@@ -1,6 +1,8 @@
 ---
 import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
+import Block from "@/components/block.astro";
+
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
 
@@ -187,29 +189,23 @@ const {
         <div class="root">
             {
                 showHeader && (
-                    <header>
+                    <Block tag="header">
                         <nav>HEADER NAV</nav>
-                    </header>
+                    </Block>
                 )
             }
 
             {
                 showBanner && (
-                    <section class="banner">
+                    <Block class="banner">
                         <div class="wrapper">BANNER</div>
-                    </section>
+                    </Block>
                 )
             }
 
             <main><slot /></main>
 
-            {
-                showFooter && (
-                    <footer>
-                        <div class="wrapper">FOOTER</div>
-                    </footer>
-                )
-            }
+            {showFooter && <Block tag="footer">FOOTER</Block>}
         </div>
     </body>
 </html>
