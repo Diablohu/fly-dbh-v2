@@ -19,8 +19,7 @@
         1200px + var(--global-edge-safe-distance) * 2
     );
     --global-root-z-index: 100;
-    --global-header-height: 98px;
-    --global-header-height: clamp(60px, 9vh, 98px);
+    --global-header-height: 60px;
     --global-header-z-index: 9999;
     --global-header-nav-max-width: var(--global-block-max-width);
 
@@ -32,25 +31,38 @@
     --global-font-family: var(--font-family-base);
     --global-font-weight: 500;
 
-    --accent-color: #7557ff;
-    --accent-color-pink: #fe8de6;
     --accent-color-purple: #6a14d1;
     --accent-color-blue: #04b8f4;
     --accent-color-green: #c8df21;
     --accent-color-red: #fe8de6;
+    --accent-color: var(--accent-color-purple);
     --theme-color-youtube: #ff0000;
     --theme-color-bilibili: #00a1d6;
-    --theme-color-tiktok: #fe2c55;
-    --theme-color-kook: #00a1d6;
-    --text-color: #5b4079;
-    --text-color-heavy: #4c256b;
+    --theme-color-tiktok: #040404;
+    --theme-color-kook: #87eb00;
+
+    --text-color-primary: #f1f1f1;
+    --text-color-secondary: #aaa;
+    --text-color-invert: #0f0f0f;
+    --background-color-tag: rgba(255, 255, 255, 0.1);
+    --background-color-tag-invert: #f1f1f1;
+    --background-color-menu: #282828;
+    --background-color-menu-highlight: #535353;
+    --border-color: rgba(255, 255, 255, 0.2);
 
     --title-letter-spacing: -0.04em;
 
     --body-safe-min-width: 375px;
 
     .theme-light({
-        // 
+        --text-color-primary: #0f0f0f;
+        --text-color-secondary: #606060;
+        --text-color-invert: #fff;
+        --background-color-tag: rgba(0, 0, 0, 0.05);
+        --background-color-tag-invert: #0f0f0f;
+        --background-color-menu: #fff;
+        --background-color-menu-highlight: #e5e5e5;
+        --border-color: rgba(0, 0, 0, 0.1);
     });
 
     // ========================================================================
@@ -62,7 +74,7 @@
     .font-size-clamp-with-line-height(16px, 24px);
     font-family: var(--global-font-family);
     font-weight: var(--global-font-weight);
-    color: var(--text-color);
+    color: var(--text-color-secondary);
     background: var(--theme-color);
     box-sizing: border-box;
 
@@ -103,4 +115,5 @@ h6 {
     font-weight: 700;
     line-height: 120%;
     letter-spacing: var(--title-letter-spacing);
+    color: var(--text-color-primary);
 }
