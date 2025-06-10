@@ -34,3 +34,15 @@
     font-size: clamp((@size * 0.85), unit((175 * @size / 1920), vw), @size);
     line-height: unit((@line-height / @size), em);
 }
+
+.block-wrapper() {
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--global-edge-safe-distance);
+    padding-right: var(--global-edge-safe-distance);
+    max-width: var(--global-block-max-width);
+    width: 100%;
+    z-index: 5;
+}

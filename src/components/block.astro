@@ -26,20 +26,15 @@ const {
 </Element>
 
 <style lang="less">
+    @import "@/utils/mixins.less";
+
     .block {
         display: block;
         position: relative;
         width: 100%;
 
         & > .wrapper {
-            display: block;
-            position: relative;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: var(--global-edge-safe-distance);
-            padding-right: var(--global-edge-safe-distance);
-            max-width: var(--global-block-max-width);
-            width: 100%;
+            .block-wrapper();
         }
     }
 </style>

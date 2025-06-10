@@ -2,6 +2,7 @@
 import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
 import Block from "@/components/block.astro";
+import Banner from './_components/banner.tsx'
 
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
@@ -197,9 +198,7 @@ const {
 
             {
                 showBanner && (
-                    <Block class="banner">
-                        <div class="wrapper">BANNER</div>
-                    </Block>
+                    <Banner />
                 )
             }
 
