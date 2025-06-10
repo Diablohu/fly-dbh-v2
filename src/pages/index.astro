@@ -1,0 +1,48 @@
+---
+// import { actions } from "astro:actions";
+
+// import log from "@/page-templates/index/_log.ts";
+
+import Layout from "@/layouts/Layout.astro";
+
+// ============================================================================
+//
+// 语言包相关
+// - 这些信息来自之前的项目
+// - 本项目暂未启用多语言
+//
+// `Astro.currentLocale` 为本次访问的语言 ID
+//  - 在所有 `page` `endpoint` 和 `context` 中均会存在，可直接使用
+//
+// `Astro.locals.global` 为全局通用信息语言包，即 CMS 中的 `通用信息` 结构体
+//  - 在所有 `page` `endpoint` 和 `context` 中均会存在，可直接使用
+//
+// `getLocale` 这一 _Action_ 为获取语言包内容的请求
+//  - 传入的参数中 `cmsStructureId` 为 CMS 中结构体 ID
+//  - 组件内自行决定返回的对象如何使用
+//      - 本例中，向所有子组件传入名为 `_` 的属性，作为语言包内容
+//
+// ============================================================================
+
+// const currentLocale = (Astro.currentLocale || "") as LocaleType;
+// const {
+//     data: _ = {},
+//     // error: _error
+// } = await Astro.callAction(actions.getLocale, {
+//     locale: currentLocale,
+//     cmsStructureId: 536,
+// });
+// if (_error) {
+//     Astro.props.error = _error;
+//     return Astro.rewrite("/500");
+// }
+
+// Astro.locals.page = _;
+// log("locales %O", _);
+// log(sparringSampleList);
+// log({ error });
+---
+
+<Layout showHeader showBanner showFooter>
+    HOME PAGE
+</Layout>

@@ -1,0 +1,241 @@
+---
+import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
+
+import { themeColorLight, themeColorDark } from "@/global";
+import "@/global.less";
+
+// ============================================================================
+
+interface Props {
+    /**
+     * 网页标题
+     * - 默认为兜底文字
+     */
+    title?: string;
+    /**
+     * 头部 Meta 信息 `keyword`
+     * - 默认为兜底文字
+     */
+    keywords?: string;
+    /**
+     * 头部 Meta 信息 `description`
+     * - 默认无内容
+     */
+    description?: string;
+
+    /**
+     * 是否显示顶部导航条
+     * - 默认隐藏
+     */
+    showHeader?: boolean;
+
+    /**
+     * 是否显示 Banner
+     * - 默认隐藏
+     */
+    showBanner?: boolean;
+
+    /**
+     * 是否显示全局页底
+     * - 默认隐藏
+     */
+    showFooter?: boolean;
+}
+
+// ============================================================================
+//
+// 多语言 & 语言包
+//
+// ============================================================================
+
+// const _ = Astro.locals.global;
+// const currentLocale = Astro.currentLocale || "";
+// const { gtag: gtagId, gtm: gtmId } = getGoogleAnalyticsIds(
+//     Astro.currentLocale as LocaleType
+// );
+// console.log(Astro.locals.global);
+
+// ============================================================================
+
+const {
+    title = "FLY-DBH.com",
+    keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
+    description,
+    showHeader = false,
+    showBanner = false,
+    showFooter = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={Astro.currentLocale}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="color-scheme" content="dark light" />
+        <meta
+            name="theme-color"
+            content={themeColorLight}
+            media="(prefers-color-scheme: light)"
+        />
+        <meta
+            name="theme-color"
+            content={themeColorDark}
+            media="(prefers-color-scheme: dark)"
+        />
+
+        <title>
+            {title === "FLY-DBH.com" ? title : `${title} | FLY-DBH.com`}
+        </title>
+
+        <!-- Google Tag Manager -->
+        <!-- <script is:inline define:vars={{ gtmId }}>
+            TODO: 需要开启 Google Tag Manager
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    "gtm.start": new Date().getTime(),
+                    event: "gtm.js",
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s),
+                    dl = l != "dataLayer" ? "&l=" + l : "";
+                j.async = true;
+                j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, "script", "dataLayer", gtmId);
+        </script> -->
+        <!-- End Google Tag Manager -->
+
+        <base target="_self" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+        {description && <meta name="description" content={description} />}
+        {keywords && <meta name="keywords" content={keywords} />}
+        <meta name="generator" content={Astro.generator} />
+
+        <style
+            is:inline
+            set:html={`
+:root {
+    --theme-color-light: ${themeColorLight};
+    --theme-color-dark: ${themeColorDark};
+    --theme-color: var(--theme-color-dark);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --theme-color: var(--theme-color-dark);
+    }
+}
+@media (prefers-color-scheme: light) {
+    :root {
+        --theme-color: var(--theme-color-light);
+    }
+}
+`}
+        ></style>
+    </head>
+    <body>
+        <!-- Google Tag Manager (noscript) -->
+        <!-- <noscript
+            TODO: 需要开启 Google Tag Manager
+            ><iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+                height="0"
+                width="0"
+                style="display:none;visibility:hidden"></iframe></noscript
+        > -->
+        <!-- End Google Tag Manager (noscript) -->
+        <!-- Google tag (gtag.js) -->
+        <!-- <script
+            TODO: 需要开启 Google Analytics
+            async
+            is:inline
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
+        ></script> -->
+        <!-- <script is:inline define:vars={{ gtagId }}>
+            TODO: 需要开启 Google Analytics
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            // 获取 URL 参数的函数，并进行防 XSS 处理
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+                var results = regex.exec(location.search);
+                if (!results) return "";
+
+                // **先解码，再过滤非法字符**
+                let decodedValue = decodeURIComponent(results[1]);
+                return decodedValue.replace(/[^a-zA-Z0-9-_]/g, "");
+            }
+            // 初始化 Google Analytics
+            gtag("js", new Date());
+            var utmCtid = getUrlParameter("utm_ctid");
+            gtag("config", gtagId, {
+                user_id: utmCtid || undefined,
+                utm_ctid: utmCtid || undefined,
+            });
+            if (utmCtid) {
+                gtag("event", "campaign_click", {
+                    utm_ctid: utmCtid,
+                });
+            }
+        </script> -->
+
+        <div class="root">
+            {
+                showHeader && (
+                    <header>
+                        <nav>HEADER NAV</nav>
+                    </header>
+                )
+            }
+
+            {
+                showBanner && (
+                    <section class="banner">
+                        <div class="wrapper">BANNER</div>
+                    </section>
+                )
+            }
+
+            <main><slot /></main>
+
+            {
+                showFooter && (
+                    <footer>
+                        <div class="wrapper">FOOTER</div>
+                    </footer>
+                )
+            }
+        </div>
+    </body>
+</html>
+
+<style lang="less">
+    @import "./Layout.module.less";
+</style>
+
+<script is:inline>
+    document.documentElement.setAttribute("javascript-enabled", "");
+    if (globalThis.window) {
+        // 站外链接兜底为新窗口打开
+        document.body.addEventListener("click", (evt) => {
+            if (
+                evt.target instanceof HTMLElement &&
+                evt.target.tagName === "A" &&
+                !evt.target.getAttribute("target")
+            ) {
+                const href = evt.target.getAttribute("href");
+                if (href[0] === "/") return;
+                if (href[0] === "#") return;
+                if (/^(javascript|mailto|tel):/.test(href)) return;
+                if (new RegExp(`^${location.origin}`).test(href)) return;
+                evt.preventDefault();
+                window.open(href, "_blank");
+            }
+        });
+    }
+</script>

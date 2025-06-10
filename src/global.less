@@ -1,0 +1,166 @@
+@import "normalize.css/normalize.css";
+@import "toastify-js/src/toastify.css";
+@import "@/utils/mixins.less";
+
+:root {
+    --global-edge-safe-distance: 30px;
+    --global-root-z-index: 100;
+    --global-header-height: 98px;
+    --global-header-height: clamp(60px, 9vh, 98px);
+    --global-header-z-index: 9999;
+    --global-header-nav-max-width: calc(
+        1200px + var(--global-edge-safe-distance) * 2
+    );
+
+    --base-font-family: Roboto, "SF Pro Display", "SF Pro Icons",
+        "Helvetica Neue", "Helvetica", "Arial", "Microsoft YaHei UI",
+        "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    --font-family-gotham: "Gotham", var(--base-font-family);
+    --font-family-poppins: "Poppins", var(--base-font-family);
+    --global-font-family: var(--font-family-gotham);
+    --global-font-weight: 400;
+
+    --accent-color: #7557ff;
+    --accent-color-pink: #fe8de6;
+    --accent-color-purple: #fe8de6;
+    --accent-color-green: #c8df21;
+    --accent-color-red: #fe8de6;
+    --theme-color-youtube: #ff0000;
+    --theme-color-bilibili: #00a1d6;
+    --theme-color-tiktok: #fe2c55;
+    --theme-color-kook: #00a1d6;
+    --text-color: #5b4079;
+    --text-color-heavy: #4c256b;
+    --title-letter-spacing: -0.04em;
+
+    --body-safe-min-width: 375px;
+
+    // ========================================================================
+    //
+    // 全局基础样式
+    //
+    // ========================================================================
+
+    .font-size-clamp-with-line-height(20px, 26px);
+    font-family: var(--global-font-family);
+    font-weight: var(--global-font-weight);
+    color: var(--text-color);
+    box-sizing: border-box;
+
+    &[lang="zh"] {
+        --global-font-weight: 500;
+        --title-letter-spacing: 0;
+    }
+    &[lang="ja"] {
+        --global-font-weight: 500;
+        --title-letter-spacing: -0.04em;
+    }
+
+    // ========================================================================
+    //
+    // 字体: Gotham
+    //
+    // ========================================================================
+
+    // .font-face-Gotham(@weight, @filename) {
+    //     @font-face {
+    //         font-family: "Gotham";
+    //         font-style: normal;
+    //         font-weight: @weight;
+    //         font-display: swap;
+    //         src: local(sans-serif),
+    //             url("/fonts/Gotham-@{filename}.otf") format("opentype");
+    //     }
+    // }
+    // .font-face-Gotham(100, "Book");
+    // .font-face-Gotham(200, "Book");
+    // .font-face-Gotham(300, "Book");
+    // .font-face-Gotham(400, "Book");
+    // .font-face-Gotham(500, "Medium");
+    // .font-face-Gotham(600, "Medium");
+    // .font-face-Gotham(700, "Bold");
+    // .font-face-Gotham(800, "Bold");
+    // .font-face-Gotham(900, "Ultra");
+
+    // ========================================================================
+    //
+    // 字体: Poppins
+    //
+    // ========================================================================
+
+    // .font-face-Poppins(@weight, @filename) {
+    //     @font-face {
+    //         font-family: "Poppins";
+    //         font-style: normal;
+    //         font-weight: @weight;
+    //         font-display: swap;
+    //         src: local(sans-serif),
+    //             url("/fonts/Poppins-@{filename}.ttf") format("truetype");
+    //     }
+    //     @font-face {
+    //         font-family: "Poppins";
+    //         font-style: italic;
+    //         font-weight: @weight;
+    //         font-display: swap;
+    //         src: local(sans-serif),
+    //             url("/fonts/Poppins-@{filename}Italic.ttf") format("truetype");
+    //     }
+    // }
+    // .font-face-Poppins(100, "Thin");
+    // .font-face-Poppins(200, "ExtraLight");
+    // .font-face-Poppins(300, "Light");
+    // @font-face {
+    //     font-family: "Poppins";
+    //     font-style: normal;
+    //     font-weight: 400;
+    //     font-display: swap;
+    //     src: local(sans-serif),
+    //         url("/fonts/Poppins-Regular.ttf") format("truetype");
+    // }
+    // @font-face {
+    //     font-family: "Poppins";
+    //     font-style: italic;
+    //     font-weight: 400;
+    //     font-display: swap;
+    //     src: local(sans-serif),
+    //         url("/fonts/Poppins-Italic.ttf") format("truetype");
+    // }
+    // .font-face-Poppins(500, "Medium");
+    // .font-face-Poppins(600, "SemiBold");
+    // .font-face-Poppins(700, "Bold");
+    // .font-face-Poppins(800, "ExtraBold");
+    // .font-face-Poppins(900, "Black");
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+a,
+button[type="button"],
+button[type="submit"] {
+    transition: 0.3s;
+    transition-property: transform;
+    &:active {
+        transform: translateY(2px);
+    }
+}
+
+button[type="button"],
+button[type="submit"] {
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: Gotham;
+    font-weight: 700;
+    line-height: 120%;
+    letter-spacing: var(--title-letter-spacing);
+}

@@ -55,7 +55,7 @@ async function main() {
             for (const type of ["build", "preview"]) {
                 await new Promise((resolve) => {
                     const child = npmRunScript(
-                        p.scripts[`${type}:${command}`],
+                        p.scripts[[type, command].filter(Boolean).join(":")],
                         {
                             stdio: "inherit",
                         }

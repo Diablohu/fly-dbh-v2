@@ -23,10 +23,10 @@ export default defineConfig({
     output: "server",
     server: ({ command }) => ({ port: command === "dev" ? 8088 : 8080 }),
     // @ts-ignore
-    site: 'fly-dbh.com',
+    site: "https://fly-dbh.com",
 
     // 多语言设置
-    i18n: false,
+    // i18n: {},
 
     // Vite 打包工具相关设置
     // Asotro 框架默认使用 Vite 进行打包
