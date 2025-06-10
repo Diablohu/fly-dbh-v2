@@ -1,0 +1,45 @@
+---
+interface Props extends astroHTML.JSX.HTMLAttributes {
+    /**
+     * HTML 元素
+     * - 默认为 `section`
+     */
+    tag?: string;
+    /**
+     * `wrapper` 的 CSS 类名
+     */
+    wrapperClass?: string;
+}
+
+const {
+    tag: Element = "section",
+    wrapperClass,
+    class: className,
+    ...props
+} = Astro.props;
+---
+
+<Element class:list={["block", className]} {...props}>
+    <section class:list={["wrapper", wrapperClass]}>
+        <slot />
+    </section>
+</Element>
+
+<style lang="less">
+    .block {
+        display: block;
+        position: relative;
+        width: 100%;
+
+        & > .wrapper {
+            display: block;
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--global-edge-safe-distance);
+            padding-right: var(--global-edge-safe-distance);
+            max-width: var(--global-block-max-width);
+            width: 100%;
+        }
+    }
+</style>
