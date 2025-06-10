@@ -1,0 +1,36 @@
+.theme-dark(@rules) {
+    @media (prefers-color-scheme: dark) {
+        & {
+            @rules();
+        }
+    }
+}
+
+.theme-light(@rules) {
+    @media (prefers-color-scheme: light) {
+        & {
+            @rules();
+        }
+    }
+}
+
+.local(@currentLocale, @rules) {
+    html[lang="@{currentLocale}"] & {
+        @rules();
+    }
+}
+
+.font-size-clamp(@min-font-size, @font-size) {
+    font-size: unit(@font-size, px);
+    font-size: clamp(
+        unit(@min-font-size, px),
+        unit((175 * @font-size / 1920), vw),
+        unit(@font-size, px)
+    );
+}
+
+.font-size-clamp-with-line-height(@size, @line-height) {
+    font-size: @size;
+    font-size: clamp((@size * 0.85), unit((175 * @size / 1920), vw), @size);
+    line-height: unit((@line-height / @size), em);
+}

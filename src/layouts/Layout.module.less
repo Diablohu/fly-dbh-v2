@@ -1,0 +1,48 @@
+@import "@/utils/mixins.less";
+
+html,
+body {
+    margin: 0;
+    // overflow-x: hidden;
+}
+
+body {
+    min-width: var(--body-safe-min-width);
+}
+
+.root {
+    position: relative;
+    z-index: var(--global-root-z-index);
+    display: flex;
+    flex-flow: column nowrap;
+    min-height: 100dvh;
+
+    & > header {
+        flex: 0;
+        display: block;
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--global-header-height);
+        z-index: var(--global-header-z-index);
+        background: #1c092a99;
+        backdrop-filter: blur(20px) saturate(180%);
+        user-select: none;
+        .font-size-clamp(20px, 28px);
+        color: var(--theme-color);
+    }
+
+    & > main {
+        flex: 1;
+    }
+
+    & > footer {
+        .font-size-clamp-with-line-height(18px, 22.6px);
+        display: block;
+        flex: 0;
+        background-color: #0e0516;
+        color: #ffffff8c;
+        position: relative;
+    }
+}
