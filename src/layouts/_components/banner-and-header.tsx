@@ -1,6 +1,9 @@
 import { useCallback, useState, useRef, useEffect, type FC } from "react";
 import classNames from "classnames";
 
+import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
+import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
+
 import styles from "./banner-and-header.module.less";
 
 // ============================================================================
@@ -10,10 +13,52 @@ const Header: FC<{
     showHeader?: boolean;
 }> & {
     observer?: IntersectionObserver;
+    bannerInView?: boolean;
+    bannerAnimateTicking?: boolean;
+    bannerAnimateRequestTick: () => void;
 } = ({ showHeader = false, showBanner = false }) => {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
+    const VideoRef = useRef<HTMLVideoElement>(null);
     const [renderBanner, setRenderBanner] = useState(showBanner);
+
+    const setStylesFunction = useCallback(() => {
+        // reset the tick so we can
+        // capture the next onScroll
+        Header.bannerAnimateTicking = false;
+
+        if (!Header.bannerInView) return;
+
+        if (BannerRef.current) {
+            const wrapperHeight = BannerRef.current.offsetHeight;
+            BannerRef.current.style.setProperty(
+                "--content-scale",
+                `${Math.min(
+                    1,
+                    Math.max(
+                        0,
+                        (wrapperHeight - window.scrollY) / wrapperHeight // * 1.2
+                    )
+                )}`
+            );
+            BannerRef.current.style.setProperty(
+                "--video-offset-y",
+                `${window.scrollY / 2}px`
+            );
+        }
+        // console.log(
+        //     window.scrollY,
+        //     pos,
+        //     WrapperRef.current,
+        //     VideoRef.current
+        // );
+    }, []);
+    const setStyles = useCallback(() => {
+        if (!Header.bannerAnimateTicking) {
+            requestAnimationFrame(setStylesFunction);
+        }
+        Header.bannerAnimateTicking = true;
+    }, [setStylesFunction]);
 
     useEffect(() => {
         if (!Header.observer) {
@@ -21,15 +66,19 @@ const Header: FC<{
                 (entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
+                            Header.bannerInView = true;
                             BannerRef.current?.classList.remove(
                                 styles["mod-not-in-view"]
                             );
-                            console.log("Banner is in view");
+                            VideoRef.current?.play();
+                            // console.log("Banner is in view");
                         } else {
+                            Header.bannerInView = false;
                             BannerRef.current?.classList.add(
                                 styles["mod-not-in-view"]
                             );
-                            console.log("Banner is out of view");
+                            VideoRef.current?.pause();
+                            // console.log("Banner is out of view");
                         }
                     });
                 },
@@ -48,15 +97,39 @@ const Header: FC<{
         };
     }, [renderBanner]);
 
+    useEffect(() => {
+        setStyles();
+        window.addEventListener("resize", setStyles);
+        window.addEventListener("scroll", setStyles);
+        // VideoRef.current.play();
+        return () => {
+            window.removeEventListener("resize", setStyles);
+            window.removeEventListener("scroll", setStyles);
+        };
+    }, [setStyles]);
+
     return (
         <>
             {renderBanner && (
                 <section className={styles["banner"]} ref={BannerRef}>
                     <div className={styles["wrapper"]}>BANNER</div>
+                    <video
+                        // poster={require('@assets/banner/cover.jpg').default}
+                        crossOrigin="anonymous"
+                        preload="auto"
+                        playsInline
+                        autoPlay
+                        loop
+                        muted
+                        ref={VideoRef}
+                    >
+                        <source type="video/webm" src={bannerVidMedWebm} />
+                        <source type="video/mp4" src={bannerVidLowMP4} />
+                    </video>
                     <div
                         className={styles["intersection-check"]}
                         ref={BannerIntersectionRef}
-                    ></div>
+                    />
                 </section>
             )}
             <header
@@ -73,6 +146,12 @@ const Header: FC<{
             </header>
         </>
     );
+};
+Header.bannerAnimateRequestTick = () => {
+    if (!Header.bannerAnimateTicking) {
+        requestAnimationFrame(Header.bannerAnimateRequestTick);
+    }
+    Header.bannerAnimateTicking = true;
 };
 
 export default Header;
