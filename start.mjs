@@ -2,7 +2,7 @@ import { spawn, execSync } from "node:child_process";
 import dayjs from "dayjs";
 import { select, Separator } from "@inquirer/prompts";
 import npmRunScript from "npm-run-script";
-import p from "./package.json" assert { type: "json" };
+import p from "./package.json" with { type: "json" };
 
 async function main() {
     const answer = await select({
