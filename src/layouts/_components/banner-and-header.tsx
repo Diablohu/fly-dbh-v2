@@ -1,4 +1,11 @@
-import { useCallback, useState, useRef, useEffect, type FC } from "react";
+import {
+    useCallback,
+    useState,
+    useRef,
+    useEffect,
+    type FC,
+    type ReactNode,
+} from "react";
 import classNames from "classnames";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
@@ -11,12 +18,13 @@ import styles from "./banner-and-header.module.less";
 const Header: FC<{
     showBanner?: boolean;
     showHeader?: boolean;
+    logo?: ReactNode;
 }> & {
     observer?: IntersectionObserver;
     bannerInView?: boolean;
     bannerAnimateTicking?: boolean;
     bannerAnimateRequestTick: () => void;
-} = ({ showHeader = false, showBanner = false }) => {
+} = ({ showHeader = false, showBanner = false, logo }) => {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
     const VideoRef = useRef<HTMLVideoElement>(null);
@@ -112,7 +120,15 @@ const Header: FC<{
         <>
             {renderBanner && (
                 <section className={styles["banner"]} ref={BannerRef}>
-                    <div className={styles["wrapper"]}>给假飞机做视频的</div>
+                    <div className={styles["wrapper"]}>
+                        {logo}
+                        <strong className={styles["slogan"]}>
+                            给假飞机做视频
+                        </strong>
+                        <div className={styles["links"]}>
+                            哔哩哔哩, YouTube, 抖音, 直播间, 粉丝群
+                        </div>
+                    </div>
                     <video
                         // poster={require('@assets/banner/cover.jpg').default}
                         crossOrigin="anonymous"

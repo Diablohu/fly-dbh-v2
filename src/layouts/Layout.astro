@@ -3,6 +3,7 @@ import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
 import Block from "@/components/block.astro";
 import BannerAndHeader from "./_components/banner-and-header";
+import LogoSVG from "@/assets/logo.svg";
 
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
@@ -183,7 +184,9 @@ const {
                 client:idle
                 showBanner={showBanner}
                 showHeader={showHeader}
-            />
+            >
+                <LogoSVG slot="logo" />
+            </BannerAndHeader>
 
             <main><slot /></main>
 
