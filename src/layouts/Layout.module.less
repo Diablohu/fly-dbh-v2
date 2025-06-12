@@ -17,28 +17,6 @@ body {
     min-height: -webkit-fill-available;
     min-height: 100dvh;
 
-    & > header {
-        position: sticky;
-        flex: 0 0 var(--global-header-height);
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: var(--global-header-z-index);
-        background: #00000011;
-        backdrop-filter: blur(20px) saturate(180%);
-        user-select: none;
-        .font-size-clamp(20px, 28px);
-        color: var(--text-color-primary);
-        will-change: background-color, color;
-        transition: all 0.3s ease-in-out;
-        &:has(~ .banner) {
-            &.mod-scrolled {
-            }
-            &.mod-not-inview {
-            }
-        }
-    }
-
     & > main {
         flex: 1;
         position: relative;

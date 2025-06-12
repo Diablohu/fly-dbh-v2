@@ -2,7 +2,7 @@
 import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
 import Block from "@/components/block.astro";
-import Banner from './_components/banner.tsx'
+import BannerAndHeader from "./_components/banner-and-header";
 
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
@@ -122,8 +122,13 @@ const {
             set:html={`
 :root {
     --theme-color-light: ${themeColorLight};
+    --theme-color-light-p-80: ${themeColorLight}50;
     --theme-color-dark: ${themeColorDark};
+    --theme-color-dark-p-80: ${themeColorDark}50;
     --theme-color: var(--theme-color-dark);
+    --theme-color-p-80: var(--theme-color-dark-p-80);
+    --theme-color-invert: var(--theme-color-light);
+    --theme-color-invert-p-80: var(--theme-color-light-p-80);
 }
 @media (prefers-color-scheme: dark) {
     :root {
@@ -188,23 +193,21 @@ const {
         </script> -->
 
         <div class="root">
-            {
-                showHeader && (
-                    <Block tag="header">
-                        <nav>HEADER NAV</nav>
-                    </Block>
-                )
-            }
-
-            {
-                showBanner && (
-                    <Banner />
-                )
-            }
+            <BannerAndHeader
+                client:idle
+                showBanner={showBanner}
+                showHeader={showHeader}
+            />
 
             <main><slot /></main>
 
             {showFooter && <Block tag="footer">FOOTER</Block>}
+
+            <!-- 
+            TODO: /?v=[vid]
+                + nanostore: caller
+            TODO: /?s=[query]
+            -->
         </div>
     </body>
 </html>

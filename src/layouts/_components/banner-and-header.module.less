@@ -1,0 +1,71 @@
+@import "@/utils/mixins.less";
+
+.banner,
+.header {
+    transition-property: none;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+    overflow: hidden;
+    user-select: none;
+
+    & > .wrapper {
+        .block-wrapper();
+    }
+}
+
+.banner {
+    position: relative;
+    z-index: calc(var(--global-header-z-index) - 1);
+    height: 50vh;
+    min-height: 300px;
+    max-height: 500px;
+    background: #000;
+
+    & > .wrapper {
+        user-select: auto;
+    }
+
+    & > .intersection-check {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        // bottom: calc(var(--global-header-height) * 2 / 3);
+        bottom: calc(var(--global-header-height) + 0.5em);
+        // bottom: calc(var(--global-header-height) + 1em);
+        left: 0;
+        width: 0;
+        // background: #ff000044;
+    }
+}
+
+.header {
+    position: sticky;
+    z-index: var(--global-header-z-index);
+    flex: 0 0 var(--global-header-height);
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: calc(var(--global-header-height) * -1);
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--global-header-background-color);
+    border-bottom: 1px solid var(--tag-background-color);
+    // .font-size-clamp(20px, 28px);
+    // color: var(--text-color-primary);
+    will-change: background-color, border-color, color, backdrop-filter;
+    transition-property: background-color, border-color, color, backdrop-filter;
+    backdrop-filter: var(--global-header-backdrop-filter);
+}
+
+.banner + .header {
+    background-color: transparent;
+    border-color: transparent;
+    backdrop-filter: none;
+}
+.banner.mod-not-in-view + .header {
+    background-color: var(--global-header-background-color);
+    border-color: var(--tag-background-color);
+    backdrop-filter: var(--global-header-backdrop-filter);
+}
