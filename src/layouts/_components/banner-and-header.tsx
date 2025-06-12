@@ -112,7 +112,7 @@ const Header: FC<{
         <>
             {renderBanner && (
                 <section className={styles["banner"]} ref={BannerRef}>
-                    <div className={styles["wrapper"]}>BANNER</div>
+                    <div className={styles["wrapper"]}>给假飞机做视频的</div>
                     <video
                         // poster={require('@assets/banner/cover.jpg').default}
                         crossOrigin="anonymous"
