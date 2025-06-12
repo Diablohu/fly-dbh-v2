@@ -121,24 +121,10 @@ const {
             is:inline
             set:html={`
 :root {
-    --theme-color-light: ${themeColorLight};
-    --theme-color-light-p-80: ${themeColorLight}50;
-    --theme-color-dark: ${themeColorDark};
-    --theme-color-dark-p-80: ${themeColorDark}50;
-    --theme-color: var(--theme-color-dark);
-    --theme-color-p-80: var(--theme-color-dark-p-80);
-    --theme-color-invert: var(--theme-color-light);
-    --theme-color-invert-p-80: var(--theme-color-light-p-80);
-}
-@media (prefers-color-scheme: dark) {
-    :root {
-        --theme-color: var(--theme-color-dark);
-    }
-}
-@media (prefers-color-scheme: light) {
-    :root {
-        --theme-color: var(--theme-color-light);
-    }
+    --light-theme-color: ${themeColorLight};
+    --light-theme-color-p-80: ${themeColorLight}50;
+    --dark-theme-color: ${themeColorDark};
+    --dark-theme-color-p-80: ${themeColorDark}50;
 }
 `}
         ></style>

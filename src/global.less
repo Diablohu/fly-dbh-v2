@@ -63,6 +63,11 @@
     --theme-color-tiktok: #040404;
     --theme-color-kook: #87eb00;
 
+    --theme-color: var(--dark-theme-color);
+    --theme-color-p-80: var(--dark-theme-color-p-80);
+    --theme-color-invert: var(--light-theme-color);
+    --theme-color-invert-p-80: var(--light-theme-color-p-80);
+
     --text-color-primary: #f1f1f1;
     --text-color-secondary: #aaa;
     --text-color-invert: #0f0f0f;
@@ -73,6 +78,11 @@
     --border-color: rgba(255, 255, 255, 0.2);
 
     .theme-light({
+        --theme-color: var(--light-theme-color);
+        --theme-color-p-80: var(--light-theme-color-p-80);
+        --theme-color-invert: var(--dark-theme-color);
+        --theme-color-invert-p-80: var(--dark-theme-color-p-80);
+
         --text-color-primary: #0f0f0f;
         --text-color-secondary: #606060;
         --text-color-invert: #fff;
