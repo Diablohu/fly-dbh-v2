@@ -3,6 +3,12 @@
 @import "@/utils/mixins.less";
 
 :root {
+    // ========================================================================
+    //
+    // 字体
+    //
+    // ========================================================================
+
     @font-face {
         font-family: "Helvetica Compressed";
         font-display: swap;
@@ -13,6 +19,10 @@
     }
 
     // ========================================================================
+    //
+    // CSS 变量
+    //
+    // ========================================================================
 
     --global-edge-safe-distance: 30px;
     --global-block-max-width: calc(
@@ -22,6 +32,8 @@
     --global-header-height: 60px;
     --global-header-z-index: 9999;
     --global-header-nav-max-width: var(--global-block-max-width);
+    --global-header-background-color: var(--theme-color-p-80);
+    --global-header-backdrop-filter: blur(20px);
 
     --font-family-base:
         Roboto, "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica",
@@ -30,6 +42,16 @@
     --font-family-logo: "Helvetica Compressed", var(--font-family-base);
     --global-font-family: var(--font-family-base);
     --global-font-weight: 500;
+
+    --body-safe-min-width: 375px;
+    --title-letter-spacing: -0.04em;
+    --backdrop-filter-glass: saturate(180%) blur(20px);
+
+    // ========================================================================
+    //
+    // CSS 变量：颜色
+    //
+    // ========================================================================
 
     --accent-color-purple: #6a14d1;
     --accent-color-blue: #04b8f4;
@@ -44,24 +66,20 @@
     --text-color-primary: #f1f1f1;
     --text-color-secondary: #aaa;
     --text-color-invert: #0f0f0f;
-    --background-color-tag: rgba(255, 255, 255, 0.1);
-    --background-color-tag-invert: #f1f1f1;
-    --background-color-menu: #282828;
-    --background-color-menu-highlight: #535353;
+    --tag-background-color: rgba(255, 255, 255, 0.1);
+    --tag-background-color-invert: #f1f1f1;
+    --menu-background-color: #282828;
+    --menu-background-color-highlight: #535353;
     --border-color: rgba(255, 255, 255, 0.2);
-
-    --title-letter-spacing: -0.04em;
-
-    --body-safe-min-width: 375px;
 
     .theme-light({
         --text-color-primary: #0f0f0f;
         --text-color-secondary: #606060;
         --text-color-invert: #fff;
-        --background-color-tag: rgba(0, 0, 0, 0.05);
-        --background-color-tag-invert: #0f0f0f;
-        --background-color-menu: #fff;
-        --background-color-menu-highlight: #e5e5e5;
+        --tag-background-color: rgba(0, 0, 0, 0.05);
+        --tag-background-color-invert: #0f0f0f;
+        --menu-background-color: #fff;
+        --menu-background-color-highlight: #e5e5e5;
         --border-color: rgba(0, 0, 0, 0.1);
     });
 
@@ -71,7 +89,7 @@
     //
     // ========================================================================
 
-    .font-size-clamp-with-line-height(16px, 24px);
+    .font-size-clamp-with-line-height(unit((16 / 0.85), px), unit((1.5 * 16 / 0.85), px));
     font-family: var(--global-font-family);
     font-weight: var(--global-font-weight);
     color: var(--text-color-secondary);

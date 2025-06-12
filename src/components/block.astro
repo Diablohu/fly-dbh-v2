@@ -32,8 +32,10 @@ const {
         display: block;
         position: relative;
         width: 100%;
+        user-select: none;
 
         & > .wrapper {
+            user-select: auto;
             .block-wrapper();
         }
     }
