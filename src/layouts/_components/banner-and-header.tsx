@@ -132,7 +132,35 @@ const Header: FC<{
                         {logo}
                         <strong className={styles["slogan"]}>{slogan}</strong>
                         <div className={styles["links"]}>
-                            哔哩哔哩, YouTube, 抖音, 直播间, 粉丝群
+                            {[
+                                [
+                                    "哔哩哔哩",
+                                    "https://b.fly-dbh.com",
+                                    "bilibili",
+                                ],
+                                [
+                                    "YouTube",
+                                    "https://ytb.fly-dbh.com",
+                                    "youtube",
+                                ],
+                                [
+                                    "抖音",
+                                    "https://douyin.fly-dbh.com",
+                                    "douyin",
+                                ],
+                                ["直播间", "https://live.fly-dbh.com", "live"],
+                                ["粉丝群", "https://qun.fly-dbh.com", "qun"],
+                            ].map(([title, href, name]) => (
+                                <a
+                                    key={name}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles["link"]}
+                                >
+                                    {title}
+                                </a>
+                            ))}
                         </div>
                     </div>
                     <video

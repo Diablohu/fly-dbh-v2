@@ -6,6 +6,8 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 // ============================================================================
 
+// TODO: 验证 .env 文件
+
 const { FLYDBH_BUILD_MODE } = process.env;
 const isDev = process.env.NODE_ENV === "development";
 /** 模式：分析打包文件尺寸 */
