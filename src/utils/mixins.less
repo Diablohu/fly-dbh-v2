@@ -46,3 +46,11 @@
     width: 100%;
     z-index: 5;
 }
+
+.screen-sm(@rules) {
+    @media screen and (max-width: 576px) {
+        & {
+            @rules();
+        }
+    }
+}
