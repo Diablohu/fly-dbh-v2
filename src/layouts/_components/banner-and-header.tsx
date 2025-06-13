@@ -8,6 +8,8 @@ import {
 } from "react";
 import classNames from "classnames";
 
+import { slogan } from "@/global";
+
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
 
@@ -122,9 +124,7 @@ const Header: FC<{
                 <section className={styles["banner"]} ref={BannerRef}>
                     <div className={styles["wrapper"]}>
                         {logo}
-                        <strong className={styles["slogan"]}>
-                            给假飞机做视频
-                        </strong>
+                        <strong className={styles["slogan"]}>{slogan}</strong>
                         <div className={styles["links"]}>
                             哔哩哔哩, YouTube, 抖音, 直播间, 粉丝群
                         </div>
