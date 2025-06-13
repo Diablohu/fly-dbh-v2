@@ -47,7 +47,7 @@ const Header: FC<{
                     1,
                     Math.max(
                         0,
-                        (wrapperHeight - window.scrollY) / wrapperHeight // * 1.2
+                        (wrapperHeight - window.scrollY) / wrapperHeight
                     )
                 )}`
             );
@@ -56,12 +56,6 @@ const Header: FC<{
                 `${window.scrollY / 2}px`
             );
         }
-        // console.log(
-        //     window.scrollY,
-        //     pos,
-        //     WrapperRef.current,
-        //     VideoRef.current
-        // );
     }, []);
     const setStyles = useCallback(() => {
         if (!Header.bannerAnimateTicking) {
@@ -96,8 +90,12 @@ const Header: FC<{
             );
         }
 
-        if (renderBanner && BannerIntersectionRef.current) {
-            Header.observer.observe(BannerIntersectionRef.current);
+        if (BannerIntersectionRef.current) {
+            if (renderBanner) {
+                Header.observer.observe(BannerIntersectionRef.current);
+            } else {
+                Header.observer.unobserve(BannerIntersectionRef.current);
+            }
         }
 
         return () => {
@@ -117,6 +115,14 @@ const Header: FC<{
             window.removeEventListener("scroll", setStyles);
         };
     }, [setStyles]);
+
+    useEffect(() => {
+        // TODO: banner 关闭动画
+        setRenderBanner(showBanner);
+        if (!showBanner) {
+            Header.bannerInView = false;
+        }
+    }, [showBanner]);
 
     return (
         <>

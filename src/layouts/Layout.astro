@@ -5,6 +5,8 @@ import Block from "@/components/block.astro";
 import BannerAndHeader from "./_components/banner-and-header";
 import LogoSVG from "@/assets/logo.svg";
 
+import { title as siteTitle, slogan } from "@/global";
+
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
 
@@ -62,9 +64,9 @@ interface Props {
 // ============================================================================
 
 const {
-    title = "FLY-DBH.com",
+    title = siteTitle,
     keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
-    description,
+    description = slogan,
     showHeader = false,
     showBanner = false,
     showFooter = false,
@@ -123,9 +125,9 @@ const {
             set:html={`
 :root {
     --light-theme-color: ${themeColorLight};
-    --light-theme-color-p-80: ${themeColorLight}50;
+    --light-theme-color-p-80: ${themeColorLight}cc;
     --dark-theme-color: ${themeColorDark};
-    --dark-theme-color-p-80: ${themeColorDark}50;
+    --dark-theme-color-p-80: ${themeColorDark}cc;
 }
 `}
         ></style>
