@@ -156,9 +156,13 @@ const Header: FC<{
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={styles["link"]}
+                                    className={classNames([
+                                        styles["link"],
+                                        styles[`link-${name}`],
+                                    ])}
                                 >
                                     {title}
+                                    <em />
                                 </a>
                             ))}
                         </div>
