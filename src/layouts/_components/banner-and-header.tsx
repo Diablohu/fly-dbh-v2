@@ -21,12 +21,13 @@ const Header: FC<{
     showBanner?: boolean;
     showHeader?: boolean;
     logo?: ReactNode;
+    originPathname: string;
 }> & {
     observer?: IntersectionObserver;
     bannerInView?: boolean;
     bannerAnimateTicking?: boolean;
     bannerAnimateRequestTick: () => void;
-} = ({ showHeader = false, showBanner = false, logo }) => {
+} = ({ showHeader = false, showBanner = false, logo, originPathname }) => {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
     const VideoRef = useRef<HTMLVideoElement>(null);
@@ -70,6 +71,11 @@ const Header: FC<{
                 (entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
+                            // console.log(
+                            //     "inview",
+                            //     BannerRef.current,
+                            //     BannerIntersectionRef.current
+                            // );
                             Header.bannerInView = true;
                             BannerRef.current?.classList.remove(
                                 styles["mod-not-in-view"]
@@ -77,6 +83,11 @@ const Header: FC<{
                             VideoRef.current?.play();
                             // console.log("Banner is in view");
                         } else {
+                            // console.log(
+                            //     "not inview",
+                            //     BannerRef.current,
+                            //     BannerIntersectionRef.current
+                            // );
                             Header.bannerInView = false;
                             BannerRef.current?.classList.add(
                                 styles["mod-not-in-view"]
@@ -119,8 +130,13 @@ const Header: FC<{
     useEffect(() => {
         // TODO: banner 关闭动画
         setRenderBanner(showBanner);
-        if (!showBanner) {
+        if (showBanner) {
+            // setTimeout(() => {
+            //     console.log(BannerRef.current);
+            // });
+        } else {
             Header.bannerInView = false;
+            Header.observer = undefined;
         }
     }, [showBanner]);
 
@@ -128,29 +144,37 @@ const Header: FC<{
         <>
             {renderBanner && (
                 <section className={styles["banner"]} ref={BannerRef}>
-                    <div className={styles["wrapper"]}>
+                    <section className={styles["wrapper"]}>
                         {logo}
                         <strong className={styles["slogan"]}>{slogan}</strong>
-                        <div className={styles["links"]}>
+                        <section className={styles["links"]}>
                             {[
                                 [
+                                    "bilibili",
                                     "哔哩哔哩",
                                     "https://b.fly-dbh.com",
-                                    "bilibili",
+                                    "svg",
                                 ],
                                 [
+                                    "youtube",
                                     "YouTube",
                                     "https://ytb.fly-dbh.com",
-                                    "youtube",
+                                    "svg",
                                 ],
                                 [
+                                    "douyin",
                                     "抖音",
                                     "https://douyin.fly-dbh.com",
-                                    "douyin",
+                                    "png",
                                 ],
-                                ["直播间", "https://live.fly-dbh.com", "live"],
-                                ["粉丝群", "https://qun.fly-dbh.com", "qun"],
-                            ].map(([title, href, name]) => (
+                                ["live", "直播间", "https://live.fly-dbh.com"],
+                                [
+                                    "qun",
+                                    "粉丝群",
+                                    "https://qun.fly-dbh.com",
+                                    "svg",
+                                ],
+                            ].map(([name, title, href, iconType]) => (
                                 <a
                                     key={name}
                                     href={href}
@@ -165,8 +189,8 @@ const Header: FC<{
                                     <em />
                                 </a>
                             ))}
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     <video
                         // poster={require('@assets/banner/cover.jpg').default}
                         crossOrigin="anonymous"
@@ -194,9 +218,47 @@ const Header: FC<{
                     },
                 ])}
             >
-                <nav className={styles["wrapper"]}>
-                    LOGO, NAV, SEARCH, LINKS
-                </nav>
+                <section className={styles["wrapper"]}>
+                    <a
+                        href="/"
+                        className={classNames([
+                            styles["aside"],
+                            styles["link-home"],
+                        ])}
+                    >
+                        {logo}
+                    </a>
+                    <nav className={styles["nav"]}>
+                        {[
+                            ["/", "首页"],
+                            ["/videos", "模拟飞行视频"],
+                            // ["/streams", "直播回放"],
+                            // ["/clips", "直播切片"],
+                        ].map(([route, name]) => (
+                            <a
+                                key={route}
+                                href={route}
+                                className={classNames([
+                                    styles["link"],
+                                    {
+                                        [styles["is-active"]]:
+                                            originPathname === route,
+                                    },
+                                ])}
+                            >
+                                {name}
+                            </a>
+                        ))}
+                    </nav>
+                    <section
+                        className={classNames([
+                            styles["aside"],
+                            styles["options"],
+                        ])}
+                    >
+                        S, L, O
+                    </section>
+                </section>
             </header>
         </>
     );

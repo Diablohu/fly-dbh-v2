@@ -1,4 +1,6 @@
 ---
+import { ClientRouter } from "astro:transitions";
+
 import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
 import Block from "@/components/block.astro";
@@ -125,12 +127,16 @@ const {
             set:html={`
 :root {
     --light-theme-color: ${themeColorLight};
+    --light-theme-color-p-20: ${themeColorLight}33;
     --light-theme-color-p-80: ${themeColorLight}cc;
     --dark-theme-color: ${themeColorDark};
+    --dark-theme-color-p-20: ${themeColorDark}33;
     --dark-theme-color-p-80: ${themeColorDark}cc;
 }
 `}
         ></style>
+
+        <ClientRouter />
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->
@@ -186,6 +192,7 @@ const {
                 client:idle
                 showBanner={showBanner}
                 showHeader={showHeader}
+                originPathname={Astro.originPathname}
             >
                 <LogoSVG slot="logo" />
             </BannerAndHeader>
