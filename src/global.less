@@ -32,7 +32,7 @@
     --global-header-height: 60px;
     --global-header-z-index: 9999;
     --global-header-nav-max-width: var(--global-block-max-width);
-    --global-header-background-color: var(--theme-color-p-80);
+    --global-header-background-color: var(--theme-color-p-20);
     --global-header-backdrop-filter: blur(20px);
 
     --font-family-base:
@@ -46,6 +46,7 @@
     --body-safe-min-width: 375px;
     --title-letter-spacing: -0.04em;
     --backdrop-filter-glass: saturate(180%) blur(20px);
+    --base-transition-duration: 0.3s;
 
     // ========================================================================
     //
@@ -65,12 +66,14 @@
     --accent-color: var(--accent-color-green);
     --theme-color-youtube: #ff0000;
     --theme-color-bilibili: #00a1d6;
-    --theme-color-tiktok: #040404;
+    --theme-color-tiktok: #00faf0;
     --theme-color-kook: #87eb00;
 
     --theme-color: var(--dark-theme-color);
+    --theme-color-p-20: var(--dark-theme-color-p-20);
     --theme-color-p-80: var(--dark-theme-color-p-80);
     --theme-color-invert: var(--light-theme-color);
+    --theme-color-invert-p-20: var(--light-theme-color-p-20);
     --theme-color-invert-p-80: var(--light-theme-color-p-80);
 
     --text-color-primary: #f1f1f1;
@@ -84,8 +87,10 @@
 
     .theme-light({
         --theme-color: var(--light-theme-color);
+        --theme-color-p-20: var(--light-theme-color-p-20);
         --theme-color-p-80: var(--light-theme-color-p-80);
         --theme-color-invert: var(--dark-theme-color);
+        --theme-color-invert-p-20: var(--dark-theme-color-p-20);
         --theme-color-invert-p-80: var(--dark-theme-color-p-80);
 
         --text-color-primary: #0f0f0f;
@@ -127,7 +132,7 @@
 a,
 button[type="button"],
 button[type="submit"] {
-    transition: 0.3s;
+    transition: var(--base-transition-duration);
     transition-property: transform;
     &:active {
         transform: translateY(2px);
