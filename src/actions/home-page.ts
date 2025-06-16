@@ -1,7 +1,7 @@
 import type { SanityDocument } from "@sanity/client";
 import { defineAction, ActionError } from "astro:actions";
 import { routeNameSanityImageCdn } from "@/global";
-import { fetch } from "./_sanityClient";
+import { fetch } from "@/services/sanity";
 
 const fetchSorting = ` | order( release desc )`;
 const fetchProjections = `{

@@ -1,6 +1,4 @@
 ---
-import type { SanityDocument } from "@sanity/client";
-import { sanityClient } from "sanity:client";
 import { actions } from "astro:actions";
 
 // import log from "@/page-templates/index/_log.ts";
@@ -73,7 +71,7 @@ if (error) {
                         {posts.map((post) => (
                             <li class="hover:underline">
                                 <a href={`?v=${post._id}`} data-astro-prefetch="false">
-                                    <img src={post.cover} alt={post.title} />
+                                    <img src={post.cover} alt={post.title} loading="lazy" />
                                     <strong class="text-xl font-semibold">
                                         {post.title}
                                     </strong>
