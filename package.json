@@ -21,14 +21,18 @@
         "@microsoft/fetch-event-source": "^2.0.1",
         "@nanostores/react": "^1.0.0",
         "@react-oauth/google": "^0.12.2",
-        "astro": "^5.9.2",
-        "axios": "^1.9.0",
+        "@sanity/astro": "^3.2.6",
+        "@sanity/client": "^7.6.0",
+        "astro": "^5.9.3",
+        "astro-portabletext": "^0.11.1",
+        "axios": "^1.10.0",
         "cache-manager": "^7.0.0",
         "classnames": "^2.5.1",
         "colorthief": "^2.6.0",
         "dayjs": "^1.11.13",
         "debug": "^4.4.1",
         "history": "^5.3.0",
+        "http-proxy-middleware": "^3.0.5",
         "less": "^4.3.0",
         "marked": "^15.0.12",
         "md5": "^2.3.0",
@@ -40,6 +44,9 @@
         "react-dom": "^19.1.0",
         "react-dropzone": "^14.3.8",
         "react-inlinesvg": "^4.2.0",
+        "react-is": "^19.1.0",
+        "sanity": "^3.92.0",
+        "styled-components": "^6.1.19",
         "toastify-js": "^1.12.0"
     },
     "devDependencies": {
@@ -50,15 +57,19 @@
         "@types/node": "^22.15.29",
         "@types/numeral": "^2.0.5",
         "@types/qrcode": "^1.5.5",
-        "@types/react": "^19.1.7",
+        "@types/react": "^19.1.8",
         "@types/react-dom": "^19.1.6",
         "@types/toastify-js": "^1.12.4",
         "cross-env": "^7.0.3",
+        "dotenv": "^16.5.0",
         "file-url": "^4.0.0",
         "http-server": "^14.1.1",
         "npm-run-script": "^0.0.4",
         "rollup-plugin-visualizer": "^6.0.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.3"
+    },
+    "overrides": {
+        "@sanity/client": "^7.6.0"
     }
 }

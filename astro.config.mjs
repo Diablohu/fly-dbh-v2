@@ -1,12 +1,21 @@
 // @ts-check
+import fs from "node:fs";
+import path from "node:path";
+import "dotenv/config";
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import { visualizer } from "rollup-plugin-visualizer";
 
+import sanity from "@sanity/astro";
+
 // ============================================================================
 
-// TODO: 验证 .env 文件
+// 验证 `.env` 文件是否存在
+if (!fs.existsSync(path.resolve("./.env")))
+    throw new Error("请确认项目根目录下存在 `.env` 文件");
+
+// ============================================================================
 
 const { FLYDBH_BUILD_MODE } = process.env;
 const isDev = process.env.NODE_ENV === "development";
@@ -17,7 +26,15 @@ const isAnalyze = FLYDBH_BUILD_MODE === "analyze";
 
 // https://astro.build/config
 export default defineConfig({
-    integrations: [react()],
+    integrations: [
+        react(),
+        sanity({
+            projectId: process.env.SANITY_PROJECT_ID,
+            dataset: process.env.SANITY_DATASET,
+            // useCdn: false, // for static builds
+            useCdn: true,
+        }),
+    ],
     adapter: node({
         mode: "standalone",
     }),

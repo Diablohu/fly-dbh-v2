@@ -1,5 +1,7 @@
 ---
-// import { actions } from "astro:actions";
+import type { SanityDocument } from "@sanity/client";
+import { sanityClient } from "sanity:client";
+import { actions } from "astro:actions";
 
 // import log from "@/page-templates/index/_log.ts";
 
@@ -42,11 +44,51 @@ import Block from "@/components/block.astro";
 // log("locales %O", _);
 // log(sparringSampleList);
 // log({ error });
+
+// ============================================================================
+//
+// 获取首页视频内容
+//
+// ============================================================================
+
+const { data: collections = {}, error: error } = await Astro.callAction(
+    actions.homePageFetch,
+    undefined
+);
+if (error) {
+    Astro.props.error = error;
+    return Astro.rewrite("/500");
+}
 ---
 
 <Layout showHeader showBanner showFooter>
     <Block class="home-page">
         <h2>HOME PAGE</h2>
+        {
+            Object.entries(collections).map(([collection, posts]) => (
+                <Fragment>
+                    <hr />
+                    <h3>{collection}</h3>
+                    <ul>
+                        {posts.map((post) => (
+                            <li class="hover:underline">
+                                <a href={`?v=${post._id}`}>
+                                    <img src={post.cover} alt={post.title} />
+                                    <strong class="text-xl font-semibold">
+                                        {post.title}
+                                    </strong>
+                                    {/* <p>
+                                        {new Date(
+                                            post.release
+                                        ).toLocaleDateString()}
+                                    </p> */}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </Fragment>
+            ))
+        }
         <p>
             Laboris esse sunt sunt laborum nulla officia irure eiusmod aliqua.
             Consectetur aliqua id anim reprehenderit sit. Consectetur sint id in
