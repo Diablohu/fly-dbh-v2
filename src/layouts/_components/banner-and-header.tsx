@@ -136,9 +136,17 @@ const Header: FC<{
             // });
         } else {
             Header.bannerInView = false;
-            Header.observer = undefined;
         }
     }, [showBanner]);
+
+    useEffect(() => {
+        return () => {
+            if (Header.observer) {
+                Header.observer.disconnect();
+                Header.observer = undefined;
+            }
+        };
+    }, []);
 
     return (
         <>

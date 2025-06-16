@@ -72,7 +72,7 @@ if (error) {
                     <ul>
                         {posts.map((post) => (
                             <li class="hover:underline">
-                                <a href={`?v=${post._id}`}>
+                                <a href={`?v=${post._id}`} data-astro-prefetch="false">
                                     <img src={post.cover} alt={post.title} />
                                     <strong class="text-xl font-semibold">
                                         {post.title}
