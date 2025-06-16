@@ -61,123 +61,54 @@ if (error) {
 
 <Layout showHeader showBanner showFooter>
     <Block class="home-page">
-        <h2>HOME PAGE</h2>
         {
-            Object.entries(collections).map(([collection, posts]) => (
-                <Fragment>
-                    <hr />
-                    <h3>{collection}</h3>
-                    <ul>
-                        {posts.map((post) => (
-                            <li class="hover:underline">
-                                <a href={`?v=${post._id}`} data-astro-prefetch="false">
-                                    <img src={post.cover} alt={post.title} loading="lazy" />
-                                    <strong class="text-xl font-semibold">
-                                        {post.title}
-                                    </strong>
-                                    {/* <p>
+            [
+                ["latest", "最新模拟飞行视频"],
+                ["tutorialsAircraft", "操作教学", "aircraft"],
+                ["tutorialsTips", "游戏技巧", "tip"],
+                ["tutorialsAviation", "航空知识", "aviation"],
+                ["news", "模拟飞行新闻", "news"],
+                ["reviews", "评测", "benchmark"],
+                ["world", "飞行世界", "world"],
+            ].map(([collectionName, title, tagName]) => (
+                <dl class="collection" data-collection={collectionName}>
+                    <dt>
+                        <h3>
+                            <a href={`/videos${tagName ? `/${tagName}` : ""}`}>
+                                {title}
+                            </a>
+                        </h3>
+                        <a href={`/videos${tagName ? `/${tagName}` : ""}`}>
+                            更多
+                        </a>
+                    </dt>
+                    <dd>
+                        {collections[collectionName].map((post) => (
+                            <a
+                                href={`?v=${post._id}`}
+                                data-astro-prefetch="false"
+                                class="video-item"
+                            >
+                                <img
+                                    src={post.cover}
+                                    alt={post.title}
+                                    loading="lazy"
+                                    width="100"
+                                />
+                                <strong class="text-xl font-semibold">
+                                    {post.title}
+                                </strong>
+                                {/* <p>
                                         {new Date(
                                             post.release
                                         ).toLocaleDateString()}
                                     </p> */}
-                                </a>
-                            </li>
+                            </a>
                         ))}
-                    </ul>
-                </Fragment>
+                    </dd>
+                </dl>
             ))
         }
-        <p>
-            Laboris esse sunt sunt laborum nulla officia irure eiusmod aliqua.
-            Consectetur aliqua id anim reprehenderit sit. Consectetur sint id in
-            proident. Non Lorem sunt anim minim laborum in duis sunt qui
-            reprehenderit. Anim do velit ea irure eu labore proident fugiat et
-            est commodo voluptate sint.
-        </p>
-        <p>
-            Excepteur excepteur excepteur enim labore. Dolor excepteur amet
-            laborum ad. Dolor exercitation laboris incididunt voluptate. Nisi
-            reprehenderit enim occaecat consectetur. Aute id excepteur est
-            dolore.
-        </p>
-        <p>
-            Magna aliqua tempor quis amet eiusmod dolor Lorem. Deserunt quis
-            duis veniam eiusmod consequat in sunt ullamco. Sint excepteur culpa
-            laborum adipisicing.
-        </p>
-        <p>
-            Exercitation dolor nisi elit nulla duis minim. Quis consectetur
-            laboris culpa cillum id enim labore proident magna. Minim eiusmod
-            ullamco laborum culpa Lorem in aliqua duis consequat in ex anim
-            mollit non. Ad sint reprehenderit quis esse et est laboris
-            excepteur.
-        </p>
-        <p>
-            Laboris commodo esse eu occaecat incididunt incididunt laboris
-            eiusmod. Reprehenderit qui et aute quis incididunt elit irure
-            nostrud veniam quis. Velit officia tempor nostrud laborum sunt.
-        </p>
-        <p>
-            Cillum ipsum nisi cupidatat sint nostrud duis eu est. Cupidatat
-            dolor consequat do et est. Elit magna quis anim adipisicing aute
-            enim.
-        </p>
-        <p>
-            Fugiat ullamco ex nostrud esse minim fugiat aute pariatur. Enim
-            irure reprehenderit esse culpa deserunt ut eu Lorem commodo tempor
-            consectetur in do minim. Labore enim est dolore dolor occaecat
-            cupidatat nostrud culpa duis reprehenderit ipsum cillum. Minim
-            pariatur pariatur consectetur incididunt sit duis labore.
-        </p>
-        <p>
-            Reprehenderit Lorem commodo velit culpa nisi excepteur incididunt
-            incididunt voluptate labore nulla tempor. Excepteur magna culpa
-            fugiat deserunt cupidatat Lorem fugiat do consectetur. Elit officia
-            Lorem officia exercitation commodo amet excepteur ex consequat culpa
-            nisi quis.
-        </p>
-        <p>
-            Tempor magna fugiat exercitation commodo consequat cupidatat dolor
-            eu proident proident quis deserunt tempor. Aute ea aute Lorem et
-            laborum consectetur aliquip. Est ad aute qui excepteur culpa
-            proident laboris cupidatat exercitation consectetur veniam ad.
-        </p>
-        <p>
-            Laborum commodo Lorem incididunt qui amet aute ullamco minim
-            exercitation magna. Qui voluptate aute pariatur nisi aute in
-            occaecat ipsum magna labore ex. Proident id quis veniam nostrud
-            eiusmod duis. Quis do nostrud eu officia velit fugiat aute consequat
-            elit occaecat in elit in sunt. Nisi mollit sit est occaecat
-            excepteur duis mollit nulla tempor nisi fugiat velit in et. Fugiat
-            esse eu proident cupidatat magna sint qui esse. Incididunt ad
-            proident laboris duis id ea anim sit id non aliqua.
-        </p>
-        <p>
-            Non anim tempor dolor amet ipsum commodo eu tempor. Amet occaecat
-            officia velit commodo qui aliquip et fugiat et sunt nostrud ut
-            exercitation. Est exercitation exercitation ea laborum esse eiusmod
-            tempor ad. Ullamco magna dolore aliquip irure adipisicing dolore
-            adipisicing ut enim cillum laboris in. In ea dolor laboris occaecat
-            exercitation nostrud. Eiusmod aute nisi ad excepteur proident elit
-            sint consequat Lorem.
-        </p>
-        <p>
-            Labore ea est excepteur aute laboris amet consequat. Irure mollit id
-            anim laboris voluptate ex ullamco. Eu nisi officia velit duis
-            exercitation ex labore culpa ut. Laboris labore velit nulla duis.
-        </p>
-        <p>
-            Sint ipsum nulla ad laborum incididunt irure. Id aute ex pariatur
-            minim do mollit laboris aute. Lorem sit Lorem Lorem eu ea consequat
-            amet tempor velit officia id non culpa nulla. Qui enim reprehenderit
-            cillum dolore in amet.
-        </p>
-        <p>
-            Laborum duis incididunt irure aliquip officia cupidatat ex id. Qui
-            amet aliquip adipisicing qui sunt excepteur pariatur reprehenderit
-            eu ad labore exercitation. Officia nisi ea aute sunt commodo
-            consectetur adipisicing ad irure sunt officia officia ea.
-        </p>
     </Block>
 </Layout>
 

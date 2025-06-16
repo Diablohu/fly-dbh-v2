@@ -1,7 +1,7 @@
 import type { SanityDocument } from "@sanity/client";
 import { defineAction, ActionError } from "astro:actions";
-import { routeNameSanityImageCdn } from "@/global";
 import { fetch } from "@/services/sanity";
+import { transformImagePath } from "@/utils/sanity-helpers";
 
 const fetchSorting = ` | order( release desc )`;
 const fetchProjections = `{
@@ -32,22 +32,28 @@ const actions = {
             try {
                 return Object.entries(
                     (await fetch(`{
-'latest': *[_type == "video"] ${fetchSorting} ${fetchProjections} [0...5],
-'tutorialsAircraft': *[_type == "video" && "aircraft" in tags[]->name] ${fetchSorting} ${fetchProjections} [0...3],
-'tutorialsTips': *[_type == "video" && "tip" in tags[]->name] ${fetchSorting} ${fetchProjections} [0...3],
-'tutorialsAviation': *[_type == "video" && "aviation" in tags[]->name] ${fetchSorting} ${fetchProjections} [0...3],
-'news': *[_type == "video" && "news" in tags[]->name] ${fetchSorting} ${fetchProjections} [0...3],
-'reviews': *[_type == "video" && "benchmark" in tags[]->name] ${fetchSorting} ${fetchProjections} [0...3],
-'world': *[_type == "video" && "world" in tags[]->name] ${fetchSorting} ${fetchProjections} [0...3]
+${[
+    ["latest", "", 9],
+    ["tutorialsAircraft", "aircraft"],
+    ["tutorialsTips", "tip"],
+    ["tutorialsAviation", "aviation"],
+    ["news", "news"],
+    ["reviews", "benchmark"],
+    ["world", "world"],
+]
+    .map(
+        ([name, tagName, count = 3]) =>
+            `'${name}': *[_type == "video"${
+                tagName ? ` && "${tagName}" in tags[]->name` : ""
+            }] ${fetchSorting} ${fetchProjections} [0...${count}]`
+    )
+    .join(",")}
 }`)) as unknown as CollectionsType
                 ).reduce<CollectionsType>(
                     (collections, [collection, posts]) => {
                         collections[collection] = posts.map(
                             ({ cover, ...post }) => ({
-                                cover: `${routeNameSanityImageCdn}${cover.replace(
-                                    `images/${process.env.SANITY_PROJECT_ID}/${process.env.SANITY_DATASET}`,
-                                    ""
-                                )}`,
+                                cover: transformImagePath(cover),
                                 ...post,
                             })
                         );
