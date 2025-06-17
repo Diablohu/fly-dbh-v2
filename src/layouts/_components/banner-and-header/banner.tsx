@@ -108,7 +108,7 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
     }, [renderBanner]);
 
     useEffect(() => {
-        setStyles();
+        setTimeout(() => setStyles(), 50);
         window.addEventListener("resize", setStyles);
         window.addEventListener("scroll", setStyles);
         // VideoRef.current.play();
