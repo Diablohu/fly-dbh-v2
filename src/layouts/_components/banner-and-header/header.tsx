@@ -22,37 +22,37 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
             ])}
         >
             <section className={styles["wrapper"]}>
-                <a
-                    href="/"
-                    className={classNames([
-                        styles["aside"],
-                        styles["link-home"],
-                    ])}
+                <section
+                    className={classNames([styles["aside"], styles["logo"]])}
                 >
-                    {logo}
-                </a>
+                    <a href="/">{logo}</a>
+                </section>
                 <nav className={styles["nav"]}>
                     {[
                         ["/", "首页"],
-                        ["/videos", "模拟飞行视频"],
-                        ["/streams", "直播回放"],
-                        // ["/clips", "直播切片"],
-                        // ["/about", "关于 & 联系"],
-                    ].map(([route, name]) => (
-                        <a
-                            key={route}
-                            href={route}
-                            className={classNames([
-                                styles["link"],
-                                {
-                                    [styles["is-active"]]:
-                                        originPathname === route,
-                                },
-                            ])}
-                        >
-                            {name}
-                        </a>
-                    ))}
+                        import.meta.env.DEV
+                            ? ["/videos", "视频"]
+                            : ["/videos", "模拟飞行视频"],
+                        import.meta.env.DEV ? ["/streams", "直播"] : null,
+                        import.meta.env.DEV ? ["/activities", "活动"] : null,
+                        import.meta.env.DEV ? ["/about", "联系"] : null,
+                    ]
+                        .filter(Array.isArray)
+                        .map(([route, name]) => (
+                            <a
+                                key={route}
+                                href={route}
+                                className={classNames([
+                                    styles["link"],
+                                    {
+                                        [styles["is-active"]]:
+                                            originPathname === route,
+                                    },
+                                ])}
+                            >
+                                {name}
+                            </a>
+                        ))}
                 </nav>
                 <section
                     className={classNames([styles["aside"], styles["options"]])}

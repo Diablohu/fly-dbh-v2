@@ -38,22 +38,23 @@
         margin-top: 0.16667em;
         margin-bottom: 0.3333em;
         font-weight: normal;
-        color: var(--dark-text-color-primary);
+        color: var(--text-color-secondary);
         .tag {
+            --border-radius: 0.3333em;
             display: inline-block;
-            background: var(--accent-color-purple);
+            background: var(--tag-background-color);
             line-height: 1.6667em;
             padding: 0 0.5em;
             & + .tag {
                 margin-left: 1px;
             }
             &:first-child {
-                border-top-left-radius: 0.6667em;
-                border-bottom-left-radius: 0.6667em;
+                border-top-left-radius: var(--border-radius);
+                border-bottom-left-radius: var(--border-radius);
             }
             &:last-child {
-                border-top-right-radius: 0.6667em;
-                border-bottom-right-radius: 0.6667em;
+                border-top-right-radius: var(--border-radius);
+                border-bottom-right-radius: var(--border-radius);
             }
         }
     }

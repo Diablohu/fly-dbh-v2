@@ -1,19 +1,31 @@
 // @ts-check
 import fs from "node:fs";
 import path from "node:path";
-import "dotenv/config";
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import { visualizer } from "rollup-plugin-visualizer";
-
 import sanity from "@sanity/astro";
+
+import "dotenv/config";
 
 // ============================================================================
 
-// 验证 `.env` 文件是否存在
-if (!fs.existsSync(path.resolve("./.env")))
-    throw new Error("请确认项目根目录下存在 `.env` 文件");
+// 验证必要的环境变量
+for (const key of ["SANITY_PROJECT_ID", "SANITY_DATASET"]) {
+    // 如果该环境变量不存在，先确认以 `_FILE` 为后缀的变量是否存在
+    // Docker Swarm 以这种方式注入 Secret 密文
+    if (!process.env[`${key}`]) {
+        process.env[`${key}`] =
+            process.env[`${key.toLowerCase()}`] ||
+            (!!process.env[`${key}_FILE`] &&
+            fs.existsSync(process.env[`${key}_FILE`] || "")
+                ? fs.readFileSync(process.env[`${key}_FILE`] || "", "utf-8")
+                : "");
+    }
+    // 如果该环境变量仍不存在，抛出错误
+    if (!process.env[`${key}`]) throw new Error(`请确认存在环境变量 "${key}"`);
+}
 
 // ============================================================================
 

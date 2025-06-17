@@ -5,6 +5,7 @@ import { slogan } from "@/global";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
+import bannerCoverImage from "@/assets/banner-video/cover.jpg";
 
 import styles from "./index.module.less";
 
@@ -162,19 +163,26 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
                         ))}
                     </section>
                 </section>
-                <video
-                    // poster={require('@assets/banner/cover.jpg').default}
-                    crossOrigin="anonymous"
-                    preload="auto"
-                    playsInline
-                    autoPlay
-                    loop
-                    muted
-                    ref={VideoRef}
+                <section
+                    className={styles["video-container"]}
+                    style={{
+                        backgroundImage: `url(${bannerCoverImage.src})`,
+                    }}
                 >
-                    <source type="video/webm" src={bannerVidMedWebm} />
-                    <source type="video/mp4" src={bannerVidLowMP4} />
-                </video>
+                    <video
+                        // poster={require('@assets/banner/cover.jpg').default}
+                        crossOrigin="anonymous"
+                        preload="auto"
+                        playsInline
+                        autoPlay
+                        loop
+                        muted
+                        ref={VideoRef}
+                    >
+                        <source type="video/webm" src={bannerVidMedWebm} />
+                        <source type="video/mp4" src={bannerVidLowMP4} />
+                    </video>
+                </section>
                 <div
                     className={styles["intersection-check"]}
                     ref={BannerIntersectionRef}
