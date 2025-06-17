@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro";
 import { fetch } from "@/services/sanity";
+import { stringReplaceImagePath } from "@/utils/sanity-helpers";
 
-export const GET: APIRoute = async ({ params, request, callAction }) => {
+export const GET: APIRoute = async ({ params }) => {
     if (!params.keyword) {
         return new Response(null, {
             status: 404,
@@ -9,8 +10,9 @@ export const GET: APIRoute = async ({ params, request, callAction }) => {
         });
     }
     return new Response(
-        JSON.stringify(
-            await fetch(`{
+        stringReplaceImagePath(
+            JSON.stringify(
+                await fetch(`{
 'videos':
     *[_type == "video" && title match "*${params.keyword}*"]
     | order( release desc )
@@ -51,6 +53,7 @@ export const GET: APIRoute = async ({ params, request, callAction }) => {
     }
     [0...5],
 }`)
+            )
         )
     );
 };

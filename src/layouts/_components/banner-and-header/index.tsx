@@ -1,4 +1,4 @@
-import { type FC, type ReactNode } from "react";
+import { memo, type FC, type ReactNode } from "react";
 
 import iconBilibili from "@/assets/icon-bilibili.svg?raw";
 import iconYouTube from "@/assets/icon-youtube.svg?raw";
@@ -47,4 +47,4 @@ const BannerAndHeader: FC<Props> = ({
     );
 };
 
-export default BannerAndHeader;
+export default memo(BannerAndHeader);

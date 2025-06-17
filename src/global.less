@@ -25,6 +25,7 @@
     // ========================================================================
 
     --global-edge-safe-distance: 30px;
+    --global-bottom-safe-distance: env(safe-area-inset-bottom, 0px);
     --global-block-max-width: calc(
         1200px + var(--global-edge-safe-distance) * 2
     );
@@ -49,7 +50,7 @@
     --base-transition-duration: 0.3s;
 
     .screen-sm({
-        --global-edge-safe-distance: 15px;
+        --global-edge-safe-distance: 20px;
     });
 
     // ========================================================================
@@ -117,7 +118,7 @@
     //
     // ========================================================================
 
-    .font-size-clamp-with-line-height(unit((16 / 0.85), px), unit((1.5 * 16 / 0.85), px));
+    .font-size-clamp-with-line-height(unit((14 / 0.85), px), unit((1.5 * 14 / 0.85), px));
     font-family: var(--global-font-family);
     font-weight: var(--global-font-weight);
     color: var(--text-color-secondary);
@@ -141,14 +142,22 @@ a,
 button[type="button"],
 button[type="submit"] {
     transition: var(--base-transition-duration);
-    transition-property: transform;
     &:active {
         transform: translateY(2px);
     }
 }
 
+a {
+    display: inline-block;
+    color: var(--text-color-secondary);
+    &:hover {
+        color: var(--text-color-primary);
+    }
+}
+
 button[type="button"],
 button[type="submit"] {
+    transition-property: transform;
     cursor: pointer;
 }
 

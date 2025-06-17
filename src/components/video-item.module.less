@@ -1,0 +1,95 @@
+.video-item {
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    color: var(--text-color-primary);
+
+    & > .cover {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 0;
+        padding-bottom: percentage((9 / 16));
+        overflow: hidden;
+        border-radius: 10px;
+        margin-bottom: 0.5em;
+
+        & > img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--base-transition-duration) ease-in-out;
+        }
+    }
+
+    & > .tags,
+    & > strong,
+    & > .info {
+        display: block;
+        margin: 0.13333em 0.25em 0 0.25em;
+    }
+
+    & > .tags {
+        font-size: 0.85em;
+        // margin-left: -0.125em;
+        margin-top: 0.16667em;
+        margin-bottom: 0.3333em;
+        font-weight: normal;
+        color: var(--dark-text-color-primary);
+        .tag {
+            display: inline-block;
+            background: var(--accent-color-purple);
+            line-height: 1.6667em;
+            padding: 0 0.5em;
+            & + .tag {
+                margin-left: 1px;
+            }
+            &:first-child {
+                border-top-left-radius: 0.6667em;
+                border-bottom-left-radius: 0.6667em;
+            }
+            &:last-child {
+                border-top-right-radius: 0.6667em;
+                border-bottom-right-radius: 0.6667em;
+            }
+        }
+    }
+
+    & > strong {
+        line-height: 1.3333em;
+    }
+
+    & > .info {
+        font-weight: normal;
+        color: var(--text-color-secondary);
+        font-size: 0.85em;
+        line-height: 1.3333em;
+        transition: inherit;
+    }
+
+    // &::after {
+    //     content: "";
+    //     position: absolute;
+    //     z-index: -1;
+    //     top: percentage((9 / 16));
+    //     bottom: 0;
+    //     left: 0;
+    //     right: 0;
+    //     background: var(--tag-background-color);
+    //     border-radius: 10px;
+    // }
+
+    @media (pointer: fine) {
+        &:hover {
+            & > .cover > img {
+                transform: scale(1.06667);
+            }
+            & > .info {
+                color: var(--text-color-primary);
+            }
+        }
+    }
+}

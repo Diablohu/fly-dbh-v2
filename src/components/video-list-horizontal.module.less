@@ -1,0 +1,158 @@
+@import "@/utils/mixins.less";
+
+.video-list-horizontal {
+    --items-in-view: 5;
+    --item-gap: 1em;
+    --item-scroll-snap-align: start;
+
+    position: relative;
+    container-name: video-list-horizontal;
+    container-type: inline-size;
+
+    & > .scroll-container {
+        position: relative;
+        display: flex;
+        gap: 1em;
+        flex-flow: row nowrap;
+        padding-left: var(--global-edge-safe-distance);
+        padding-right: var(--global-edge-safe-distance);
+        margin-left: calc(var(--global-edge-safe-distance) * -1);
+        margin-right: calc(var(--global-edge-safe-distance) * -1);
+        overflow: hidden;
+        overflow-x: auto;
+        // scrollbar-width: thin;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+        scroll-padding: var(--global-edge-safe-distance);
+
+        .item {
+            scroll-snap-align: var(--item-scroll-snap-align);
+            flex: 1 0
+                calc(
+                    100% / var(--items-in-view) - var(--item-gap) -
+                        var(--global-edge-safe-distance) / var(--items-in-view)
+                );
+        }
+
+        .intersection-check {
+            flex: none;
+            position: relative;
+            width: 0;
+            height: 0;
+            margin-left: calc(var(--item-gap) * -1);
+            &.intersection-check-begin {
+                left: var(--global-edge-safe-distance);
+            }
+            &.intersection-check-end {
+                right: 0;
+            }
+        }
+    }
+
+    & > .arrow {
+        --size: 38px;
+
+        position: absolute;
+        z-index: 10;
+        top: 33.3333%;
+        display: block;
+        appearance: none;
+        border: 0;
+        background: var(--theme-color-p-20);
+        width: var(--size);
+        height: var(--size);
+        margin-top: calc(var(--size) * -0.5);
+        border-radius: 100%;
+        border: 1px solid var(--border-color);
+        transition-property: transform, opacity, background-color;
+        opacity: 0;
+        pointer-events: none;
+        backdrop-filter: var(--backdrop-filter-glass);
+        color: var(--text-color-secondary);
+
+        & > svg {
+            --size: 18px;
+            width: var(--size);
+            height: var(--size);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: calc(var(--size) * -0.5);
+            margin-left: calc(var(--size) * -0.5);
+        }
+
+        &.arrow-left {
+            left: calc(2px - var(--global-edge-safe-distance));
+            // & > svg {
+            //     margin-left: calc(var(--size) * -0.5 - 1px);
+            // }
+        }
+        &.arrow-right {
+            right: calc(2px - var(--global-edge-safe-distance));
+            // & > svg {
+            //     margin-left: calc(var(--size) * -0.5 + 1px);
+            // }
+        }
+        &.is-active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        @media (pointer: fine) {
+            &:hover {
+                background-color: var(--theme-color-p-50);
+            }
+        }
+    }
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        z-index: 5;
+        top: 0;
+        bottom: 0;
+        width: var(--global-edge-safe-distance);
+        pointer-events: none;
+    }
+    &::before {
+        left: calc(var(--global-edge-safe-distance) * -1);
+        background: linear-gradient(
+            to right,
+            var(--theme-color) 33.3333%,
+            transparent
+        );
+    }
+    &::after {
+        right: calc(var(--global-edge-safe-distance) * -1);
+        background: linear-gradient(
+            to left,
+            var(--theme-color) 33.3333%,
+            transparent
+        );
+    }
+}
+
+@container video-list-horizontal (width < @screen-size-lg) {
+    .scroll-container {
+        --items-in-view: 4;
+    }
+}
+
+@container video-list-horizontal (width < @screen-size-md) {
+    .scroll-container {
+        --items-in-view: 3;
+    }
+}
+
+@container video-list-horizontal (width < @screen-size-sm) {
+    .scroll-container {
+        --items-in-view: 2;
+    }
+}
+
+@container video-list-horizontal (width < @screen-size-xs) {
+    .scroll-container {
+        --items-in-view: 1;
+        --item-scroll-snap-align: center;
+    }
+}

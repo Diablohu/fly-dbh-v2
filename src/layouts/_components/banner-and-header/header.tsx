@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { memo, type FC } from "react";
 import classNames from "classnames";
 
 import styles from "./index.module.less";
@@ -87,4 +87,4 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
     );
 };
 
-export default Header;
+export default memo(Header);
