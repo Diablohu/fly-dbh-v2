@@ -201,7 +201,7 @@ const {
 
             <main><slot /></main>
 
-            {showFooter && <Block tag="footer">FOOTER</Block>}
+            {showFooter && <Block tag="footer" class="footer">FOOTER</Block>}
 
             <!-- 
             TODO: /?v=[vid]
@@ -214,6 +214,9 @@ const {
 
 <style lang="less">
     @import "./Layout.module.less";
+    .footer {
+        padding-bottom: var(--global-bottom-safe-distance);
+    }
 </style>
 
 <script is:inline>

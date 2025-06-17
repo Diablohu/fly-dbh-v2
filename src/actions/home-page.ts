@@ -33,16 +33,14 @@ const actions = {
                 return Object.entries(
                     (await fetch(`{
 ${[
-    ["latest", "", 9],
-    ["tutorialsAircraft", "aircraft"],
-    ["tutorialsTips", "tip"],
-    ["tutorialsAviation", "aviation"],
+    ["latest"],
+    ["tutorials", "training"],
     ["news", "news"],
     ["reviews", "benchmark"],
     ["world", "world"],
 ]
     .map(
-        ([name, tagName, count = 3]) =>
+        ([name, tagName, count = 10]) =>
             `'${name}': *[_type == "video"${
                 tagName ? ` && "${tagName}" in tags[]->name` : ""
             }] ${fetchSorting} ${fetchProjections} [0...${count}]`

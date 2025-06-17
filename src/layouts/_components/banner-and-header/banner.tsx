@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useEffect, type FC } from "react";
+import { useCallback, useState, useRef, useEffect, memo, type FC } from "react";
 import classNames from "classnames";
 
 import { slogan } from "@/global";
@@ -190,4 +190,4 @@ Banner.bannerAnimateRequestTick = () => {
     Banner.bannerAnimateTicking = true;
 };
 
-export default Banner;
+export default memo(Banner);

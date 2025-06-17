@@ -5,6 +5,8 @@ import { actions } from "astro:actions";
 
 import Layout from "@/layouts/Layout.astro";
 import Block from "@/components/block.astro";
+import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
+import { undefined } from "astro:schema";
 
 // ============================================================================
 //
@@ -49,7 +51,7 @@ import Block from "@/components/block.astro";
 //
 // ============================================================================
 
-const { data: collections = {}, error: error } = await Astro.callAction(
+const { data: collections, error: error } = await Astro.callAction(
     actions.homePageFetch,
     undefined
 );
@@ -63,13 +65,11 @@ if (error) {
     <Block class="home-page">
         {
             [
-                ["latest", "最新模拟飞行视频"],
-                ["tutorialsAircraft", "操作教学", "aircraft"],
-                ["tutorialsTips", "游戏技巧", "tip"],
-                ["tutorialsAviation", "航空知识", "aviation"],
-                ["news", "模拟飞行新闻", "news"],
-                ["reviews", "评测", "benchmark"],
-                ["world", "飞行世界", "world"],
+                ["latest", "最新视频"],
+                ["tutorials", "模拟飞行教学视频", "training"],
+                ["news", "模拟飞行资讯视频", "news"],
+                ["reviews", "模拟飞行评测视频", "benchmark"],
+                ["world", "航空专题视频", "world"],
             ].map(([collectionName, title, tagName]) => (
                 <dl class="collection" data-collection={collectionName}>
                     <dt>
@@ -83,28 +83,31 @@ if (error) {
                         </a>
                     </dt>
                     <dd>
-                        {collections[collectionName].map((post) => (
-                            <a
-                                href={`?v=${post._id}`}
-                                data-astro-prefetch="false"
-                                class="video-item"
-                            >
-                                <img
-                                    src={post.cover}
-                                    alt={post.title}
-                                    loading="lazy"
-                                    width="100"
-                                />
-                                <strong class="text-xl font-semibold">
-                                    {post.title}
-                                </strong>
-                                {/* <p>
-                                        {new Date(
-                                            post.release
-                                        ).toLocaleDateString()}
-                                    </p> */}
-                            </a>
-                        ))}
+                        <VideoListHorizontal
+                            client:idle
+                            videos={collections[collectionName].map((post) => ({
+                                cmsId: post._id,
+                                title: post.title,
+                                cover: post.cover,
+                                tags:
+                                    collectionName === "latest"
+                                        ? [post.tags[0].label]
+                                        : collectionName === "tutorials"
+                                          ? [
+                                                post.tags.filter((tag) =>
+                                                    [
+                                                        "aircraft",
+                                                        "tip",
+                                                        "aviation",
+                                                    ].includes(tag.value)
+                                                )[0]?.label,
+                                            ].filter(Boolean)
+                                          : [],
+                                infos: [
+                                    new Date(post.release).toLocaleDateString(),
+                                ],
+                            }))}
+                        />
                     </dd>
                 </dl>
             ))
@@ -114,9 +117,104 @@ if (error) {
 
 <style lang="less">
     @import "@/utils/mixins.less";
+
     .home-page {
         // .font-size-clamp-with-line-height(40px, 60px);
         padding-top: 1em;
         padding-bottom: 2em;
+    }
+
+    .collection {
+        display: block;
+        position: relative;
+        margin-bottom: 5em;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -2.5em;
+            height: 1px;
+            left: 0;
+            right: 0;
+            background: var(--border-color);
+        }
+
+        a {
+            display: inline-block;
+            position: relative;
+            color: var(--text-color-primary);
+            text-decoration: none;
+            transition-property: color, transform, opacity;
+            // &:hover {
+            //     color: var(--text-color-primary);
+            // }
+            &:active {
+                transform: translateY(2px);
+            }
+        }
+
+        & > dt,
+        & > dd {
+            position: relative;
+            padding: 0;
+        }
+        & > dt {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin: 0 0 1em 0;
+            & > h3 {
+                display: block;
+                flex: 1;
+                margin: 0;
+                font-size: 1.25em;
+            }
+            & > a {
+                white-space: nowrap;
+                color: var(--text-color-secondary);
+                &:hover {
+                    color: var(--text-color-primary);
+                }
+            }
+            a {
+                --arrow-line-width: 2px;
+                --arrow-translate-x: -10px;
+                --arrow-opacity: 0;
+                &::before,
+                &::after {
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    top: 50%;
+                    right: -0.4em;
+                    border: var(--arrow-line-width) solid currentColor;
+                    width: 0.5em;
+                    height: 0.5em;
+                    margin-top: -0.125em;
+                    border-left-width: 0;
+                    border-bottom-width: 0;
+                    opacity: var(--arrow-opacity);
+                    transform-origin: 100% 100%;
+                    transform: translateX(var(--arrow-translate-x))
+                        rotate(45deg);
+                    transition: inherit;
+                    transition-property: transform, opacity;
+                }
+                &::before {
+                }
+                &::after {
+                    --arrow-line-width: 1px;
+                    border-color: var(--text-color-secondary);
+                    right: calc(-0.4em - 5px);
+                }
+                &:hover {
+                    --arrow-translate-x: 0;
+                    --arrow-opacity: 1;
+                }
+            }
+        }
+        & > dd {
+            margin: 0;
+        }
     }
 </style>

@@ -1,3 +1,8 @@
+@screen-size-xs: 440px;
+@screen-size-sm: 576px;
+@screen-size-md: 780px;
+@screen-size-lg: 1030px;
+
 .theme-dark(@rules) {
     @media (prefers-color-scheme: dark) {
         & {
@@ -48,7 +53,7 @@
 }
 
 .screen-sm(@rules) {
-    @media screen and (max-width: 576px) {
+    @media screen and (max-width: @screen-size-sm) {
         & {
             @rules();
         }
