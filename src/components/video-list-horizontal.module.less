@@ -44,7 +44,7 @@
                 left: var(--global-edge-safe-distance);
             }
             &.intersection-check-end {
-                right: 0;
+                right: var(--global-edge-safe-distance);
             }
         }
     }
@@ -64,7 +64,7 @@
         margin-top: calc(var(--size) * -0.5);
         border-radius: 100%;
         border: 1px solid var(--border-color);
-        transition-property: transform, opacity, background-color;
+        transition-property: transform, opacity, background-color, color;
         opacity: 0;
         pointer-events: none;
         backdrop-filter: var(--backdrop-filter-glass);
@@ -99,6 +99,7 @@
         }
         @media (pointer: fine) {
             &:hover {
+                color: var(--text-color-primary);
                 background-color: var(--theme-color-p-50);
             }
         }

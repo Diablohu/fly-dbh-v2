@@ -5,6 +5,9 @@ const target = `https://cdn.sanity.io/images/${process.env.SANITY_PROJECT_ID}/${
 export const ALL: APIRoute = async ({ request, params, url }) => {
     const fullUrl = `${target}/${params.imagePath}${url.search}`;
     // console.log({ fullUrl });
-    return await fetch(fullUrl, request);
-    // return new Response(response.body);
+    try {
+        return await fetch(fullUrl, request);
+    } catch (e) {
+        return new Response("");
+    }
 };
