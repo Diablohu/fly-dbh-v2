@@ -28,13 +28,13 @@ async function main() {
             {
                 name: "正式",
                 short: "\n🚀 线上发布：正式",
-                value: "publish:overseas",
+                value: "publish:release",
                 description: "触发线上发布流程\n",
             },
             {
                 name: "预览",
                 short: "\n🚀 线上发布：预览",
-                value: "publish:cn",
+                value: "publish:preview",
                 description: "触发线上发布流程\n",
             },
             new Separator(" "),
