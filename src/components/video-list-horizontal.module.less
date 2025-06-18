@@ -133,19 +133,19 @@
     }
 }
 
-@container video-list-horizontal (width < @screen-size-lg) {
+@container video-list-horizontal (width < @screen-size-lg-plus-edge-safe-distance) {
     .scroll-container {
         --items-in-view: 4;
     }
 }
 
-@container video-list-horizontal (width < @screen-size-md) {
+@container video-list-horizontal (width < @screen-size-md-plus-edge-safe-distance) {
     .scroll-container {
         --items-in-view: 3;
     }
 }
 
-@container video-list-horizontal (width < @screen-size-sm) {
+@container video-list-horizontal (width < @screen-size-sm-plus-edge-safe-distance) {
     .scroll-container {
         --items-in-view: 2;
     }

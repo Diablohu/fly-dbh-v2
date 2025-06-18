@@ -55,6 +55,7 @@ const { data: collections, error: error } = await Astro.callAction(
     undefined
 );
 if (error) {
+    Astro.response.status = 500;
     Astro.props.error = error;
     return Astro.rewrite("/500");
 }
@@ -86,6 +87,7 @@ if (error) {
                             client:idle
                             videos={collections[collectionName].map((post) => ({
                                 cmsId: post._id,
+                                slug: post.slug,
                                 title: post.title,
                                 cover: post.cover,
                                 tags:
@@ -102,9 +104,7 @@ if (error) {
                                                 )[0]?.label,
                                             ].filter(Boolean)
                                           : [],
-                                infos: [
-                                    new Date(post.release).toLocaleDateString(),
-                                ],
+                                infos: [new Date(post.release)],
                             }))}
                         />
                     </dd>

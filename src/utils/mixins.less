@@ -1,7 +1,22 @@
+@global-edge-safe-distance: 30px;
+@global-edge-safe-distance-sm: 20px;
+
 @screen-size-xs: 440px;
+@screen-size-xs-plus-edge-safe-distance: (
+    @screen-size-xs + @global-edge-safe-distance-sm * 2
+);
 @screen-size-sm: 576px;
+@screen-size-sm-plus-edge-safe-distance: (
+    @screen-size-sm + @global-edge-safe-distance-sm * 2
+);
 @screen-size-md: 780px;
+@screen-size-md-plus-edge-safe-distance: (
+    @screen-size-md + @global-edge-safe-distance * 2
+);
 @screen-size-lg: 1030px;
+@screen-size-lg-plus-edge-safe-distance: (
+    @screen-size-lg + @global-edge-safe-distance * 2
+);
 @screen-size-xl: 1300px;
 
 .theme-dark(@rules) {

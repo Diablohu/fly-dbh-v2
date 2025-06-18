@@ -1,0 +1,129 @@
+---
+import { actions } from "astro:actions";
+
+// import log from "@/page-templates/index/_log.ts";
+
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+import Player from "./_components/player";
+
+import getDateString from "@/utils/get-date-string";
+
+// ============================================================================
+
+if (!Astro.params.slug) return Astro.redirect("/videos");
+
+const { data: video, error: error } = await Astro.callAction(
+    actions.watchPageFetch,
+    Astro.params.slug
+);
+if (error) {
+    Astro.response.status = 500;
+    Astro.props.error = error;
+    return Astro.rewrite("/500");
+}
+
+// console.log(video);
+---
+
+<Layout showHeader showFooter title={video.title}>
+    <section class="watch">
+        <Player links={video.links} title={video.title} client:load />
+    </section>
+    <Block class="infos">
+        <p>
+            {
+                video.tags?.map(({ _id, slug, label }) => (
+                    <span>
+                        [{slug || _id}] {label}
+                    </span>
+                ))
+            }
+        </p>
+        <h1>{video.title}</h1>
+        <p>{getDateString(new Date(video.release))}</p>
+
+        <hr />
+
+        <section>{video.description}</section>
+        <section>
+            <h4>相关机型系列</h4>
+            <p>
+                {
+                    video.aircraft_families?.map(
+                        ({ _id, slug, maker, name }) => (
+                            <span>
+                                [{slug || _id}] {maker} {name}
+                            </span>
+                        )
+                    )
+                }
+            </p>
+        </section>
+        <section>
+            <h4>相关机场</h4>
+            <p>
+                {
+                    video.aerodromes?.map(({ _id, slug, icao, iata, name }) => (
+                        <span>
+                            [{slug || _id}] {icao} {iata} {name}
+                        </span>
+                    ))
+                }
+            </p>
+        </section>
+        <section>
+            <h4>相关开发商</h4>
+            <p>
+                {
+                    video.developers?.map(({ _id, slug, name }) => (
+                        <span>
+                            [{slug || _id}] {name}
+                        </span>
+                    ))
+                }
+            </p>
+        </section>
+        <section>
+            <h4>相关平台</h4>
+            <p>
+                {
+                    video.games?.map(({ _id, slug, name }) => (
+                        <span>
+                            [{slug || _id}] {name}
+                        </span>
+                    ))
+                }
+            </p>
+        </section>
+        <section>
+            <h4>相关平台更新</h4>
+            <p>
+                {
+                    video.msfs_updates?.map(
+                        ({ _id, slug, game, series, number, release }) => (
+                            <span>
+                                [{slug || _id}] {game} {series} {number}{" "}
+                                {release}
+                            </span>
+                        )
+                    )
+                }
+            </p>
+        </section>
+
+        <hr />
+
+        <section>参与讨论 @ ???</section>
+
+        <aside>设置：视频源</aside>
+    </Block>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .infos {
+        user-select: auto;
+    }
+</style>

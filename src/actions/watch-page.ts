@@ -1,0 +1,131 @@
+import { z } from "astro:schema";
+import { defineAction, ActionError } from "astro:actions";
+import { fetch } from "@/services/sanity";
+import { transformImagePath } from "@/utils/sanity-helpers";
+
+const fetchSorting = ` | order( release desc )`;
+const fetchProjections = `{
+    _id,
+    'slug': slug.current,
+    title,
+    'tags': tags[]->{
+        _id,
+        'slug': slug.current,
+        "value": name,
+        "label": title
+    },
+    release,
+    "cover": cover.asset->path + '?auto=format&q=65',
+    description,
+    links,
+    'aircraft_families': aircraft_families[]->{
+        _id,
+        'slug': slug.current,
+        name,
+        'maker': maker->name_zh_cn
+    },
+    'aerodromes': aerodromes[]->{
+        _id,
+        'slug': slug.current,
+        name,
+        icao,
+        iata
+    },
+    'developers': developers[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },
+    'games': games[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },
+    'msfs_updates': msfs_updates[]->{
+        _id,
+        'slug': slug.current,
+        game,
+        series,
+        number,
+        release
+    }
+}`;
+// links
+
+const actions = {
+    watchPageFetch: defineAction({
+        input: z.string(),
+        handler: async (cmsIdOrSlug) => {
+            try {
+                const res = (
+                    await fetch<{
+                        _id: string;
+                        title: string;
+                        tags: {
+                            _id: string;
+                            slug?: string;
+                            value: string;
+                            label: string;
+                        }[];
+                        release: string;
+                        cover: string;
+                        description: string;
+                        links: {
+                            bilibili: string;
+                            youtube: string;
+                            douyin: string;
+                        };
+                        aircraft_families: {
+                            _id: string;
+                            slug?: string;
+                            maker: string;
+                            name: string;
+                        }[];
+                        aerodromes: {
+                            _id: string;
+                            slug?: string;
+                            icao: string;
+                            iata: string;
+                            name: string;
+                        }[];
+                        developers: {
+                            _id: string;
+                            slug?: string;
+                            name: string;
+                        }[];
+                        games: {
+                            _id: string;
+                            slug?: string;
+                            name: string;
+                        }[];
+                        msfs_updates: {
+                            _id: string;
+                            slug?: string;
+                            game: string;
+                            series: string;
+                            number: number;
+                            release: string;
+                        }[];
+                    }>(
+                        `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`
+                    )
+                )[0];
+
+                if (!res) throw new Error("Video not found");
+
+                res.cover = transformImagePath(res.cover);
+
+                return res;
+            } catch (err) {
+                console.trace(err);
+                throw new ActionError({
+                    message:
+                        err instanceof Error ? err.message : (err as string),
+                    code: "INTERNAL_SERVER_ERROR",
+                });
+            }
+        },
+    }),
+};
+
+export default actions;

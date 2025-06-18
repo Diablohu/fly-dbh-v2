@@ -3,11 +3,12 @@ import { ClientRouter } from "astro:transitions";
 
 import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
+import LogoSVG from "@/assets/logo.svg";
 import Block from "@/components/block.astro";
 import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
 import Announcements from "./_components/announcements.astro";
-import LogoSVG from "@/assets/logo.svg";
+import PrepareHistory from "./_components/prepare-history";
 
 import { title as siteTitle, slogan } from "@/global";
 
@@ -271,6 +272,8 @@ const {
                 originPathname={Astro.originPathname}
             />
 
+            <PrepareHistory client:only />
+
             <!-- 
 
             TODO: /?v=[vid]
@@ -287,7 +290,16 @@ const {
 
 <script is:inline>
     document.documentElement.setAttribute("javascript-enabled", "");
+
     if (globalThis.window) {
+        // 准备 browserHistory
+        // if (!window._browserHistory) {
+        //     import("history").then(({ default: history }) => {
+        //         window._browserHistory = history;
+        //         console.log(window._browserHistory);
+        //     });
+        // }
+
         // 站外链接兜底为新窗口打开
         document.body.addEventListener("click", (evt) => {
             if (
