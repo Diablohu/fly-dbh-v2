@@ -28,7 +28,7 @@
     --global-glossy-modal-z-index: 100;
     --global-message-z-index: 1000;
 
-    --global-edge-safe-distance: 30px;
+    --global-edge-safe-distance: @global-edge-safe-distance;
     --global-bottom-safe-distance: env(safe-area-inset-bottom, 0px);
     --global-block-max-width: calc(
         1200px + var(--global-edge-safe-distance) * 2
@@ -55,7 +55,7 @@
     --base-transition-duration: 0.3s;
 
     .screen-sm({
-        --global-edge-safe-distance: 20px;
+        --global-edge-safe-distance: @global-edge-safe-distance-sm;
     });
 
     // ========================================================================

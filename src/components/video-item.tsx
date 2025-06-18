@@ -1,5 +1,14 @@
-import { memo, type FC, type AnchorHTMLAttributes } from "react";
+import {
+    memo,
+    // useCallback,
+    // useMemo,
+    type FC,
+    type AnchorHTMLAttributes,
+    // type MouseEventHandler,
+} from "react";
 import classNames from "classnames";
+
+import getDateString from "@/utils/get-date-string";
 
 import styles from "./video-item.module.less";
 
@@ -7,26 +16,42 @@ import styles from "./video-item.module.less";
 
 export type Props = {
     cmsId: string;
+    slug?: string;
     title: string;
     cover: string;
     tags?: string[];
-    infos?: string[];
+    infos?: (string | Date)[];
 };
 
 // ============================================================================
 
 const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
     cmsId,
+    slug,
     title,
     cover,
     tags,
     infos,
     className,
 }) => {
+    // const searchString = useMemo(() => `?v=${cmsId}`, [cmsId]);
+    // const onClick = useCallback<MouseEventHandler<HTMLAnchorElement>>(
+    //     (evt) => {
+    //         evt.preventDefault();
+
+    //         window._browserHistory?.push({
+    //             search: searchString,
+    //         });
+    //     },
+    //     [searchString]
+    // );
+
     return (
         <a
             className={classNames([styles["video-item"], className])}
-            href={`?v=${cmsId}`}
+            href={`/watch/${slug || cmsId}`}
+            // href={searchString}
+            // onClick={onClick}
             data-astro-prefetch="false"
         >
             <span className={styles["cover"]}>
@@ -49,7 +74,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
                 infos.length > 0 &&
                 infos.map((info, index) => (
                     <span className={styles["info"]} key={index}>
-                        {info}
+                        {info instanceof Date ? getDateString(info) : info}
                     </span>
                 ))}
         </a>

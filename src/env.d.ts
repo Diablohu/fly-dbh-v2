@@ -1,5 +1,7 @@
 /// <reference types="astro/client" />
 
+import { type BrowserHistory, type HashHistory } from "history";
+
 declare namespace App {
     // Add locale strings to Astro Context
     interface Locals {
@@ -8,8 +10,11 @@ declare namespace App {
 }
 
 // Add properties to browser's window object
-interface Window {
-    //
+declare global {
+    interface Window {
+        _browserHistory?: BrowserHistory;
+        _hashHistory?: HashHistory;
+    }
 }
 
 declare namespace astroHTML.JSX {

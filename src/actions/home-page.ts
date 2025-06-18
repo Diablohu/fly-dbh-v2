@@ -6,6 +6,7 @@ import { transformImagePath } from "@/utils/sanity-helpers";
 const fetchSorting = ` | order( release desc )`;
 const fetchProjections = `{
     _id,
+    'slug': slug.current,
     title,
     'tags': tags[]->{
         "value": name,
@@ -19,6 +20,7 @@ const fetchProjections = `{
 type CollectionsType = {
     [collection: string]: SanityDocument<{
         _id: string;
+        slug?: string;
         title: string;
         tags: { value: string; label: string }[];
         release: string;
@@ -49,6 +51,7 @@ ${[
 }`)) as unknown as CollectionsType
                 ).reduce<CollectionsType>(
                     (collections, [collection, posts]) => {
+                        // console.log(posts[0]);
                         collections[collection] = posts.map(
                             ({ cover, ...post }) => ({
                                 cover: transformImagePath(cover),
