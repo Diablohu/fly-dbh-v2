@@ -30,6 +30,7 @@
         "colorthief": "^2.6.0",
         "dayjs": "^1.11.13",
         "debug": "^4.4.1",
+        "dotenv": "^16.5.0",
         "history": "^5.3.0",
         "http-proxy-middleware": "^3.0.5",
         "less": "^4.3.0",
@@ -60,12 +61,8 @@
         "@types/react-dom": "^19.1.6",
         "@types/toastify-js": "^1.12.4",
         "cross-env": "^7.0.3",
-        "dotenv": "^16.5.0",
-        "file-url": "^4.0.0",
-        "http-server": "^14.1.1",
         "npm-run-script": "^0.0.4",
         "rollup-plugin-visualizer": "^6.0.3",
-        "ts-node": "^10.9.2",
         "typescript": "^5.8.3"
     }
 }

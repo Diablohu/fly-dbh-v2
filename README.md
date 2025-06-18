@@ -35,8 +35,6 @@ SANITY_DATASET=[Sanity 数据集名称]
 
 - 代码库根目录下的各 `Dockerfile` 文件为对应的 _Docker_ 镜像生成文件，供线上生产环境使用。
 - 如果要更改生产环境发布流程，只需修改 `Dockerfile`。
-- 设置 _Docker_ 时，需要添加上述的环境变量：
-    - 在 _Docker_ 镜像构建时，会有 `astro build` 流程，此时需要用到上述环境变量。
 
 </details>
 
