@@ -21,7 +21,6 @@
         "@microsoft/fetch-event-source": "^2.0.1",
         "@nanostores/react": "^1.0.0",
         "@react-oauth/google": "^0.12.2",
-        "@sanity/astro": "^3.2.6",
         "@sanity/client": "^7.6.0",
         "astro": "^5.9.3",
         "astro-portabletext": "^0.11.1",
@@ -68,8 +67,5 @@
         "rollup-plugin-visualizer": "^6.0.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.3"
-    },
-    "overrides": {
-        "@sanity/client": "^7.6.0"
     }
 }
