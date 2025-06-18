@@ -8,6 +8,8 @@ export const ALL: APIRoute = async ({ request, params, url }) => {
     try {
         return await fetch(fullUrl, request);
     } catch (e) {
+        console.log(e);
+        console.trace(e);
         return new Response("");
     }
 };

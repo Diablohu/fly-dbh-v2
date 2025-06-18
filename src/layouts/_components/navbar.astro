@@ -50,7 +50,7 @@ type Props = {
         padding: 0 calc(var(--global-navbar-height) * 0.25);
         bottom: calc(
             var(--global-bottom-safe-distance) +
-                var(--global-edge-safe-distance)
+                var(--global-navbar-bottom-edge)
         );
         left: calc(var(--global-edge-safe-distance) * 1.5);
         right: calc(var(--global-edge-safe-distance) * 1.5);
@@ -60,7 +60,7 @@ type Props = {
         border-radius: var(--global-navbar-height);
         background-color: var(--global-header-background-color);
         backdrop-filter: var(--global-header-backdrop-filter);
-        .font-size-clamp-with-line-height(unit((14 / 0.85), px), unit((1 * 14 / 0.85), px));
+        .font-size-clamp-with-line-height(unit((12 / 0.85), px), unit((1 * 12 / 0.85), px));
 
         .screen-sm({
             display: flex;
@@ -70,11 +70,12 @@ type Props = {
             display: block;
             position: relative;
             text-decoration: none;
+            flex: 1;
             .icon {
                 display: block;
                 width: var(--icon-size);
                 height: var(--icon-size);
-                margin: 0 auto 0.25em auto;
+                margin: 0 auto 0.4em auto;
                 color: inherit;
                 transition: inherit;
                 transition-property: color, background-color;
