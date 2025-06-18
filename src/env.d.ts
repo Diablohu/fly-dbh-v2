@@ -1,5 +1,4 @@
 /// <reference types="astro/client" />
-/// <reference types="@sanity/astro/module" />
 
 declare namespace App {
     // Add locale strings to Astro Context

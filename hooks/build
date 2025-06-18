@@ -1,3 +1,0 @@
-#!/bin/bash
-
-docker build -t $IMAGE_NAME --build-arg SANITY_PROJECT_ID=$SANITY_PROJECT_ID --build-arg SANITY_DATASET=$SANITY_DATASET .

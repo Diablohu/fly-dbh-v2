@@ -5,7 +5,6 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import { visualizer } from "rollup-plugin-visualizer";
-import sanity from "@sanity/astro";
 
 import "dotenv/config";
 
@@ -38,15 +37,7 @@ const isAnalyze = FLYDBH_BUILD_MODE === "analyze";
 
 // https://astro.build/config
 export default defineConfig({
-    integrations: [
-        react(),
-        sanity({
-            projectId: process.env.SANITY_PROJECT_ID,
-            dataset: process.env.SANITY_DATASET,
-            // useCdn: false, // for static builds
-            useCdn: true,
-        }),
-    ],
+    integrations: [react()],
     adapter: node({
         mode: "standalone",
     }),
