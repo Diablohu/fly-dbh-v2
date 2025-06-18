@@ -27,7 +27,7 @@ if (error) {
 ---
 
 <Layout showHeader showFooter title={video.title}>
-    <section class="watch">
+    <section class="player-container">
         <Player links={video.links} title={video.title} client:load />
     </section>
     <Block class="infos">
@@ -122,6 +122,10 @@ if (error) {
 
 <style lang="less">
     @import "@/utils/mixins.less";
+
+    .player-container{
+        // 宽高比小于 0.75(?) 固定播放器
+    }
 
     .infos {
         user-select: auto;
