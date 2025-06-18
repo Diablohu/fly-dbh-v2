@@ -6,6 +6,7 @@ import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 import Block from "@/components/block.astro";
 import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
+import Announcements from "./_components/announcements.astro";
 import LogoSVG from "@/assets/logo.svg";
 
 import { title as siteTitle, slogan } from "@/global";
@@ -200,6 +201,8 @@ const {
                 <LogoSVG slot="logo" />
             </BannerAndHeader>
 
+            <Announcements showHeader={showHeader} />
+
             <main><slot /></main>
 
             {
@@ -230,8 +233,7 @@ const {
                                 <dl>
                                     <dt>Stage 2</dt>
                                     <dd>
-                                        images.fly-dbh.com proxy to sanity
-                                        images cdn and store locally
+                                        /sanity-images persist cache
                                         <br />
                                         ?s=
                                     </dd>

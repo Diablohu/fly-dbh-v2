@@ -1,0 +1,101 @@
+---
+import { isUnderConstruction } from "@/global";
+import Block from "@/components/block.astro";
+
+type Props = {
+    showHeader: boolean;
+};
+
+const announcements: {
+    type: "under-construction" | "info" | "warning" | "error";
+    message?: string;
+}[] = isUnderConstruction
+    ? [
+          {
+              type: "under-construction",
+          },
+      ]
+    : [];
+---
+
+{
+    Array.isArray(announcements) && announcements.length > 0 && (
+        <section
+            class:list={[
+                "announcements",
+                {
+                    "mod-has-header": Astro.props.showHeader === true,
+                },
+            ]}
+        >
+            {announcements.map(({ type, message }) => (
+                <Block class:list={["announcement", `announcement-${type}`]}>
+                    <span class="message">
+                        {message ??
+                            (type === "under-construction"
+                                ? "🚧 施工中，请佩戴安全帽 ⛑️"
+                                : "")}
+                    </span>
+                </Block>
+            ))}
+        </section>
+    )
+}
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .announcements {
+        position: sticky;
+        z-index: var(--global-header-z-index);
+        top: 0;
+
+        &.mod-has-header {
+            top: var(--global-header-height);
+        }
+    }
+
+    .announcement {
+        position: relative;
+        & > :global(.wrapper) {
+            text-align: center;
+        }
+    }
+
+    .announcement-under-construction {
+        --color-dark: #111111;
+        --color-dark-p-50: #11111180;
+        --color-light: #ffd914;
+        --color-light-p-50: #ffd91480;
+        background: repeating-linear-gradient(
+            45deg,
+            var(--color-dark-p-50),
+            var(--color-dark-p-50) 10px,
+            var(--color-light-p-50) 10px,
+            var(--color-light-p-50) 20px
+        );
+        // font-size: 1.5em;
+        font-weight: bolder;
+        padding: 0.3333em 0;
+        backdrop-filter: var(--backdrop-filter-glass);
+        .message {
+            display: inline-block;
+            vertical-align: top;
+            background: var(--color-dark);
+            color: var(--color-light);
+            line-height: 1em;
+            padding: 0.6667em 1em;
+            border-radius: 8px;
+        }
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            height: 1px;
+            left: 0;
+            right: 0;
+            background: var(--color-dark-p-50);
+        }
+        // background-size: 50px 50px;
+    }
+</style>

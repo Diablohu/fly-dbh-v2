@@ -13,3 +13,5 @@ export const navLinks = [
     import.meta.env.DEV ? ["/activities", "活动"] : null,
     import.meta.env.DEV ? ["/about", "联系"] : null,
 ].filter(Array.isArray);
+
+export const isUnderConstruction = true;
