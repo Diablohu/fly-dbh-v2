@@ -5,6 +5,7 @@ import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
 
 import Block from "@/components/block.astro";
 import BannerAndHeader from "./_components/banner-and-header";
+import Navbar from "./_components/navbar.astro";
 import LogoSVG from "@/assets/logo.svg";
 
 import { title as siteTitle, slogan } from "@/global";
@@ -222,6 +223,8 @@ const {
                                         v2.fly-dbh.com preview
                                         <br />
                                         cache strategy
+                                        <br />
+                                        PWA
                                     </dd>
                                 </dl>
                                 <dl>
@@ -261,7 +264,13 @@ const {
                 )
             }
 
+            <Navbar
+                showHeader={showHeader}
+                originPathname={Astro.originPathname}
+            />
+
             <!-- 
+
             TODO: /?v=[vid]
                 + nanostore: caller
             TODO: /?s=[query]
@@ -271,14 +280,7 @@ const {
 </html>
 
 <style lang="less">
-    @import "./Layout.module.less";
-    .footer {
-        padding-top: var(--global-edge-safe-distance);
-        padding-bottom: calc(
-            var(--global-bottom-safe-distance) +
-                var(--global-edge-safe-distance)
-        );
-    }
+    @import "./layout.module.less";
 </style>
 
 <script is:inline>

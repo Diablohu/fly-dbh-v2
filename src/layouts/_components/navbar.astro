@@ -1,0 +1,102 @@
+---
+import { navLinks } from "@/global";
+
+import isRouteActive from "@/utils/is-route-active";
+
+type Props = {
+    showHeader?: boolean;
+    originPathname: string;
+};
+---
+
+{
+    Astro.props.showHeader && (
+        <section class="navbar">
+            {navLinks.map(([route, name, icon]) => (
+                <a
+                    href={route}
+                    class:list={[
+                        "link",
+                        {
+                            "is-active": isRouteActive(
+                                route,
+                                Astro.originPathname
+                            ),
+                        },
+                    ]}
+                >
+                    <span class="icon">{icon || null}</span>
+                    {name}
+                </a>
+            ))}
+        </section>
+    )
+}
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .navbar {
+        --icon-size: 25px;
+
+        position: fixed;
+        z-index: var(--global-header-z-index);
+        flex: none;
+        display: none;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        align-items: center;
+        height: var(--global-navbar-height);
+        padding: 0 calc(var(--global-navbar-height) * 0.25);
+        bottom: calc(
+            var(--global-bottom-safe-distance) +
+                var(--global-edge-safe-distance)
+        );
+        left: calc(var(--global-edge-safe-distance) * 1.5);
+        right: calc(var(--global-edge-safe-distance) * 1.5);
+        text-align: center;
+        color: var(--text-color-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--global-navbar-height);
+        background-color: var(--global-header-background-color);
+        backdrop-filter: var(--global-header-backdrop-filter);
+        .font-size-clamp-with-line-height(unit((14 / 0.85), px), unit((1 * 14 / 0.85), px));
+
+        .screen-sm({
+            display: flex;
+        });
+
+        .link {
+            display: block;
+            position: relative;
+            text-decoration: none;
+            .icon {
+                display: block;
+                width: var(--icon-size);
+                height: var(--icon-size);
+                margin: 0 auto 0.25em auto;
+                color: inherit;
+                transition: inherit;
+                transition-property: color, background-color;
+                svg {
+                    transition: inherit;
+                    transition-property: color, fill;
+                    display: block;
+                    width: var(--icon-size);
+                    height: var(--icon-size);
+                    object-fit: contain;
+                }
+                &:empty {
+                    background: var(--tag-background-color);
+                    border-radius: 0.3333em;
+                }
+            }
+            &.is-active {
+                color: var(--text-color-primary);
+                .icon:empty {
+                    background-color: var(--text-color-secondary);
+                }
+            }
+        }
+    }
+</style>

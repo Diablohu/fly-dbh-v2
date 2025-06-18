@@ -8,8 +8,6 @@ import iconKook from "@/assets/icon-kook.svg?raw";
 import Banner from "./banner";
 import Header from "./header";
 
-// import styles from "./index.module.less";
-
 // ============================================================================
 
 export const links = [
@@ -42,7 +40,6 @@ const BannerAndHeader: FC<Props> = ({
                 logo={logo}
                 originPathname={originPathname}
             />
-            {/* TODO: TAB BAR on PHONE VIEW */}
         </>
     );
 };
