@@ -18,8 +18,8 @@ export const links = [
     ["qun", "粉丝群", "https://qun.fly-dbh.com", "svg", iconKook],
 ];
 export type Props = {
-    showBanner?: boolean;
-    showHeader?: boolean;
+    showBanner: boolean;
+    showHeader: boolean;
     logo?: ReactNode;
     originPathname: string;
 };
