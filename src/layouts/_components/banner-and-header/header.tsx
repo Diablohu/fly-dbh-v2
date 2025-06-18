@@ -1,9 +1,11 @@
 import { memo, type FC } from "react";
 import classNames from "classnames";
 
-import styles from "./index.module.less";
-
+import isRouteActive from "@/utils/is-route-active";
+import { navLinks } from "@/global";
 import { links, type Props } from "./";
+
+import styles from "./index.module.less";
 
 // ============================================================================
 
@@ -28,31 +30,23 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
                     <a href="/">{logo}</a>
                 </section>
                 <nav className={styles["nav"]}>
-                    {[
-                        ["/", "首页"],
-                        import.meta.env.DEV
-                            ? ["/videos", "视频"]
-                            : ["/videos", "模拟飞行视频"],
-                        import.meta.env.DEV ? ["/streams", "直播"] : null,
-                        import.meta.env.DEV ? ["/activities", "活动"] : null,
-                        import.meta.env.DEV ? ["/about", "联系"] : null,
-                    ]
-                        .filter(Array.isArray)
-                        .map(([route, name]) => (
-                            <a
-                                key={route}
-                                href={route}
-                                className={classNames([
-                                    styles["link"],
-                                    {
-                                        [styles["is-active"]]:
-                                            originPathname === route,
-                                    },
-                                ])}
-                            >
-                                {name}
-                            </a>
-                        ))}
+                    {navLinks.map(([route, name]) => (
+                        <a
+                            key={route}
+                            href={route}
+                            className={classNames([
+                                styles["link"],
+                                {
+                                    [styles["is-active"]]: isRouteActive(
+                                        route,
+                                        originPathname
+                                    ),
+                                },
+                            ])}
+                        >
+                            {name}
+                        </a>
+                    ))}
                 </nav>
                 <section
                     className={classNames([styles["aside"], styles["options"]])}

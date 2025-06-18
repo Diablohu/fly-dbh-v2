@@ -27,10 +27,18 @@ body {
         display: block;
         flex: 0;
         background-color: var(--tag-background-color);
-        // color: ;
+        padding-top: var(--global-edge-safe-distance);
+        padding-bottom: calc(
+            var(--global-bottom-safe-distance) +
+                var(--global-edge-safe-distance)
+        );
 
         .screen-sm({
-            padding-bottom: calc(var(--global-header-height) + var(--global-edge-safe-distance) * 2);
+            padding-bottom: calc(
+                var(--global-navbar-height) + 
+                var(--global-bottom-safe-distance) +
+                var(--global-edge-safe-distance)
+            );
         });
     }
 }
