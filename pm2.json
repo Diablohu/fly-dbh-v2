@@ -1,0 +1,13 @@
+{
+    "apps": [
+        {
+            "name": "fly-dbh-v2-server",
+            "script": "dist/server/entry.mjs",
+            "exec_mode": "cluster",
+            "instances": "3",
+            "max_memory_restart": "150M",
+            "out_file": "logs/server.log",
+            "error_file": "logs/server-error.log"
+        }
+    ]
+}
