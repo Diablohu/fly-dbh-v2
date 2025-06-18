@@ -1,5 +1,4 @@
 // @ts-check
-import fs from "node:fs";
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
