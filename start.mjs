@@ -78,7 +78,7 @@ async function main() {
                 console.error("⛔ 请先提交本地的改动！");
                 return;
             }
-            const tag = `release-${command}-online-${dayjs().format(
+            const tag = `publish-${command}-${dayjs().format(
                 `YYYYMMDD`
             )}-${dayjs().format(`HHmmss`)}`;
             spawn(`git`, ["tag", tag], { stdio: "inherit" });
