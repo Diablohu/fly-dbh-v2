@@ -17,7 +17,7 @@ export const navLinks = [
         icon: "",
     },
     {
-        route: "videos",
+        route: "/videos",
         name: import.meta.env.DEV ? "视频" : "模拟飞行视频",
         icon: "",
         extraChecks: [/^\/watch\//],

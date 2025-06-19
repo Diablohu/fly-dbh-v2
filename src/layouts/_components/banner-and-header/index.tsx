@@ -1,6 +1,8 @@
 import { memo, type FC, type ReactNode } from "react";
 import { type ValidVideoSourceType } from "@/types";
 
+import getPlatformName from "@/utils/get-platform-name";
+
 import iconBilibili from "@/assets/icon-bilibili.svg?raw";
 import iconYouTube from "@/assets/icon-youtube.svg?raw";
 import iconTiktok from "@/assets/icon-tiktok.svg?raw";
@@ -20,21 +22,21 @@ export const links: {
 }[] = [
     {
         name: "bilibili",
-        title: "哔哩哔哩",
+        title: getPlatformName("bilibili"),
         href: "https://b.fly-dbh.com",
         iconType: "svg",
         iconHtml: iconBilibili,
     },
     {
         name: "youtube",
-        title: "YouTube",
+        title: getPlatformName("youtube"),
         href: "https://ytb.fly-dbh.com",
         iconType: "svg",
         iconHtml: iconYouTube,
     },
     {
         name: "douyin",
-        title: "抖音",
+        title: getPlatformName("douyin"),
         href: "https://douyin.fly-dbh.com",
         iconType: "svg",
         iconHtml: iconTiktok,

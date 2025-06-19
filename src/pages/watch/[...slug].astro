@@ -135,10 +135,46 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
     @import "@/utils/mixins.less";
 
     .player-container {
-        // 宽高比小于 0.75(?) 固定播放器
+        --player-height-shrink: 0px;
+        --player-aspect-ratio: 16/9;
+        --player-min-height: 200px;
+        --player-max-height: calc(100dvh - var(--global-header-height) * 3);
+
+        position: relative;
+        z-index: 5;
+        background: #000;
+        position: relative;
+        width: 100%;
+        aspect-ratio: var(--player-aspect-ratio);
+        min-height: var(--player-min-height);
+        max-height: 75vh;
+        max-height: var(--player-max-height);
+        // border-top: var(--player-height-shrink) solid transparent;
+        background: #000;
+
+        @media (aspect-ratio <= @video-player-sticky-screen-aspect-ratio) {
+            position: sticky;
+            top: calc(
+                var(--global-header-height) +
+                    var(--global-announcement-height) *
+                    var(--global-announcement-count)
+            );
+        }
+
+        // &::after {
+        //     content: "";
+        //     position: absolute;
+        //     bottom: -1px;
+        //     height: 1px;
+        //     left: 0;
+        //     right: 0;
+        //     background: var(--border-color);
+        // }
     }
 
     .infos {
+        position: relative;
+        z-index: 1;
         user-select: auto;
     }
 </style>
