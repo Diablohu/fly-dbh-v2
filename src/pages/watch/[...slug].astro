@@ -32,7 +32,12 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
 // console.log(video);
 ---
 
-<Layout showHeader showFooter title={prettifyTitle(video.title)}>
+<Layout
+    title={prettifyTitle(video.title)}
+    contentType="video-player"
+    showHeader
+    showFooter
+>
     <section class="player-container">
         <Player
             links={video.links}
@@ -141,16 +146,9 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
         --player-max-height: calc(100dvh - var(--global-header-height) * 3);
 
         position: relative;
-        z-index: 5;
+        z-index: 2;
         background: #000;
-        position: relative;
         width: 100%;
-        aspect-ratio: var(--player-aspect-ratio);
-        min-height: var(--player-min-height);
-        max-height: 75vh;
-        max-height: var(--player-max-height);
-        // border-top: var(--player-height-shrink) solid transparent;
-        background: #000;
 
         @media (aspect-ratio <= @video-player-sticky-screen-aspect-ratio) {
             position: sticky;

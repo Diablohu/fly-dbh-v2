@@ -58,42 +58,47 @@ const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
 
     return (
         <section className={styles["player"]} ref={PlayerRef}>
-            {!url ? (
-                <section className={styles["no-valid-link"]}>
-                    <p>
-                        本视频暂无
-                        <strong className={styles[`platform-${$videoSource}`]}>
-                            {getPlatformName($videoSource)}
-                        </strong>
-                        版本
-                    </p>
-                    <p>请通过画面右上角更换视频平台</p>
-                </section>
-            ) : $videoSource === "bilibili" ? (
-                <iframe
-                    src={url}
-                    title={title}
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                ></iframe>
-            ) : $videoSource === "youtube" ? (
-                <iframe
-                    src={url}
-                    title={title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                ></iframe>
-            ) : $videoSource === "douyin" ? (
-                <iframe
-                    src={url}
-                    title={title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="unsafe-url"
-                    allowFullScreen
-                ></iframe>
-            ) : null}
+            <div className={styles["wrapper"]}>
+                {!url ? (
+                    <section className={styles["no-valid-link"]}>
+                        <p>
+                            本视频暂无
+                            <strong
+                                className={styles[`platform-${$videoSource}`]}
+                            >
+                                {getPlatformName($videoSource)}
+                            </strong>
+                            版本
+                        </p>
+                        <p>请通过画面右上角更换视频平台</p>
+                        {/* TODO: 自动弹出选项 */}
+                    </section>
+                ) : $videoSource === "bilibili" ? (
+                    <iframe
+                        src={url}
+                        title={title}
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    ></iframe>
+                ) : $videoSource === "youtube" ? (
+                    <iframe
+                        src={url}
+                        title={title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                    ></iframe>
+                ) : $videoSource === "douyin" ? (
+                    <iframe
+                        src={url}
+                        title={title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="unsafe-url"
+                        allowFullScreen
+                    ></iframe>
+                ) : null}
+            </div>
         </section>
     );
 };

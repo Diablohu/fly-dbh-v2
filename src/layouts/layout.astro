@@ -16,6 +16,7 @@ import { title as siteTitle, slogan } from "@/global";
 
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
+import type { boolean } from "astro:schema";
 
 // ============================================================================
 
@@ -36,8 +37,12 @@ interface Props {
      */
     description?: string;
 
-    /** 用于社交分享 */
-    contentType?: string;
+    /**
+     * 用于社交分享 & 控制细节样式
+     *  - `<html>` 标签会有 `data-content-type` 属性，若组件需要响应内容类型，可基于此做 CSS 选择器，如
+     *      - `:root[data-content-type="video-player"] .logo { opacity: 0.5 }`
+     */
+    contentType?: 'video-player';
     /** 用于社交分享 */
     coverImage?: string;
 
@@ -79,6 +84,7 @@ const {
     title = siteTitle,
     keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
     description = slogan,
+    contentType,
     showHeader = false,
     showBanner = false,
     showFooter = false,
@@ -89,7 +95,7 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale}>
+<html lang={Astro.currentLocale} data-content-type={contentType}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
