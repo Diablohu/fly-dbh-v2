@@ -1,0 +1,9 @@
+---
+import { type VideoListPageTypesType } from "@/types";
+import VideoListPage from "@/page-templates/video-list/index.astro";
+---
+
+<VideoListPage
+    type={Astro.params.type as VideoListPageTypesType}
+    slug={Astro.params.slug}
+/>

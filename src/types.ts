@@ -6,3 +6,11 @@
 // };
 
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
+
+export type VideoListPageTypesType =
+    | "tag"
+    | "aircraftFamily"
+    | "aerodrome"
+    | "developer"
+    | "platform"
+    | "platformUpdate";

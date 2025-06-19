@@ -13,27 +13,28 @@ const fetchProjections = `{
         "label": title
     },
     release,
-    "cover": cover.asset->path + '?auto=format&w=400&q=65',
+    "cover": cover.asset->path,
 }`;
 // links
 
+type DocumentType = SanityDocument<{
+    _id: string;
+    slug?: string;
+    title: string;
+    tags: { value: string; label: string }[];
+    release: string;
+    cover: string;
+}>;
 type CollectionsType = {
-    [collection: string]: SanityDocument<{
-        _id: string;
-        slug?: string;
-        title: string;
-        tags: { value: string; label: string }[];
-        release: string;
-        cover: string;
-    }>[];
+    [collection: string]: DocumentType[];
 };
 
 const actions = {
     homePageFetch: defineAction({
         handler: async () => {
             try {
-                return Object.entries(
-                    (await fetch(`{
+                return (await fetch(
+                    `{
 ${[
     ["latest"],
     ["tutorials", "training"],
@@ -48,20 +49,25 @@ ${[
             }] ${fetchSorting} ${fetchProjections} [0...${count}]`
     )
     .join(",")}
-}`)) as unknown as CollectionsType
-                ).reduce<CollectionsType>(
-                    (collections, [collection, posts]) => {
-                        // console.log(posts[0]);
-                        collections[collection] = posts.map(
-                            ({ cover, ...post }) => ({
-                                cover: transformImagePath(cover),
-                                ...post,
-                            })
-                        );
-                        return collections;
-                    },
-                    {}
-                );
+}`,
+                    (res) => {
+                        return Object.entries(
+                            res as unknown as CollectionsType
+                        ).reduce<CollectionsType>(
+                            (collections, [collection, posts]) => {
+                                // console.log(posts[0]);
+                                collections[collection] = posts.map(
+                                    ({ cover, ...post }) => ({
+                                        cover: transformImagePath(cover),
+                                        ...post,
+                                    })
+                                );
+                                return collections;
+                            },
+                            {}
+                        ) as unknown as DocumentType[];
+                    }
+                )) as unknown as CollectionsType;
             } catch (err) {
                 throw new ActionError({
                     message:

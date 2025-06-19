@@ -108,6 +108,7 @@ const VideoListHorizontal: FC<{
                         {...v}
                     />
                 ))}
+                {/* TODO: added last block link to more */}
                 <div
                     className={classNames([
                         styles["intersection-check"],

@@ -57,9 +57,20 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
             // onClick={onClick}
             data-astro-prefetch="false"
         >
-            <span className={styles["cover"]}>
-                <img src={cover} alt={prettifiedTitle} loading="lazy" />
-            </span>
+            <picture className={styles["cover"]}>
+                <source
+                    srcSet={[
+                        `${cover}?fm=webp&w=400&q=60`,
+                        `${cover}?fm=webp&w=${400 * 1.5}&q=60 1.5x`,
+                    ].join(", ")}
+                    type="image/webp"
+                />
+                <img
+                    src={cover + "?auto=format&w=400&q=60"}
+                    alt={prettifiedTitle}
+                    loading="lazy"
+                />
+            </picture>
 
             {Array.isArray(tags) && tags.length > 0 && (
                 <span className={styles["tags"]}>

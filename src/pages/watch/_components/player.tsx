@@ -16,12 +16,13 @@ type Props = {
         youtube: string;
         douyin: string;
     };
+    cover: string;
     selectedVideoSource: ValidVideoSourceType;
 };
 
 // ============================================================================
 
-const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
+const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
     const [$videoSource] = useVideoSource(selectedVideoSource);
 
@@ -60,7 +61,12 @@ const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
         <section className={styles["player"]} ref={PlayerRef}>
             <div className={styles["wrapper"]}>
                 {!url ? (
-                    <section className={styles["no-valid-link"]}>
+                    <section
+                        className={styles["no-valid-link"]}
+                        style={{
+                            backgroundImage: `url(${cover}?auto=format&w=960&blur=100&q=60)`,
+                        }}
+                    >
                         <p>
                             本视频暂无
                             <strong

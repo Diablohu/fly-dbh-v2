@@ -21,11 +21,14 @@ export const client = createClient({
 export const fetch = async <
     T extends Record<string, any> = Record<string, any>,
 >(
-    queryString: string
+    queryString: string,
+    transformResult?: (res: SanityDocument<T>[]) => SanityDocument<T>[]
 ) =>
     await cache.wrap(`SANITY:${queryString}`, async () => {
         try {
             const posts = await client.fetch<SanityDocument<T>[]>(queryString);
+            if (typeof transformResult === "function")
+                return transformResult(posts);
             return posts;
         } catch (err) {
             throw err;
