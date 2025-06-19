@@ -1,11 +1,13 @@
 /// <reference types="astro/client" />
 
 import { type BrowserHistory, type HashHistory } from "history";
+import { type ValidVideoSourceType } from "@/types";
 
 declare namespace App {
     // Add locale strings to Astro Context
+    // Can store other infos for rendering
     interface Locals {
-        //
+        selectedVideoSource: ValidVideoSourceType;
     }
 }
 

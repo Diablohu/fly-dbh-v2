@@ -1,13 +1,14 @@
 import {
     memo,
     // useCallback,
-    // useMemo,
+    useMemo,
     type FC,
     type AnchorHTMLAttributes,
     // type MouseEventHandler,
 } from "react";
 import classNames from "classnames";
 
+import prettifyTitle from "@/utils/prettify-title";
 import getDateString from "@/utils/get-date-string";
 
 import styles from "./video-item.module.less";
@@ -46,6 +47,8 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
     //     [searchString]
     // );
 
+    const prettifiedTitle = useMemo(() => prettifyTitle(title), [title]);
+
     return (
         <a
             className={classNames([styles["video-item"], className])}
@@ -55,7 +58,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
             data-astro-prefetch="false"
         >
             <span className={styles["cover"]}>
-                <img src={cover} alt={title} loading="lazy" />
+                <img src={cover} alt={prettifiedTitle} loading="lazy" />
             </span>
 
             {Array.isArray(tags) && tags.length > 0 && (
@@ -68,7 +71,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
                 </span>
             )}
 
-            <strong>{title}</strong>
+            <strong>{prettifiedTitle}</strong>
 
             {Array.isArray(infos) &&
                 infos.length > 0 &&

@@ -1,6 +1,8 @@
-import { memo, type FC } from "react";
+import { memo, useCallback, type FC } from "react";
 import classNames from "classnames";
+import { type ValidVideoSourceType } from "@/types";
 
+import useVideoSource from "@/react-hooks/use-video-source";
 import isRouteActive from "@/utils/is-route-active";
 import { navLinks } from "@/global";
 import { links, type Props } from "./";
@@ -9,11 +11,12 @@ import styles from "./index.module.less";
 
 // ============================================================================
 
-const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
-    showHeader,
-    logo,
-    originPathname,
-}) => {
+const Header: FC<
+    Pick<
+        Props,
+        "showHeader" | "logo" | "originPathname" | "selectedVideoSource"
+    >
+> = ({ showHeader, logo, originPathname, selectedVideoSource }) => {
     return (
         <header
             className={classNames([
@@ -30,7 +33,7 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
                     <a href="/">{logo}</a>
                 </section>
                 <nav className={styles["nav"]}>
-                    {navLinks.map(([route, name]) => (
+                    {navLinks.map(({ route, name, extraChecks }) => (
                         <a
                             key={route}
                             href={route}
@@ -39,7 +42,8 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
                                 {
                                     [styles["is-active"]]: isRouteActive(
                                         route,
-                                        originPathname
+                                        originPathname,
+                                        extraChecks
                                     ),
                                 },
                             ])}
@@ -51,29 +55,22 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
                 <section
                     className={classNames([styles["aside"], styles["options"]])}
                 >
-                    {links
-                        .filter((link) => Boolean(link[4]))
-                        .map(([name, title, href, iconType, icon]) => (
-                            <a
-                                key={name}
-                                href={href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={classNames([
-                                    styles["link"],
-                                    styles[`link-${name}`],
-                                ])}
-                                title={title}
-                                dangerouslySetInnerHTML={{
-                                    __html:
-                                        iconType === "png"
-                                            ? `<img src="${icon}" alt="${title}" />`
-                                            : iconType === "svg"
-                                              ? icon
-                                              : "",
-                                }}
-                            ></a>
-                        ))}
+                    <section className={styles["switch-video-source"]}>
+                        {links
+                            .filter(({ name }) =>
+                                ["bilibili", "youtube", "douyin"].includes(name)
+                            )
+                            .map(({ name, title, iconType, iconHtml }) => (
+                                <VideoSourceSwitchItem
+                                    key={name}
+                                    name={name as ValidVideoSourceType}
+                                    title={title}
+                                    iconType={iconType}
+                                    iconHtml={iconHtml}
+                                    selectedVideoSource={selectedVideoSource}
+                                />
+                            ))}
+                    </section>
                     {/* TODO: Light / Dark */}
                 </section>
             </section>
@@ -82,3 +79,41 @@ const Header: FC<Pick<Props, "showHeader" | "logo" | "originPathname">> = ({
 };
 
 export default memo(Header);
+
+// ============================================================================
+
+const VideoSourceSwitchItem: FC<{
+    name: ValidVideoSourceType;
+    title: string;
+    iconType?: "png" | "svg";
+    iconHtml?: string;
+    selectedVideoSource: ValidVideoSourceType;
+}> = memo(({ name, title, iconType, iconHtml = "", selectedVideoSource }) => {
+    const [$videoSource, setVideoSource] = useVideoSource(selectedVideoSource);
+    const onClick = useCallback(() => {
+        setVideoSource(name);
+    }, [setVideoSource]);
+
+    return (
+        <button
+            type="button"
+            className={classNames([
+                styles["video-source-switch-item"],
+                styles[`video-source-switch-item-${name}`],
+                {
+                    [styles["is-active"]]: name === $videoSource,
+                },
+            ])}
+            title={title}
+            dangerouslySetInnerHTML={{
+                __html:
+                    iconType === "png"
+                        ? `<img src="${iconHtml}" alt="${title}" />`
+                        : iconType === "svg"
+                          ? iconHtml
+                          : "",
+            }}
+            onClick={onClick}
+        ></button>
+    );
+});

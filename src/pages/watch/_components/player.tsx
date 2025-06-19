@@ -1,4 +1,7 @@
-import { memo, useState, useMemo, type FC } from "react";
+import { memo, useMemo, type FC } from "react";
+import { type ValidVideoSourceType } from "@/types";
+
+import useVideoSource from "@/react-hooks/use-video-source";
 
 import styles from "./player.module.less";
 
@@ -11,32 +14,33 @@ type Props = {
         youtube: string;
         douyin: string;
     };
+    selectedVideoSource: ValidVideoSourceType;
 };
 
 // ============================================================================
 
-const Player: FC<Props> = ({ links, title }) => {
-    const [source, setSource] = useState<keyof Props["links"]>("bilibili");
+const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
+    const [$videoSource] = useVideoSource(selectedVideoSource);
 
     const url = useMemo(() => {
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[source]
+            links[$videoSource]
         )?.[1];
         if (bilibiliId)
             return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1`;
 
         const youtubeId =
             /(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/)(.+?)(\/|\?|\#|\&|$)/.exec(
-                links[source]
+                links[$videoSource]
             )?.[2];
         if (youtubeId) return `//youtube.com/embed/${youtubeId}?autoplay=1`;
 
-        return links[source];
-    }, [source, links]);
+        return links[$videoSource];
+    }, [$videoSource, links]);
 
     return (
         <section className={styles["player"]}>
-            {source === "bilibili" ? (
+            {$videoSource === "bilibili" ? (
                 <iframe
                     src={url}
                     title={title}
@@ -44,7 +48,7 @@ const Player: FC<Props> = ({ links, title }) => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                 ></iframe>
-            ) : source === "youtube" ? (
+            ) : $videoSource === "youtube" ? (
                 <iframe
                     src={url}
                     title={title}

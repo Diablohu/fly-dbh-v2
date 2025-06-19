@@ -5,13 +5,4 @@
 //     currentLocale: LocaleType;
 // };
 
-export type VideoArticleType = {
-    id: number;
-    title: string;
-};
-
-export type SanityResponseType<T> = {
-    code: number;
-    data: T;
-    msg?: string;
-};
+export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";

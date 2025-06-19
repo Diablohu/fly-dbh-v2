@@ -146,7 +146,7 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
                     {logo}
                     <strong className={styles["slogan"]}>{slogan}</strong>
                     <section className={styles["links"]}>
-                        {links.map(([name, title, href]) => (
+                        {links.map(({ name, title, href }) => (
                             <a
                                 key={name}
                                 href={href}

@@ -12,7 +12,7 @@ type Props = {
 {
     Astro.props.showHeader && (
         <section class="navbar">
-            {navLinks.map(([route, name, icon]) => (
+            {navLinks.map(({ route, name, icon, extraChecks }) => (
                 <a
                     href={route}
                     class:list={[
@@ -20,7 +20,8 @@ type Props = {
                         {
                             "is-active": isRouteActive(
                                 route,
-                                Astro.originPathname
+                                Astro.originPathname,
+                                extraChecks
                             ),
                         },
                     ]}
