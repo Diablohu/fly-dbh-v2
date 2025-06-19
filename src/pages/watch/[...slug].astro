@@ -32,7 +32,7 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
 // console.log(video);
 ---
 
-<Layout showHeader showFooter title={video.title}>
+<Layout showHeader showFooter title={prettifyTitle(video.title)}>
     <section class="player-container">
         <Player
             links={video.links}
