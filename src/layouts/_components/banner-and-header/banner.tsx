@@ -2,6 +2,7 @@ import { useCallback, useState, useRef, useEffect, memo, type FC } from "react";
 import classNames from "classnames";
 
 import { slogan } from "@/global";
+import useWindowResizeScroll from "@/react-hooks/use-window-resize-scroll";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
@@ -16,20 +17,14 @@ import { links, type Props } from "./";
 const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
     observer?: IntersectionObserver;
     bannerInView?: boolean;
-    bannerAnimateTicking?: boolean;
-    bannerAnimateRequestTick: () => void;
 } = ({ showBanner, logo }) => {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
     const VideoRef = useRef<HTMLVideoElement>(null);
     const [renderBanner, setRenderBanner] = useState(showBanner);
 
-    const setStylesFunction = useCallback(() => {
-        // reset the tick so we can
-        // capture the next onScroll
-        Banner.bannerAnimateTicking = false;
-
-        if (!Banner.bannerInView) return;
+    useWindowResizeScroll((force?: boolean) => {
+        if (!force && !Banner.bannerInView) return;
 
         if (BannerRef.current) {
             const wrapperHeight = BannerRef.current.offsetHeight;
@@ -48,13 +43,7 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
                 `${window.scrollY / 2}px`
             );
         }
-    }, []);
-    const setStyles = useCallback(() => {
-        if (!Banner.bannerAnimateTicking) {
-            requestAnimationFrame(setStylesFunction);
-        }
-        Banner.bannerAnimateTicking = true;
-    }, [setStylesFunction]);
+    });
 
     useEffect(() => {
         if (!Banner.observer) {
@@ -106,17 +95,6 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
             }
         };
     }, [renderBanner]);
-
-    useEffect(() => {
-        setTimeout(() => setStyles(), 50);
-        window.addEventListener("resize", setStyles);
-        window.addEventListener("scroll", setStyles);
-        // VideoRef.current.play();
-        return () => {
-            window.removeEventListener("resize", setStyles);
-            window.removeEventListener("scroll", setStyles);
-        };
-    }, [setStyles]);
 
     useEffect(() => {
         // TODO: banner 关闭动画
@@ -190,12 +168,6 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
             </section>
         )
     );
-};
-Banner.bannerAnimateRequestTick = () => {
-    if (!Banner.bannerAnimateTicking) {
-        requestAnimationFrame(Banner.bannerAnimateRequestTick);
-    }
-    Banner.bannerAnimateTicking = true;
 };
 
 export default memo(Banner);

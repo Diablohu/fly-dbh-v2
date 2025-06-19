@@ -419,7 +419,7 @@
             &.is-active {
                 color: var(--color-primary);
                 font-weight: bolder;
-                cursor: default;
+                // cursor: default;
                 &::after {
                     content: "";
                     position: absolute;
@@ -485,6 +485,7 @@
                 }
                 &.is-active {
                     color: var(--icon-theme-color);
+                    pointer-events: none;
                 }
             }
         }

@@ -1,7 +1,9 @@
-import { memo, useMemo, type FC } from "react";
+import { memo, useMemo, useRef, type FC } from "react";
 import { type ValidVideoSourceType } from "@/types";
 
+import useWindowResizeScroll from "@/react-hooks/use-window-resize-scroll";
 import useVideoSource from "@/react-hooks/use-video-source";
+import getPlatformName from "@/utils/get-platform-name";
 
 import styles from "./player.module.less";
 
@@ -20,7 +22,17 @@ type Props = {
 // ============================================================================
 
 const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
+    const PlayerRef = useRef<HTMLDivElement>(null);
     const [$videoSource] = useVideoSource(selectedVideoSource);
+
+    useWindowResizeScroll((force?: boolean) => {
+        if (PlayerRef.current) {
+            PlayerRef.current.style.setProperty(
+                "--player-height-shrink",
+                `${window.scrollY}px`
+            );
+        }
+    });
 
     const url = useMemo(() => {
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
@@ -35,12 +47,29 @@ const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
             )?.[2];
         if (youtubeId) return `//youtube.com/embed/${youtubeId}?autoplay=1`;
 
-        return links[$videoSource];
+        const douyinId = /douyin\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
+            links[$videoSource]
+        )?.[1];
+        if (douyinId)
+            return `//open.douyin.com/player/video?vid=${douyinId}&autoplay=1`;
+
+        return "";
     }, [$videoSource, links]);
 
     return (
-        <section className={styles["player"]}>
-            {$videoSource === "bilibili" ? (
+        <section className={styles["player"]} ref={PlayerRef}>
+            {!url ? (
+                <section className={styles["no-valid-link"]}>
+                    <p>
+                        本视频暂无
+                        <strong className={styles[`platform-${$videoSource}`]}>
+                            {getPlatformName($videoSource)}
+                        </strong>
+                        版本
+                    </p>
+                    <p>请通过画面右上角更换视频平台</p>
+                </section>
+            ) : $videoSource === "bilibili" ? (
                 <iframe
                     src={url}
                     title={title}
@@ -54,6 +83,14 @@ const Player: FC<Props> = ({ links, title, selectedVideoSource }) => {
                     title={title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                ></iframe>
+            ) : $videoSource === "douyin" ? (
+                <iframe
+                    src={url}
+                    title={title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="unsafe-url"
                     allowFullScreen
                 ></iframe>
             ) : null}
