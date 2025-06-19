@@ -11,6 +11,7 @@ import Player from "./_components/player";
 
 import getDateString from "@/utils/get-date-string";
 import prettifyTitle from "@/utils/prettify-title";
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 // ============================================================================
 
@@ -42,6 +43,7 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
         <Player
             links={video.links}
             title={video.title}
+            cover={video.cover}
             selectedVideoSource={selectedVideoSource}
             client:load
         />
@@ -50,9 +52,9 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
         <p>
             {
                 video.tags?.map(({ _id, slug, label }) => (
-                    <span>
-                        [{slug || _id}] {label}
-                    </span>
+                    <a href={getVideoListPageLink("tag", slug || _id)}>
+                        {label}
+                    </a>
                 ))
             }
         </p>
@@ -68,9 +70,14 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                 {
                     video.aircraft_families?.map(
                         ({ _id, slug, maker, name }) => (
-                            <span>
-                                [{slug || _id}] {maker} {name}
-                            </span>
+                            <a
+                                href={getVideoListPageLink(
+                                    "aircraftFamily",
+                                    slug || _id
+                                )}
+                            >
+                                <span>{maker}</span> {name}
+                            </a>
                         )
                     )
                 }
@@ -81,9 +88,17 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
             <p>
                 {
                     video.aerodromes?.map(({ _id, slug, icao, iata, name }) => (
-                        <span>
-                            [{slug || _id}] {icao} {iata} {name}
-                        </span>
+                        <a
+                            href={getVideoListPageLink(
+                                "aerodrome",
+                                slug || _id
+                            )}
+                        >
+                            <span>
+                                {icao} / {iata}
+                            </span>{" "}
+                            {name}
+                        </a>
                     ))
                 }
             </p>
@@ -93,9 +108,14 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
             <p>
                 {
                     video.developers?.map(({ _id, slug, name }) => (
-                        <span>
-                            [{slug || _id}] {name}
-                        </span>
+                        <a
+                            href={getVideoListPageLink(
+                                "developer",
+                                slug || _id
+                            )}
+                        >
+                            {name}
+                        </a>
                     ))
                 }
             </p>
@@ -105,9 +125,9 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
             <p>
                 {
                     video.games?.map(({ _id, slug, name }) => (
-                        <span>
-                            [{slug || _id}] {name}
-                        </span>
+                        <a href={getVideoListPageLink("platform", slug || _id)}>
+                            {name}
+                        </a>
                     ))
                 }
             </p>
@@ -118,10 +138,14 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                 {
                     video.msfs_updates?.map(
                         ({ _id, slug, game, series, number, release }) => (
-                            <span>
-                                [{slug || _id}] {game} {series} {number}{" "}
-                                {release}
-                            </span>
+                            <a
+                                href={getVideoListPageLink(
+                                    "platformUpdate",
+                                    slug || _id
+                                )}
+                            >
+                                <span>{game}</span> {series} {number} {release}
+                            </a>
                         )
                     )
                 }
@@ -142,21 +166,18 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
     .player-container {
         --player-height-shrink: 0px;
         --player-aspect-ratio: 16/9;
-        --player-min-height: 200px;
-        --player-max-height: calc(100dvh - var(--global-header-height) * 3);
+        --player-min-height: 300px;
+        --player-max-height: calc(100dvh - var(--global-header-height) * 4);
 
         position: relative;
         z-index: 2;
         background: #000;
         width: 100%;
+        user-select: none;
 
         @media (aspect-ratio <= @video-player-sticky-screen-aspect-ratio) {
             position: sticky;
-            top: calc(
-                var(--global-header-height) +
-                    var(--global-announcement-height) *
-                    var(--global-announcement-count)
-            );
+            top: var(--global-sticky-top);
         }
 
         // &::after {

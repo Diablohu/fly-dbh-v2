@@ -31,7 +31,7 @@
     --global-edge-safe-distance: @global-edge-safe-distance;
     --global-bottom-safe-distance: env(safe-area-inset-bottom, 0px);
     --global-block-max-width: calc(
-        1200px + var(--global-edge-safe-distance) * 2
+        1600px + var(--global-edge-safe-distance) * 2
     );
     --global-header-height: 60px;
     --global-header-z-index: 9999;
@@ -42,6 +42,10 @@
     --global-announcement-count: 0;
     --global-navbar-height: 55px;
     --global-navbar-bottom-edge: calc(var(--global-edge-safe-distance) * 2 / 3);
+    --global-sticky-top: calc(
+        var(--global-header-height) + var(--global-announcement-height) *
+            var(--global-announcement-count)
+    );
 
     --font-family-base:
         Roboto, "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica",

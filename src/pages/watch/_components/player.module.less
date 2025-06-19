@@ -29,8 +29,12 @@
             justify-content: center;
             align-items: center;
             font-size: 1.75em;
+            background: no-repeat 50% 50% / cover;
+            color: var(--text-color-primary);
             p {
                 margin: 0.5em auto;
+                position: relative;
+                z-index: 2;
                 strong {
                     display: inline-block;
                     color: var(--text-color-primary);
@@ -46,6 +50,15 @@
                     }
                 }
             }
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--dark-theme-color-p-50);
+            }
         }
     }
 
@@ -58,12 +71,7 @@
             max-height: var(--player-max-height);
             width: 100%;
             height: auto;
-            top: calc(
-                var(--global-header-height) +
-                    var(--global-announcement-height) *
-                    var(--global-announcement-count) -
-                    var(--player-height-shrink)
-            );
+            top: calc(var(--global-sticky-top) - var(--player-height-shrink));
             left: 0;
             border-top: var(--player-height-shrink) solid transparent;
             & > iframe,
@@ -73,7 +81,7 @@
                 //         var(--global-announcement-height) *
                 //         var(--global-announcement-count)
                 // );
-                min-height: 300px;
+                min-height: var(--player-min-height);
             }
         }
     }

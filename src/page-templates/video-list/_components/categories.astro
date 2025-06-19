@@ -1,0 +1,64 @@
+---
+// import { actions } from "astro:actions";
+import { type VideoListPageTypesType } from "@/types";
+
+type Props = {
+    type?: VideoListPageTypesType;
+    slug?: string;
+    isIndex: boolean;
+};
+
+/*
+
+Index
+
+---
+
+Main Categories
+- news
+- tutorial
+- review
+- chat
+- world
+- short
+
+---
+
+Explore More
+- Tags
+- Aircraft Families
+- Aerodromes
+- Games / Platforms
+- Game Updates
+- Related Developers
+
+*/
+---
+
+<aside class="categories">
+    <section class="wrapper">
+        <p>CATEGOREIS</p>
+    </section>
+</aside>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .categories {
+        position: sticky;
+        top: calc(var(--global-sticky-top) + 1em);
+        flex: 0 0 200px;
+        background: var(--tag-background-color);
+        margin: 1em 0 4em 0;
+        border-radius: 10px;
+        overflow: hidden;
+        & > .wrapper {
+            position: relative;
+            height: 100%;
+            overflow: auto;
+            scrollbar-width: thin;
+            max-height: calc(100dvh - var(--global-sticky-top) - 3em);
+            padding: 1em;
+        }
+    }
+</style>

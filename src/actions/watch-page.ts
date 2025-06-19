@@ -3,7 +3,6 @@ import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
 
-const fetchSorting = ` | order( release desc )`;
 const fetchProjections = `{
     _id,
     'slug': slug.current,
@@ -15,7 +14,7 @@ const fetchProjections = `{
         "label": title
     },
     release,
-    "cover": cover.asset->path + '?auto=format&q=65',
+    "cover": cover.asset->path,
     description,
     links,
     'aircraft_families': aircraft_families[]->{
@@ -60,6 +59,7 @@ const actions = {
                 const res = (
                     await fetch<{
                         _id: string;
+                        slug?: string;
                         title: string;
                         tags: {
                             _id: string;
@@ -107,14 +107,15 @@ const actions = {
                             release: string;
                         }[];
                     }>(
-                        `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`
+                        `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`,
+                        (res) => {
+                            res[0].cover = transformImagePath(res[0].cover);
+                            return res;
+                        }
                     )
                 )[0];
 
                 if (!res) throw new Error("Video not found");
-
-                res.cover = transformImagePath(res.cover);
-
                 return res;
             } catch (err) {
                 console.trace(err);

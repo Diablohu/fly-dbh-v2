@@ -1,0 +1,51 @@
+---
+// import { actions } from "astro:actions";
+import { type VideoListPageTypesType } from "@/types";
+
+// import log from "@/page-templates/index/_log.ts";
+
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+
+import VideoList from "./_components/list.astro";
+import VideoCategories from "./_components/categories.astro";
+
+type Props = {
+    type?: VideoListPageTypesType | "aircraftfamily" | "platformupdate";
+    slug?: string;
+};
+
+const isIndex = !Astro.props.type;
+const type: VideoListPageTypesType | undefined =
+    Astro.props.type === "aircraftfamily"
+        ? "aircraftFamily"
+        : Astro.props.type === "platformupdate"
+          ? "platformUpdate"
+          : Astro.props.type;
+---
+
+<Layout showHeader showFooter>
+    <Block class="video-list-page">
+        <section class="video-list-page-container">
+            <VideoList type={type} slug={Astro.props.slug} isIndex={isIndex} />
+            <VideoCategories
+                type={type}
+                slug={Astro.props.slug}
+                isIndex={isIndex}
+            />
+        </section>
+    </Block>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .video-list-page {
+        .video-list-page-container {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: flex-start;
+            gap: 2em;
+        }
+    }
+</style>

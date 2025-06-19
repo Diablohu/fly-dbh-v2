@@ -4,7 +4,7 @@ const AnnouncementsHeightCheck: FC<{
     count: number;
 }> = ({ count }) => {
     useEffect(() => {
-        document.body.style.setProperty(
+        document.documentElement.style.setProperty(
             "--global-announcement-count",
             `${count}`
         );

@@ -37,7 +37,7 @@ export const GET: APIRoute = async ({ params }) => {
         release,
         description,
         links,
-        "cover": cover.asset->path + '?auto=format&w=400&q=65',
+        "cover": cover.asset->path,
     }
     [0...10],
 

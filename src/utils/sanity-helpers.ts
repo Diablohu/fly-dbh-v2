@@ -9,8 +9,8 @@ export const transformImagePath = (pathname: string) =>
 export const stringReplaceImagePath = (str: string) =>
     str.replace(
         new RegExp(
-            `"images/${process.env.SANITY_PROJECT_ID}/${process.env.SANITY_DATASET}/`,
+            `\"images/${process.env.SANITY_PROJECT_ID}/${process.env.SANITY_DATASET}/`,
             "gm"
         ),
-        `${routeNameSanityImageCdn}/`
+        `"${routeNameSanityImageCdn}/`
     );
