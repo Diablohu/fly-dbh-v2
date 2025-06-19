@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 
-import { getIds as getGoogleAnalyticsIds } from "@/constants/google-analytics";
+import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
 
 import LogoSVG from "@/assets/logo.svg";
 import Block from "@/components/block.astro";
@@ -100,22 +100,23 @@ const {
         </title>
 
         <!-- Google Tag Manager -->
-        <!-- <script is:inline define:vars={{ gtmId }}>
-            TODO: 需要开启 Google Tag Manager
-            (function (w, d, s, l, i) {
-                w[l] = w[l] || [];
-                w[l].push({
-                    "gtm.start": new Date().getTime(),
-                    event: "gtm.js",
-                });
-                var f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s),
-                    dl = l != "dataLayer" ? "&l=" + l : "";
-                j.async = true;
-                j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, "script", "dataLayer", gtmId);
-        </script> -->
+        {gtmId && (
+            <script is:inline define:vars={{ gtmId }}>
+                (function (w, d, s, l, i) {
+                    w[l] = w[l] || [];
+                    w[l].push({
+                        "gtm.start": new Date().getTime(),
+                        event: "gtm.js",
+                    });
+                    var f = d.getElementsByTagName(s)[0],
+                        j = d.createElement(s),
+                        dl = l != "dataLayer" ? "&l=" + l : "";
+                    j.async = true;
+                    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+                    f.parentNode.insertBefore(j, f);
+                })(window, document, "script", "dataLayer", gtmId);
+            </script>
+        )}
         <!-- End Google Tag Manager -->
 
         <base target="_self" />
@@ -145,52 +146,30 @@ const {
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->
-        <!-- <noscript
-            TODO: 需要开启 Google Tag Manager
-            ><iframe
-                src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
-                height="0"
-                width="0"
-                style="display:none;visibility:hidden"></iframe></noscript
-        > -->
+        {gtmId && (
+            <noscript>
+                <iframe
+                    src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+                    height="0"
+                    width="0"
+                    style="display:none;visibility:hidden"></iframe>
+            </noscript>
+        )}
         <!-- End Google Tag Manager (noscript) -->
-        <!-- Google tag (gtag.js) -->
-        <!-- <script
-            TODO: 需要开启 Google Analytics
-            async
+        <script
             is:inline
+            async
             src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
-        ></script> -->
-        <!-- <script is:inline define:vars={{ gtagId }}>
-            TODO: 需要开启 Google Analytics
+        ></script>
+        <script is:inline define:vars={{ gtagId }}>
             window.dataLayer = window.dataLayer || [];
             function gtag() {
                 dataLayer.push(arguments);
             }
-            // 获取 URL 参数的函数，并进行防 XSS 处理
-            function getUrlParameter(name) {
-                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-                var results = regex.exec(location.search);
-                if (!results) return "";
-
-                // **先解码，再过滤非法字符**
-                let decodedValue = decodeURIComponent(results[1]);
-                return decodedValue.replace(/[^a-zA-Z0-9-_]/g, "");
-            }
-            // 初始化 Google Analytics
             gtag("js", new Date());
-            var utmCtid = getUrlParameter("utm_ctid");
-            gtag("config", gtagId, {
-                user_id: utmCtid || undefined,
-                utm_ctid: utmCtid || undefined,
-            });
-            if (utmCtid) {
-                gtag("event", "campaign_click", {
-                    utm_ctid: utmCtid,
-                });
-            }
-        </script> -->
+
+            gtag("config", gtagId);
+        </script>
 
         <div class="root">
             <BannerAndHeader
@@ -275,9 +254,6 @@ const {
             <PrepareHistory client:only />
 
             <!-- 
-
-            TODO: /?v=[vid]
-                + nanostore: caller
             TODO: /?s=[query]
             -->
         </div>
@@ -292,14 +268,6 @@ const {
     document.documentElement.setAttribute("javascript-enabled", "");
 
     if (globalThis.window) {
-        // 准备 browserHistory
-        // if (!window._browserHistory) {
-        //     import("history").then(({ default: history }) => {
-        //         window._browserHistory = history;
-        //         console.log(window._browserHistory);
-        //     });
-        // }
-
         // 站外链接兜底为新窗口打开
         document.body.addEventListener("click", (evt) => {
             if (
