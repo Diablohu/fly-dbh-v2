@@ -9,12 +9,23 @@ export const GET: APIRoute = async ({ params }) => {
             statusText: "Not found",
         });
     }
+
+    const keywords = [
+        ...new Set([
+            params.keyword,
+            params.keyword.replace(/([a-z])([0-9])/gi, "$1-$2"),
+            params.keyword.replace(/^[a-z]{1}([0-9a-z]{3})/gi, "$1"),
+        ]),
+    ];
+    const s = (name: string) =>
+        `(${keywords.map((keyword) => `${name} match "*${keyword}*"`).join(" || ")})`;
+
     return new Response(
         stringReplaceImagePath(
             JSON.stringify(
                 await fetch(`{
 'videos':
-    *[_type == "video" && title match "*${params.keyword}*"]
+    *[_type == "video" && ${s("title")}]
     | order( release desc )
     {
         _id,
@@ -39,7 +50,7 @@ export const GET: APIRoute = async ({ params }) => {
     }
     [0...5],
 
-'aircraftFamilies': *[_type == "aircraft_family" && (name match "*${params.keyword}*" || aircrafts[].name match "*${params.keyword}*" || aircrafts[].icao_code match "*${params.keyword}*")]
+'aircraftFamilies': *[_type == "aircraft_family" && (${s("name")} || ${s("aircrafts[].name")} || aircrafts[].icao_code match "*${params.keyword}*")]
     | order( maker->icao_code asc, name asc )
     {
         _id,
