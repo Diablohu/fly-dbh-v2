@@ -16,7 +16,6 @@ import { title as siteTitle, slogan } from "@/global";
 
 import { themeColorLight, themeColorDark } from "@/global";
 import "@/global.less";
-import type { boolean } from "astro:schema";
 
 // ============================================================================
 
@@ -89,9 +88,6 @@ const {
     showBanner = false,
     showFooter = false,
 } = Astro.props;
-
-const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
-    ?.value as ValidVideoSourceType;
 ---
 
 <!doctype html>
@@ -193,7 +189,7 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                 showBanner={showBanner}
                 showHeader={showHeader}
                 originPathname={Astro.originPathname}
-                selectedVideoSource={selectedVideoSource}
+                selectedVideoSource={Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType}
             >
                 <LogoSVG slot="logo" />
             </BannerAndHeader>
@@ -205,7 +201,7 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
             {
                 showFooter && (
                     <Block tag="footer" class="footer">
-                        FOOTER: Channels, Group, Contacts
+                        FOOTER: Domain, Channels, Community, Contacts, Powered By, Open Source
                         {import.meta.env.DEV ? (
                             <Fragment>
                                 <hr />
@@ -213,6 +209,8 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                                     <dt>Stage 1</dt>
                                     <dd>
                                         favicon
+                                        <br />
+                                        /watch/:slug
                                         <br />
                                         /videos
                                         <br />
@@ -233,6 +231,8 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                                         /sanity-images persist cache
                                         <br />
                                         ?s=
+                                        <br />
+                                        /search/:keyword
                                     </dd>
                                 </dl>
                                 <dl>
@@ -246,6 +246,8 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                                         <br />
                                         other stream types
                                         <br />
+                                        /vod/:slug
+                                        <br />
                                         /activities
                                     </dd>
                                 </dl>
@@ -255,6 +257,12 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
                                         /streams/clips
                                         <br />
                                         /shots
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>Stage 5</dt>
+                                    <dd>
+                                        /tools
                                     </dd>
                                 </dl>
                             </Fragment>
@@ -269,10 +277,6 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
             />
 
             <PrepareHistory client:only />
-
-            <!-- 
-            TODO: /?s=[query]
-            -->
         </div>
     </body>
 </html>

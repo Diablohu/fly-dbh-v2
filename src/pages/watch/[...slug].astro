@@ -27,9 +27,6 @@ if (error) {
     return Astro.rewrite("/500");
 }
 
-const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
-    ?.value as ValidVideoSourceType;
-
 // console.log(video);
 ---
 
@@ -44,7 +41,8 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
             links={video.links}
             title={video.title}
             cover={video.cover}
-            selectedVideoSource={selectedVideoSource}
+            selectedVideoSource={Astro.cookies.get(VIDEO_SOURCE)
+                ?.value as ValidVideoSourceType}
             client:load
         />
     </section>
@@ -154,9 +152,10 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
 
         <hr />
 
-        <section>参与讨论 @ ???</section>
-
-        <aside>设置：视频源</aside>
+        <aside>
+            <section class="options">设置：视频源</section>
+            <section>参与讨论 @ ???</section>
+        </aside>
     </Block>
 </Layout>
 
@@ -195,5 +194,9 @@ const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
         position: relative;
         z-index: 1;
         user-select: auto;
+
+        h1 {
+            font-size: unit(22px / 14px, em);
+        }
     }
 </style>

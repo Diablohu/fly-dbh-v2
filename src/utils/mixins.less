@@ -28,17 +28,12 @@
 
 // ============================================================================
 
-.theme-dark(@rules) {
-    @media (prefers-color-scheme: dark) {
-        & {
-            @rules();
-        }
+.color-scheme-light(@rules) {
+    :root.force-color-scheme-light {
+        @rules();
     }
-}
-
-.theme-light(@rules) {
     @media (prefers-color-scheme: light) {
-        & {
+        :root:not(.force-color-scheme-dark) & {
             @rules();
         }
     }
