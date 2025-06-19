@@ -31,17 +31,28 @@ if (error) {
 
 <section class="list">
     <h1>
-        VIDEOS / {
+        {
             Astro.props.isIndex ? (
-                "Index"
+                "最新模拟飞行视频"
             ) : (
                 <Fragment>
-                    [{Astro.props.type}] {Astro.params.slug}
+                    <small>{Astro.props.type}</small>
+                    {Astro.params.slug}
                 </Fragment>
             )
         }
     </h1>
     <hr />
+
+    {
+        Astro.props.isIndex ? null : (
+            <Fragment>
+                <section class="info">INFO: {Astro.params.slug}</section>
+                <hr />
+            </Fragment>
+        )
+    }
+
     <section class="video-list">
         {
             data.list.map((post) => (
@@ -76,6 +87,13 @@ if (error) {
 
         h1 {
             margin: 0;
+            font-size: unit(22px / 14px, em);
+        }
+
+        .info {
+            background: var(--tag-background-color);
+            border-radius: 10px;
+            padding: 1em;
         }
 
         .video-list {

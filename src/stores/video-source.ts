@@ -4,11 +4,16 @@ import { VIDEO_SOURCE } from "@/constants/cookie-names";
 import { type ValidVideoSourceType } from "@/types";
 import { defaultVideoSource } from "@/global";
 
+/**
+ * **请勿** 单独使用该 store
+ *  - 如需监听或更改视频源，请使用 _React Hook_ `useVideoSource`
+ */
 const videoSource = atom<ValidVideoSourceType>(
     globalThis.window
         ? (Cookies.get(VIDEO_SOURCE) as unknown as ValidVideoSourceType) ||
               defaultVideoSource
-        : defaultVideoSource
+        : // 服务器渲染时的初始值也是读取的 Cookie
+          defaultVideoSource
 );
 
 // videoSource.

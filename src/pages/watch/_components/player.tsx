@@ -24,7 +24,7 @@ type Props = {
 
 const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
-    const [$videoSource] = useVideoSource(selectedVideoSource);
+    const [$videoSource, setVideoSource] = useVideoSource(selectedVideoSource);
 
     useWindowResizeScroll((force?: boolean) => {
         if (PlayerRef.current) {
@@ -77,7 +77,7 @@ const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
                             版本
                         </p>
                         <p>请通过画面右上角更换视频平台</p>
-                        {/* TODO: 自动弹出选项 */}
+                        {/* TODO: 在这里直接切换 */}
                     </section>
                 ) : $videoSource === "bilibili" ? (
                     <iframe

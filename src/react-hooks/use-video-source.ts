@@ -1,8 +1,4 @@
-import {
-    useState,
-    useEffect,
-    useCallback,
-} from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useStore } from "@nanostores/react";
 import { type ValidVideoSourceType } from "@/types";
 
@@ -12,9 +8,9 @@ import videoSource from "@/stores/video-source";
 
 const useVideoSource = (
     /**
-     * 当前已选择的值
+     * 已选择的初始值
      * - 通常情况下，该值应为 _Astro_ 模板中服务器渲染时获取的 Cookie 值
-     *     - 参见 `@/pages/watch/_components/player.tsx`
+     *     - 参见 `@/layouts/layout.astro` 向 _React_ 组件 `<BannerAndHeader />` 传入 _props_ 的方式
      */
     selected: ValidVideoSourceType
 ): [ValidVideoSourceType, typeof videoSource.set] => {
