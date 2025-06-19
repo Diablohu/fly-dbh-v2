@@ -1,4 +1,5 @@
 import { memo, type FC, type ReactNode } from "react";
+import { type ValidVideoSourceType } from "@/types";
 
 import iconBilibili from "@/assets/icon-bilibili.svg?raw";
 import iconYouTube from "@/assets/icon-youtube.svg?raw";
@@ -10,18 +11,49 @@ import Header from "./header";
 
 // ============================================================================
 
-export const links = [
-    ["bilibili", "哔哩哔哩", "https://b.fly-dbh.com", "svg", iconBilibili],
-    ["youtube", "YouTube", "https://ytb.fly-dbh.com", "svg", iconYouTube],
-    ["douyin", "抖音", "https://douyin.fly-dbh.com", "svg", iconTiktok],
-    ["live", "直播间", "https://live.fly-dbh.com"],
-    ["qun", "粉丝群", "https://qun.fly-dbh.com", "svg", iconKook],
+export const links: {
+    name: string;
+    title: string;
+    href: string;
+    iconType?: "svg" | "png";
+    iconHtml?: string;
+}[] = [
+    {
+        name: "bilibili",
+        title: "哔哩哔哩",
+        href: "https://b.fly-dbh.com",
+        iconType: "svg",
+        iconHtml: iconBilibili,
+    },
+    {
+        name: "youtube",
+        title: "YouTube",
+        href: "https://ytb.fly-dbh.com",
+        iconType: "svg",
+        iconHtml: iconYouTube,
+    },
+    {
+        name: "douyin",
+        title: "抖音",
+        href: "https://douyin.fly-dbh.com",
+        iconType: "svg",
+        iconHtml: iconTiktok,
+    },
+    { name: "live", title: "直播间", href: "https://live.fly-dbh.com" },
+    {
+        name: "qun",
+        title: "粉丝群",
+        href: "https://qun.fly-dbh.com",
+        iconType: "svg",
+        iconHtml: iconKook,
+    },
 ];
 export type Props = {
     showBanner: boolean;
     showHeader: boolean;
     logo?: ReactNode;
     originPathname: string;
+    selectedVideoSource: ValidVideoSourceType;
 };
 
 // ============================================================================
@@ -31,6 +63,7 @@ const BannerAndHeader: FC<Props> = ({
     showBanner = false,
     logo,
     originPathname,
+    selectedVideoSource,
 }) => {
     return (
         <>
@@ -39,6 +72,7 @@ const BannerAndHeader: FC<Props> = ({
                 showHeader={showHeader}
                 logo={logo}
                 originPathname={originPathname}
+                selectedVideoSource={selectedVideoSource}
             />
         </>
     );

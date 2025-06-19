@@ -1,5 +1,7 @@
 ---
 import { actions } from "astro:actions";
+import { VIDEO_SOURCE } from "@/constants/cookie-names";
+import { type ValidVideoSourceType } from "@/types";
 
 // import log from "@/page-templates/index/_log.ts";
 
@@ -8,6 +10,7 @@ import Block from "@/components/block.astro";
 import Player from "./_components/player";
 
 import getDateString from "@/utils/get-date-string";
+import prettifyTitle from "@/utils/prettify-title";
 
 // ============================================================================
 
@@ -23,12 +26,20 @@ if (error) {
     return Astro.rewrite("/500");
 }
 
+const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
+    ?.value as ValidVideoSourceType;
+
 // console.log(video);
 ---
 
 <Layout showHeader showFooter title={video.title}>
     <section class="player-container">
-        <Player links={video.links} title={video.title} client:load />
+        <Player
+            links={video.links}
+            title={video.title}
+            selectedVideoSource={selectedVideoSource}
+            client:load
+        />
     </section>
     <Block class="infos">
         <p>
@@ -40,7 +51,7 @@ if (error) {
                 ))
             }
         </p>
-        <h1>{video.title}</h1>
+        <h1>{prettifyTitle(video.title)}</h1>
         <p>{getDateString(new Date(video.release))}</p>
 
         <hr />
@@ -123,7 +134,7 @@ if (error) {
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .player-container{
+    .player-container {
         // 宽高比小于 0.75(?) 固定播放器
     }
 

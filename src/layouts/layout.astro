@@ -2,6 +2,8 @@
 import { ClientRouter } from "astro:transitions";
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
+import { VIDEO_SOURCE } from "@/constants/cookie-names";
+import { type ValidVideoSourceType } from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
 import Block from "@/components/block.astro";
@@ -76,6 +78,9 @@ const {
     showBanner = false,
     showFooter = false,
 } = Astro.props;
+
+const selectedVideoSource = Astro.cookies.get(VIDEO_SOURCE)
+    ?.value as ValidVideoSourceType;
 ---
 
 <!doctype html>
@@ -177,6 +182,7 @@ const {
                 showBanner={showBanner}
                 showHeader={showHeader}
                 originPathname={Astro.originPathname}
+                selectedVideoSource={selectedVideoSource}
             >
                 <LogoSVG slot="logo" />
             </BannerAndHeader>
@@ -188,7 +194,7 @@ const {
             {
                 showFooter && (
                     <Block tag="footer" class="footer">
-                        FOOTER
+                        FOOTER: Channels, Group, Contacts
                         {import.meta.env.DEV ? (
                             <Fragment>
                                 <hr />
@@ -197,13 +203,13 @@ const {
                                     <dd>
                                         favicon
                                         <br />
-                                        ?v=
-                                        <br />
                                         /videos
                                         <br />
-                                        /videos/:tag
+                                        /videos/:type-:tag
                                         <br />
-                                        v2.fly-dbh.com preview
+                                        Custom 404
+                                        <br />
+                                        Custom 500
                                         <br />
                                         cache strategy
                                         <br />
