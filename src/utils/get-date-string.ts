@@ -9,7 +9,7 @@ import dayjs from "dayjs";
  * - 如果该时间距离当前 **不超过 1 天**: `N 小时前`
  * - 如果该时间距离当前 **不超过 2 天**: `昨天`
  * - 如果该时间和当前 **同一年**: `M 月 D 日`
- * - 其他: `YYYY 年 M 月 D 日`
+ * - 其他: `YYYY 年 M 月`
  */
 const getDateString = (date: Date) => {
     const now = new Date();
@@ -30,7 +30,7 @@ const getDateString = (date: Date) => {
 
     const d = dayjs(date);
     if (now.getFullYear() === date.getFullYear()) return d.format("M 月 D 日");
-    return d.format("YYYY 年 M 月 D 日");
+    return d.format("YYYY 年 M 月");
 };
 
 export default getDateString;

@@ -2,6 +2,7 @@ import { z } from "astro:schema";
 import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
+import { type VideoItemType } from "@/types";
 
 const fetchProjections = `{
     _id,
@@ -10,8 +11,7 @@ const fetchProjections = `{
     'tags': tags[]->{
         _id,
         'slug': slug.current,
-        "value": name,
-        "label": title
+        "name": title
     },
     release,
     "cover": cover.asset->path,
@@ -57,56 +57,7 @@ const actions = {
         handler: async (cmsIdOrSlug) => {
             try {
                 const res = (
-                    await fetch<{
-                        _id: string;
-                        slug?: string;
-                        title: string;
-                        tags: {
-                            _id: string;
-                            slug?: string;
-                            value: string;
-                            label: string;
-                        }[];
-                        release: string;
-                        cover: string;
-                        description: string;
-                        links: {
-                            bilibili: string;
-                            youtube: string;
-                            douyin: string;
-                        };
-                        aircraft_families: {
-                            _id: string;
-                            slug?: string;
-                            maker: string;
-                            name: string;
-                        }[];
-                        aerodromes: {
-                            _id: string;
-                            slug?: string;
-                            icao: string;
-                            iata: string;
-                            name: string;
-                        }[];
-                        developers: {
-                            _id: string;
-                            slug?: string;
-                            name: string;
-                        }[];
-                        games: {
-                            _id: string;
-                            slug?: string;
-                            name: string;
-                        }[];
-                        msfs_updates: {
-                            _id: string;
-                            slug?: string;
-                            game: string;
-                            series: string;
-                            number: number;
-                            release: string;
-                        }[];
-                    }>(
+                    await fetch<VideoItemType>(
                         `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`,
                         (res) => {
                             res[0].cover = transformImagePath(res[0].cover);

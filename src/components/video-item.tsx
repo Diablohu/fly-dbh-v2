@@ -21,7 +21,7 @@ export type Props = {
     title: string;
     cover: string;
     tags?: string[];
-    infos?: (string | Date)[];
+    infos?: (string | Date | Array<string | Date>)[];
 };
 
 // ============================================================================
@@ -88,7 +88,17 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
                 infos.length > 0 &&
                 infos.map((info, index) => (
                     <span className={styles["info"]} key={index}>
-                        {info instanceof Date ? getDateString(info) : info}
+                        {info instanceof Date
+                            ? getDateString(info)
+                            : Array.isArray(info)
+                              ? info.map((i, index) => (
+                                    <span key={index}>
+                                        {i instanceof Date
+                                            ? getDateString(i)
+                                            : i}
+                                    </span>
+                                ))
+                              : info}
                     </span>
                 ))}
         </a>

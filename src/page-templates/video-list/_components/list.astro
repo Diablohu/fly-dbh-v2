@@ -1,9 +1,8 @@
 ---
 import { actions } from "astro:actions";
 import { type VideoListPageTypesType } from "@/types";
-import VideoItem, {
-    type Props as VideoItemProps,
-} from "@/components/video-item";
+import VideoItem from "@/components/video-item";
+import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -62,8 +61,29 @@ if (error) {
                     slug={post.slug}
                     title={post.title}
                     cover={post.cover}
-                    tags={[]}
-                    infos={[new Date(post.release)]}
+                    tags={
+                        // [
+                        //     Astro.props.isIndex
+                        //         ? getVideoItemTopTag(post, "latest")?.name || ""
+                        //         : Astro.props.type === "tag" &&
+                        //             Astro.props.slug === "review"
+                        //         ? getVideoItemTopTag(post, "review")?.name || ""
+                        //         : "",
+                        // ].filter(Boolean)
+                        []
+                    }
+                    infos={[
+                        [
+                            Astro.props.isIndex
+                                ? getVideoItemTopTag(post, "latest")?.name || ""
+                                : Astro.props.type === "tag" &&
+                                    Astro.props.slug === "review"
+                                  ? getVideoItemTopTag(post, "review")?.name ||
+                                    ""
+                                  : "",
+                            new Date(post.release),
+                        ].filter(Boolean),
+                    ]}
                 />
             ))
         }

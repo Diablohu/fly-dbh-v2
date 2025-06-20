@@ -7,6 +7,8 @@ import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 
+import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+
 // ============================================================================
 //
 // 语言包相关
@@ -66,19 +68,21 @@ if (error) {
         {
             [
                 ["latest", "最新视频"],
-                ["tutorials", "模拟飞行教学视频", "training"],
-                ["news", "模拟飞行资讯视频", "news"],
-                ["reviews", "模拟飞行评测视频", "benchmark"],
-                ["world", "航空专题视频", "world"],
-            ].map(([collectionName, title, tagName]) => (
+                ["tutorials", "模拟飞行教学视频", "tag-tutorial"],
+                ["news", "模拟飞行资讯视频", "tag-news"],
+                ["reviews", "模拟飞行评测视频", "tag-review"],
+                ["world", "航空专题视频", "tag-world"],
+            ].map(([collectionName, title, routeName]) => (
                 <dl class="collection" data-collection={collectionName}>
                     <dt>
                         <h3>
-                            <a href={`/videos${tagName ? `/${tagName}` : ""}`}>
+                            <a
+                                href={`/videos${routeName ? `/${routeName}` : ""}`}
+                            >
                                 {title}
                             </a>
                         </h3>
-                        <a href={`/videos${tagName ? `/${tagName}` : ""}`}>
+                        <a href={`/videos${routeName ? `/${routeName}` : ""}`}>
                             更多
                         </a>
                     </dt>
@@ -90,21 +94,35 @@ if (error) {
                                 slug: post.slug,
                                 title: post.title,
                                 cover: post.cover,
-                                tags:
-                                    collectionName === "latest"
-                                        ? [post.tags[0].label]
-                                        : collectionName === "tutorials"
-                                          ? [
-                                                post.tags.filter((tag) =>
-                                                    [
-                                                        "aircraft",
-                                                        "tip",
-                                                        "aviation",
-                                                    ].includes(tag.value)
-                                                )[0]?.label,
-                                            ].filter(Boolean)
-                                          : [],
-                                infos: [new Date(post.release)],
+                                // tags:
+                                //     collectionName === "latest"
+                                //         ? [post.tags[0].name]
+                                //         : collectionName === "tutorials"
+                                //           ? [
+                                //                 post.tags.filter((tag) =>
+                                //                     [
+                                //                         "training",
+                                //                         "tip",
+                                //                         "aviation",
+                                //                     ].includes(tag.slug)
+                                //                 )[0]?.name,
+                                //             ].filter(Boolean)
+                                //           : [],
+                                infos: [
+                                    [
+                                        getVideoItemTopTag(
+                                            post,
+                                            collectionName === "tutorials"
+                                                ? "tutorial"
+                                                : collectionName === "reviews"
+                                                  ? "review"
+                                                  : (collectionName as Parameters<
+                                                        typeof getVideoItemTopTag
+                                                    >[1])
+                                        )?.name || "",
+                                        new Date(post.release),
+                                    ].filter(Boolean),
+                                ],
                             }))}
                         />
                     </dd>

@@ -3,15 +3,8 @@ import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
-import { type VideoListPageTypesType } from "@/types";
+import { type VideoListPageTypesType, type VideoItemType } from "@/types";
 
-const baseProjections = `{
-    _id,
-    'slug': slug.current,
-    title,
-    release,
-    "cover": cover.asset->path,
-}`;
 const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
     if (!type) return "";
     switch (type) {
@@ -38,20 +31,43 @@ const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
     }
     return "";
 };
-const getProjections = (type?: VideoListPageTypesType) => {
-    // TODO: projections based on type
-    return baseProjections;
-};
+const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
+    _id,
+    'slug': slug.current,
+    title,
+    release,
+    "cover": cover.asset->path,
+    'tags': tags[]->{
+        _id,
+        'slug': slug.current,
+        "value": name,
+        "name": title
+    },
+    ${
+        type === "tag" && slug === "news"
+            ? `'developers': developers[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },`
+            : type === "tag" && slug === "review"
+              ? `'developers': developers[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },
+    'games': games[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },`
+              : ""
+    }
+}`;
 // const fetchProjections = `{
 //     _id,
 //     'slug': slug.current,
 //     title,
-//     'tags': tags[]->{
-//         _id,
-//         'slug': slug.current,
-//         "value": name,
-//         "label": title
-//     },
 //     release,
 //     "cover": cover.asset->path,
 //     description,
@@ -89,59 +105,10 @@ const getProjections = (type?: VideoListPageTypesType) => {
 //     }
 // }`;
 // links
-type VideoItemType = {
-    _id: string;
-    slug?: string;
-    title: string;
-    release: string;
-    cover: string;
-    // description: string;
-    // links: {
-    //     bilibili: string;
-    //     youtube: string;
-    //     douyin: string;
-    // };
-
-    tags?: {
-        _id: string;
-        slug?: string;
-        value: string;
-        label: string;
-    }[];
-    aircraft_families?: {
-        _id: string;
-        slug?: string;
-        maker: string;
-        name: string;
-    }[];
-    aerodromes?: {
-        _id: string;
-        slug?: string;
-        icao: string;
-        iata: string;
-        name: string;
-    }[];
-    developers?: {
-        _id: string;
-        slug?: string;
-        name: string;
-    }[];
-    games?: {
-        _id: string;
-        slug?: string;
-        name: string;
-    }[];
-    msfs_updates?: {
-        _id: string;
-        slug?: string;
-        game: string;
-        series: string;
-        number: number;
-        release: string;
-    }[];
-};
+type ReturnVideoItemType = Partial<VideoItemType> &
+    Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">;
 type ResponseDataType = {
-    list: VideoItemType[];
+    list: ReturnVideoItemType[];
     total: number;
     page: number;
 };
@@ -161,7 +128,7 @@ const actions = {
         }>,
         handler: async ({ type, slug: cmsIdOrSlug, from = 0, length = 20 }) => {
             try {
-                const query = `*[_type == "video"${getFilter(type, cmsIdOrSlug)}] ${getProjections(type)} | order( release desc )`;
+                const query = `*[_type == "video"${getFilter(type, cmsIdOrSlug)}] ${getProjections(type, cmsIdOrSlug)} | order( release desc )`;
 
                 return (await fetch(
                     `{
@@ -177,7 +144,7 @@ const actions = {
                         // const maxPage = Math.ceil(r.total / length);
                         // console.log(r.total, from, length, maxPage);
                         r.page = Math.floor(from / length) + 1;
-                        return r as unknown as SanityDocument<VideoItemType>[];
+                        return r as unknown as SanityDocument<ReturnVideoItemType>[];
                     }
                 )) as unknown as ResponseDataType;
             } catch (err) {
