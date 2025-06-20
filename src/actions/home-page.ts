@@ -2,29 +2,41 @@ import type { SanityDocument } from "@sanity/client";
 import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
+import { type VideoItemType } from "@/types";
 
 const fetchSorting = ` | order( release desc )`;
-const fetchProjections = `{
+const getProjections = (collection: string) => `{
     _id,
     'slug': slug.current,
     title,
     'tags': tags[]->{
-        "value": name,
-        "label": title
+        _id,
+        'slug': slug.current,
+        "name": title
     },
     release,
     "cover": cover.asset->path,
+    ${
+        collection === "reviews"
+            ? `'developers': developers[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },
+    'games': games[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },`
+            : ""
+    }
 }`;
 // links
 
-type DocumentType = SanityDocument<{
-    _id: string;
-    slug?: string;
-    title: string;
-    tags: { value: string; label: string }[];
-    release: string;
-    cover: string;
-}>;
+type DocumentType = SanityDocument<
+    Partial<VideoItemType> &
+        Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">
+>;
 type CollectionsType = {
     [collection: string]: DocumentType[];
 };
@@ -37,16 +49,16 @@ const actions = {
                     `{
 ${[
     ["latest"],
-    ["tutorials", "training"],
+    ["tutorials", "tutorial"],
     ["news", "news"],
-    ["reviews", "benchmark"],
+    ["reviews", "review"],
     ["world", "world"],
 ]
     .map(
-        ([name, tagName, count = 10]) =>
+        ([name, tagSlug, count = 10]) =>
             `'${name}': *[_type == "video"${
-                tagName ? ` && "${tagName}" in tags[]->name` : ""
-            }] ${fetchSorting} ${fetchProjections} [0...${count}]`
+                tagSlug ? ` && "${tagSlug}" in tags[]->slug.current` : ""
+            }] ${fetchSorting} ${getProjections(name)} [0...${count}]`
     )
     .join(",")}
 }`,

@@ -29,10 +29,12 @@ export const GET: APIRoute = async ({ params }) => {
     | order( release desc )
     {
         _id,
+        "slug": slug.current,
         title,
         'tags': tags[]->{
-            "value": name,
-            "label": title
+            _id,
+            "slug": slug.current,
+            "name": title
         },
         release,
         description,

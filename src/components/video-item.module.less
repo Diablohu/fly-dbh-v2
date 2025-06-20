@@ -39,11 +39,13 @@
         margin-top: 0.16667em;
         margin-bottom: 0.3333em;
         font-weight: normal;
-        color: var(--text-color-secondary);
+        // color: var(--text-color-secondary);
+        color: #f1f1f1;
         .tag {
             --border-radius: 0.3333em;
             display: inline-block;
-            background: var(--tag-background-color);
+            // background: var(--tag-background-color);
+            background: var(--accent-color-purple);
             line-height: 1.6667em;
             padding: 0 0.5em;
             & + .tag {
@@ -70,6 +72,21 @@
         font-size: 0.85em;
         line-height: 1.3333em;
         transition: inherit;
+
+        & > span {
+            display: inline-block;
+            position: relative;
+            + span {
+                margin-left: 1em;
+                &::before {
+                    content: "・";
+                    position: absolute;
+                    top: 50%;
+                    line-height: 0;
+                    left: -1em;
+                }
+            }
+        }
     }
 
     // &::after {
