@@ -371,6 +371,7 @@
         flex: 0 0
             calc((var(--link-icon-size) + var(--link-icon-extra-edge) * 2) * 4);
         opacity: var(--aside-opacity);
+        transition: opacity var(--base-transition-duration) ease-in-out;
     }
 
     .logo {
@@ -438,7 +439,6 @@
     }
 
     .options {
-        transition: opacity var(--base-transition-duration) ease-in-out;
         height: calc(var(--link-icon-size) + 20px);
         text-align: right;
         .switch-video-source {

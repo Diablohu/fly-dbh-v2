@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
-import Cookies from "js-cookie";
-import { VIDEO_SOURCE } from "@/constants/cookie-names";
+import { parse as parseCookie, serialize as serializeCookie } from "cookie";
+import { VIDEO_SOURCE, getSetVideoSourceOptions } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import { defaultVideoSource } from "@/global";
 
@@ -10,8 +10,9 @@ import { defaultVideoSource } from "@/global";
  */
 const videoSource = atom<ValidVideoSourceType>(
     globalThis.window
-        ? (Cookies.get(VIDEO_SOURCE) as unknown as ValidVideoSourceType) ||
-              defaultVideoSource
+        ? (parseCookie(document.cookie)[
+              VIDEO_SOURCE
+          ] as unknown as ValidVideoSourceType) || defaultVideoSource
         : // 服务器渲染时的初始值也是读取的 Cookie
           defaultVideoSource
 );
@@ -27,6 +28,10 @@ if (globalThis.window) {
 
     // 监听 `videoSource` 变化，将最新值写入 cookie
     videoSource.subscribe((newValue, oldValue) => {
-        Cookies.set(VIDEO_SOURCE, newValue);
+        document.cookie = serializeCookie(
+            VIDEO_SOURCE,
+            newValue,
+            getSetVideoSourceOptions()
+        );
     });
 }
