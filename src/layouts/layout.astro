@@ -2,7 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
-import { VIDEO_SOURCE } from "@/constants/cookie-names";
+import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
@@ -10,7 +10,7 @@ import Block from "@/components/block.astro";
 import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
 import Announcements from "./_components/announcements.astro";
-import PrepareHistory from "./_components/prepare-history";
+import PrepareClient from "./_components/prepare-client";
 
 import { title as siteTitle, slogan } from "@/global";
 
@@ -216,7 +216,7 @@ const {
                                         <br />
                                         /videos/:type-:tag
                                         <br />
-                                        Custom 404
+                                        Custom 404, check old tag name
                                         <br />
                                         Custom 500
                                         <br />
@@ -276,7 +276,7 @@ const {
                 originPathname={Astro.originPathname}
             />
 
-            <PrepareHistory client:only />
+            <PrepareClient client:only />
         </div>
     </body>
 </html>

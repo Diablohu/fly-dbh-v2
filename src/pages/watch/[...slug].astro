@@ -1,6 +1,6 @@
 ---
 import { actions } from "astro:actions";
-import { VIDEO_SOURCE } from "@/constants/cookie-names";
+import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import dayjs from "dayjs";
 
@@ -10,7 +10,6 @@ import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import Player from "./_components/player";
 
-import getDateString from "@/utils/get-date-string";
 import prettifyTitle from "@/utils/prettify-title";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
@@ -168,10 +167,11 @@ if (error) {
         --player-aspect-ratio: 16/9;
         --player-min-height: 300px;
         --player-max-height: calc(100dvh - var(--global-header-height) * 4);
+        --player-background: #000;
 
         position: relative;
         z-index: 2;
-        background: #000;
+        background: var(--player-background);
         width: 100%;
         user-select: none;
 

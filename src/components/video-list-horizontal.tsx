@@ -88,6 +88,7 @@ const VideoListHorizontal: FC<{
                 ObserverRef.current.unobserve(IntersectionCheckEnd.current);
             }
             ObserverRef.current?.disconnect();
+            ObserverRef.current = null;
         };
     }, []);
 

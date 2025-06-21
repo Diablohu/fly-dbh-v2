@@ -11,6 +11,8 @@
     // border-top: var(--player-height-shrink) solid transparent;
 
     & > .wrapper {
+        background: var(--player-background);
+
         &,
         & > iframe,
         & > .no-valid-link {
@@ -23,6 +25,10 @@
             border: 0;
             // box-shadow: 0 0 50px 10px #f00;
         }
+        // & > iframe,
+        // & > .no-valid-link {
+        //     opacity: 0.25;
+        // }
         & > .no-valid-link {
             display: flex;
             flex-flow: column nowrap;
@@ -63,17 +69,30 @@
     }
 
     // 宽高比大于一定值时，缩小播放器
-    @media (aspect-ratio > @video-player-sticky-screen-aspect-ratio) and (height > 620px) {
+    @media (aspect-ratio > @video-player-sticky-screen-aspect-ratio) and (height > @video-player-dynamic-screen-min-height) {
         & > .wrapper {
-            position: sticky;
-            aspect-ratio: var(--player-aspect-ratio);
-            min-height: var(--player-min-height);
-            max-height: var(--player-max-height);
-            width: 100%;
-            height: auto;
-            top: calc(var(--global-sticky-top) - var(--player-height-shrink));
+            // position: sticky;
+            // aspect-ratio: var(--player-aspect-ratio);
+            // min-height: var(--player-min-height);
+            // max-height: var(--player-max-height);
+            // width: 100%;
+            // height: auto;
+            // top: calc(var(--global-sticky-top) - var(--player-height-shrink));
+            // left: 0;
+            // border-top: var(--player-height-shrink) solid transparent;
+            position: fixed;
+            top: var(--global-sticky-top);
             left: 0;
-            border-top: var(--player-height-shrink) solid transparent;
+            width: 100%;
+            height: 100%;
+            min-height: var(--player-min-height);
+            height: calc(
+                (100vw - var(--body-scrollbar-width)) * 9 / 16 -
+                    var(--player-height-shrink)
+            );
+            max-height: calc(
+                var(--player-max-height) - var(--player-height-shrink)
+            );
             & > iframe,
             & > .no-valid-link {
                 // min-height: calc(

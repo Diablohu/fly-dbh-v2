@@ -1,8 +1,8 @@
-import { useCallback, useState, useRef, useEffect, memo, type FC } from "react";
+import { useState, useRef, useEffect, memo, type FC } from "react";
 import classNames from "classnames";
 
 import { slogan } from "@/global";
-import useWindowResizeScroll from "@/react-hooks/use-window-resize-scroll";
+import useWindow from "@/react-hooks/use-window";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
@@ -23,27 +23,33 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
     const VideoRef = useRef<HTMLVideoElement>(null);
     const [renderBanner, setRenderBanner] = useState(showBanner);
 
-    useWindowResizeScroll((force?: boolean) => {
-        if (!force && !Banner.bannerInView) return;
+    useWindow(
+        (force?: boolean) => {
+            if (!force && !Banner.bannerInView) return;
 
-        if (BannerRef.current) {
-            const wrapperHeight = BannerRef.current.offsetHeight;
-            BannerRef.current.style.setProperty(
-                "--content-scale",
-                `${Math.min(
-                    1,
-                    Math.max(
-                        0,
-                        (wrapperHeight - window.scrollY) / wrapperHeight
-                    )
-                )}`
-            );
-            BannerRef.current.style.setProperty(
-                "--video-offset-y",
-                `${window.scrollY / 2}px`
-            );
+            if (BannerRef.current) {
+                const wrapperHeight = BannerRef.current.offsetHeight;
+                BannerRef.current.style.setProperty(
+                    "--content-scale",
+                    `${Math.min(
+                        1,
+                        Math.max(
+                            0,
+                            (wrapperHeight - window.scrollY) / wrapperHeight
+                        )
+                    )}`
+                );
+                BannerRef.current.style.setProperty(
+                    "--video-offset-y",
+                    `${window.scrollY / 2}px`
+                );
+            }
+        },
+        {
+            resize: true,
+            scroll: true,
         }
-    });
+    );
 
     useEffect(() => {
         if (!Banner.observer) {
@@ -110,10 +116,8 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
 
     useEffect(() => {
         return () => {
-            if (Banner.observer) {
-                Banner.observer.disconnect();
-                Banner.observer = undefined;
-            }
+            Banner.observer?.disconnect();
+            Banner.observer = undefined;
         };
     }, []);
 

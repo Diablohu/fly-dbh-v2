@@ -1,7 +1,7 @@
 import { memo, useMemo, useRef, type FC } from "react";
 import { type ValidVideoSourceType } from "@/types";
 
-import useWindowResizeScroll from "@/react-hooks/use-window-resize-scroll";
+import useWindow from "@/react-hooks/use-window";
 import useVideoSource from "@/react-hooks/use-video-source";
 import getPlatformName from "@/utils/get-platform-name";
 
@@ -26,14 +26,20 @@ const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
     const [$videoSource, setVideoSource] = useVideoSource(selectedVideoSource);
 
-    useWindowResizeScroll((force?: boolean) => {
-        if (PlayerRef.current) {
-            PlayerRef.current.style.setProperty(
-                "--player-height-shrink",
-                `${window.scrollY}px`
-            );
+    useWindow(
+        (force?: boolean) => {
+            if (PlayerRef.current) {
+                PlayerRef.current.style.setProperty(
+                    "--player-height-shrink",
+                    `${window.scrollY}px`
+                );
+            }
+        },
+        {
+            resize: true,
+            scroll: true,
         }
-    });
+    );
 
     const url = useMemo(() => {
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
