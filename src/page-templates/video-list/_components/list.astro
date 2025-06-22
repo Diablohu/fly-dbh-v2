@@ -3,6 +3,7 @@ import { actions } from "astro:actions";
 import { type VideoListPageTypesType } from "@/types";
 import VideoItem from "@/components/video-item";
 import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+import LLL from "./l2";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -87,6 +88,14 @@ if (error) {
                 />
             ))
         }
+        <LLL
+            client:idle
+            initialList={data.list}
+            length={20}
+            type={Astro.props.type}
+            slug={Astro.props.slug}
+            isIndex={Astro.props.isIndex}
+        />
     </section>
     <hr />
     <p>
