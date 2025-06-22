@@ -1,6 +1,15 @@
-import { useState, useEffect, useRef, useCallback, type FC } from "react";
+import {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    useMemo,
+    type FC,
+} from "react";
 import { actions } from "astro:actions";
+import dbg from "debug";
 import { type VideoListPageTypesType, type VideoItemType } from "@/types";
+import { VIDEO_LIST_GRID } from "@/constants/debug-keys";
 
 import VideoItem from "@/components/video-item";
 
@@ -11,35 +20,54 @@ import styles from "./video-list-grid.module.less";
 // ============================================================================
 
 type StatusType = "ready" | "loading" | "complete" | "error";
+type Props = {
+    type?: VideoListPageTypesType;
+    slug?: string;
+    isIndex?: boolean;
+    length: number;
+    initialList?: (Partial<VideoItemType> &
+        Pick<VideoItemType, "_id" | "title" | "release" | "cover">)[];
+    initialListIsComplete?: boolean;
+    infiniteScroll?: boolean;
+};
+
+const debug = dbg(VIDEO_LIST_GRID);
+debug.namespace = VIDEO_LIST_GRID;
+
+if (import.meta.env.DEV || import.meta.env.MODE === "test") {
+    debug.enabled = true;
+}
 
 // ============================================================================
 
-const VideoListGrid: FC<{
-    type?: VideoListPageTypesType;
-    slug?: string;
-    isIndex: boolean;
-    length: number;
-    initialList?: VideoItemType[];
-    infiniteScroll?: boolean;
-}> = ({
+const VideoListGrid: FC<Props> = ({
     type,
     slug,
-    isIndex,
+    isIndex: _isIndex,
     length,
     initialList = [],
+    initialListIsComplete = false,
     infiniteScroll = false,
 }) => {
     const ListContainerRef = useRef<HTMLDivElement>(null);
     const InfiniteScrollIndicatorRef = useRef<HTMLDivElement>(null);
     const InfiniteScrollObserverRef = useRef<IntersectionObserver>(null);
     const CurrentIndexRef = useRef(initialList?.length || 0);
-    const StatusRef = useRef<StatusType>("ready");
+    const StatusRef = useRef<StatusType>(
+        initialListIsComplete ? "complete" : "ready"
+    );
 
     const [status, setStatus] = useState<StatusType>(StatusRef.current);
-    const [list, setList] = useState<VideoItemType[]>(initialList);
+    const [list, setList] =
+        useState<Required<Props>["initialList"]>(initialList);
+
+    const isIndex = useMemo(
+        () => (typeof _isIndex === "boolean" ? _isIndex : !type),
+        [_isIndex, type]
+    );
 
     const loadMore = useCallback(() => {
-        if (StatusRef.current === "loading") return;
+        if (["loading", "complete"].includes(StatusRef.current)) return;
 
         setStatus("loading");
         actions
@@ -50,8 +78,52 @@ const VideoListGrid: FC<{
                 length,
             })
             .then((res) => {
-                setStatus("ready");
-                console.log(res.data);
+                debug("fetch action response: %O", res.data);
+                if (!res || !res.data || !Array.isArray(res.data.list)) {
+                    throw res;
+                } else {
+                    const forceComplete = res.data.list.length < length;
+                    if (!res.data.list.length) {
+                        debug("no data received. set complete");
+                        setStatus("complete");
+                    } else
+                        setList((prevList) => {
+                            const newList = [
+                                ...prevList,
+                                ...res.data.list.filter(
+                                    ({ _id }) =>
+                                        !prevList.some(
+                                            (post) => post._id === _id
+                                        )
+                                ),
+                            ];
+                            if (forceComplete) {
+                                debug(
+                                    `received item count less than ${length}. set complete. total: ${newList.length}`
+                                );
+                                setStatus("complete");
+                            } else {
+                                debug(
+                                    "list expanded: " +
+                                        [
+                                            `current page: ${res.data.page} / ${Math.ceil(
+                                                res.data.total / length
+                                            )}`,
+                                            `items: ${newList.length} / ${res.data.total}`,
+                                        ].join(" | ")
+                                );
+                                if (newList.length >= res.data.total) {
+                                    setStatus("complete");
+                                } else {
+                                    setStatus("ready");
+                                }
+                            }
+                            return newList;
+                        });
+                }
+            })
+            .catch((err) => {
+                console.trace(err);
             });
     }, [type, slug, length]);
 
@@ -64,34 +136,45 @@ const VideoListGrid: FC<{
                 (entries) => {
                     entries.forEach((entry) => {
                         if (
-                            entry.target === InfiniteScrollIndicatorRef.current
+                            entry.target ===
+                                InfiniteScrollIndicatorRef.current &&
+                            entry.isIntersecting
                         ) {
                             loadMore();
                         }
                     });
                 },
-                { root: ListContainerRef.current, threshold: 0 }
+                { threshold: 0 }
             );
         }
 
+        if (InfiniteScrollIndicatorRef.current)
+            InfiniteScrollObserverRef.current.observe(
+                InfiniteScrollIndicatorRef.current
+            );
+
         return () => {
-            if (ListContainerRef.current)
+            if (InfiniteScrollIndicatorRef.current)
                 InfiniteScrollObserverRef.current?.unobserve(
-                    ListContainerRef.current
+                    InfiniteScrollIndicatorRef.current
                 );
             InfiniteScrollObserverRef.current?.disconnect();
             InfiniteScrollObserverRef.current = null;
         };
     }, [infiniteScroll, loadMore]);
 
-    useEffect(() => {
-        if (!infiniteScroll) return;
-        loadMore();
-    }, [loadMore, infiniteScroll]);
+    // useEffect(() => {
+    //     if (!infiniteScroll) return;
+    //     loadMore();
+    // }, [loadMore, infiniteScroll]);
 
     useEffect(() => {
         StatusRef.current = status;
     }, [status]);
+
+    useEffect(() => {
+        CurrentIndexRef.current = list.length;
+    }, [list]);
 
     return (
         <div className={styles["video-list-grid"]} ref={ListContainerRef}>
@@ -103,35 +186,46 @@ const VideoListGrid: FC<{
                     slug={post.slug}
                     title={post.title}
                     cover={post.cover}
-                    tags={
-                        // [
-                        //     Astro.props.isIndex
-                        //         ? getVideoItemTopTag(post, "latest")?.name || ""
-                        //         : Astro.props.type === "tag" &&
-                        //             Astro.props.slug === "review"
-                        //         ? getVideoItemTopTag(post, "review")?.name || ""
-                        //         : "",
-                        // ].filter(Boolean)
-                        []
-                    }
+                    // tags={[
+                    //     isIndex
+                    //         ? getVideoItemTopTag(post, "latest")?.name || ""
+                    //         : type === "tag" && slug === "review"
+                    //           ? getVideoItemTopTag(post, "review")?.name || ""
+                    //           : "",
+                    // ].filter(Boolean)}
                     infos={[
                         [
                             isIndex
                                 ? getVideoItemTopTag(post, "latest")?.name || ""
-                                : type === "tag" && slug === "review"
-                                  ? getVideoItemTopTag(post, "review")?.name ||
-                                    ""
-                                  : "",
+                                : type === "tag" && slug === "news"
+                                  ? getVideoItemTopTag(post, "news")?.name || ""
+                                  : type === "tag" && slug === "review"
+                                    ? getVideoItemTopTag(post, "review")
+                                          ?.name || ""
+                                    : "",
                             new Date(post.release),
                         ].filter(Boolean),
                     ]}
                 />
             ))}
-            <div
-                ref={InfiniteScrollIndicatorRef}
-                className={styles["infinite-scroll-indicator"]}
-            ></div>
-            <button onClick={loadMore}>LOAD MORE</button>
+
+            <section className={styles["block"]}>
+                <span
+                    ref={InfiniteScrollIndicatorRef}
+                    className={styles["infinite-scroll-indicator"]}
+                />
+                {status === "complete" ? (
+                    <span className={styles["completed"]}>没有更多啦~</span>
+                ) : (
+                    <button
+                        type="button"
+                        onClick={loadMore}
+                        disabled={["loading", "complete"].includes(status)}
+                    >
+                        {status === "loading" ? "获取更多..." : "获取更多"}
+                    </button>
+                )}
+            </section>
         </div>
     );
 };

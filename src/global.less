@@ -104,6 +104,16 @@
     --menu-background-color-highlight: #535353;
     --border-color: rgba(255, 255, 255, 0.2);
 
+    .color-scheme-light(@rules) {
+        &.force-color-scheme-light {
+            @rules();
+        }
+        @media (prefers-color-scheme: light) {
+            &:not(.force-color-scheme-dark) & {
+                @rules();
+            }
+        }
+    }
     .color-scheme-light({
         --theme-color: var(--light-theme-color);
         --theme-color-p-20: var(--light-theme-color-p-20);

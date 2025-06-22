@@ -1,7 +1,7 @@
 import dbg from "debug";
-import { common } from "@/constants/debug-keys";
+import { FLY_DBH_V2 } from "@/constants/debug-keys";
 
-const debug = dbg(common);
+const debug = dbg(FLY_DBH_V2);
 debug.color = "#FE8DE6";
 debug.namespace = "FLY-DBH";
 

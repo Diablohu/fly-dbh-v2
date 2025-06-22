@@ -1,9 +1,8 @@
 ---
 import { actions } from "astro:actions";
 import { type VideoListPageTypesType } from "@/types";
-import VideoItem from "@/components/video-item";
-import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
-import LLL from "./l2";
+
+import VideoListGrid from "@/components/video-list-grid";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -54,55 +53,17 @@ if (error) {
     }
 
     <section class="video-list">
-        {
-            data.list.map((post) => (
-                // TODO: tags by category
-                <VideoItem
-                    cmsId={post._id}
-                    slug={post.slug}
-                    title={post.title}
-                    cover={post.cover}
-                    tags={
-                        // [
-                        //     Astro.props.isIndex
-                        //         ? getVideoItemTopTag(post, "latest")?.name || ""
-                        //         : Astro.props.type === "tag" &&
-                        //             Astro.props.slug === "review"
-                        //         ? getVideoItemTopTag(post, "review")?.name || ""
-                        //         : "",
-                        // ].filter(Boolean)
-                        []
-                    }
-                    infos={[
-                        [
-                            Astro.props.isIndex
-                                ? getVideoItemTopTag(post, "latest")?.name || ""
-                                : Astro.props.type === "tag" &&
-                                    Astro.props.slug === "review"
-                                  ? getVideoItemTopTag(post, "review")?.name ||
-                                    ""
-                                  : "",
-                            new Date(post.release),
-                        ].filter(Boolean),
-                    ]}
-                />
-            ))
-        }
-        <LLL
+        <VideoListGrid
             client:idle
-            initialList={data.list}
-            length={20}
             type={Astro.props.type}
             slug={Astro.props.slug}
             isIndex={Astro.props.isIndex}
+            length={length}
+            initialList={data.list}
+            initialListIsComplete={data.list.length >= data.total}
+            infiniteScroll
         />
     </section>
-    <hr />
-    <p>
-        Total: {data.total} | Page: {data.page} / {
-            Math.ceil(data.total / length)
-        } | TODO: Pagination
-    </p>
 </section>
 
 <style lang="less">
@@ -125,9 +86,6 @@ if (error) {
         }
 
         .video-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2em 1em;
             padding: 1em 0;
         }
     }
