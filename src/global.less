@@ -73,7 +73,7 @@
 
     --dark-text-color-primary: #f1f1f1;
     --dark-text-color-secondary: #aaa;
-    --dark-tag-background-color: rgba(255, 255, 255, 0.1);
+    --dark-tag-background-color: rgba(255, 255, 255, 0.125);
 
     --accent-color-purple: #6a14d1;
     --accent-color-blue: #04b8f4;
@@ -130,7 +130,10 @@
     //
     // ========================================================================
 
-    .font-size-clamp-with-line-height(unit((14 / 0.85), px), unit((1.5 * 14 / 0.85), px));
+    .font-size-clamp-with-line-height(
+        unit((@base-font-size-number / 0.85), px),
+        unit((1.5 * @base-font-size-number / 0.85), px)
+    );
     font-family: var(--global-font-family);
     font-weight: var(--global-font-weight);
     color: var(--text-color-secondary);
@@ -183,6 +186,22 @@ h6 {
     line-height: 120%;
     letter-spacing: var(--title-letter-spacing);
     color: var(--text-color-primary);
+}
+
+h1 {
+    font-size: unit((22px / @base-font-size-number), em);
+}
+h2 {
+    font-size: unit((20px / @base-font-size-number), em);
+}
+h3 {
+    font-size: unit((18px / @base-font-size-number), em);
+}
+h4 {
+    font-size: unit((16px / @base-font-size-number), em);
+}
+h5 {
+    font-size: unit((14px / @base-font-size-number), em);
 }
 
 hr {
