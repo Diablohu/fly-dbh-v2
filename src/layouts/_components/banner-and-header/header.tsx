@@ -12,9 +12,19 @@ import styles from "./index.module.less";
 const Header: FC<
     Pick<
         Props,
-        "showHeader" | "logo" | "originPathname" | "selectedVideoSource"
+        | "showHeader"
+        | "logo"
+        | "originPathname"
+        | "selectedVideoSource"
+        | "forcedColorScheme"
     >
-> = ({ showHeader, logo, originPathname, selectedVideoSource }) => {
+> = ({
+    showHeader,
+    logo,
+    originPathname,
+    selectedVideoSource,
+    forcedColorScheme,
+}) => {
     return (
         <header
             className={classNames([
@@ -53,7 +63,7 @@ const Header: FC<
                 <section
                     className={classNames([styles["aside"], styles["options"]])}
                 >
-                    😲
+                    ☀ ☾
                     {/* TODO: 视频源改为下拉菜单内容，菜单中还包括亮暗切换 */}
                 </section>
             </section>

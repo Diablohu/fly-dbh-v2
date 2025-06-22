@@ -56,6 +56,7 @@ export type Props = {
     logo?: ReactNode;
     originPathname: string;
     selectedVideoSource: ValidVideoSourceType;
+    forcedColorScheme?: "dark" | "light";
 };
 
 // ============================================================================
@@ -66,6 +67,7 @@ const BannerAndHeader: FC<Props> = ({
     logo,
     originPathname,
     selectedVideoSource,
+    forcedColorScheme,
 }) => {
     return (
         <>
@@ -75,6 +77,7 @@ const BannerAndHeader: FC<Props> = ({
                 logo={logo}
                 originPathname={originPathname}
                 selectedVideoSource={selectedVideoSource}
+                forcedColorScheme={forcedColorScheme}
             />
         </>
     );

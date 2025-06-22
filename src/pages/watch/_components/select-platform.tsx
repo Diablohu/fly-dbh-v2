@@ -13,6 +13,8 @@ const SelectPlatform: FC<{
     selectedVideoSource: ValidVideoSourceType;
     isInsidePlayer?: boolean;
 }> = ({ selectedVideoSource, isInsidePlayer = false }) => {
+    const [videoSource] = useVideoSource(selectedVideoSource);
+
     return (
         <section
             className={classNames([
@@ -28,8 +30,7 @@ const SelectPlatform: FC<{
                     ["bilibili", "youtube", "douyin"]
                         .filter(
                             (source) =>
-                                (isInsidePlayer &&
-                                    source !== selectedVideoSource) ||
+                                (isInsidePlayer && source !== videoSource) ||
                                 !isInsidePlayer
                         )
                         .includes(name)
@@ -68,7 +69,7 @@ const Item: FC<{
         selectedVideoSource,
         showLabel = false,
     }) => {
-        const [$videoSource, setVideoSource] =
+        const [videoSource, setVideoSource] =
             useVideoSource(selectedVideoSource);
         const onClick = useCallback(() => {
             setVideoSource(name);
@@ -81,7 +82,7 @@ const Item: FC<{
                     styles["item"],
                     styles[`item-${name}`],
                     {
-                        [styles["is-active"]]: name === $videoSource,
+                        [styles["is-active"]]: name === videoSource,
                     },
                 ])}
                 title={title}

@@ -2,7 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
-import { VIDEO_SOURCE } from "@/constants/cookies";
+import { VIDEO_SOURCE, FORCE_COLOR_SCHEME } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
@@ -88,24 +88,41 @@ const {
     showBanner = false,
     showFooter = false,
 } = Astro.props;
+
+const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale} data-content-type={contentType}>
+<html lang={Astro.currentLocale} data-content-type={contentType} class:list={[
+    forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : ''
+]}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
-        <meta name="color-scheme" content="dark light" />
-        <meta
-            name="theme-color"
-            content={themeColorLight}
-            media="(prefers-color-scheme: light)"
-        />
-        <meta
-            name="theme-color"
-            content={themeColorDark}
-            media="(prefers-color-scheme: dark)"
-        />
+        <meta name="color-scheme" content={forcedColorScheme ? `only ${forcedColorScheme}` : "dark light"} />
+        {forcedColorScheme === 'dark'
+            ? <meta
+                name="theme-color"
+                content={themeColorDark}
+            />
+            : forcedColorScheme === 'light'
+            ? <meta
+                name="theme-color"
+                content={themeColorLight}
+            />
+            : (<Fragment>
+                    <meta
+                    name="theme-color"
+                    content={themeColorLight}
+                    media="(prefers-color-scheme: light)"
+                />
+                <meta
+                    name="theme-color"
+                    content={themeColorDark}
+                    media="(prefers-color-scheme: dark)"
+                />
+            </Fragment>)
+        }
 
         <title>
             {title === "FLY-DBH.com" ? title : `${title} | FLY-DBH.com`}
@@ -190,6 +207,7 @@ const {
                 showHeader={showHeader}
                 originPathname={Astro.originPathname}
                 selectedVideoSource={Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType}
+                forcedColorScheme={forcedColorScheme as 'dark' | 'light' | undefined}
             >
                 <LogoSVG slot="logo" />
             </BannerAndHeader>
@@ -209,8 +227,6 @@ const {
                                     <dt>Stage 1</dt>
                                     <dd>
                                         favicon
-                                        <br />
-                                        /watch/:slug
                                         <br />
                                         /videos
                                         <br />
@@ -233,6 +249,8 @@ const {
                                         ?s=
                                         <br />
                                         /search/:keyword
+                                        <br />
+                                        /watch/:slug expand infos, related or latest videos?
                                     </dd>
                                 </dl>
                                 <dl>
