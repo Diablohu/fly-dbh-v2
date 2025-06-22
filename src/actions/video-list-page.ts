@@ -129,7 +129,7 @@ const actions = {
         handler: async ({ type, slug: cmsIdOrSlug, from = 0, length = 20 }) => {
             try {
                 const query = `*[_type == "video"${getFilter(type, cmsIdOrSlug)}] ${getProjections(type, cmsIdOrSlug)} | order( release desc )`;
-
+                // console.log({ query });
                 return (await fetch(
                     `{
 'list' : ${query} [${from}...${from + length}],
