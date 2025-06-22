@@ -257,7 +257,9 @@ if (error) {
             gap: 0.5em 0.5em;
             .tag {
                 --border-radius: 0.3333em;
-                display: inline-block;
+                display: flex;
+                flex-flow: row wrap;
+                gap: 0 0.5em;
                 background: var(--tag-background-color);
                 line-height: 1.6667em;
                 border: 1px solid var(--tag-background-color);
@@ -272,9 +274,9 @@ if (error) {
                     background: var(--tag-background-color);
                     display: inline-block;
                     margin-left: -0.5em;
-                    margin-right: 0.25em;
                     padding: 0 0.5em;
-                    border-radius: var(--border-radius) 0 0 var(--border-radius);
+                    border-radius: var(--border-radius);
+                    white-space: nowrap;
                 }
             }
             &:empty {
