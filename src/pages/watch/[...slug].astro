@@ -3,12 +3,14 @@ import { actions } from "astro:actions";
 import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import dayjs from "dayjs";
+import numeral from "numeral";
 
 // import log from "@/page-templates/index/_log.ts";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import Player from "./_components/player";
+import SelectPlatform from "./_components/select-platform";
 
 import prettifyTitle from "@/utils/prettify-title";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
@@ -46,116 +48,158 @@ if (error) {
             client:load
         />
     </section>
-    <Block class="infos">
-        <p>
-            {
-                video.tags?.map(({ _id, slug, name }) => (
-                    <a href={getVideoListPageLink("tag", slug || _id)}>
-                        {name}
-                    </a>
-                ))
-            }
-        </p>
-        <h1>{prettifyTitle(video.title)}</h1>
-        <p>{dayjs(new Date(video.release)).format(`YYYY年M月D日 HH:mm`)}</p>
-
-        <hr />
-
-        <section>{video.description}</section>
-        <section>
-            <h4>相关机型系列</h4>
-            <p>
-                {
-                    video.aircraft_families?.map(
-                        ({ _id, slug, maker, name }) => (
+    <Block class="video-infos">
+        <section class="infos-container">
+            <section class="title">
+                <section class="tags">
+                    {
+                        video.tags?.map(({ _id, slug, name }) => (
                             <a
-                                href={getVideoListPageLink(
-                                    "aircraftFamily",
-                                    slug || _id
-                                )}
+                                class="tag"
+                                href={getVideoListPageLink("tag", slug || _id)}
                             >
-                                <span>{maker}</span> {name}
+                                {name}
                             </a>
+                        ))
+                    }
+                </section>
+                <h1>{prettifyTitle(video.title)}</h1>
+                <section class="release">
+                    {
+                        dayjs(new Date(video.release)).format(
+                            `YYYY年M月D日 HH:mm`
                         )
+                    }
+                </section>
+                <SelectPlatform
+                    client:idle
+                    selectedVideoSource={Astro.cookies.get(VIDEO_SOURCE)
+                        ?.value as ValidVideoSourceType}
+                />
+            </section>
+
+            <section class="description">{video.description}</section>
+
+            <section class="relations">
+                {
+                    (
+                        [
+                            // [
+                            //     "",
+                            //     video.tags?.map(({ _id, slug, name }) => ({
+                            //         name,
+                            //         route: getVideoListPageLink(
+                            //             "tag",
+                            //             slug || _id
+                            //         ),
+                            //     })),
+                            // ],
+                            [
+                                "相关机型系列",
+                                video.aircraft_families?.map(
+                                    ({ _id, slug, maker, name }) => ({
+                                        prefix: maker,
+                                        name,
+                                        route: getVideoListPageLink(
+                                            "aircraftFamily",
+                                            slug || _id
+                                        ),
+                                    })
+                                ),
+                            ],
+                            [
+                                "相关机场",
+                                video.aerodromes?.map(
+                                    ({ _id, slug, icao, iata, name }) => ({
+                                        prefix: [icao, iata]
+                                            .map((s) => s.toUpperCase())
+                                            .join(" / "),
+                                        name,
+                                        route: getVideoListPageLink(
+                                            "aerodrome",
+                                            slug || _id
+                                        ),
+                                    })
+                                ),
+                            ],
+                            [
+                                "相关开发商",
+                                video.developers?.map(
+                                    ({ _id, slug, name }) => ({
+                                        name,
+                                        route: getVideoListPageLink(
+                                            "developer",
+                                            slug || _id
+                                        ),
+                                    })
+                                ),
+                            ],
+                            [
+                                "相关平台",
+                                video.games?.map(({ _id, slug, name }) => ({
+                                    name,
+                                    route: getVideoListPageLink(
+                                        "platform",
+                                        slug || _id
+                                    ),
+                                })),
+                            ],
+                            [
+                                "相关平台更新",
+                                video.msfs_updates?.map(
+                                    ({
+                                        _id,
+                                        slug,
+                                        game,
+                                        series,
+                                        number,
+                                        release,
+                                    }) => ({
+                                        prefix: isNaN(game as unknown as number)
+                                            ? game
+                                            : `微软${game}`,
+                                        name: `${series.toUpperCase()}_${numeral(number).format("00")} (${dayjs(release).format("YY年M月")})`,
+                                        route: getVideoListPageLink(
+                                            "platform",
+                                            slug || _id
+                                        ),
+                                    })
+                                ),
+                            ],
+                        ] as [
+                            string,
+                            {
+                                prefix?: string;
+                                name: string;
+                                route: string;
+                            }[],
+                        ][]
+                    ).map(
+                        ([relationName, tags]) =>
+                            Array.isArray(tags) &&
+                            tags.length > 0 && (
+                                <dl class="relation">
+                                    {relationName && <dt>{relationName}</dt>}
+                                    <dd class="tags">
+                                        {tags?.map(
+                                            ({ prefix, name, route }) => (
+                                                <a class="tag" href={route}>
+                                                    {prefix && (
+                                                        <span class="prefix">
+                                                            {prefix}
+                                                        </span>
+                                                    )}
+                                                    {name}
+                                                </a>
+                                            )
+                                        )}
+                                    </dd>
+                                </dl>
+                            )
                     )
                 }
-            </p>
+            </section>
         </section>
-        <section>
-            <h4>相关机场</h4>
-            <p>
-                {
-                    video.aerodromes?.map(({ _id, slug, icao, iata, name }) => (
-                        <a
-                            href={getVideoListPageLink(
-                                "aerodrome",
-                                slug || _id
-                            )}
-                        >
-                            <span>
-                                {icao} / {iata}
-                            </span>{" "}
-                            {name}
-                        </a>
-                    ))
-                }
-            </p>
-        </section>
-        <section>
-            <h4>相关开发商</h4>
-            <p>
-                {
-                    video.developers?.map(({ _id, slug, name }) => (
-                        <a
-                            href={getVideoListPageLink(
-                                "developer",
-                                slug || _id
-                            )}
-                        >
-                            {name}
-                        </a>
-                    ))
-                }
-            </p>
-        </section>
-        <section>
-            <h4>相关平台</h4>
-            <p>
-                {
-                    video.games?.map(({ _id, slug, name }) => (
-                        <a href={getVideoListPageLink("platform", slug || _id)}>
-                            {name}
-                        </a>
-                    ))
-                }
-            </p>
-        </section>
-        <section>
-            <h4>相关平台更新</h4>
-            <p>
-                {
-                    video.msfs_updates?.map(
-                        ({ _id, slug, game, series, number, release }) => (
-                            <a
-                                href={getVideoListPageLink(
-                                    "platformUpdate",
-                                    slug || _id
-                                )}
-                            >
-                                <span>{game}</span> {series} {number} {release}
-                            </a>
-                        )
-                    )
-                }
-            </p>
-        </section>
-
-        <hr />
-
-        <aside>
-            <section class="options">设置：视频源</section>
-            <section>参与讨论 @ ???</section>
-        </aside>
     </Block>
 </Layout>
 
@@ -170,7 +214,7 @@ if (error) {
         --player-background: #000;
 
         position: relative;
-        z-index: 2;
+        z-index: 5;
         background: var(--player-background);
         width: 100%;
         user-select: none;
@@ -192,13 +236,95 @@ if (error) {
         // }
     }
 
-    .infos {
+    .video-infos {
         position: relative;
         z-index: 1;
-        user-select: auto;
+        user-select: all;
+    }
 
-        h1 {
-            font-size: unit((22px / 14px), em);
+    .infos-container {
+        user-select: auto;
+        padding: 1em 0 4em 0;
+        display: flex;
+        flex-flow: row wrap;
+        gap: 0.75em 2em;
+
+        .tags {
+            font-size: unit((13px / @base-font-size-number), em);
+            font-weight: normal;
+            display: flex;
+            flex-flow: row wrap;
+            gap: 0.5em 0.5em;
+            .tag {
+                --border-radius: 0.3333em;
+                display: inline-block;
+                background: var(--tag-background-color);
+                line-height: 1.6667em;
+                border: 1px solid var(--tag-background-color);
+                border-radius: var(--border-radius);
+                padding: 0 0.5em;
+                color: var(--text-color-primary);
+                text-decoration: none;
+                &:hover {
+                    background-color: var(--menu-background-color-highlight);
+                }
+                .prefix {
+                    background: var(--tag-background-color);
+                    display: inline-block;
+                    margin-left: -0.5em;
+                    margin-right: 0.25em;
+                    padding: 0 0.5em;
+                    border-radius: var(--border-radius) 0 0 var(--border-radius);
+                }
+            }
+            &:empty {
+                display: none;
+            }
         }
+
+        & > .title {
+            flex: 1 0 100%;
+            padding: 0 0 0.75em 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 0.5em;
+            position: relative;
+            & > .tags {
+                margin-bottom: 0.25em;
+            }
+            & > h1 {
+                margin: 0;
+            }
+        }
+        & > .description {
+            flex: 7;
+        }
+        & > .relations {
+            flex: 3;
+            display: flex;
+            flex-flow: row wrap;
+            gap: 1em 1em;
+            & > .relation {
+                margin: 0;
+                padding: 0;
+                flex: 1 1 600px;
+                & > dt {
+                    color: var(--text-color-secondary);
+                    margin: 0 0 0.3333em 0;
+                    // font-weight: bolder;
+                }
+                & > dd {
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+        }
+
+        .screen-sm({
+            & > .description {
+                flex-basis: 100%;
+            }
+        });
     }
 </style>

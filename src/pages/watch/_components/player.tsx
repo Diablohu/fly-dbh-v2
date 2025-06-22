@@ -4,6 +4,7 @@ import { type ValidVideoSourceType } from "@/types";
 import useWindow from "@/react-hooks/use-window";
 import useVideoSource from "@/react-hooks/use-video-source";
 import getPlatformName from "@/utils/get-platform-name";
+import SelectPlatform from "./select-platform";
 
 import styles from "./player.module.less";
 
@@ -82,8 +83,11 @@ const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
                             </strong>
                             版本
                         </p>
-                        <p>请通过画面右上角更换视频平台</p>
-                        {/* TODO: 在这里直接切换 */}
+                        <p>请角更换视频平台</p>
+                        <SelectPlatform
+                            selectedVideoSource={selectedVideoSource}
+                            isInsidePlayer
+                        />
                     </section>
                 ) : $videoSource === "bilibili" ? (
                     <iframe

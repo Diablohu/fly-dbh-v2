@@ -1,0 +1,90 @@
+@import "@/utils/mixins.less";
+
+.select-platform {
+    --icon-theme-color: inherit;
+    --icon-size: 1.25em;
+    --icon-padding: 0.3333em;
+    --icon-gap: 0px;
+    --item-hover-scale: 1.2;
+
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    line-height: 1.75em;
+    user-select: none;
+
+    & > span {
+        padding-right: 0.5em;
+    }
+
+    .item {
+        appearance: none;
+        background: transparent;
+        border: 0;
+        display: inline-block;
+        color: inherit;
+        padding: var(--icon-padding) 0 var(--icon-padding) var(--icon-padding);
+        transition-property: color, transform, opacity;
+        position: relative;
+        vertical-align: top;
+        & + .item {
+            margin-left: var(--icon-gap);
+        }
+        & > svg,
+        & > img {
+            display: inline-block;
+            width: var(--icon-size);
+            height: var(--icon-size);
+            object-fit: contain;
+            vertical-align: top;
+            margin-right: var(--icon-padding);
+        }
+        &:hover {
+            color: var(--icon-theme-color);
+            transform: scale(var(--item-hover-scale));
+        }
+        &:active {
+            transform: scale(var(--item-hover-scale)) translateY(1.5px);
+        }
+        &.item-bilibili {
+            --icon-theme-color: var(--theme-color-bilibili);
+            top: -1px;
+        }
+        &.item-youtube {
+            --icon-theme-color: var(--theme-color-youtube);
+        }
+        &.item-douyin {
+            --icon-theme-color: var(--theme-color-tiktok);
+        }
+        &.is-active {
+            color: var(--icon-theme-color);
+            pointer-events: none;
+        }
+    }
+
+    .screen-sm({
+        &:not(.mod-is-inside-player){
+            --icon-size: 1.5em;
+            --icon-padding: 0.5em;
+            position: relative;
+            order: -1;
+            text-align: center;
+            background: var(--tag-background-color);
+            border-radius: 10px;
+            line-height: 2.5em;
+            padding: 0.25em;
+            margin-bottom: 0.5em;
+        }
+    });
+
+    &.mod-is-inside-player {
+        --icon-gap: 0.5em;
+        --item-hover-scale: 1;
+        position: relative;
+        background: var(--tag-background-color);
+        border-radius: 10px;
+        padding: 0.25em 0.5em;
+        margin: 0.25em 0 0 0;
+    }
+}

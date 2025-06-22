@@ -441,54 +441,6 @@
     .options {
         height: calc(var(--link-icon-size) + 20px);
         text-align: right;
-        .switch-video-source {
-            .video-source-switch-item {
-                --icon-theme-color: inherit;
-                appearance: none;
-                background: transparent;
-                border: 0;
-                display: inline-block;
-                color: inherit;
-                padding: 10px var(--link-icon-extra-edge);
-                transition-property: color, transform, opacity;
-                position: relative;
-                &:last-child {
-                    margin-right: calc(var(--link-icon-extra-edge) * -1);
-                }
-                & > svg,
-                & > img {
-                    display: block;
-                    width: var(--link-icon-size);
-                    height: var(--link-icon-size);
-                    object-fit: contain;
-                }
-                &:hover {
-                    color: var(--icon-theme-color);
-                    transform: scale(1.2);
-                }
-                &:active {
-                    transform: scale(1.2) translateY(1.5px);
-                }
-                &.video-source-switch-item-bilibili {
-                    --icon-theme-color: var(--theme-color-bilibili);
-                    top: -1px;
-                }
-                &.video-source-switch-item-youtube {
-                    --icon-theme-color: var(--theme-color-youtube);
-                }
-                &.video-source-switch-item-douyin {
-                    --icon-theme-color: var(--theme-color-tiktok);
-                }
-                &.video-source-switch-item-qun {
-                    --icon-theme-color: var(--theme-color-kook);
-                    top: 1px;
-                }
-                &.is-active {
-                    color: var(--icon-theme-color);
-                    pointer-events: none;
-                }
-            }
-        }
     }
 
     .screen-sm({
