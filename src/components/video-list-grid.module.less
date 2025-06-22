@@ -1,6 +1,21 @@
 .video-list-grid {
     position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2em 1em;
+
+    & > .block {
+        grid-column: 1 / -1;
+        position: relative;
+    }
 
     .infinite-scroll-indicator {
+        position: absolute;
+        z-index: -1;
+        top: -10em;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        // background: #f00;
     }
 }

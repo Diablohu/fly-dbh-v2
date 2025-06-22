@@ -17,7 +17,9 @@ const PrepareHistory: FC = () => {
         (force?: boolean) => {
             document.documentElement.style.setProperty(
                 "--body-scrollbar-width",
-                window.innerWidth - document.documentElement.clientWidth + "px"
+                // window.innerWidth - document.documentElement.clientWidth + "px"
+                // 获取 body 实际宽度，这个数值不包含 body 的 margin
+                window.innerWidth - document.body.offsetWidth + "px"
             );
         },
         {

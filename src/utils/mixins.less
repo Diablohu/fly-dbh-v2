@@ -33,17 +33,6 @@
 
 // ============================================================================
 
-.color-scheme-light(@rules) {
-    :root.force-color-scheme-light {
-        @rules();
-    }
-    @media (prefers-color-scheme: light) {
-        :root:not(.force-color-scheme-dark) & {
-            @rules();
-        }
-    }
-}
-
 .local(@currentLocale, @rules) {
     html[lang="@{currentLocale}"] & {
         @rules();
