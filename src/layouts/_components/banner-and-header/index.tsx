@@ -55,8 +55,10 @@ export type Props = {
     showHeader: boolean;
     logo?: ReactNode;
     originPathname: string;
-    selectedVideoSource: ValidVideoSourceType;
-    forcedColorScheme?: "dark" | "light";
+    defaults: {
+        selectedVideoSource: ValidVideoSourceType;
+        forcedColorScheme?: "dark" | "light";
+    };
 };
 
 // ============================================================================
@@ -66,8 +68,7 @@ const BannerAndHeader: FC<Props> = ({
     showBanner = false,
     logo,
     originPathname,
-    selectedVideoSource,
-    forcedColorScheme,
+    defaults,
 }) => {
     return (
         <>
@@ -76,8 +77,7 @@ const BannerAndHeader: FC<Props> = ({
                 showHeader={showHeader}
                 logo={logo}
                 originPathname={originPathname}
-                selectedVideoSource={selectedVideoSource}
-                forcedColorScheme={forcedColorScheme}
+                defaults={defaults}
             />
         </>
     );

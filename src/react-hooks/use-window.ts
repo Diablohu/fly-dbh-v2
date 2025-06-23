@@ -30,7 +30,7 @@ const useWindow = (
         // capture the next onScroll
         AnimateTickingRef.current = false;
         func(force);
-    }, []);
+    }, [func]);
 
     const setStyles = useCallback(() => {
         if (!AnimateTickingRef.current) {

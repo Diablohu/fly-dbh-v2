@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 import isRouteActive from "@/utils/is-route-active";
 import { navLinks } from "@/global";
+import HeaderOptions from "./header-options";
 import { type Props } from "./";
 
 import styles from "./index.module.less";
@@ -10,21 +11,8 @@ import styles from "./index.module.less";
 // ============================================================================
 
 const Header: FC<
-    Pick<
-        Props,
-        | "showHeader"
-        | "logo"
-        | "originPathname"
-        | "selectedVideoSource"
-        | "forcedColorScheme"
-    >
-> = ({
-    showHeader,
-    logo,
-    originPathname,
-    selectedVideoSource,
-    forcedColorScheme,
-}) => {
+    Pick<Props, "showHeader" | "logo" | "originPathname" | "defaults">
+> = ({ showHeader, logo, originPathname, defaults }) => {
     return (
         <header
             className={classNames([
@@ -61,10 +49,9 @@ const Header: FC<
                     ))}
                 </nav>
                 <section
-                    className={classNames([styles["aside"], styles["options"]])}
+                    className={classNames([styles["aside"], styles["right"]])}
                 >
-                    ☀ ☾
-                    {/* TODO: 视频源改为下拉菜单内容，菜单中还包括亮暗切换 */}
+                    <HeaderOptions defaults={defaults} />
                 </section>
             </section>
         </header>
