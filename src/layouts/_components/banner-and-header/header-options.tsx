@@ -4,15 +4,20 @@ import {
     memo,
     type FC,
     type MouseEventHandler,
+    type HTMLAttributes,
 } from "react";
 import classNames from "classnames";
 
 import symbolCogFill from "@/assets/svg-symbols/cog-fill.svg?raw";
 import symbolCogHollow from "@/assets/svg-symbols/cog-hollow.svg?raw";
 
-import Menu, { MenuTitleItem } from "@/components/menu";
+import Menu, { MenuItem, MenuTitleItem, MenuLineItem } from "@/components/menu";
+
+import useColorScheme from "@/react-hooks/use-color-scheme";
+import useVideoSource from "@/react-hooks/use-video-source";
 // import isRouteActive from "@/utils/is-route-active";
 import { type Props } from "./";
+import { links } from "./";
 
 import styles from "./index.module.less";
 
@@ -48,9 +53,16 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
                 open={showMenu}
                 setOpenState={setShowMenu}
                 anchorPoint="bottomRight"
+                className={styles["global-options"]}
             >
                 <MenuTitleItem>颜色主题</MenuTitleItem>
+                <OptionColorScheme defaultValue={defaults.forcedColorScheme} />
+                <MenuLineItem />
                 <MenuTitleItem>视频播放平台</MenuTitleItem>
+                <OptionVideoSource
+                    defaultValue={defaults.selectedVideoSource}
+                />
+                <MenuLineItem />
                 <MenuTitleItem>列表自动加载更多</MenuTitleItem>
             </Menu>
             {/* TODO: 视频源改为下拉菜单内容，菜单中还包括亮暗切换 ☀ ☾ */}
@@ -59,3 +71,106 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
 };
 
 export default memo(HeaderOptions);
+
+// ============================================================================
+
+const OptionItem: FC<
+    HTMLAttributes<HTMLButtonElement> & {
+        isActive?: boolean;
+    }
+> = ({ className, isActive = false, ...props }) => {
+    return (
+        <button
+            type="button"
+            className={classNames([styles["option-item"], className], {
+                [styles["is-active"]]: isActive,
+            })}
+            {...props}
+        />
+    );
+};
+
+// ============================================================================
+
+const OptionColorScheme: FC<{
+    defaultValue: Pick<Props, "defaults">["defaults"]["forcedColorScheme"];
+}> = ({ defaultValue }) => {
+    const [forcedColorScheme, setForcedColorScheme] =
+        useColorScheme(defaultValue);
+
+    const onClick = useCallback<MouseEventHandler<HTMLButtonElement>>(
+        (evt) => {
+            setForcedColorScheme(
+                evt.currentTarget.getAttribute(
+                    "data-value"
+                ) as typeof defaultValue
+            );
+        },
+        [setForcedColorScheme]
+    );
+
+    return (
+        <MenuItem className={styles["option-switch-container"]}>
+            {[
+                ["暗色", "dark"],
+                ["亮色", "light"],
+                ["跟随系统", ""],
+            ].map(([label, value]) => (
+                <OptionItem
+                    key={value}
+                    isActive={(forcedColorScheme || "") === value}
+                    data-value={value}
+                    onClick={onClick}
+                >
+                    {label}
+                </OptionItem>
+            ))}
+        </MenuItem>
+    );
+};
+
+// ============================================================================
+
+const OptionVideoSource: FC<{
+    defaultValue: Pick<Props, "defaults">["defaults"]["selectedVideoSource"];
+}> = ({ defaultValue }) => {
+    const [videoSource, setVideoSource] = useVideoSource(defaultValue);
+
+    const onClick = useCallback<MouseEventHandler<HTMLButtonElement>>(
+        (evt) => {
+            setVideoSource(
+                evt.currentTarget.getAttribute(
+                    "data-video-platform"
+                ) as typeof defaultValue
+            );
+        },
+        [setVideoSource]
+    );
+
+    return (
+        <MenuItem className={styles["option-switch-container"]}>
+            {links
+                .filter(({ name }) =>
+                    ["bilibili", "youtube", "douyin"].includes(name)
+                )
+                .map(({ name, title, iconType, iconHtml }) => (
+                    <OptionItem
+                        key={name}
+                        isActive={videoSource === name}
+                        data-video-platform={name}
+                        onClick={onClick}
+                        dangerouslySetInnerHTML={{
+                            __html: [
+                                iconType === "png"
+                                    ? `<img src="${iconHtml}" alt="${title}" />`
+                                    : iconType === "svg"
+                                      ? iconHtml
+                                      : "",
+                                title,
+                            ].join(""),
+                        }}
+                    />
+                ))}
+        </MenuItem>
+    );
+};

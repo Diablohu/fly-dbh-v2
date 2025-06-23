@@ -39,8 +39,8 @@ export const navLinks = [
         : null,
     import.meta.env.DEV
         ? {
-              route: "/about",
-              name: "联系",
+              route: "/donate",
+              name: "资助",
               icon: "",
           }
         : null,

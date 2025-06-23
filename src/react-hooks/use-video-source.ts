@@ -9,6 +9,7 @@ import {
 } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import { defaultVideoSource } from "@/global";
+import { cookie as logCookie } from "@/utils/log";
 
 // ============================================================================
 
@@ -23,12 +24,13 @@ const videoSource = atom<ValidVideoSourceType>(
 if (globalThis.window) {
     // 客户端中
     // 监听 `videoSource` 变化，将最新值写入 cookie
-    videoSource.subscribe((newValue, oldValue) => {
+    videoSource.listen((newValue, oldValue) => {
         document.cookie = serializeCookie(
             VIDEO_SOURCE,
             newValue,
             getGeneralCookieOptions()
         );
+        logCookie(`set VIDEO_SOURCE to ${newValue}`);
     });
 }
 
@@ -39,7 +41,7 @@ const useVideoSource = (
      * 已选择的初始值
      * - 通常情况下，该值应为 _Astro_ 模板中服务器渲染时获取的 Cookie 值
      *     - 参见 `@/layouts/layout.astro` 向 _React_ 组件 `<BannerAndHeader />` 传入 _props_ 的方式
-     * 
+     *
      * 为什么需要传入初始值
      *  - 为确保 _Astro_ 渲染结果和 _React_ 脱水结果一致
      */

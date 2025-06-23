@@ -6,6 +6,7 @@
 // };
 
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
+export type ValidColorSchemeType = "dark" | "light";
 
 export type VideoListPageTypesType =
     | "tag"

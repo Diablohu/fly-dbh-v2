@@ -28,13 +28,14 @@ const Menu: FC<
         setOpenState?: Dispatch<SetStateAction<boolean>>;
         onClose?: () => unknown;
         anchorPoint?: "topLeft" | "topRight" | "bottomRight" | "bottomLeft";
-    } & Pick<MenuHTMLAttributes<HTMLMenuElement>, "children">
+    } & Pick<MenuHTMLAttributes<HTMLMenuElement>, "children" | "className">
 > = ({
     open: _open = false,
     setOpenState: _setOpenState,
     onClose,
     anchorPoint = "topLeft",
     children,
+    className,
 }) => {
     const MenuRef = useRef<HTMLMenuElement>(null);
     const AnchorRef = useRef<HTMLElement>(null);
@@ -55,8 +56,10 @@ const Menu: FC<
     }, []);
     const onDocumentBodyClick = useCallback(
         (evt: MouseEvent) => {
-            if (!ClickedOnMenuRef.current) closeMenu();
-            ClickedOnMenuRef.current = false;
+            setTimeout(() => {
+                if (!ClickedOnMenuRef.current) closeMenu();
+                ClickedOnMenuRef.current = false;
+            });
         },
         [closeMenu]
     );
@@ -184,6 +187,7 @@ const Menu: FC<
                     <menu
                         className={classNames([
                             styles["menu"],
+                            className,
                             {
                                 [styles["mod-fading-out"]]: !openState,
                             },
@@ -205,17 +209,33 @@ export default memo(Menu);
 
 // ============================================================================
 
+export const MenuItem: FC<HTMLAttributes<HTMLDivElement>> = ({
+    className,
+    ...props
+}) => {
+    return (
+        <section
+            className={classNames([styles["menu-item"], className])}
+            {...props}
+        />
+    );
+};
+
 export const MenuTitleItem: FC<HTMLAttributes<HTMLHeadingElement>> = ({
     children,
 }) => {
     return (
-        <h3
+        <h5
             className={classNames([
                 styles["menu-item"],
                 styles["menu-title-item"],
             ])}
         >
             {children}
-        </h3>
+        </h5>
     );
+};
+
+export const MenuLineItem: FC = () => {
+    return <hr className={styles["menu-line-item"]} />;
 };
