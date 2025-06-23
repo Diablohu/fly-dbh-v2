@@ -16,6 +16,7 @@ declare global {
     interface Window {
         _browserHistory?: BrowserHistory;
         _hashHistory?: HashHistory;
+        _contentRoot: HTMLDivElement;
     }
 }
 

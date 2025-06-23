@@ -4,6 +4,7 @@ import {
     useRef,
     useCallback,
     useMemo,
+    memo,
     type FC,
 } from "react";
 import { actions } from "astro:actions";
@@ -230,4 +231,4 @@ const VideoListGrid: FC<Props> = ({
     );
 };
 
-export default VideoListGrid;
+export default memo(VideoListGrid);

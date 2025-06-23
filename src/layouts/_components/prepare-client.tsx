@@ -30,6 +30,9 @@ const PrepareHistory: FC = () => {
     useEffect(() => {
         if (!window._browserHistory) window._browserHistory = browserHistory;
         if (!window._hashHistory) window._hashHistory = hashHistory;
+        window._contentRoot = document.querySelector(
+            "body > .root"
+        ) as HTMLDivElement;
     }, []);
 
     return null;
