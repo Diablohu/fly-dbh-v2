@@ -99,7 +99,6 @@ const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
-        <meta name="color-scheme" content={forcedColorScheme ? `only ${forcedColorScheme}` : "dark light"} />
         {forcedColorScheme === 'dark'
             ? <meta
                 name="theme-color"
@@ -162,10 +161,14 @@ const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
     --light-theme-color: ${themeColorLight};
     --light-theme-color-p-20: ${themeColorLight}33;
     --light-theme-color-p-50: ${themeColorLight}80;
+    --light-theme-color-p-60: ${themeColorLight}99;
+    --light-theme-color-p-70: ${themeColorLight}b3;
     --light-theme-color-p-80: ${themeColorLight}cc;
     --dark-theme-color: ${themeColorDark};
     --dark-theme-color-p-20: ${themeColorDark}33;
     --dark-theme-color-p-50: ${themeColorDark}80;
+    --dark-theme-color-p-60: ${themeColorDark}99;
+    --dark-theme-color-p-70: ${themeColorDark}b3;
     --dark-theme-color-p-80: ${themeColorDark}cc;
 }
 `}
@@ -253,6 +256,8 @@ const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
                                         /search/:keyword
                                         <br />
                                         /watch/:slug expand infos, related or latest videos?
+                                        <br />
+                                        /donate
                                     </dd>
                                 </dl>
                                 <dl>

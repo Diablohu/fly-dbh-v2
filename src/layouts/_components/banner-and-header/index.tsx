@@ -1,5 +1,5 @@
 import { memo, type FC, type ReactNode } from "react";
-import { type ValidVideoSourceType } from "@/types";
+import { type ValidVideoSourceType, type ValidColorSchemeType } from "@/types";
 
 import getPlatformName from "@/utils/get-platform-name";
 
@@ -57,7 +57,7 @@ export type Props = {
     originPathname: string;
     defaults: {
         selectedVideoSource: ValidVideoSourceType;
-        forcedColorScheme?: "dark" | "light";
+        forcedColorScheme?: ValidColorSchemeType;
     };
 };
 

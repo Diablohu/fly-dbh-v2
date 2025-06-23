@@ -1,3 +1,5 @@
+@import "@/utils/mixins.less";
+
 .menu-anchor-probe {
     display: none;
 }
@@ -8,6 +10,11 @@
     --position-bottom: auto;
     --position-right: auto;
 
+    --item-min-height: 2.5em;
+    --item-line-height: 1.5em;
+
+    --space-y: 0.5em;
+
     position: fixed;
     z-index: calc(var(--global-header-z-index) + 1);
     top: var(--position-top);
@@ -16,9 +23,11 @@
     right: var(--position-right);
     color: #fff;
     background: var(--menu-background-color);
+    background: var(--global-header-background-color);
+    backdrop-filter: var(--backdrop-filter-glass);
     border-radius: 10px;
     margin: 0;
-    padding: 0;
+    padding: var(--space-y) 0;
     user-select: none;
     animation: fade-in var(--base-transition-duration);
     transition: opacity var(--base-transition-duration);
@@ -39,8 +48,18 @@
 }
 
 .menu-item {
+    display: block;
+    min-height: var(--item-min-height);
+    line-height: var(--item-line-height);
+    padding: calc((var(--item-min-height) - var(--item-line-height)) / 2)
+        @global-edge-safe-distance-sm;
 }
 .menu-title-item {
     margin: 0;
-    padding: 0;
+    font-weight: 400;
+    color: var(--text-color-secondary);
+}
+.menu-line-item {
+    margin: var(--space-y) 0;
+    border-top-width: 0;
 }
