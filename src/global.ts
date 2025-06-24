@@ -1,4 +1,7 @@
-import { type ValidVideoSourceType } from "@/types";
+import {
+    type ValidVideoSourceType,
+    type ValidContentListAutoLoadMoreType,
+} from "@/types";
 
 export const themeColorLight = "#ffffff";
 export const themeColorDark = "#0f0f0f";
@@ -52,3 +55,4 @@ export const navLinks = [
 }>((v) => !!v);
 
 export const defaultVideoSource: ValidVideoSourceType = "bilibili";
+export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType = "1";

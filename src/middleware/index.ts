@@ -1,6 +1,10 @@
 import { defineMiddleware } from "astro:middleware";
-import { VIDEO_SOURCE, getGeneralOptions as getGeneralCookieOptions } from "@/constants/cookies";
-import { defaultVideoSource } from "@/global";
+import {
+    VIDEO_SOURCE,
+    CONTENT_LIST_AUTO_LOAD_MORE,
+    getGeneralOptions as getGeneralCookieOptions,
+} from "@/constants/cookies";
+import { defaultVideoSource, defaultContentListAutoLoadMore } from "@/global";
 
 // `context` and `next` are automatically typed
 export const onRequest = defineMiddleware((context, next) => {
@@ -8,7 +12,10 @@ export const onRequest = defineMiddleware((context, next) => {
     if (/^\/api\//.test(context.url.pathname)) return next();
 
     // 为页面请求设置初始 Cookie 值
-    for (const [name, defaultValue] of [[VIDEO_SOURCE, defaultVideoSource]]) {
+    for (const [name, defaultValue] of [
+        [VIDEO_SOURCE, defaultVideoSource],
+        [CONTENT_LIST_AUTO_LOAD_MORE, defaultContentListAutoLoadMore],
+    ]) {
         // console.log(getSetVideoSourceOptions());
         if (context.cookies.has(name)) continue;
         context.cookies.set(name, defaultValue, getGeneralCookieOptions());

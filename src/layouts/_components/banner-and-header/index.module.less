@@ -493,7 +493,7 @@
 // ============================================================================
 
 .global-options {
-    min-width: 320px;
+    width: 320px;
 
     .option-switch-container {
         display: flex;
@@ -519,7 +519,8 @@
         padding: 0 0.5em;
         color: var(--text-color-primary);
         text-decoration: none;
-        transition: background-color var(--base-transition-duration);
+        transition: none var(--base-transition-duration);
+        transition-property: background-color, color;
         &:hover {
             background-color: var(--menu-background-color-highlight);
         }

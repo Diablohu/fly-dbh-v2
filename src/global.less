@@ -59,7 +59,7 @@
     --body-scrollbar-width: 0px;
     --title-letter-spacing: -0.04em;
     --backdrop-filter-glass: saturate(180%) blur(20px);
-    --base-transition-duration: 0.3s;
+    --base-transition-duration: @base-transition-duration;
 
     .screen-sm({
         --global-edge-safe-distance: @global-edge-safe-distance-sm;
@@ -164,6 +164,8 @@
     background: var(--theme-color);
     box-sizing: border-box;
     color-scheme: var(--color-scheme);
+    transition: none var(--base-transition-duration);
+    transition-property: color, background-color;
 
     &[lang="ja"] {
         --font-family-base:

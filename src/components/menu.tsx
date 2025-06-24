@@ -10,6 +10,7 @@ import {
     type MouseEventHandler,
     type TransitionEventHandler,
     type AnimationEventHandler,
+    type ChangeEventHandler,
     type Dispatch,
     type SetStateAction,
 } from "react";
@@ -56,10 +57,17 @@ const Menu: FC<
     }, []);
     const onDocumentBodyClick = useCallback(
         (evt: MouseEvent) => {
-            setTimeout(() => {
-                if (!ClickedOnMenuRef.current) closeMenu();
+            if (
+                ClickedOnMenuRef.current ||
+                (MenuRef.current &&
+                    evt.target instanceof Element &&
+                    MenuRef.current.contains(evt.target))
+            ) {
                 ClickedOnMenuRef.current = false;
-            });
+                return;
+            }
+
+            closeMenu();
         },
         [closeMenu]
     );
@@ -68,6 +76,9 @@ const Menu: FC<
         (evt) => {
             ClickedOnMenuRef.current = true;
             evt.stopPropagation();
+            setTimeout(() => {
+                ClickedOnMenuRef.current = false;
+            });
         },
         []
     );
@@ -209,33 +220,71 @@ export default memo(Menu);
 
 // ============================================================================
 
-export const MenuItem: FC<HTMLAttributes<HTMLDivElement>> = ({
-    className,
-    ...props
-}) => {
-    return (
-        <section
-            className={classNames([styles["menu-item"], className])}
-            {...props}
-        />
-    );
-};
+export const MenuItem: FC<HTMLAttributes<HTMLDivElement>> = memo(
+    ({ className, ...props }) => {
+        return (
+            <section
+                className={classNames([styles["menu-item"], className])}
+                {...props}
+            />
+        );
+    }
+);
 
-export const MenuTitleItem: FC<HTMLAttributes<HTMLHeadingElement>> = ({
-    children,
-}) => {
-    return (
-        <h5
-            className={classNames([
-                styles["menu-item"],
-                styles["menu-title-item"],
-            ])}
-        >
-            {children}
-        </h5>
-    );
-};
+export const MenuTitleItem: FC<HTMLAttributes<HTMLHeadingElement>> = memo(
+    ({ className, children }) => {
+        return (
+            <h5
+                className={classNames([
+                    styles["menu-item"],
+                    styles["menu-title-item"],
+                    className,
+                ])}
+            >
+                {children}
+            </h5>
+        );
+    }
+);
 
-export const MenuLineItem: FC = () => {
+export const MenuLineItem: FC = memo(() => {
     return <hr className={styles["menu-line-item"]} />;
-};
+});
+
+export const MenuSwitchItem: FC<
+    Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
+        label?: string;
+        checked?: boolean;
+        defaultChecked?: boolean;
+        onChange?: (checked: boolean) => unknown;
+    }
+> = memo(({ className, label, checked, defaultChecked, onChange }) => {
+    const onCheckboxChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+        (evt) => {
+            onChange?.(evt.currentTarget.checked === true);
+        },
+        [onChange]
+    );
+    const onLabelClick = useCallback<MouseEventHandler<HTMLLabelElement>>(
+        (evt) => {
+            evt.stopPropagation();
+        },
+        []
+    );
+    return (
+        <MenuItem
+            className={classNames([styles["menu-switch-item"], className])}
+        >
+            <label onClick={onLabelClick}>
+                <input
+                    type="checkbox"
+                    defaultChecked={defaultChecked}
+                    checked={checked}
+                    onChange={onCheckboxChange}
+                />
+                {label}
+                <span className={classNames([styles["switch"]])} />
+            </label>
+        </MenuItem>
+    );
+});

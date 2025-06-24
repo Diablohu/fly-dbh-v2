@@ -1,6 +1,10 @@
 ---
 import { actions } from "astro:actions";
-import { type VideoListPageTypesType } from "@/types";
+import {
+    type VideoListPageTypesType,
+    type ValidContentListAutoLoadMoreType,
+} from "@/types";
+import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
 
 import VideoListGrid from "@/components/video-list-grid";
 
@@ -62,6 +66,9 @@ if (error) {
             initialList={data.list}
             initialListIsComplete={data.list.length >= data.total}
             infiniteScroll
+            defaultContentListAutoLoadMore={Astro.cookies.get(
+                CONTENT_LIST_AUTO_LOAD_MORE
+            )?.value as ValidContentListAutoLoadMoreType}
         />
     </section>
 </section>

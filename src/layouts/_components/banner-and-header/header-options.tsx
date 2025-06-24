@@ -11,10 +11,16 @@ import classNames from "classnames";
 import symbolCogFill from "@/assets/svg-symbols/cog-fill.svg?raw";
 import symbolCogHollow from "@/assets/svg-symbols/cog-hollow.svg?raw";
 
-import Menu, { MenuItem, MenuTitleItem, MenuLineItem } from "@/components/menu";
+import Menu, {
+    MenuItem,
+    MenuTitleItem,
+    MenuLineItem,
+    MenuSwitchItem,
+} from "@/components/menu";
 
 import useColorScheme from "@/react-hooks/use-color-scheme";
 import useVideoSource from "@/react-hooks/use-video-source";
+import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 // import isRouteActive from "@/utils/is-route-active";
 import { type Props } from "./";
 import { links } from "./";
@@ -59,13 +65,13 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
                 <OptionColorScheme defaultValue={defaults.forcedColorScheme} />
                 <MenuLineItem />
                 <MenuTitleItem>视频播放平台</MenuTitleItem>
-                <OptionVideoSource
-                    defaultValue={defaults.selectedVideoSource}
-                />
+                <OptionVideoSource defaultValue={defaults.videoSource} />
                 <MenuLineItem />
-                <MenuTitleItem>列表自动加载更多</MenuTitleItem>
+                <OptionContentListAutoLoadMore
+                    label="列表自动加载更多"
+                    defaultValue={defaults.contentListAutoLoadMore}
+                />
             </Menu>
-            {/* TODO: 视频源改为下拉菜单内容，菜单中还包括亮暗切换 ☀ ☾ */}
         </>
     );
 };
@@ -132,7 +138,7 @@ const OptionColorScheme: FC<{
 // ============================================================================
 
 const OptionVideoSource: FC<{
-    defaultValue: Pick<Props, "defaults">["defaults"]["selectedVideoSource"];
+    defaultValue: Pick<Props, "defaults">["defaults"]["videoSource"];
 }> = ({ defaultValue }) => {
     const [videoSource, setVideoSource] = useVideoSource(defaultValue);
 
@@ -172,5 +178,33 @@ const OptionVideoSource: FC<{
                     />
                 ))}
         </MenuItem>
+    );
+};
+
+// ============================================================================
+
+const OptionContentListAutoLoadMore: FC<{
+    label?: string;
+    defaultValue: Pick<
+        Props,
+        "defaults"
+    >["defaults"]["contentListAutoLoadMore"];
+}> = ({ label, defaultValue }) => {
+    const [contentListAutoLoadMore, setContentListAutoLoadMore] =
+        useContentListAutoLoadMore(defaultValue);
+
+    const onChange = useCallback(
+        (checked: boolean) => {
+            setContentListAutoLoadMore(checked ? "1" : "0");
+        },
+        [contentListAutoLoadMore]
+    );
+
+    return (
+        <MenuSwitchItem
+            label={label}
+            checked={contentListAutoLoadMore === "1"}
+            onChange={onChange}
+        />
     );
 };

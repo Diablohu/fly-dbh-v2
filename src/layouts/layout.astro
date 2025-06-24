@@ -2,8 +2,8 @@
 import { ClientRouter } from "astro:transitions";
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
-import { VIDEO_SOURCE, FORCE_COLOR_SCHEME } from "@/constants/cookies";
-import { type ValidVideoSourceType } from "@/types";
+import { VIDEO_SOURCE, FORCE_COLOR_SCHEME, CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
+import { type ValidVideoSourceType, type ValidContentListAutoLoadMoreType } from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
 import Block from "@/components/block.astro";
@@ -90,6 +90,7 @@ const {
 } = Astro.props;
 
 const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
+const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.value;
 ---
 
 <!doctype html>
@@ -210,8 +211,9 @@ const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
                 showHeader={showHeader}
                 originPathname={Astro.originPathname}
                 defaults={{
-                    selectedVideoSource: Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType,
-                    forcedColorScheme: forcedColorScheme as 'dark' | 'light' | undefined
+                    videoSource: Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType,
+                    forcedColorScheme: forcedColorScheme as 'dark' | 'light' | undefined,
+                    contentListAutoLoadMore: contentListAutoLoadMore as ValidContentListAutoLoadMoreType,
                 }}
             >
                 <LogoSVG slot="logo" />

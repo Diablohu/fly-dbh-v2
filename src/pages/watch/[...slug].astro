@@ -43,7 +43,7 @@ if (error) {
             links={video.links}
             title={video.title}
             cover={video.cover}
-            selectedVideoSource={Astro.cookies.get(VIDEO_SOURCE)
+            defaultVideoSource={Astro.cookies.get(VIDEO_SOURCE)
                 ?.value as ValidVideoSourceType}
             client:load
         />
@@ -73,7 +73,7 @@ if (error) {
                 </section>
                 <SelectPlatform
                     client:idle
-                    selectedVideoSource={Astro.cookies.get(VIDEO_SOURCE)
+                    defaultVideoSource={Astro.cookies.get(VIDEO_SOURCE)
                         ?.value as ValidVideoSourceType}
                 />
             </section>

@@ -9,10 +9,15 @@ import {
 } from "react";
 import { actions } from "astro:actions";
 import dbg from "debug";
-import { type VideoListPageTypesType, type VideoItemType } from "@/types";
+import {
+    type VideoListPageTypesType,
+    type VideoItemType,
+    type ValidContentListAutoLoadMoreType,
+} from "@/types";
 import { VIDEO_LIST_GRID } from "@/constants/debug-keys";
 
 import VideoItem from "@/components/video-item";
+import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 
 import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
 
@@ -30,6 +35,7 @@ type Props = {
         Pick<VideoItemType, "_id" | "title" | "release" | "cover">)[];
     initialListIsComplete?: boolean;
     infiniteScroll?: boolean;
+    defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 };
 
 const debug = dbg(VIDEO_LIST_GRID);
@@ -48,7 +54,8 @@ const VideoListGrid: FC<Props> = ({
     length,
     initialList = [],
     initialListIsComplete = false,
-    infiniteScroll = false,
+    infiniteScroll: _infiniteScroll = false,
+    defaultContentListAutoLoadMore,
 }) => {
     const ListContainerRef = useRef<HTMLDivElement>(null);
     const InfiniteScrollIndicatorRef = useRef<HTMLDivElement>(null);
@@ -58,6 +65,10 @@ const VideoListGrid: FC<Props> = ({
         initialListIsComplete ? "complete" : "ready"
     );
 
+    const [contentListAutoLoadMore] = useContentListAutoLoadMore(
+        defaultContentListAutoLoadMore
+    );
+
     const [status, setStatus] = useState<StatusType>(StatusRef.current);
     const [list, setList] =
         useState<Required<Props>["initialList"]>(initialList);
@@ -65,6 +76,10 @@ const VideoListGrid: FC<Props> = ({
     const isIndex = useMemo(
         () => (typeof _isIndex === "boolean" ? _isIndex : !type),
         [_isIndex, type]
+    );
+    const infiniteScroll = useMemo(
+        () => _infiniteScroll && contentListAutoLoadMore === "1",
+        [_infiniteScroll, contentListAutoLoadMore]
     );
 
     const loadMore = useCallback(() => {
