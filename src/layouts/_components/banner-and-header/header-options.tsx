@@ -68,7 +68,7 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
                 <OptionVideoSource defaultValue={defaults.videoSource} />
                 <MenuLineItem />
                 <OptionContentListAutoLoadMore
-                    label="列表自动加载更多"
+                    label="列表自动加载更多内容"
                     defaultValue={defaults.contentListAutoLoadMore}
                 />
             </Menu>

@@ -1,9 +1,9 @@
-import { memo, useCallback, type FC } from "react";
+import { memo, useCallback, type FC, type MouseEventHandler } from "react";
 import classNames from "classnames";
-import { type ValidVideoSourceType } from "@/types";
+import { type ValidVideoSourceType, type VideoItemType } from "@/types";
 
 import useVideoSource from "@/react-hooks/use-video-source";
-import { links } from "@/layouts/_components/banner-and-header";
+import { links as _links } from "@/layouts/_components/banner-and-header";
 
 import styles from "./select-platform.module.less";
 
@@ -12,7 +12,8 @@ import styles from "./select-platform.module.less";
 const SelectPlatform: FC<{
     defaultVideoSource: ValidVideoSourceType;
     isInsidePlayer?: boolean;
-}> = ({ defaultVideoSource, isInsidePlayer = false }) => {
+    links: VideoItemType["links"];
+}> = ({ defaultVideoSource, isInsidePlayer = false, links }) => {
     const [videoSource] = useVideoSource(defaultVideoSource);
 
     return (
@@ -25,7 +26,7 @@ const SelectPlatform: FC<{
             ])}
         >
             {!isInsidePlayer && <span>视频平台</span>}
-            {links
+            {_links
                 .filter(({ name }) =>
                     ["bilibili", "youtube", "douyin"]
                         .filter(
@@ -44,6 +45,7 @@ const SelectPlatform: FC<{
                         iconHtml={iconHtml}
                         defaultVideoSource={defaultVideoSource}
                         showLabel={isInsidePlayer}
+                        url={links[name as "bilibili"]}
                     />
                 ))}
         </section>
@@ -60,6 +62,7 @@ const Item: FC<{
     iconHtml?: string;
     defaultVideoSource: ValidVideoSourceType;
     showLabel?: boolean;
+    url: string;
 }> = memo(
     ({
         name,
@@ -68,16 +71,22 @@ const Item: FC<{
         iconHtml = "",
         defaultVideoSource,
         showLabel = false,
+        url,
     }) => {
         const [videoSource, setVideoSource] =
             useVideoSource(defaultVideoSource);
-        const onClick = useCallback(() => {
-            setVideoSource(name);
-        }, [setVideoSource]);
+        const onClick = useCallback<MouseEventHandler<HTMLAnchorElement>>(
+            (evt) => {
+                evt.preventDefault();
+                evt.stopPropagation();
+                setVideoSource(name);
+            },
+            [setVideoSource]
+        );
 
         return (
-            <button
-                type="button"
+            <a
+                href={url}
                 className={classNames([
                     styles["item"],
                     styles[`item-${name}`],
@@ -97,7 +106,7 @@ const Item: FC<{
                     ].join(""),
                 }}
                 onClick={onClick}
-            ></button>
+            ></a>
         );
     }
 );

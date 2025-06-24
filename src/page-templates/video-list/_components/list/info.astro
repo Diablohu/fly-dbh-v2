@@ -1,0 +1,257 @@
+---
+import { actions } from "astro:actions";
+import numeral from "numeral";
+import dayjs from "dayjs";
+import { type VideoListPageTypesType } from "@/types";
+import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
+
+type Props = {
+    type?: VideoListPageTypesType;
+    slug?: string;
+    isIndex: boolean;
+};
+
+const { data, error: error } = Astro.props.isIndex
+    ? {}
+    : await Astro.callAction(actions.videoListPageFetchInfo, {
+          type: Astro.props.type as Required<Props>["type"],
+          slug: Astro.props.slug as Required<Props>["slug"],
+      });
+if (error) {
+    console.trace(error);
+    Astro.response.status = 500;
+    // Astro.response.statusText = (error.cause || error.message || "") as string;
+    return Astro.rewrite("/500");
+}
+---
+
+<Fragment>
+    <h1>
+        {
+            Astro.props.isIndex ? (
+                "最新模拟飞行视频"
+            ) : (
+                <Fragment>
+                    <small>
+                        {getVideoListPageTypeInfo(Astro.props.type).name}
+                    </small>
+                    {Astro.props.type === "tag" ? (
+                        data?.title
+                    ) : Astro.props.type === "aerodrome" ? (
+                        data?.name
+                    ) : Astro.props.type === "aircraftFamily" ? (
+                        `${data?.maker} ${data?.name}`
+                    ) : Astro.props.type === "developer" ||
+                      Astro.props.type === "platform" ? (
+                        <Fragment>
+                            {data?.name_full}
+                            {data?.name_full !== data?.name ? (
+                                <small>{data?.name}</small>
+                            ) : null}
+                        </Fragment>
+                    ) : Astro.props.type === "platformUpdate" ? (
+                        <Fragment>
+                            微软{data?.game} {data?.series?.toUpperCase()}_
+                            {numeral(data?.number).format("00")}
+                            {data?.series === "su" ? (
+                                <small>
+                                    Sim Update{" "}
+                                    {numeral(data?.number).format("00")}
+                                </small>
+                            ) : null}
+                        </Fragment>
+                    ) : (
+                        Astro.params.slug
+                    )}
+                </Fragment>
+            )
+        }
+    </h1>
+
+    {
+        Astro.props.isIndex || Astro.props.type === "tag" ? null : (
+            <section class="info">
+                {Astro.props.type === "aerodrome" ? (
+                    <dl>
+                        <dt>代码</dt>
+                        <dd>
+                            {[data?.icao, data?.iata]
+                                .filter(Boolean)
+                                .join(" / ")}
+                        </dd>
+                    </dl>
+                ) : Astro.props.type === "aircraftFamily" ? (
+                    <dl>
+                        <dt>机型</dt>
+                        <dd>
+                            {Array.isArray(data?.aircrafts) &&
+                                data.aircrafts.length > 0 &&
+                                data.aircrafts.map(
+                                    (aircraft: {
+                                        icao_code: unknown;
+                                        name: unknown;
+                                    }) => (
+                                        <span class="tag">
+                                            <span>{aircraft.icao_code} /</span>{" "}
+                                            {aircraft.name}
+                                        </span>
+                                    )
+                                )}
+                        </dd>
+                    </dl>
+                ) : Astro.props.type === "developer" ? (
+                    <Fragment>
+                        {data?.logo && (
+                            <img
+                                class="logo"
+                                src={data.logo}
+                                alt={data.name_full}
+                            />
+                        )}
+                        {data?.links && Object.keys(data.links).length > 0 && (
+                            <dl>
+                                <dt>链接</dt>
+                                <dd>
+                                    {Object.entries(data.links).map((l) => (
+                                        <a href={l[1] as string} class="link">
+                                            {l[0] === "official"
+                                                ? "官网"
+                                                : l[0][0].toLocaleUpperCase() +
+                                                  l[0].slice(1)}
+                                        </a>
+                                    ))}
+                                </dd>
+                            </dl>
+                        )}
+                    </Fragment>
+                ) : Astro.props.type === "platform" ? (
+                    <Fragment>
+                        {Array.isArray(data?.developers) &&
+                            data.developers.length > 0 && (
+                                <dl>
+                                    <dt>开发</dt>
+                                    <dd>
+                                        {data.developers?.map(
+                                            (developer: {
+                                                _id: string;
+                                                name: string;
+                                                slug?: string;
+                                            }) => (
+                                                <span class="tag">
+                                                    {developer.name}
+                                                </span>
+                                            )
+                                        )}
+                                    </dd>
+                                </dl>
+                            )}
+                        {data?.links && Object.keys(data.links).length > 0 && (
+                            <dl>
+                                <dt>链接</dt>
+                                <dd>
+                                    {Object.entries(data.links).map((l) => (
+                                        <a href={l[1] as string} class="link">
+                                            {l[0] === "official"
+                                                ? "官网"
+                                                : l[0][0].toLocaleUpperCase() +
+                                                  l[0].slice(1)}
+                                        </a>
+                                    ))}
+                                </dd>
+                            </dl>
+                        )}
+                    </Fragment>
+                ) : Astro.props.type === "platformUpdate" ? (
+                    <dl>
+                        <dt>发布</dt>
+                        <dd>
+                            {dayjs(data?.release).format("YYYY 年 M 月 D 日")}
+                        </dd>
+                    </dl>
+                ) : null}
+            </section>
+        )
+    }
+</Fragment>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    h1 {
+        margin: 0 0 0.33333em 0;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        small {
+            display: block;
+            font-weight: normal;
+            font-size: 0.6667em;
+            &:first-child {
+                margin-bottom: 0.5em;
+            }
+            &:last-child {
+                margin-top: 0.5em;
+            }
+        }
+    }
+
+    .info {
+        // background: var(--tag-background-color);
+        // background: linear-gradient(
+        //     to bottom,
+        //     var(--tag-background-color) -50%,
+        //     transparent 66.6667%
+        // );
+        // background: radial-gradient(
+        //     circle,
+        //     var(--tag-background-color) 0%,
+        //     transparent 50%
+        // );
+        // background-size: 100% 100%;
+        // border-radius: 10px;
+        padding: 1em 0;
+        margin: 1em 0 0.3333em 0;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+
+        img.logo {
+            max-width: 400px;
+            width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        dl {
+            margin: 0;
+            display: flex;
+            flex-flow: row nowrap;
+            dt {
+                flex: 0 0 3em;
+            }
+            dd {
+                margin: 0;
+                font-weight: normal;
+                color: var(--text-color-primary);
+                .tag {
+                    .tag-styles();
+                    margin-right: 0.75em;
+                    background: inherit;
+                    &:hover {
+                        background: inherit;
+                    }
+                }
+                .link {
+                    display: inline-block;
+                    vertical-align: top;
+                    margin-right: 0.75em;
+                }
+            }
+            &:has(dd:empty) {
+                display: none;
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+</style>

@@ -8,14 +8,14 @@ import {
     type FC,
 } from "react";
 import { actions } from "astro:actions";
-import dbg from "debug";
+import classNames from "classnames";
 import {
     type VideoListPageTypesType,
     type VideoItemType,
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
-import { VIDEO_LIST_GRID } from "@/constants/debug-keys";
 
+import { videoListGrid as debug } from "@/utils/log";
 import VideoItem from "@/components/video-item";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 
@@ -37,13 +37,6 @@ type Props = {
     infiniteScroll?: boolean;
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 };
-
-const debug = dbg(VIDEO_LIST_GRID);
-debug.namespace = VIDEO_LIST_GRID;
-
-if (import.meta.env.DEV || import.meta.env.MODE === "test") {
-    debug.enabled = true;
-}
 
 // ============================================================================
 
@@ -236,9 +229,15 @@ const VideoListGrid: FC<Props> = ({
                     <button
                         type="button"
                         onClick={loadMore}
+                        className={classNames([
+                            styles["button-load-more"],
+                            {
+                                [styles["is-loading"]]: status === "loading",
+                            },
+                        ])}
                         disabled={["loading", "complete"].includes(status)}
                     >
-                        {status === "loading" ? "获取更多..." : "获取更多"}
+                        {status === "loading" ? "加载更多..." : "加载更多"}
                     </button>
                 )}
             </section>

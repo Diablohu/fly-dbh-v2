@@ -28,23 +28,24 @@
         transition-property: color, transform, opacity;
         position: relative;
         vertical-align: top;
+        text-decoration: none;
+        cursor: pointer;
         & + .item {
             margin-left: var(--icon-gap);
         }
         & > svg,
         & > img {
-            display: inline-block;
+            display: block;
             width: var(--icon-size);
             height: var(--icon-size);
             object-fit: contain;
-            vertical-align: top;
             margin-right: var(--icon-padding);
         }
-        &:hover {
+        &:not(.is-active):hover {
             color: var(--icon-theme-color);
             transform: scale(var(--item-hover-scale));
         }
-        &:active {
+        &:not(.is-active):active {
             transform: scale(var(--item-hover-scale)) translateY(1.5px);
         }
         &.item-bilibili {
@@ -59,7 +60,7 @@
         }
         &.is-active {
             color: var(--icon-theme-color);
-            pointer-events: none;
+            // pointer-events: none;
         }
     }
 
@@ -86,5 +87,10 @@
         border-radius: 10px;
         padding: 0.25em 0.5em;
         margin: 0.25em 0 0 0;
+        .item {
+            display: inline-flex;
+            flex-flow: row nowrap;
+            align-items: center;
+        }
     }
 }
