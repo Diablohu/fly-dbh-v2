@@ -6,6 +6,7 @@ import { actions } from "astro:actions";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
+import TagButton from "@/components/tag-button.astro";
 
 import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
 
@@ -129,6 +130,32 @@ if (error) {
                 </dl>
             ))
         }
+
+        <!-- <dl class="collection">
+            <dt>
+                <h3>
+                    <a href={`/videos`}>近期亮点</a>
+                </h3>
+            </dt>
+            <dd class="tags">
+                {
+                    [
+                        ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
+                        ["空客", "A380", "aircraftfamily-airbus-a380"],
+                        ["微软2024", "SU03 更新", "platformupdate-msfs2024-su03"],
+                        ["微软2024", "SU02 更新", "platformupdate-msfs2024-su02"],
+                    ].map(([prefix, name, route]) => (
+                        <TagButton href={`/videos/${route}`} prefix={prefix}>
+                            {name}
+                        </TagButton>
+                    ))
+                }
+            </dd>
+        </dl> -->
+
+        <section class="more">
+            <TagButton href="/videos">浏览更多视频</TagButton>
+        </section>
     </Block>
 </Layout>
 
@@ -145,6 +172,7 @@ if (error) {
         display: block;
         position: relative;
         margin-bottom: 5em;
+
         &::after {
             content: "";
             position: absolute;
@@ -160,7 +188,7 @@ if (error) {
             position: relative;
             color: var(--text-color-primary);
             text-decoration: none;
-            transition-property: color, transform, opacity;
+            transition-property: color, transform, opacity, background-color;
             // &:hover {
             //     color: var(--text-color-primary);
             // }
@@ -232,6 +260,29 @@ if (error) {
         }
         & > dd {
             margin: 0;
+            &.tags {
+                font-size: unit((14px / @base-font-size-number), em);
+                font-weight: normal;
+                display: flex;
+                flex-flow: row wrap;
+                gap: 0.75em;
+                &:empty {
+                    display: none;
+                }
+                a {
+                    display: inline-flex;
+                }
+            }
+        }
+    }
+
+    .collection ~ .more {
+        text-align: center;
+        margin-bottom: 3em;
+        a {
+            font-size: 1.33333em;
+            border-radius: 100em;
+            padding: 0.3333em 1.6667em;
         }
     }
 </style>

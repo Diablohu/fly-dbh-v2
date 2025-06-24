@@ -9,11 +9,13 @@ import numeral from "numeral";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
+import TagButton from "@/components/tag-button.astro";
 import Player from "./_components/player";
 import SelectPlatform from "./_components/select-platform";
 
 import prettifyTitle from "@/utils/prettify-title";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
+import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 
 // ============================================================================
 
@@ -54,12 +56,11 @@ if (error) {
                 <section class="tags">
                     {
                         video.tags?.map(({ _id, slug, name }) => (
-                            <a
-                                class="tag"
+                            <TagButton
                                 href={getVideoListPageLink("tag", slug || _id)}
                             >
                                 {name}
-                            </a>
+                            </TagButton>
                         ))
                     }
                 </section>
@@ -75,6 +76,7 @@ if (error) {
                     client:idle
                     defaultVideoSource={Astro.cookies.get(VIDEO_SOURCE)
                         ?.value as ValidVideoSourceType}
+                    links={video.links}
                 />
             </section>
 
@@ -95,7 +97,7 @@ if (error) {
                             //     })),
                             // ],
                             [
-                                "相关机型系列",
+                                getVideoListPageTypeInfo("aircraftFamily").name,
                                 video.aircraft_families?.map(
                                     ({ _id, slug, maker, name }) => ({
                                         prefix: maker,
@@ -108,7 +110,7 @@ if (error) {
                                 ),
                             ],
                             [
-                                "相关机场",
+                                getVideoListPageTypeInfo("aerodrome").name,
                                 video.aerodromes?.map(
                                     ({ _id, slug, icao, iata, name }) => ({
                                         prefix: [icao, iata]
@@ -123,7 +125,7 @@ if (error) {
                                 ),
                             ],
                             [
-                                "相关开发商",
+                                getVideoListPageTypeInfo("developer").name,
                                 video.developers?.map(
                                     ({ _id, slug, name }) => ({
                                         name,
@@ -135,7 +137,7 @@ if (error) {
                                 ),
                             ],
                             [
-                                "相关平台",
+                                getVideoListPageTypeInfo("platform").name,
                                 video.games?.map(({ _id, slug, name }) => ({
                                     name,
                                     route: getVideoListPageLink(
@@ -145,7 +147,7 @@ if (error) {
                                 })),
                             ],
                             [
-                                "相关平台更新",
+                                getVideoListPageTypeInfo("platformUpdate").name,
                                 video.msfs_updates?.map(
                                     ({
                                         _id,
@@ -179,18 +181,18 @@ if (error) {
                             Array.isArray(tags) &&
                             tags.length > 0 && (
                                 <dl class="relation">
-                                    {relationName && <dt>{relationName}</dt>}
+                                    {relationName && (
+                                        <dt>相关{relationName}</dt>
+                                    )}
                                     <dd class="tags">
                                         {tags?.map(
                                             ({ prefix, name, route }) => (
-                                                <a class="tag" href={route}>
-                                                    {prefix && (
-                                                        <span class="prefix">
-                                                            {prefix}
-                                                        </span>
-                                                    )}
+                                                <TagButton
+                                                    href={route}
+                                                    prefix={prefix}
+                                                >
                                                     {name}
-                                                </a>
+                                                </TagButton>
                                             )
                                         )}
                                     </dd>
@@ -255,30 +257,6 @@ if (error) {
             display: flex;
             flex-flow: row wrap;
             gap: 0.5em 0.5em;
-            .tag {
-                --border-radius: 0.3333em;
-                display: flex;
-                flex-flow: row wrap;
-                gap: 0 0.5em;
-                background: var(--tag-background-color);
-                line-height: 1.6667em;
-                border: 1px solid var(--tag-background-color);
-                border-radius: var(--border-radius);
-                padding: 0 0.5em;
-                color: var(--text-color-primary);
-                text-decoration: none;
-                &:hover {
-                    background-color: var(--menu-background-color-highlight);
-                }
-                .prefix {
-                    background: var(--tag-background-color);
-                    display: inline-block;
-                    margin-left: -0.5em;
-                    padding: 0 0.5em;
-                    border-radius: var(--border-radius);
-                    white-space: nowrap;
-                }
-            }
             &:empty {
                 display: none;
             }

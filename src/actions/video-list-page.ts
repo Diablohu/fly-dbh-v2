@@ -1,9 +1,12 @@
 import { z } from "astro:schema";
 import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
+
+import { type VideoListPageTypesType, type VideoItemType } from "@/types";
+
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
-import { type VideoListPageTypesType, type VideoItemType } from "@/types";
+import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 
 const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
     if (!type) return "";
@@ -147,6 +150,90 @@ const actions = {
                         return r as unknown as SanityDocument<ReturnVideoItemType>[];
                     }
                 )) as unknown as ResponseDataType;
+            } catch (err) {
+                console.trace(err);
+                throw new ActionError({
+                    message:
+                        err instanceof Error ? err.message : (err as string),
+                    code: "INTERNAL_SERVER_ERROR",
+                });
+            }
+        },
+    }),
+
+    videoListPageFetchInfo: defineAction({
+        input: z.object({
+            type: z.string(),
+            slug: z.string(),
+        }) as z.ZodType<{
+            type: VideoListPageTypesType;
+            slug: string;
+        }>,
+        handler: async ({ type, slug: cmsIdOrSlug }) => {
+            try {
+                const info = getVideoListPageTypeInfo(type);
+                const res = (
+                    await fetch(
+                        `*[_type == "${info.type}" && ("${cmsIdOrSlug}" == slug.current || "${cmsIdOrSlug}" == _id)]{
+    _id,
+    'slug': slug.current,
+${
+    type === "tag"
+        ? `
+    tag_type,
+    title,
+`
+        : type === "aerodrome"
+          ? `
+    name,
+    icao,
+    iata
+`
+          : type === "aircraftFamily"
+            ? `
+    name,
+    'maker': maker->name_zh_cn,
+    aircrafts[]{
+        icao_code,
+        name,
+    },
+`
+            : type === "developer"
+              ? `
+    name,
+    name_full,
+    links,
+    "logo": logo.asset->path,
+`
+              : type === "platform"
+                ? `
+    name,
+    name_full,
+    links,
+    'developers': developers[]->{
+        _id,
+        'slug': slug.current,
+        name
+    },
+`
+                : type === "platformUpdate"
+                  ? `
+    game,
+    series,
+    number,
+    release
+`
+                  : ``
+}
+}`,
+                        (res) => {
+                            const r = res[0];
+                            if (r.logo) r.logo = transformImagePath(r.logo);
+                            return [r];
+                        }
+                    )
+                )[0];
+                return res;
             } catch (err) {
                 console.trace(err);
                 throw new ActionError({

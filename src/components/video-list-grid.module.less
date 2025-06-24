@@ -1,3 +1,5 @@
+@import "@/utils/mixins.less";
+
 .video-list-grid {
     position: relative;
     display: grid;
@@ -7,6 +9,7 @@
     & > .block {
         grid-column: 1 / -1;
         position: relative;
+        text-align: center;
     }
 
     .infinite-scroll-indicator {
@@ -17,5 +20,41 @@
         left: 0;
         width: 100%;
         // background: #f00;
+    }
+
+    .button-load-more {
+        .tag-styles();
+        border-radius: 100em;
+        padding: 0.3333em 1.6667em;
+        // transition-property:
+        //     color, background-color, border-color, border-width, transform,
+        //     opacity, padding;
+        &.is-loading {
+            color: transparent;
+            width: 3em;
+            height: 3em;
+            padding: 0;
+            overflow: hidden;
+            background-color: transparent;
+            border-width: 0.25em;
+            border-color: var(--text-color-secondary);
+            border-left-color: transparent;
+            animation: rotating 1.5s infinite linear;
+            transition-property:
+                background-color, border-color, border-width, transform,
+                opacity, padding;
+            @keyframes rotating {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            // &:disabled,
+            // &[disabled] {
+            //     opacity: 1;
+            // }
+        }
     }
 }

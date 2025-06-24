@@ -7,8 +7,8 @@ import { type VideoListPageTypesType } from "@/types";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 
-import VideoList from "./_components/list.astro";
-import VideoCategories from "./_components/categories.astro";
+import VideoList from "./_components/list/index.astro";
+import VideoCategories from "./_components/categories/index.astro";
 
 type Props = {
     type?: VideoListPageTypesType | "aircraftfamily" | "platformupdate";

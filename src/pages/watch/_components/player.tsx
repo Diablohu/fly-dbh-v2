@@ -25,7 +25,7 @@ type Props = {
 
 const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
-    const [$videoSource, setVideoSource] = useVideoSource(defaultVideoSource);
+    const [$videoSource] = useVideoSource(defaultVideoSource);
 
     useWindow(
         (force?: boolean) => {
@@ -86,6 +86,7 @@ const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
                         <p>请角更换视频平台</p>
                         <SelectPlatform
                             defaultVideoSource={defaultVideoSource}
+                            links={links}
                             isInsidePlayer
                         />
                     </section>

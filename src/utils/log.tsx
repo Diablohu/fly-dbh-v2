@@ -1,5 +1,5 @@
 import dbg from "debug";
-import { FLY_DBH_V2, COOKIE } from "@/constants/debug-keys";
+import { FLY_DBH_V2, COOKIE, VIDEO_LIST_GRID } from "@/constants/debug-keys";
 
 // ============================================================================
 
@@ -14,9 +14,13 @@ export default debug;
 export const cookie = dbg(COOKIE);
 cookie.namespace = "Cookies";
 
+export const videoListGrid = dbg(VIDEO_LIST_GRID);
+videoListGrid.namespace = "Cookies";
+
 // ============================================================================
 
 if (import.meta.env.DEV || import.meta.env.MODE === "test") {
     debug.enabled = true;
     cookie.enabled = true;
+    videoListGrid.enabled = true;
 }
