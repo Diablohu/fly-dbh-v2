@@ -10,10 +10,10 @@ import styles from "./select-platform.module.less";
 // ============================================================================
 
 const SelectPlatform: FC<{
-    selectedVideoSource: ValidVideoSourceType;
+    defaultVideoSource: ValidVideoSourceType;
     isInsidePlayer?: boolean;
-}> = ({ selectedVideoSource, isInsidePlayer = false }) => {
-    const [videoSource] = useVideoSource(selectedVideoSource);
+}> = ({ defaultVideoSource, isInsidePlayer = false }) => {
+    const [videoSource] = useVideoSource(defaultVideoSource);
 
     return (
         <section
@@ -42,7 +42,7 @@ const SelectPlatform: FC<{
                         title={title}
                         iconType={iconType}
                         iconHtml={iconHtml}
-                        selectedVideoSource={selectedVideoSource}
+                        defaultVideoSource={defaultVideoSource}
                         showLabel={isInsidePlayer}
                     />
                 ))}
@@ -58,7 +58,7 @@ const Item: FC<{
     title: string;
     iconType?: "png" | "svg";
     iconHtml?: string;
-    selectedVideoSource: ValidVideoSourceType;
+    defaultVideoSource: ValidVideoSourceType;
     showLabel?: boolean;
 }> = memo(
     ({
@@ -66,11 +66,11 @@ const Item: FC<{
         title,
         iconType,
         iconHtml = "",
-        selectedVideoSource,
+        defaultVideoSource,
         showLabel = false,
     }) => {
         const [videoSource, setVideoSource] =
-            useVideoSource(selectedVideoSource);
+            useVideoSource(defaultVideoSource);
         const onClick = useCallback(() => {
             setVideoSource(name);
         }, [setVideoSource]);

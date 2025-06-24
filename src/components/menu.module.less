@@ -22,23 +22,27 @@
     bottom: var(--position-bottom);
     right: var(--position-right);
     color: #fff;
-    background: var(--menu-background-color);
-    background: var(--global-header-background-color);
+    background: var(--theme-color-p-80);
     border: 1px solid var(--border-color);
     backdrop-filter: var(--backdrop-filter-glass);
     border-radius: 10px;
     margin: 0;
     padding: var(--space-y) 0;
     user-select: none;
-    animation: fade-in var(--base-transition-duration);
-    transition: opacity var(--base-transition-duration);
+    animation: fade-in @base-transition-duration;
+    transition: opacity @base-transition-duration;
 
     @keyframes fade-in {
         0% {
+            --base-transition-duration: 0s;
             opacity: 0;
             transform: translateY(-1em);
         }
+        99% {
+            --base-transition-duration: 0s;
+        }
         100% {
+            --base-transition-duration: @base-transition-duration;
             opacity: 1;
         }
     }
@@ -63,4 +67,66 @@
 .menu-line-item {
     margin: var(--space-y) 0;
     border-top-width: 0;
+}
+.menu-switch-item {
+    color: var(--text-color-secondary);
+    & > label {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        color: inherit;
+        cursor: pointer;
+        transition: color var(--base-transition-duration);
+        & > input[type="checkbox"] {
+            position: absolute;
+            flex: none;
+            z-index: -1;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+        }
+        & > .switch {
+            --width: 3em;
+            --height: 1.5em;
+            --dot-size: 1em;
+            --dot-margin: calc((var(--height) - var(--dot-size)) / 2);
+            position: relative;
+            width: var(--width);
+            height: var(--height);
+            border-radius: 50px;
+            background: var(--tag-background-color);
+            border: 1px solid var(--tag-background-color);
+            transition: background-color var(--base-transition-duration);
+            &::before {
+                content: "";
+                position: absolute;
+                width: var(--dot-size);
+                height: var(--dot-size);
+                top: 50%;
+                left: 0;
+                margin-top: calc(var(--dot-size) * -0.5);
+                background: var(--border-color);
+                border-radius: 100%;
+                transform: translateX(var(--dot-margin));
+                transition: all var(--base-transition-duration);
+            }
+        }
+        & > input[type="checkbox"]:checked ~ .switch {
+            &::before {
+                transform: translateX(
+                    calc(var(--width) - var(--dot-size) - var(--dot-margin) * 2)
+                );
+                background: var(--text-color-primary);
+            }
+        }
+        &:hover {
+            color: var(--text-color-primary);
+            & > .switch {
+                background-color: var(--menu-background-color-highlight);
+            }
+        }
+    }
 }

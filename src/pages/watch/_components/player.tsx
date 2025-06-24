@@ -18,14 +18,14 @@ type Props = {
         douyin: string;
     };
     cover: string;
-    selectedVideoSource: ValidVideoSourceType;
+    defaultVideoSource: ValidVideoSourceType;
 };
 
 // ============================================================================
 
-const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
+const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
-    const [$videoSource, setVideoSource] = useVideoSource(selectedVideoSource);
+    const [$videoSource, setVideoSource] = useVideoSource(defaultVideoSource);
 
     useWindow(
         (force?: boolean) => {
@@ -85,7 +85,7 @@ const Player: FC<Props> = ({ links, title, cover, selectedVideoSource }) => {
                         </p>
                         <p>请角更换视频平台</p>
                         <SelectPlatform
-                            selectedVideoSource={selectedVideoSource}
+                            defaultVideoSource={defaultVideoSource}
                             isInsidePlayer
                         />
                     </section>

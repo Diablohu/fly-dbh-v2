@@ -1,5 +1,9 @@
 import { memo, type FC, type ReactNode } from "react";
-import { type ValidVideoSourceType, type ValidColorSchemeType } from "@/types";
+import {
+    type ValidVideoSourceType,
+    type ValidColorSchemeType,
+    type ValidContentListAutoLoadMoreType,
+} from "@/types";
 
 import getPlatformName from "@/utils/get-platform-name";
 
@@ -56,8 +60,9 @@ export type Props = {
     logo?: ReactNode;
     originPathname: string;
     defaults: {
-        selectedVideoSource: ValidVideoSourceType;
+        videoSource: ValidVideoSourceType;
         forcedColorScheme?: ValidColorSchemeType;
+        contentListAutoLoadMore: ValidContentListAutoLoadMoreType;
     };
 };
 

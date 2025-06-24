@@ -6,9 +6,7 @@ import { type ValidVideoSourceType } from "@/types";
 declare namespace App {
     // Add locale strings to Astro Context
     // Can store other infos for rendering
-    interface Locals {
-        selectedVideoSource: ValidVideoSourceType;
-    }
+    interface Locals {}
 }
 
 // Add properties to browser's window object

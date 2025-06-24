@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 export const VIDEO_SOURCE = "VIDEO_SOURCE";
 export const FORCE_COLOR_SCHEME = "FORCE_COLOR_SCHEME";
-export const VIDEO_LIST_AUTO_LOAD_MORE = "VIDEO_LIST_AUTO_LOAD_MORE";
+export const CONTENT_LIST_AUTO_LOAD_MORE = "CONTENT_LIST_AUTO_LOAD_MORE";
 
 // ============================================================================
 
