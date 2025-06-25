@@ -198,25 +198,57 @@ const VideoListGrid: FC<Props> = ({
                     slug={post.slug}
                     title={post.title}
                     cover={post.cover}
-                    // tags={[
-                    //     isIndex
-                    //         ? getVideoItemTopTag(post, "latest")?.name || ""
-                    //         : type === "tag" && slug === "review"
-                    //           ? getVideoItemTopTag(post, "review")?.name || ""
-                    //           : "",
-                    // ].filter(Boolean)}
+                    tags={[
+                        isIndex
+                            ? getVideoItemTopTag(post, "latest")?.name || ""
+                            : type === "tag" && slug === "news"
+                              ? getVideoItemTopTag(post, "news")?.name || ""
+                              : type === "tag" && slug === "tutorial"
+                                ? getVideoItemTopTag(post, "tutorial")?.name ||
+                                  ""
+                                : type === "tag" && slug === "review"
+                                  ? getVideoItemTopTag(post, "review")?.name ||
+                                    ""
+                                  : type === "tag" && slug === "world"
+                                    ? getVideoItemTopTag(post, "world")?.name ||
+                                      ""
+                                    : [
+                                            "aerodrome",
+                                            "developer",
+                                            "platform",
+                                            "platformUpdate",
+                                        ].includes(type || "")
+                                      ? getVideoItemTopTag(post, "latest")
+                                            ?.name || ""
+                                      : "",
+                    ].filter(Boolean)}
                     infos={[
-                        [
-                            isIndex
-                                ? getVideoItemTopTag(post, "latest")?.name || ""
-                                : type === "tag" && slug === "news"
-                                  ? getVideoItemTopTag(post, "news")?.name || ""
-                                  : type === "tag" && slug === "review"
-                                    ? getVideoItemTopTag(post, "review")
-                                          ?.name || ""
-                                    : "",
-                            new Date(post.release),
-                        ].filter(Boolean),
+                        // [
+                        //     isIndex
+                        //         ? getVideoItemTopTag(post, "latest")?.name || ""
+                        //         : type === "tag" && slug === "news"
+                        //           ? getVideoItemTopTag(post, "news")?.name || ""
+                        //           : type === "tag" && slug === "tutorial"
+                        //             ? getVideoItemTopTag(post, "tutorial")
+                        //                   ?.name || ""
+                        //             : type === "tag" && slug === "review"
+                        //               ? getVideoItemTopTag(post, "review")
+                        //                     ?.name || ""
+                        //               : type === "tag" && slug === "world"
+                        //                 ? getVideoItemTopTag(post, "world")
+                        //                       ?.name || ""
+                        //                 : [
+                        //                         "aerodrome",
+                        //                         "developer",
+                        //                         "platform",
+                        //                         "platformUpdate",
+                        //                     ].includes(type || "")
+                        //                   ? getVideoItemTopTag(post, "latest")
+                        //                         ?.name || ""
+                        //                   : "",
+                        //     new Date(post.release),
+                        // ].filter(Boolean),
+                        new Date(post.release),
                     ]}
                 />
             ))}
