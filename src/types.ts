@@ -13,6 +13,7 @@ export type ValidContentListAutoLoadMoreType = "0" | "1";
 export type VideoListPageTypesType =
     | "tag"
     | "aircraftFamily"
+    | "aircraftOnboardDevice"
     | "aerodrome"
     | "developer"
     | "platform"
@@ -36,6 +37,12 @@ export type VideoItemType = {
     };
 
     aircraft_families: {
+        _id: string;
+        slug?: string;
+        maker: string;
+        name: string;
+    }[];
+    aircraft_onboard_devices: {
         _id: string;
         slug?: string;
         maker: string;

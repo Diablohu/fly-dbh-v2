@@ -1,9 +1,9 @@
 ---
 import { actions } from "astro:actions";
 import numeral from "numeral";
-import dayjs from "dayjs";
 import { type VideoListPageTypesType } from "@/types";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
+import getGameUpdateName from "@/utils/get-game-update-name";
 
 // import log from "@/page-templates/index/_log.ts";
 
@@ -15,7 +15,11 @@ import VideoList from "./_components/list/list.astro";
 import VideoCategories from "./_components/categories/index.astro";
 
 type Props = {
-    type?: VideoListPageTypesType | "aircraftfamily" | "platformupdate";
+    type?:
+        | VideoListPageTypesType
+        | "aircraftfamily"
+        | "aircraftonboarddevice"
+        | "platformupdate";
     slug?: string;
 };
 
@@ -23,9 +27,11 @@ const isIndex = !Astro.props.type;
 const type: VideoListPageTypesType | undefined =
     Astro.props.type === "aircraftfamily"
         ? "aircraftFamily"
-        : Astro.props.type === "platformupdate"
-          ? "platformUpdate"
-          : Astro.props.type;
+        : Astro.props.type === "aircraftonboarddevice"
+          ? "aircraftOnboardDevice"
+          : Astro.props.type === "platformupdate"
+            ? "platformUpdate"
+            : Astro.props.type;
 
 const { data: currentCategoryInfo, error: error } = isIndex
     ? {}
@@ -57,11 +63,21 @@ const title = {
                         new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
                         ""
                     )}`
-                  : type === "developer" || type === "platform"
-                    ? currentCategoryInfo?.name_full
-                    : type === "platformUpdate"
-                      ? `微软${currentCategoryInfo?.game} ${currentCategoryInfo?.series?.toUpperCase()}_${numeral(currentCategoryInfo?.number).format("00")}`
-                      : Astro.params.slug) ||
+                  : type === "aircraftOnboardDevice"
+                    ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
+                          new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
+                          ""
+                      )}`
+                    : type === "developer" || type === "platform"
+                      ? currentCategoryInfo?.name_full
+                      : type === "platformUpdate"
+                        ? `微软${currentCategoryInfo?.game} ${getGameUpdateName(
+                              {
+                                  series: currentCategoryInfo?.series || "",
+                                  number: currentCategoryInfo?.number || "",
+                              }
+                          )}`
+                        : Astro.params.slug) ||
           Astro.params.slug ||
           "",
     sub:

@@ -203,7 +203,8 @@ if (error) {
 
         <section class="check-more">
             <TagButton href="/videos">分类浏览更多视频</TagButton>
-            <TagButton href="/search">搜索视频</TagButton>
+            <!-- TOOD: SEARCH -->
+            {import.meta.env.DEV && <TagButton href="/search">搜索视频</TagButton>}
             <TagButton href="https://qun.fly-dbh.com">加入粉丝群</TagButton>
         </section>
     </Block>

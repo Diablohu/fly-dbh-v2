@@ -4,6 +4,7 @@ import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import dayjs from "dayjs";
 import numeral from "numeral";
+import getGameUpdateName from "@/utils/get-game-update-name";
 
 import videoPlatforms from "@/constants/video-platforms";
 // import log from "@/page-templates/index/_log.ts";
@@ -112,6 +113,21 @@ if (!video || error) {
                                 ),
                             ],
                             [
+                                getVideoListPageTypeInfo(
+                                    "aircraftOnboardDevice"
+                                ).name,
+                                video.aircraft_onboard_devices?.map(
+                                    ({ _id, slug, maker, name }) => ({
+                                        prefix: maker,
+                                        name,
+                                        route: getVideoListPageLink(
+                                            "aircraftOnboardDevice",
+                                            slug || _id
+                                        ),
+                                    })
+                                ),
+                            ],
+                            [
                                 getVideoListPageTypeInfo("aerodrome").name,
                                 video.aerodromes?.map(
                                     ({ _id, slug, icao, iata, name }) => ({
@@ -162,7 +178,12 @@ if (!video || error) {
                                         prefix: isNaN(game as unknown as number)
                                             ? game
                                             : `微软${game}`,
-                                        name: `${series.toUpperCase()}_${numeral(number).format("00")} (${dayjs(release).format("YY年M月")})`,
+                                        name:
+                                            getGameUpdateName({
+                                                series,
+                                                number,
+                                            }) +
+                                            ` (${dayjs(release).format("YY年M月")})`,
                                         route: getVideoListPageLink(
                                             "platformUpdate",
                                             slug || _id
@@ -346,6 +367,10 @@ if (!video || error) {
             gap: 1em 1em;
             & > dl {
                 flex: 1 1 600px;
+            }
+            &::after {
+                content: "";
+                height: 100%;
             }
         }
         & > .relations {
