@@ -30,12 +30,13 @@ type Props = {
     type?: VideoListPageTypesType;
     slug?: string;
     isIndex?: boolean;
-    length: number;
+    length?: number;
     initialList?: (Partial<VideoItemType> &
         Pick<VideoItemType, "_id" | "title" | "release" | "cover">)[];
     initialListIsComplete?: boolean;
     infiniteScroll?: boolean;
-    defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
+    defaultContentListAutoLoadMore?: ValidContentListAutoLoadMoreType;
+    showLoadMoreButton?: boolean;
 };
 
 // ============================================================================
@@ -44,11 +45,12 @@ const VideoListGrid: FC<Props> = ({
     type,
     slug,
     isIndex: _isIndex,
-    length,
+    length = 20,
     initialList = [],
     initialListIsComplete = false,
     infiniteScroll: _infiniteScroll = false,
-    defaultContentListAutoLoadMore,
+    defaultContentListAutoLoadMore = "0",
+    showLoadMoreButton = true,
 }) => {
     const ListContainerRef = useRef<HTMLDivElement>(null);
     const InfiniteScrollIndicatorRef = useRef<HTMLDivElement>(null);
@@ -92,11 +94,12 @@ const VideoListGrid: FC<Props> = ({
                     throw res;
                 } else {
                     const forceComplete = res.data.list.length < length;
-                    if (!res.data.list.length) {
+                    if (!res.data || !res.data.list.length) {
                         debug("no data received. set complete");
                         setStatus("complete");
                     } else
                         setList((prevList) => {
+                            if (!res.data) return prevList;
                             const newList = [
                                 ...prevList,
                                 ...res.data.list.filter(
@@ -223,23 +226,25 @@ const VideoListGrid: FC<Props> = ({
                     ref={InfiniteScrollIndicatorRef}
                     className={styles["infinite-scroll-indicator"]}
                 />
-                {status === "complete" ? (
-                    <span className={styles["completed"]}>没有更多啦~</span>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={loadMore}
-                        className={classNames([
-                            styles["button-load-more"],
-                            {
-                                [styles["is-loading"]]: status === "loading",
-                            },
-                        ])}
-                        disabled={["loading", "complete"].includes(status)}
-                    >
-                        {status === "loading" ? "加载更多..." : "加载更多"}
-                    </button>
-                )}
+                {showLoadMoreButton &&
+                    (status === "complete" ? (
+                        <span className={styles["completed"]}>没有更多啦~</span>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={loadMore}
+                            className={classNames([
+                                styles["button-load-more"],
+                                {
+                                    [styles["is-loading"]]:
+                                        status === "loading",
+                                },
+                            ])}
+                            disabled={["loading", "complete"].includes(status)}
+                        >
+                            {status === "loading" ? "加载更多..." : "加载更多"}
+                        </button>
+                    ))}
             </section>
         </div>
     );

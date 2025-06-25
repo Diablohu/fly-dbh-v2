@@ -1,13 +1,17 @@
 ---
-// import { actions } from "astro:actions";
+import { actions } from "astro:actions";
+import numeral from "numeral";
+import dayjs from "dayjs";
 import { type VideoListPageTypesType } from "@/types";
+import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 
 // import log from "@/page-templates/index/_log.ts";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 
-import VideoList from "./_components/list/index.astro";
+import VideoListInfo from "./_components/list/info.astro";
+import VideoList from "./_components/list/list.astro";
 import VideoCategories from "./_components/categories/index.astro";
 
 type Props = {
@@ -22,12 +26,79 @@ const type: VideoListPageTypesType | undefined =
         : Astro.props.type === "platformupdate"
           ? "platformUpdate"
           : Astro.props.type;
+
+const { data: currentCategoryInfo, error: error } = isIndex
+    ? {}
+    : await Astro.callAction(actions.videoListPageFetchInfo, {
+          type: type as VideoListPageTypesType,
+          slug: Astro.props.slug as Required<Props>["slug"],
+      });
+if (error) {
+    console.trace(error);
+    Astro.response.status = 500;
+    // Astro.response.statusText = (error.cause || error.message || "") as string;
+    return Astro.rewrite("/500");
+}
+
+const title = {
+    category: isIndex
+        ? ""
+        : type === "tag"
+          ? "模拟飞行视频"
+          : `模拟飞行视频 / ${getVideoListPageTypeInfo(type).name}`,
+    main:
+        (type === "tag"
+            ? currentCategoryInfo?.title
+            : type === "aerodrome"
+              ? currentCategoryInfo?.name
+              : type === "aircraftFamily"
+                ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
+                      new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
+                      ""
+                  )}`
+                : type === "developer" || type === "platform"
+                  ? currentCategoryInfo?.name_full
+                  : type === "platformUpdate"
+                    ? `微软${currentCategoryInfo?.game} ${currentCategoryInfo?.series?.toUpperCase()}_${numeral(currentCategoryInfo?.number).format("00")}`
+                    : Astro.params.slug) ||
+        Astro.params.slug ||
+        "",
+    sub:
+        type === "platform"
+            ? currentCategoryInfo?.name_full !== currentCategoryInfo?.name
+                ? currentCategoryInfo?.name
+                : ""
+            : type === "platformUpdate"
+              ? currentCategoryInfo?.series === "su"
+                  ? `Sim Update ${numeral(currentCategoryInfo?.number).format("00")}`
+                  : ""
+              : "",
+};
 ---
 
-<Layout showHeader showFooter>
+<Layout
+    showHeader
+    showFooter
+    title={`${title.category ? `${title.category} : ` : ""}${title.main}${title.sub ? ` (${title.sub})` : ""}`}
+>
     <Block class="video-list-page">
         <section class="video-list-page-container">
-            <VideoList type={type} slug={Astro.props.slug} isIndex={isIndex} />
+            <section class="list">
+                <VideoListInfo
+                    category={title.category}
+                    title={title.main}
+                    subTitle={title.sub}
+                    type={type}
+                    slug={Astro.props.slug}
+                    isIndex={isIndex}
+                    info={currentCategoryInfo}
+                />
+                <VideoList
+                    type={type}
+                    slug={Astro.props.slug}
+                    isIndex={isIndex}
+                />
+            </section>
             <VideoCategories
                 type={type}
                 slug={Astro.props.slug}
@@ -46,6 +117,13 @@ const type: VideoListPageTypesType | undefined =
             flex-flow: row nowrap;
             align-items: flex-start;
             gap: 2em;
+
+            .list {
+                flex: 1;
+                order: 2;
+                padding-top: 1.5em;
+                padding-bottom: 4em;
+            }
         }
     }
 </style>

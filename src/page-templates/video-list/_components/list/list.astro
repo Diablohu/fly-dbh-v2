@@ -24,6 +24,9 @@ const { data, error: error } = await Astro.callAction(
         length,
     }
 );
+
+type List = Exclude<typeof data, undefined>["list"];
+
 if (error) {
     console.trace(error);
     Astro.response.status = 500;
@@ -33,19 +36,80 @@ if (error) {
 ---
 
 <section class="video-list">
-    <VideoListGrid
-        client:idle
-        type={Astro.props.type}
-        slug={Astro.props.slug}
-        isIndex={Astro.props.isIndex}
-        length={length}
-        initialList={data.list}
-        initialListIsComplete={data.list.length >= data.total}
-        infiniteScroll
-        defaultContentListAutoLoadMore={Astro.cookies.get(
-            CONTENT_LIST_AUTO_LOAD_MORE
-        )?.value as ValidContentListAutoLoadMoreType}
-    />
+    {
+        !data ? (
+            "列表获取失败"
+        ) : Astro.props.type === "aircraftFamily" ? (
+            Object.entries(
+                data.list.reduce(
+                    (listByCategory, currentPost) => {
+                        if (!listByCategory[currentPost.tags[0]._id])
+                            listByCategory[currentPost.tags[0]._id] = {
+                                name: currentPost.tags[0].name,
+                                slug: currentPost.tags[0].slug,
+                                list: [],
+                            };
+                        listByCategory[currentPost.tags[0]._id].list.push(
+                            currentPost
+                        );
+                        return listByCategory;
+                    },
+                    {
+                        "a8c9106d-729d-4ef0-8856-2427033a3fb7": {
+                            name: "教程攻略",
+                            slug: "tutorial",
+                            list: [],
+                        },
+                        "04d17ab0-b28e-4132-9418-3fc2b85bbf4f": {
+                            name: "评测",
+                            slug: "review",
+                            list: [],
+                        },
+                        "acc16e01-9854-4270-9a13-1626c080a2e8": {
+                            name: "飞行实况",
+                            slug: "gameplay",
+                            list: [],
+                        },
+                    } as {
+                        [category: string]: {
+                            name: string;
+                            slug?: string;
+                            list: List;
+                        };
+                    }
+                )
+            )
+                .filter(
+                    ([_id, { list }]) => Array.isArray(list) && list.length > 0
+                )
+                .map(([_id, { name, list }]) => (
+                    <Fragment>
+                        <h3>{name}</h3>
+                        <VideoListGrid
+                            type="aircraftFamily"
+                            initialList={list}
+                            initialListIsComplete
+                            showLoadMoreButton={false}
+                        />
+                    </Fragment>
+                ))
+        ) : (
+            <VideoListGrid
+                client:idle
+                type={Astro.props.type}
+                slug={Astro.props.slug}
+                isIndex={Astro.props.isIndex}
+                length={length}
+                initialList={data.list}
+                initialListIsComplete={data.list.length >= data.total}
+                infiniteScroll
+                defaultContentListAutoLoadMore={
+                    Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)
+                        ?.value as ValidContentListAutoLoadMoreType
+                }
+            />
+        )
+    }
 </section>
 
 <style lang="less">
@@ -53,5 +117,12 @@ if (error) {
 
     .video-list {
         padding: 1em 0;
+
+        h3 {
+            margin-top: 0;
+        }
+        h3 ~ h3 {
+            margin-top: 1em;
+        }
     }
 </style>

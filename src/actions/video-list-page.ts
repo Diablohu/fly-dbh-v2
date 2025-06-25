@@ -7,6 +7,9 @@ import { type VideoListPageTypesType, type VideoItemType } from "@/types";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
+import actionErrorHandler from "./_error-handler";
+
+// ============================================================================
 
 const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
     if (!type) return "";
@@ -116,6 +119,8 @@ type ResponseDataType = {
     page: number;
 };
 
+// ============================================================================
+
 const actions = {
     videoListPageFetch: defineAction({
         input: z.object({
@@ -135,7 +140,7 @@ const actions = {
                 // console.log({ query });
                 return (await fetch(
                     `{
-'list' : ${query} [${from}...${from + length}],
+'list' : ${query}${type === "aircraftFamily" ? "" : `[${from}...${from + length}]`},
 'total' : count(${query}),
 }`,
                     (res) => {
@@ -151,12 +156,7 @@ const actions = {
                     }
                 )) as unknown as ResponseDataType;
             } catch (err) {
-                console.trace(err);
-                throw new ActionError({
-                    message:
-                        err instanceof Error ? err.message : (err as string),
-                    code: "INTERNAL_SERVER_ERROR",
-                });
+                actionErrorHandler(err);
             }
         },
     }),
@@ -233,14 +233,124 @@ ${
                         }
                     )
                 )[0];
-                return res;
+                return res as unknown as {
+                    _id: string;
+                    slug?: string;
+
+                    name?: string;
+                    name_full?: string;
+                    title?: string;
+                    tag_type?: string;
+                    icao?: string;
+                    iata?: string;
+                    maker?: string;
+                    aircrafts?: {
+                        icao_code: string;
+                        name: string;
+                    }[];
+                    links?: { [key: string]: string };
+                    logo?: string;
+                    developers?: {
+                        _id: string;
+                        slug?: string;
+                        name: string;
+                    }[];
+                    game?: string;
+                    series?: string;
+                    number?: number;
+                    release?: string;
+                };
             } catch (err) {
-                console.trace(err);
-                throw new ActionError({
-                    message:
-                        err instanceof Error ? err.message : (err as string),
-                    code: "INTERNAL_SERVER_ERROR",
-                });
+                actionErrorHandler(err);
+            }
+        },
+    }),
+
+    videoListPageFetchTags: defineAction({
+        input: z.object({
+            type: z.string().optional(),
+        }) as z.ZodType<{
+            type?: VideoListPageTypesType;
+        }>,
+        handler: async ({ type }) => {
+            try {
+                const currentType = !type
+                    ? "tag"
+                    : getVideoListPageTypeInfo(type).type;
+                return await fetch<{
+                    _id: string;
+                    slug?: string;
+
+                    title?: string;
+                    tag_type?: "category" | "topic";
+                    name?: string;
+                    name_full?: string;
+                    icao?: string;
+                    iata?: string;
+                    maker?: string;
+                    aircrafts?: {
+                        icao_code: string;
+                        name: string;
+                    }[];
+                    game?: string;
+                    series?: string;
+                    number?: number;
+                    release?: string;
+                }>(`
+*[_type == "${currentType}"] | order(${
+                    currentType === "tag"
+                        ? `sort asc`
+                        : type === "aerodrome"
+                          ? "icao asc"
+                          : type === "aircraftFamily"
+                            ? "maker->icao_code asc, name asc"
+                            : type === "developer"
+                              ? "name asc"
+                              : type === "platform"
+                                ? "name_full asc"
+                                : type === "platformUpdate"
+                                  ? "release desc"
+                                  : ""
+                }) {
+    _id,
+    'slug': slug.current,${
+        currentType === "tag"
+            ? `
+    title,
+    tag_type,`
+            : type === "aerodrome"
+              ? `
+    name,
+    icao,
+    iata,`
+              : type === "aircraftFamily"
+                ? `
+    name,
+    'maker': maker->name_zh_cn,
+    aircrafts[]{
+        icao_code,
+        name,
+    },`
+                : type === "developer"
+                  ? `
+    name,
+    name_full,`
+                  : type === "platform"
+                    ? `
+    name,
+    name_full,`
+                    : type === "platformUpdate"
+                      ? `
+    game,
+    series,
+    number,
+    release,`
+                      : ""
+    }
+}
+                `);
+            } catch (err) {
+                actionErrorHandler(err);
             }
         },
     }),

@@ -3,6 +3,7 @@ import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
 import { type VideoItemType } from "@/types";
+import actionErrorHandler from "./_error-handler";
 
 const fetchSorting = ` | order( release desc )`;
 const getProjections = (collection: string) => `{
@@ -81,11 +82,7 @@ ${[
                     }
                 )) as unknown as CollectionsType;
             } catch (err) {
-                throw new ActionError({
-                    message:
-                        err instanceof Error ? err.message : (err as string),
-                    code: "INTERNAL_SERVER_ERROR",
-                });
+                actionErrorHandler(err);
             }
         },
     }),
