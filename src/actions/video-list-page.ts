@@ -23,6 +23,9 @@ const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
         case "aircraftFamily": {
             return ` && ("${slug}" in aircraft_families[]->slug.current || "${slug}" in aircraft_families[]->_id)`;
         }
+        case "aircraftOnboardDevice": {
+            return ` && ("${slug}" in aircraft_onboard_devices[]->slug.current || "${slug}" in aircraft_onboard_devices[]->_id)`;
+        }
         case "developer": {
             return ` && ("${slug}" in developers[]->slug.current || "${slug}" in developers[]->_id)`;
         }
@@ -230,15 +233,20 @@ ${
         _id,
     }
 `
-            : type === "developer"
+            : type === "aircraftOnboardDevice"
               ? `
+    name,
+    'maker': maker->name_zh_cn,
+`
+              : type === "developer"
+                ? `
     name,
     name_full,
     links,
     "logo": logo.asset->path,
 `
-              : type === "platform"
-                ? `
+                : type === "platform"
+                  ? `
     name,
     name_full,
     links,
@@ -248,14 +256,14 @@ ${
         name
     },
 `
-                : type === "platformUpdate"
-                  ? `
+                  : type === "platformUpdate"
+                    ? `
     game,
     series,
     number,
     release
 `
-                  : ``
+                    : ``
 }
 }`,
                         (res) => {
@@ -345,13 +353,15 @@ ${
                           ? "icao asc"
                           : type === "aircraftFamily"
                             ? "maker->icao_code asc, name asc"
-                            : type === "developer"
-                              ? "name asc"
-                              : type === "platform"
-                                ? "name_full asc"
-                                : type === "platformUpdate"
-                                  ? "release desc"
-                                  : ""
+                            : type === "aircraftOnboardDevice"
+                              ? "maker->icao_code asc, name asc"
+                              : type === "developer"
+                                ? "name asc"
+                                : type === "platform"
+                                  ? "name_full asc"
+                                  : type === "platformUpdate"
+                                    ? "release desc"
+                                    : ""
                 }) {
     _id,
     'slug': slug.current,${
@@ -372,21 +382,25 @@ ${
         icao_code,
         name,
     },`
-                : type === "developer"
+                : type === "aircraftOnboardDevice"
                   ? `
     name,
-    name_full,`
-                  : type === "platform"
+    'maker': maker->name_zh_cn,`
+                  : type === "developer"
                     ? `
     name,
     name_full,`
-                    : type === "platformUpdate"
+                    : type === "platform"
                       ? `
+    name,
+    name_full,`
+                      : type === "platformUpdate"
+                        ? `
     game,
     series,
     number,
     release,`
-                      : ""
+                        : ""
     }
 }
                 `);

@@ -24,6 +24,12 @@ const fetchProjections = `{
         name,
         'maker': maker->name_zh_cn
     },
+    'aircraft_onboard_devices': aircraft_onboard_devices[]->{
+        _id,
+        'slug': slug.current,
+        'maker': maker->name_zh_cn,
+        name,
+    },
     'aerodromes': aerodromes[]->{
         _id,
         'slug': slug.current,

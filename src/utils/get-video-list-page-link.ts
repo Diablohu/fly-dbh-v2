@@ -6,7 +6,8 @@ const getVideoListPageLink = (type?: VideoListPageTypesType, slug?: string) => {
     return `/videos/${
         type === "aircraftFamily"
             ? "aircraftfamily"
-            : type === "platformUpdate"
+            : type === 'aircraftOnboardDevice'
+            ? 'aircraftonboarddevice' :type === "platformUpdate"
               ? "platformupdate"
               : type
     }-${slug}`;

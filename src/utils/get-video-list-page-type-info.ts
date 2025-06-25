@@ -6,6 +6,8 @@ const getVideoListPageTypeInfo = (t?: VideoListPageTypesType) => {
             return { type: "tag", name: "类型" };
         case "aircraftFamily":
             return { type: "aircraft_family", name: "机型系列" };
+        case "aircraftOnboardDevice":
+            return { type: "aircraft_onboard_device", name: "机载设备" };
         case "aerodrome":
             return { type: "aerodrome", name: "机场" };
         case "developer":
