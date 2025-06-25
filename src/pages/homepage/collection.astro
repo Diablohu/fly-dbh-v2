@@ -1,0 +1,180 @@
+---
+import { actions } from "astro:actions";
+import { type ValueOf } from "@/types";
+import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
+import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+
+type Props = {
+    name: string;
+    route?: string;
+    title: string;
+    videos?: ValueOf<
+        Exclude<
+            Awaited<ReturnType<typeof actions.homePageFetch>>["data"],
+            undefined
+        >
+    >;
+    showMore?: boolean;
+};
+const { showMore = true } = Astro.props;
+---
+
+<dl class="collection" data-collection={Astro.props.name}>
+    <dt>
+        <h3>
+            <a
+                href={`/videos${Astro.props.route ? `/${Astro.props.route}` : ""}`}
+            >
+                {Astro.props.title}
+            </a>
+        </h3>
+        {
+            showMore && (
+                <a
+                    href={`/videos${Astro.props.route ? `/${Astro.props.route}` : ""}`}
+                >
+                    更多
+                </a>
+            )
+        }
+    </dt>
+    <dd>
+        {
+            !Astro.props.videos ||
+            !Array.isArray(Astro.props.videos) ||
+            Astro.props.videos.length < 1 ? (
+                <slot />
+            ) : (
+                <VideoListHorizontal
+                    client:idle
+                    videos={Astro.props.videos.map((post) => ({
+                        cmsId: post._id,
+                        slug: post.slug,
+                        title: post.title,
+                        cover: post.cover,
+                        // tags:
+                        //     Astro.props.name === "latest"
+                        //         ? [post.tags[0].Astro.props.name]
+                        //         : Astro.props.name === "tutorials"
+                        //           ? [
+                        //                 post.tags.filter((tag) =>
+                        //                     [
+                        //                         "training",
+                        //                         "tip",
+                        //                         "aviation",
+                        //                     ].includes(tag.slug)
+                        //                 )[0]?.Astro.props.name,
+                        //             ].filter(Boolean)
+                        //           : [],
+                        infos: [
+                            [
+                                getVideoItemTopTag(
+                                    post,
+                                    Astro.props.name === "tutorials"
+                                        ? "tutorial"
+                                        : Astro.props.name === "reviews"
+                                          ? "review"
+                                          : (Astro.props.name as Parameters<
+                                                typeof getVideoItemTopTag
+                                            >[1])
+                                )?.name || "",
+                                new Date(post.release),
+                            ].filter(Boolean),
+                        ],
+                    }))}
+                />
+            )
+        }
+    </dd>
+</dl>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .collection {
+        display: block;
+        position: relative;
+        margin-bottom: 5em;
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -2.5em;
+            height: 1px;
+            left: 0;
+            right: 0;
+            background: var(--border-color);
+        }
+
+        & > dt,
+        & > dd {
+            position: relative;
+            padding: 0;
+        }
+        & > dt {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin: 0 0 1em 0;
+            & > h3 {
+                display: block;
+                flex: 1;
+                margin: 0;
+                font-size: 1.25em;
+            }
+            a {
+                --arrow-line-width: 2px;
+                --arrow-translate-x: -10px;
+                --arrow-opacity: 0;
+                display: inline-block;
+                position: relative;
+                color: var(--text-color-primary);
+                text-decoration: none;
+                transition-property:
+                    color, transform, opacity, background-color;
+                &::before,
+                &::after {
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    top: 50%;
+                    right: -0.4em;
+                    border: var(--arrow-line-width) solid currentColor;
+                    width: 0.5em;
+                    height: 0.5em;
+                    margin-top: -0.125em;
+                    border-left-width: 0;
+                    border-bottom-width: 0;
+                    opacity: var(--arrow-opacity);
+                    transform-origin: 100% 100%;
+                    transform: translateX(var(--arrow-translate-x))
+                        rotate(45deg);
+                    transition: inherit;
+                    transition-property: transform, opacity;
+                }
+                &::before {
+                }
+                &::after {
+                    --arrow-line-width: 1px;
+                    border-color: var(--text-color-secondary);
+                    right: calc(-0.4em - 5px);
+                }
+                &:hover {
+                    --arrow-translate-x: 0;
+                    --arrow-opacity: 1;
+                }
+            }
+            & > a {
+                white-space: nowrap;
+                color: var(--text-color-secondary);
+                &:hover {
+                    color: var(--text-color-primary);
+                }
+            }
+        }
+        & > dd {
+            margin: 0;
+        }
+    }
+</style>

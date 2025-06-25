@@ -3,7 +3,7 @@ import { type VideoListPageTypesType } from "@/types";
 const getVideoListPageTypeInfo = (t?: VideoListPageTypesType) => {
     switch (t) {
         case "tag":
-            return { type: "tag", name: "标签" };
+            return { type: "tag", name: "类型" };
         case "aircraftFamily":
             return { type: "aircraft_family", name: "机型系列" };
         case "aerodrome":

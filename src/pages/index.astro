@@ -10,6 +10,8 @@ import TagButton from "@/components/tag-button.astro";
 
 import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
 
+import Collection from "./homepage/collection.astro";
+
 // ============================================================================
 //
 // 语言包相关
@@ -66,94 +68,112 @@ if (error) {
 
 <Layout showHeader showBanner showFooter>
     <Block class="home-page">
+        <Collection
+            name="latest"
+            title="最新视频"
+            videos={collections?.["latest"]}
+        />
+
+        <Collection name="tags" title="亮点内容" showMore={false}>
+            {
+                [
+                    {
+                        name: "机型教学",
+                        tags: [
+                            [
+                                "空客",
+                                "A350 XWB",
+                                "aircraftfamily-airbus-a350-xwb",
+                            ],
+                            ["空客", "A380", "aircraftfamily-airbus-a380"],
+                            [
+                                "空客",
+                                "A320 CEO",
+                                "aircraftfamily-airbus-a320-ceo",
+                            ],
+                            [
+                                "空客",
+                                "A320 NEO",
+                                "aircraftfamily-airbus-a320-neo",
+                            ],
+                            [
+                                "波音",
+                                "787 梦想客机",
+                                "aircraftfamily-boeing-787-dreamliner",
+                            ],
+                            [
+                                "安东诺夫",
+                                "An-225 梦幻",
+                                "aircraftfamily-antonov-an-225",
+                            ],
+                            ["ATR", "72-600", "aircraftfamily-atr-72-600"],
+                            [
+                                "西瑞",
+                                "SF-50 展望喷气",
+                                "aircraftfamily-cirrus-sf50-vision-jet",
+                            ],
+                            [
+                                "派珀",
+                                "PA-24 科曼奇",
+                                "aircraftfamily-piper-pa24-comanche",
+                            ],
+                        ],
+                    },
+                    {
+                        name: "热点资讯",
+                        tags: [
+                            [
+                                "微软2024",
+                                "SU03 更新",
+                                "platformupdate-msfs2024-su03",
+                            ],
+                            [
+                                "微软2020",
+                                "SU16 更新",
+                                "platformupdate-msfs2020-su16",
+                            ],
+                            [
+                                "微软2024",
+                                "SU02 更新",
+                                "platformupdate-msfs2024-su02",
+                            ],
+                        ],
+                    },
+                ].map(({ name, tags }) => (
+                    <section class="hot-tag">
+                        <strong class="name">{name}</strong>
+                        <span class="tags">
+                            {tags.map(([prefix, name, route]) => (
+                                <TagButton
+                                    href={`/videos/${route}`}
+                                    prefix={prefix}
+                                >
+                                    {name}
+                                </TagButton>
+                            ))}
+                        </span>
+                    </section>
+                ))
+            }
+        </Collection>
+
         {
             [
-                ["latest", "最新视频"],
                 ["tutorials", "模拟飞行教学视频", "tag-tutorial"],
                 ["news", "模拟飞行资讯视频", "tag-news"],
                 ["reviews", "模拟飞行评测视频", "tag-review"],
                 ["world", "航空专题视频", "tag-world"],
             ].map(([collectionName, title, routeName]) => (
-                <dl class="collection" data-collection={collectionName}>
-                    <dt>
-                        <h3>
-                            <a
-                                href={`/videos${routeName ? `/${routeName}` : ""}`}
-                            >
-                                {title}
-                            </a>
-                        </h3>
-                        <a href={`/videos${routeName ? `/${routeName}` : ""}`}>
-                            更多
-                        </a>
-                    </dt>
-                    <dd>
-                        <VideoListHorizontal
-                            client:idle
-                            videos={collections[collectionName].map((post) => ({
-                                cmsId: post._id,
-                                slug: post.slug,
-                                title: post.title,
-                                cover: post.cover,
-                                // tags:
-                                //     collectionName === "latest"
-                                //         ? [post.tags[0].name]
-                                //         : collectionName === "tutorials"
-                                //           ? [
-                                //                 post.tags.filter((tag) =>
-                                //                     [
-                                //                         "training",
-                                //                         "tip",
-                                //                         "aviation",
-                                //                     ].includes(tag.slug)
-                                //                 )[0]?.name,
-                                //             ].filter(Boolean)
-                                //           : [],
-                                infos: [
-                                    [
-                                        getVideoItemTopTag(
-                                            post,
-                                            collectionName === "tutorials"
-                                                ? "tutorial"
-                                                : collectionName === "reviews"
-                                                  ? "review"
-                                                  : (collectionName as Parameters<
-                                                        typeof getVideoItemTopTag
-                                                    >[1])
-                                        )?.name || "",
-                                        new Date(post.release),
-                                    ].filter(Boolean),
-                                ],
-                            }))}
-                        />
-                    </dd>
-                </dl>
+                <Collection
+                    name={collectionName}
+                    route={routeName}
+                    title={title}
+                    videos={collections?.[collectionName]}
+                />
             ))
         }
 
-        <!-- <dl class="collection">
-            <dt>
-                <h3>
-                    <a href={`/videos`}>近期亮点</a>
-                </h3>
-            </dt>
-            <dd class="tags">
-                {
-                    [
-                        ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
-                        ["空客", "A380", "aircraftfamily-airbus-a380"],
-                        ["微软2024", "SU03 更新", "platformupdate-msfs2024-su03"],
-                        ["微软2024", "SU02 更新", "platformupdate-msfs2024-su02"],
-                    ].map(([prefix, name, route]) => (
-                        <TagButton href={`/videos/${route}`} prefix={prefix}>
-                            {name}
-                        </TagButton>
-                    ))
-                }
-            </dd>
-        </dl> -->
-
-        <section class="more">
+        <section class="check-more">
             <TagButton href="/videos">浏览更多视频</TagButton>
         </section>
     </Block>
@@ -168,119 +188,38 @@ if (error) {
         padding-bottom: 2em;
     }
 
-    .collection {
-        display: block;
-        position: relative;
-        margin-bottom: 5em;
-
-        &::after {
-            content: "";
-            position: absolute;
-            bottom: -2.5em;
-            height: 1px;
-            left: 0;
-            right: 0;
-            background: var(--border-color);
+    .hot-tag {
+        display: flex;
+        flex-flow: row nowrap;
+        & + .hot-tag {
+            margin-top: 1em;
+            line-height: 1.6667em;
         }
-
-        a {
-            display: inline-block;
-            position: relative;
-            color: var(--text-color-primary);
-            text-decoration: none;
-            transition-property: color, transform, opacity, background-color;
-            // &:hover {
-            //     color: var(--text-color-primary);
-            // }
-            &:active {
-                transform: translateY(2px);
-            }
+        & > .name {
+            display: block;
+            flex: 0 0 5em;
         }
-
-        & > dt,
-        & > dd {
-            position: relative;
-            padding: 0;
-        }
-        & > dt {
+        & > .tags {
+            flex: 1;
+            font-size: unit((14px / @base-font-size-number), em);
+            font-weight: normal;
             display: flex;
-            flex-flow: row nowrap;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin: 0 0 1em 0;
-            & > h3 {
-                display: block;
-                flex: 1;
-                margin: 0;
-                font-size: 1.25em;
-            }
-            & > a {
-                white-space: nowrap;
-                color: var(--text-color-secondary);
-                &:hover {
-                    color: var(--text-color-primary);
-                }
+            flex-flow: row wrap;
+            gap: 0.5em;
+            &:empty {
+                display: none;
             }
             a {
-                --arrow-line-width: 2px;
-                --arrow-translate-x: -10px;
-                --arrow-opacity: 0;
-                &::before,
-                &::after {
-                    content: "";
-                    position: absolute;
-                    z-index: -1;
-                    top: 50%;
-                    right: -0.4em;
-                    border: var(--arrow-line-width) solid currentColor;
-                    width: 0.5em;
-                    height: 0.5em;
-                    margin-top: -0.125em;
-                    border-left-width: 0;
-                    border-bottom-width: 0;
-                    opacity: var(--arrow-opacity);
-                    transform-origin: 100% 100%;
-                    transform: translateX(var(--arrow-translate-x))
-                        rotate(45deg);
-                    transition: inherit;
-                    transition-property: transform, opacity;
-                }
-                &::before {
-                }
-                &::after {
-                    --arrow-line-width: 1px;
-                    border-color: var(--text-color-secondary);
-                    right: calc(-0.4em - 5px);
-                }
-                &:hover {
-                    --arrow-translate-x: 0;
-                    --arrow-opacity: 1;
-                }
-            }
-        }
-        & > dd {
-            margin: 0;
-            &.tags {
-                font-size: unit((14px / @base-font-size-number), em);
-                font-weight: normal;
-                display: flex;
-                flex-flow: row wrap;
-                gap: 0.75em;
-                &:empty {
-                    display: none;
-                }
-                a {
-                    display: inline-flex;
-                }
+                display: inline-flex;
             }
         }
     }
 
-    .collection ~ .more {
+    .check-more {
         text-align: center;
         margin-bottom: 3em;
         a {
-            font-size: 1.33333em;
+            font-size: 1.133333em;
             border-radius: 100em;
             padding: 0.3333em 1.6667em;
         }

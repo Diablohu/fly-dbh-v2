@@ -4,6 +4,7 @@
 //     _: L;
 //     currentLocale: LocaleType;
 // };
+export type ValueOf<T> = T[keyof T];
 
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
 export type ValidColorSchemeType = "dark" | "light";

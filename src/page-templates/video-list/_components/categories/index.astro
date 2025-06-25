@@ -1,5 +1,5 @@
 ---
-// import { actions } from "astro:actions";
+import { actions } from "astro:actions";
 import { type VideoListPageTypesType } from "@/types";
 
 type Props = {
@@ -7,6 +7,25 @@ type Props = {
     slug?: string;
     isIndex: boolean;
 };
+
+const { data, error: error } = Astro.props.isIndex
+    ? {}
+    : await Astro.callAction(
+          actions.videoListPageFetchTags,
+          {}
+          //   Astro.props.type as Required<Props>["type"]
+      );
+if (error) {
+    console.trace(error);
+    Astro.response.status = 500;
+    // Astro.response.statusText = (error.cause || error.message || "") as string;
+    return Astro.rewrite("/500");
+}
+
+// console.log(data);
+// const list = [
+
+// ]
 
 /*
 
@@ -17,6 +36,9 @@ Index
 Main Categories
 - news
 - tutorial
+    - aircraft
+    - tips
+    - aviation
 - review
 - chat
 - world
