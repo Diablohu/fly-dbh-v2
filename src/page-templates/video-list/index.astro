@@ -46,23 +46,24 @@ const title = {
         : type === "tag"
           ? "模拟飞行视频"
           : `模拟飞行视频 / ${getVideoListPageTypeInfo(type).name}`,
-    main:
-        (type === "tag"
-            ? currentCategoryInfo?.title
-            : type === "aerodrome"
-              ? currentCategoryInfo?.name
-              : type === "aircraftFamily"
-                ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
-                      new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
-                      ""
-                  )}`
-                : type === "developer" || type === "platform"
-                  ? currentCategoryInfo?.name_full
-                  : type === "platformUpdate"
-                    ? `微软${currentCategoryInfo?.game} ${currentCategoryInfo?.series?.toUpperCase()}_${numeral(currentCategoryInfo?.number).format("00")}`
-                    : Astro.params.slug) ||
-        Astro.params.slug ||
-        "",
+    main: isIndex
+        ? "最新模拟飞行视频"
+        : (type === "tag"
+              ? currentCategoryInfo?.title
+              : type === "aerodrome"
+                ? currentCategoryInfo?.name
+                : type === "aircraftFamily"
+                  ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
+                        new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
+                        ""
+                    )}`
+                  : type === "developer" || type === "platform"
+                    ? currentCategoryInfo?.name_full
+                    : type === "platformUpdate"
+                      ? `微软${currentCategoryInfo?.game} ${currentCategoryInfo?.series?.toUpperCase()}_${numeral(currentCategoryInfo?.number).format("00")}`
+                      : Astro.params.slug) ||
+          Astro.params.slug ||
+          "",
     sub:
         type === "platform"
             ? currentCategoryInfo?.name_full !== currentCategoryInfo?.name
