@@ -74,6 +74,34 @@
         }
     }
 }
+.screen-md-below(@rules) {
+    @media screen and (max-width: @screen-size-md) {
+        & {
+            @rules();
+        }
+    }
+}
+.screen-md(@rules) {
+    @media screen and (min-width: (@screen-size-sm + 1)) and (max-width: @screen-size-md) {
+        & {
+            @rules();
+        }
+    }
+}
+.screen-lg-below(@rules) {
+    @media screen and (max-width: @screen-size-lg) {
+        & {
+            @rules();
+        }
+    }
+}
+.screen-lg(@rules) {
+    @media screen and (min-width: (@screen-size-md + 1)) and (max-width: @screen-size-lg) {
+        & {
+            @rules();
+        }
+    }
+}
 
 .tag-styles() {
     --border-radius: 0.3333em;

@@ -117,6 +117,8 @@ type ResponseDataType = {
     list: ReturnVideoItemType[];
     total: number;
     page: number;
+} & {
+    [extra: string]: ReturnVideoItemType[];
 };
 
 // ============================================================================
@@ -128,13 +130,31 @@ const actions = {
             slug: z.string().optional(),
             from: z.number().optional(),
             length: z.number().optional(),
+            extra: z
+                .array(
+                    z.object({
+                        name: z.string(),
+                        query: z.string(),
+                    })
+                )
+                .optional(),
         }) as z.ZodType<{
             type?: VideoListPageTypesType;
             slug?: string;
             from?: number;
             length?: number;
+            extra?: {
+                name: string;
+                query: string;
+            }[];
         }>,
-        handler: async ({ type, slug: cmsIdOrSlug, from = 0, length = 20 }) => {
+        handler: async ({
+            type,
+            slug: cmsIdOrSlug,
+            from = 0,
+            length = 20,
+            extra = [],
+        }) => {
             try {
                 const query = `*[_type == "video"${getFilter(type, cmsIdOrSlug)}] ${getProjections(type, cmsIdOrSlug)} | order( release desc )`;
                 // console.log({ query });
@@ -142,13 +162,16 @@ const actions = {
                     `{
 'list' : ${query}${type === "aircraftFamily" ? "" : `[${from}...${from + length}]`},
 'total' : count(${query}),
+${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
 }`,
                     (res) => {
                         const r = res as unknown as ResponseDataType;
-                        r.list = r.list.map(({ cover, ...post }) => ({
-                            cover: transformImagePath(cover),
-                            ...post,
-                        }));
+                        for (const list of Object.values(r)) {
+                            if (!Array.isArray(list)) continue;
+                            list.forEach((post) => {
+                                post.cover = transformImagePath(post.cover);
+                            });
+                        }
                         // const maxPage = Math.ceil(r.total / length);
                         // console.log(r.total, from, length, maxPage);
                         r.page = Math.floor(from / length) + 1;
@@ -197,6 +220,15 @@ ${
         icao_code,
         name,
     },
+    'onboard_devices': onboard_devices[]->{
+        'maker': maker->name_zh_cn,
+        name,
+        _id,
+    },
+    'tags': tags[]->{
+        name,
+        _id,
+    }
 `
             : type === "developer"
               ? `
@@ -247,6 +279,15 @@ ${
                     aircrafts?: {
                         icao_code: string;
                         name: string;
+                    }[];
+                    onboard_devices?: {
+                        maker: string;
+                        name: string;
+                        _id: string;
+                    }[];
+                    tags?: {
+                        name: string;
+                        _id: string;
                     }[];
                     links?: { [key: string]: string };
                     logo?: string;

@@ -191,7 +191,6 @@ const VideoListGrid: FC<Props> = ({
     return (
         <div className={styles["video-list-grid"]} ref={ListContainerRef}>
             {list.map((post) => (
-                // TODO: tags by category
                 <VideoItem
                     key={post._id}
                     cmsId={post._id}

@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { type ValidVideoSourceType, type VideoItemType } from "@/types";
 
 import useVideoSource from "@/react-hooks/use-video-source";
-import { links as _links } from "@/layouts/_components/banner-and-header";
+import videoPlatforms from "@/constants/video-platforms";
 
 import styles from "./select-platform.module.less";
 
@@ -26,7 +26,7 @@ const SelectPlatform: FC<{
             ])}
         >
             {!isInsidePlayer && <span>视频平台</span>}
-            {_links
+            {videoPlatforms
                 .filter(({ name }) =>
                     ["bilibili", "youtube", "douyin"]
                         .filter(

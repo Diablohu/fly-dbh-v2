@@ -12,8 +12,47 @@ type Props = {
     type?: VideoListPageTypesType;
     slug?: string;
     isIndex: boolean;
+    info: Awaited<ReturnType<typeof actions.videoListPageFetchInfo>>["data"];
 };
 const length = 20;
+const extra: Parameters<typeof actions.videoListPageFetch>[0]["extra"] = [];
+
+if (Astro.props.type === "aircraftFamily") {
+    function getQueryString(ref: string) {
+        return `*[_type=="video" && "tutorial" in tags[]->slug.current && references(${ref})] {
+    _id,
+    'slug': slug.current,
+    title,
+    release,
+    "cover": cover.asset->path,
+    'tags': tags[]->{
+        _id,
+        'slug': slug.current,
+        "value": name,
+        "name": title
+    },
+} | order(release desc)`;
+    }
+    if (
+        Array.isArray(Astro.props.info?.onboard_devices) &&
+        Astro.props.info.onboard_devices.length
+    ) {
+        Astro.props.info.onboard_devices.forEach(({ _id, maker, name }) => {
+            extra.push({
+                name: `机载设备 (${maker} ${name}) 教学`,
+                query: getQueryString(`"${_id}"`),
+            });
+        });
+    }
+    if (Array.isArray(Astro.props.info?.tags) && Astro.props.info.tags.length) {
+        extra.push({
+            name: `相关航空知识`,
+            query: getQueryString(
+                `[${Astro.props.info.tags.map(({ _id }) => `"${_id}"`).join(",")}]`
+            ),
+        });
+    }
+}
 
 const { data, error: error } = await Astro.callAction(
     actions.videoListPageFetch,
@@ -22,6 +61,7 @@ const { data, error: error } = await Astro.callAction(
         slug: Astro.props.slug,
         from: 0,
         length,
+        extra: extra.length > 0 ? extra : undefined,
     }
 );
 
@@ -79,18 +119,38 @@ if (error) {
                     }
                 )
             )
-                .filter(
-                    ([_id, { list }]) => Array.isArray(list) && list.length > 0
-                )
-                .map(([_id, { name, list }]) => (
+                // .filter(
+                //     ([_id, { name, list }]) =>
+                //         Array.isArray(list) && list.length > 0
+                // )
+                .map(([_id, { name, list }], index, arr) => (
                     <Fragment>
-                        <h3>{name}</h3>
-                        <VideoListGrid
-                            type="aircraftFamily"
-                            initialList={list}
-                            initialListIsComplete
-                            showLoadMoreButton={false}
-                        />
+                        {Array.isArray(list) && list.length > 0 && (
+                            <Fragment>
+                                <h3>{name}</h3>
+                                <VideoListGrid
+                                    type="aircraftFamily"
+                                    initialList={list}
+                                    initialListIsComplete
+                                    showLoadMoreButton={false}
+                                />
+                            </Fragment>
+                        )}
+                        {name === "评测" &&
+                            extra.map(({ name }) =>
+                                Array.isArray(data[name]) &&
+                                data[name].length > 0 ? (
+                                    <Fragment>
+                                        <h3>{name}</h3>
+                                        <VideoListGrid
+                                            type="aircraftFamily"
+                                            initialList={data[name]}
+                                            initialListIsComplete
+                                            showLoadMoreButton={false}
+                                        />
+                                    </Fragment>
+                                ) : null
+                            )}
                     </Fragment>
                 ))
         ) : (
@@ -116,8 +176,6 @@ if (error) {
     @import "@/utils/mixins.less";
 
     .video-list {
-        padding: 1em 0;
-
         h3 {
             margin-top: 0;
         }

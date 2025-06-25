@@ -1,5 +1,5 @@
 import { memo, useMemo, useRef, type FC } from "react";
-import { type ValidVideoSourceType } from "@/types";
+import { type ValidVideoSourceType, type VideoItemType } from "@/types";
 
 import useWindow from "@/react-hooks/use-window";
 import useVideoSource from "@/react-hooks/use-video-source";
@@ -12,11 +12,7 @@ import styles from "./player.module.less";
 
 type Props = {
     title: string;
-    links: {
-        bilibili: string;
-        youtube: string;
-        douyin: string;
-    };
+    links: VideoItemType["links"];
     cover: string;
     defaultVideoSource: ValidVideoSourceType;
 };
@@ -43,20 +39,22 @@ const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
     );
 
     const url = useMemo(() => {
+        if (!$videoSource) return "";
+
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[$videoSource]
+            links[$videoSource] || ""
         )?.[1];
         if (bilibiliId)
             return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1`;
 
         const youtubeId =
             /(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/)(.+?)(\/|\?|\#|\&|$)/.exec(
-                links[$videoSource]
+                links[$videoSource] || ""
             )?.[2];
         if (youtubeId) return `//youtube.com/embed/${youtubeId}?autoplay=1`;
 
         const douyinId = /douyin\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[$videoSource]
+            links[$videoSource] || ""
         )?.[1];
         if (douyinId)
             return `//open.douyin.com/player/video?vid=${douyinId}&autoplay=1`;

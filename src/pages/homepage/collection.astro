@@ -15,11 +15,20 @@ type Props = {
         >
     >;
     showMore?: boolean;
+    highlighted?: boolean;
 };
 const { showMore = true } = Astro.props;
 ---
 
-<dl class="collection" data-collection={Astro.props.name}>
+<dl
+    class:list={[
+        "collection",
+        {
+            "mod-highlight": Astro.props.highlighted,
+        },
+    ]}
+    data-collection={Astro.props.name}
+>
     <dt>
         <h3>
             <a
@@ -92,14 +101,16 @@ const { showMore = true } = Astro.props;
     @import "@/utils/mixins.less";
 
     .collection {
+        --margin-bottom: 5em;
+
         display: block;
         position: relative;
-        margin-bottom: 5em;
+        margin-bottom: var(--margin-bottom);
 
         &::after {
             content: "";
             position: absolute;
-            bottom: -2.5em;
+            bottom: calc(var(--margin-bottom) / -2);
             height: 1px;
             left: 0;
             right: 0;
@@ -176,5 +187,28 @@ const { showMore = true } = Astro.props;
         & > dd {
             margin: 0;
         }
+    }
+
+    .collection:has(+ .mod-highlight) {
+        margin-bottom: calc(var(--margin-bottom) / 1.5);
+        &::after {
+            display: none;
+        }
+    }
+
+    .collection.mod-highlight {
+        background: var(--tag-background-color);
+        padding: 1.5em var(--global-edge-safe-distance) 1.75em
+            var(--global-edge-safe-distance);
+        border-radius: 10px;
+        margin-left: calc(var(--global-edge-safe-distance) * -1);
+        margin-right: calc(var(--global-edge-safe-distance) * -1);
+        margin-bottom: calc(var(--margin-bottom) / 1.25);
+        &::after {
+            display: none;
+        }
+        .screen-lg-below({
+            border-radius: 0;
+        });
     }
 </style>
