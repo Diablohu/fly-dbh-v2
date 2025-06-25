@@ -5,7 +5,9 @@ import { type ValidVideoSourceType } from "@/types";
 import dayjs from "dayjs";
 import numeral from "numeral";
 
+import videoPlatforms from "@/constants/video-platforms";
 // import log from "@/page-templates/index/_log.ts";
+import iconKook from "@/assets/icon-kook.svg?raw";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
@@ -25,7 +27,7 @@ const { data: video, error: error } = await Astro.callAction(
     actions.watchPageFetch,
     Astro.params.slug
 );
-if (error) {
+if (!video || error) {
     Astro.response.status = 500;
     Astro.props.error = error;
     return Astro.rewrite("/500");
@@ -201,6 +203,40 @@ if (error) {
                     )
                 }
             </section>
+
+            <section class="links">
+                <dl>
+                    <dt>参与讨论</dt>
+                    {
+                        (
+                            Object.entries(video.links) as [
+                                ValidVideoSourceType,
+                                string,
+                            ][]
+                        ).map(([platform, url]) => {
+                            if (!url) return null;
+                            const thisPlatform = videoPlatforms.find(
+                                ({ name }) => name === platform
+                            );
+                            if (!thisPlatform) return null;
+                            return (
+                                <dd>
+                                    <a
+                                        href={url}
+                                        data-platform={thisPlatform.name}
+                                        set:html={`${thisPlatform.iconHtml}${thisPlatform.title}评论区`}
+                                    />
+                                </dd>
+                            );
+                        })
+                    }
+                    <a
+                        href="https://qun.fly-dbh.com"
+                        data-platform="kook"
+                        set:html={`${iconKook}粉丝群`}
+                    />
+                </dl>
+            </section>
         </section>
     </Block>
 </Layout>
@@ -247,12 +283,16 @@ if (error) {
     .infos-container {
         user-select: auto;
         padding: 1em 0 4em 0;
-        display: flex;
-        flex-flow: row wrap;
-        gap: 0.75em 2em;
+        gap: 2em;
+        display: grid;
+        grid-template-columns: 7fr 3fr;
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas:
+            "title title"
+            "description relations"
+            "links relations";
 
         .tags {
-            font-size: unit((13px / @base-font-size-number), em);
             font-weight: normal;
             display: flex;
             flex-flow: row wrap;
@@ -260,16 +300,35 @@ if (error) {
             &:empty {
                 display: none;
             }
+            a {
+                font-size: unit((13px / @base-font-size-number), em);
+            }
+        }
+
+        dl {
+            margin: 0;
+            padding: 0;
+            & > dt {
+                // color: var(--text-color-primary);
+                color: var(--text-color-secondary);
+                margin: 0 0 0.3333em 0;
+                // font-weight: bolder;
+            }
+            & > dd {
+                margin: 0;
+                padding: 0;
+            }
         }
 
         & > .title {
-            flex: 1 0 100%;
+            grid-area: title;
             padding: 0 0 0.75em 0;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             flex-flow: column nowrap;
             gap: 0.5em;
             position: relative;
+            margin-bottom: -1em;
             & > .tags {
                 margin-bottom: 0.25em;
             }
@@ -278,33 +337,64 @@ if (error) {
             }
         }
         & > .description {
-            flex: 7;
+            grid-area: description;
         }
-        & > .relations {
-            flex: 3;
+        & > .relations,
+        & > .links {
             display: flex;
             flex-flow: row wrap;
             gap: 1em 1em;
-            & > .relation {
-                margin: 0;
-                padding: 0;
+            & > dl {
                 flex: 1 1 600px;
-                & > dt {
-                    color: var(--text-color-secondary);
-                    margin: 0 0 0.3333em 0;
-                    // font-weight: bolder;
+            }
+        }
+        & > .relations {
+            grid-area: relations;
+        }
+        & > .links {
+            grid-area: links;
+            dd {
+                margin-bottom: 0.13333em;
+            }
+            a {
+                display: inline-block;
+                color: var(--text-color-primary);
+                text-decoration: none;
+                :global(svg) {
+                    display: inline-block;
+                    vertical-align: top;
+                    width: 1.25em;
+                    height: 1.25em;
+                    margin-top: 0.05em;
+                    margin-right: 0.3333em;
+                    color: var(--accent-color);
                 }
-                & > dd {
-                    margin: 0;
-                    padding: 0;
+                &[data-platform="bilibili"] {
+                    --accent-color: var(--theme-color-bilibili);
+                }
+                &[data-platform="youtube"] {
+                    --accent-color: var(--theme-color-youtube);
+                }
+                &[data-platform="douyin"] {
+                    --accent-color: var(--theme-color-tiktok);
+                }
+                &:hover {
+                    color: var(--accent-color);
                 }
             }
         }
 
+        .screen-md({
+            grid-template-columns: 5fr 3fr;
+        });
         .screen-sm({
-            & > .description {
-                flex-basis: 100%;
-            }
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+            grid-template-areas:
+                "title"
+                "description"
+                "links"
+                "relations";
         });
     }
 </style>

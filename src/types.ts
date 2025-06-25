@@ -32,9 +32,7 @@ export type VideoItemType = {
 
     description: string;
     links: {
-        bilibili: string;
-        youtube: string;
-        douyin: string;
+        [platform in ValidVideoSourceType]?: string;
     };
 
     aircraft_families: {

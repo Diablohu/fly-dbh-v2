@@ -17,7 +17,7 @@ type Props = {
 <Fragment>
     <h1>
         {!!Astro.props.category && <small>{Astro.props.category}</small>}
-        {Astro.props.title}
+        <span>{Astro.props.title}</span>
         {!!Astro.props.subTitle && <small>{Astro.props.subTitle}</small>}
     </h1>
 
@@ -145,8 +145,14 @@ type Props = {
     @import "@/utils/mixins.less";
 
     h1 {
-        margin: 0 0 0.33333em 0;
+        margin: 0 calc(var(--global-edge-safe-distance) * -1);
+        padding: 1em var(--global-edge-safe-distance);
         line-height: 1;
+        // position: sticky;
+        // top: var(--global-sticky-top);
+        z-index: 5;
+        background-color: var(--global-header-background-color);
+        backdrop-filter: var(--global-header-backdrop-filter);
         small {
             display: block;
             font-weight: normal;
@@ -175,7 +181,7 @@ type Props = {
         // background-size: 100% 100%;
         // border-radius: 10px;
         padding: 1em 0;
-        margin: 1em 0 0.3333em 0;
+        margin: 0 0 1.3333em 0;
         border-top: 1px solid var(--border-color);
         border-bottom: 1px solid var(--border-color);
 
