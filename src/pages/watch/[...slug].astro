@@ -3,8 +3,6 @@ import { actions } from "astro:actions";
 import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import dayjs from "dayjs";
-import numeral from "numeral";
-import getGameUpdateName from "@/utils/get-game-update-name";
 
 import videoPlatforms from "@/constants/video-platforms";
 // import log from "@/page-templates/index/_log.ts";
@@ -19,6 +17,9 @@ import SelectPlatform from "./_components/select-platform";
 import prettifyTitle from "@/utils/prettify-title";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
+import getVideoCategoryInfoFromRawTypeData, {
+    type CategoryInfoType,
+} from "@/utils/get-video-category-info-from-raw-type-data";
 
 // ============================================================================
 
@@ -101,104 +102,61 @@ if (!video || error) {
                             // ],
                             [
                                 getVideoListPageTypeInfo("aircraftFamily").name,
-                                video.aircraft_families?.map(
-                                    ({ _id, slug, maker, name }) => ({
-                                        prefix: maker,
-                                        name,
-                                        route: getVideoListPageLink(
-                                            "aircraftFamily",
-                                            slug || _id
-                                        ),
-                                    })
+                                video.aircraft_families?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
+                                        "aircraftFamily",
+                                        item
+                                    )
                                 ),
                             ],
                             [
                                 getVideoListPageTypeInfo(
                                     "aircraftOnboardDevice"
                                 ).name,
-                                video.aircraft_onboard_devices?.map(
-                                    ({ _id, slug, maker, name }) => ({
-                                        prefix: maker,
-                                        name,
-                                        route: getVideoListPageLink(
-                                            "aircraftOnboardDevice",
-                                            slug || _id
-                                        ),
-                                    })
+                                video.aircraft_onboard_devices?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
+                                        "aircraftOnboardDevice",
+                                        item
+                                    )
                                 ),
                             ],
                             [
                                 getVideoListPageTypeInfo("aerodrome").name,
-                                video.aerodromes?.map(
-                                    ({ _id, slug, icao, iata, name }) => ({
-                                        prefix: [icao, iata]
-                                            .map((s) => s.toUpperCase())
-                                            .join(" / "),
-                                        name,
-                                        route: getVideoListPageLink(
-                                            "aerodrome",
-                                            slug || _id
-                                        ),
-                                    })
+                                video.aerodromes?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
+                                        "aerodrome",
+                                        item
+                                    )
                                 ),
                             ],
                             [
                                 getVideoListPageTypeInfo("developer").name,
-                                video.developers?.map(
-                                    ({ _id, slug, name }) => ({
-                                        name,
-                                        route: getVideoListPageLink(
-                                            "developer",
-                                            slug || _id
-                                        ),
-                                    })
+                                video.developers?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
+                                        "developer",
+                                        item
+                                    )
                                 ),
                             ],
                             [
                                 getVideoListPageTypeInfo("platform").name,
-                                video.games?.map(({ _id, slug, name }) => ({
-                                    name,
-                                    route: getVideoListPageLink(
+                                video.games?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
                                         "platform",
-                                        slug || _id
-                                    ),
-                                })),
+                                        item
+                                    )
+                                ),
                             ],
                             [
                                 getVideoListPageTypeInfo("platformUpdate").name,
-                                video.msfs_updates?.map(
-                                    ({
-                                        _id,
-                                        slug,
-                                        game,
-                                        series,
-                                        number,
-                                        release,
-                                    }) => ({
-                                        prefix: isNaN(game as unknown as number)
-                                            ? game
-                                            : `微软${game}`,
-                                        name:
-                                            getGameUpdateName({
-                                                series,
-                                                number,
-                                            }) +
-                                            ` (${dayjs(release).format("YY年M月")})`,
-                                        route: getVideoListPageLink(
-                                            "platformUpdate",
-                                            slug || _id
-                                        ),
-                                    })
+                                video.msfs_updates?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
+                                        "platformUpdate",
+                                        item
+                                    )
                                 ),
                             ],
-                        ] as [
-                            string,
-                            {
-                                prefix?: string;
-                                name: string;
-                                route: string;
-                            }[],
-                        ][]
+                        ] as [string, CategoryInfoType[]][]
                     ).map(
                         ([relationName, tags]) =>
                             Array.isArray(tags) &&
@@ -209,12 +167,20 @@ if (!video || error) {
                                     )}
                                     <dd class="tags">
                                         {tags?.map(
-                                            ({ prefix, name, route }) => (
+                                            ({
+                                                prefix,
+                                                name,
+                                                suffix,
+                                                route,
+                                            }) => (
                                                 <TagButton
                                                     href={route}
                                                     prefix={prefix}
                                                 >
                                                     {name}
+                                                    {suffix
+                                                        ? ` (${suffix})`
+                                                        : ""}
                                                 </TagButton>
                                             )
                                         )}

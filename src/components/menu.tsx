@@ -29,12 +29,14 @@ const Menu: FC<
         setOpenState?: Dispatch<SetStateAction<boolean>>;
         onClose?: () => unknown;
         anchorPoint?: "topLeft" | "topRight" | "bottomRight" | "bottomLeft";
+        grow?: Array<"up" | "down" | "left" | "right">;
     } & Pick<MenuHTMLAttributes<HTMLMenuElement>, "children" | "className">
 > = ({
     open: _open = false,
     setOpenState: _setOpenState,
     onClose,
     anchorPoint = "topLeft",
+    grow = [],
     children,
     className,
 }) => {
@@ -102,10 +104,10 @@ const Menu: FC<
         if (!MenuRef.current) return;
         if (!AnchorRef.current) return;
         const position = {
-            top: "auto",
-            right: "auto",
-            bottom: "auto",
-            left: "auto",
+            top: "",
+            right: "",
+            bottom: "",
+            left: "",
         };
         const bodyRect = document.body.getBoundingClientRect();
         const rect = AnchorRef.current.getBoundingClientRect();
@@ -116,8 +118,14 @@ const Menu: FC<
                 break;
             }
             case "topRight": {
-                position.top = `${rect.top}px`;
-                position.right = `${bodyRect.right - rect.right}px`;
+                if (grow.includes("up"))
+                    position.top = `${rect.top - MenuRef.current.offsetHeight}px`;
+                else position.top = `${rect.top}px`;
+
+                if (grow.includes("right"))
+                    position.left = `${rect.left + rect.width}px`;
+                else position.right = `${bodyRect.right - rect.right}px`;
+
                 break;
             }
             case "bottomLeft": {
@@ -126,8 +134,14 @@ const Menu: FC<
                 break;
             }
             case "bottomRight": {
-                position.top = `${rect.top + rect.height}px`;
-                position.right = `${bodyRect.right - rect.right}px`;
+                if (grow.includes("up"))
+                    position.bottom = `${window.innerHeight - rect.top - rect.height}px`;
+                else position.top = `${rect.top + rect.height}px`;
+
+                if (grow.includes("right"))
+                    position.left = `${rect.left + rect.width}px`;
+                else position.right = `${bodyRect.right - rect.right}px`;
+
                 break;
             }
             default: {
@@ -139,7 +153,7 @@ const Menu: FC<
                 typeof v === "number" ? `${v}px` : v
             );
         }
-    }, [anchorPoint]);
+    }, [anchorPoint, grow]);
 
     useWindow(
         (force?: boolean) => {
@@ -201,6 +215,7 @@ const Menu: FC<
                             className,
                             {
                                 [styles["mod-fading-out"]]: !openState,
+                                [styles["is-grou-up"]]: grow.includes("up"),
                             },
                         ])}
                         onClick={onMenuClick}

@@ -3,6 +3,7 @@ import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
 
 import { type VideoListPageTypesType, type VideoItemType } from "@/types";
+import { specialTagsTutorial } from "@/global";
 
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
@@ -319,13 +320,15 @@ ${
         input: z.object({
             type: z.string().optional(),
         }) as z.ZodType<{
-            type?: VideoListPageTypesType;
+            type?: VideoListPageTypesType | "tagSubCategory";
         }>,
         handler: async ({ type }) => {
             try {
                 const currentType = !type
                     ? "tag"
-                    : getVideoListPageTypeInfo(type).type;
+                    : type === "tagSubCategory"
+                      ? "tag"
+                      : getVideoListPageTypeInfo(type).type;
                 return await fetch<{
                     _id: string;
                     slug?: string;
@@ -346,7 +349,15 @@ ${
                     number?: number;
                     release?: string;
                 }>(`
-*[_type == "${currentType}"] | order(${
+*[_type == "${currentType}"${
+                    type
+                        ? ` && count(*[_type == 'video' && references(^._id)]) > 0`
+                        : ""
+                }${
+                    type === "tagSubCategory"
+                        ? ` && tag_type == "topic" && !(slug.current in [${specialTagsTutorial.map((s) => `"${s}"`).join(",")}])`
+                        : ""
+                }] | order(${
                     currentType === "tag"
                         ? `sort asc`
                         : type === "aerodrome"

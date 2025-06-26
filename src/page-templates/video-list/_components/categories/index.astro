@@ -9,6 +9,7 @@ import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg?raw";
 import VideosFill from "@/assets/svg-symbols/videos-fill.svg?raw";
 import ArrowLeftSvg from "@/assets/arrow/left3.svg";
 import ArrowRightSvg from "@/assets/arrow/right3.svg";
+import Explore from "./explore";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -19,7 +20,6 @@ type Props = {
 const { data, error: error } = await Astro.callAction(
     actions.videoListPageFetchTags,
     {}
-    //   Astro.props.type as Required<Props>["type"]
 );
 if (error) {
     console.trace(error);
@@ -30,10 +30,19 @@ if (error) {
 
 const mainTags: typeof list = [];
 const subTags: typeof list = [];
+
+let isCurrentMainTag = false;
+
+// 遍历所有标签（Tag），根据 `tag_type` 归属主要和次要标签
+// 特殊：`教程攻略` 子类直接归属主要标签
 data?.forEach((tag) => {
     if (!tag.title) return;
     if (!tag.slug) return;
-    if (specialTagsTutorial.includes(tag.slug)) return;
+    if (specialTagsTutorial.includes(tag.slug)) {
+        if (Astro.props.slug === tag.slug) isCurrentMainTag = true;
+        return;
+    }
+
     const item: (typeof list)[0] = {
         type: "link",
         text: tag.title,
@@ -41,9 +50,14 @@ data?.forEach((tag) => {
         linkSlug: tag.slug,
         isActive: Astro.props.slug === tag.slug,
     };
-    if (tag.tag_type === "category") mainTags.push(item);
-    subTags.push(item);
+    if (tag.tag_type === "category") {
+        mainTags.push(item);
+        if (Astro.props.slug === item.linkSlug) isCurrentMainTag = true;
+    } else {
+        subTags.push(item);
+    }
 
+    // 遍历到“教程攻略”，直接追加子类别
     if (tag.slug === "tutorial") {
         specialTagsTutorial.forEach((slug) => {
             const thisData = data.find((d) => d.slug === slug);
@@ -61,6 +75,9 @@ data?.forEach((tag) => {
     }
 });
 
+/**
+ * 根据这一列表，渲染视频类别导航
+ */
 const list: Array<
     | {
           type: "subtitle";
@@ -93,48 +110,58 @@ const list: Array<
         iconHtmlActive: VideosFill,
     },
     "divider",
-    {
-        type: "subtitle",
-        text: "视频分类",
-    },
+    // {
+    //     type: "subtitle",
+    //     text: "视频分类",
+    // },
     ...mainTags,
     "divider",
+    // {
+    //     type: "subtitle",
+    //     text: "更多内容",
+    // },
     {
-        type: "subtitle",
-        text: "更多内容",
+        type: "explore",
+        text: "分类标签",
+        explore: "tag",
     },
+    {
+        type: "explore",
+        text: "机型系列",
+        explore: "aircraftFamily",
+    },
+    {
+        type: "explore",
+        text: "机载设备",
+        explore: "aircraftOnboardDevice",
+    },
+    {
+        type: "explore",
+        text: "机场",
+        explore: "aerodrome",
+    },
+    {
+        type: "explore",
+        text: "平台",
+        explore: "platform",
+    },
+    {
+        type: "explore",
+        text: "平台更新",
+        explore: "platformUpdate",
+    },
+    // {
+    //     type: "explore",
+    //     text: "工作室",
+    //     explore: 'developer',
+    // },
 ];
-// console.log(data, list);
+// console.log(data, list, isCurrentMainTag);
 
-/*
-
-Index
-
----
-
-Main Categories
-- news
-- tutorial
-    - aircraft
-    - tips
-    - aviation
-- review
-- chat
-- world
-- short
-
----
-
-Explore More
-- Tags
-- Aircraft Families
-- Aircraft Onboard Devices
-- Aerodromes
-- Games / Platforms
-- Game Updates
-- Related Developers
-
-*/
+// 所有以 `.screen-sm-` 开头的 class，均为小屏幕特别覆盖
+// 小屏幕时，类别导航自动隐藏，需要手动展开显示
+// 使用 ID 为 {VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN} 的 checkbox 控制是否显示类别导航
+// 相关的 `<label />` 元素为操作按钮
 ---
 
 <Fragment>
@@ -166,7 +193,6 @@ Explore More
                                         "item",
                                         "link",
                                         `is-level-${item.level || 1}`,
-                                        ,
                                         {
                                             "is-active": item.isActive,
                                         },
@@ -183,14 +209,37 @@ Explore More
                             );
                         }
                         case "explore": {
-                            return null;
+                            return (
+                                <button
+                                    type="button"
+                                    class:list={[
+                                        "item",
+                                        "explore",
+                                        {
+                                            "is-active":
+                                                Astro.props.type ===
+                                                    item.explore &&
+                                                !isCurrentMainTag,
+                                        },
+                                    ]}
+                                >
+                                    <Explore
+                                        client:idle
+                                        type={item.explore}
+                                        title={item.text}
+                                    >
+                                        {item.text}
+                                    </Explore>
+                                    <ArrowRightSvg class="right-arrow" />
+                                </button>
+                            );
                         }
                         default:
                             return null;
                     }
                 })
             }
-            <span>TODO: MORE CATEGORIES</span>
+            <!-- <span>TODO: MORE CATEGORIES</span> -->
         </section>
         <label
             for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
@@ -200,11 +249,14 @@ Explore More
             class="screen-sm-button-expand-categories"
             ><ArrowRightSvg />展开分类</label
         >
-    </aside></Fragment
->
+    </aside>
+</Fragment>
 
 <style lang="less">
     @import "@/utils/mixins.less";
+
+    // 所有以 `.screen-sm-` 开头的 class，均为小屏幕特别覆盖
+    // 小屏幕时，类别导航自动隐藏，需要手动展开显示
 
     input[type="checkbox"] {
         display: none;
@@ -218,12 +270,13 @@ Explore More
     }
 
     .categories {
+        @min-width: 10.75em;
         --item-min-height: 2.5em;
         --item-line-height: 1.1em;
 
         position: sticky;
         top: calc(var(--global-sticky-top) + 1em);
-        flex: 0 0 175px;
+        flex: 0 0 @min-width;
         margin: 1em 0 4em 0;
         // border-radius: 10px;
         overflow: hidden;
@@ -237,7 +290,7 @@ Explore More
             overflow: auto;
             scrollbar-width: thin;
             max-height: calc(100dvh - var(--global-sticky-top) - 2em);
-            padding: 0 1em 0 0;
+            padding: 0 1em 1em 0;
             overscroll-behavior: contain;
 
             & > .item,
@@ -258,6 +311,7 @@ Explore More
 
                 position: relative;
                 color: inherit;
+                font-weight: normal;
                 min-height: var(--item-min-height);
                 line-height: var(--item-line-height);
                 padding: calc(
@@ -276,6 +330,16 @@ Explore More
                     );
                     margin-right: calc(var(--icon-margin) / 2);
                     margin-top: calc(var(--icon-size) * -0.5);
+                    &.right-arrow {
+                        --icon-size: 0.75em;
+                        position: relative;
+                        top: 0.175em;
+                        margin: auto;
+                        display: inline-block;
+                        vertical-align: top;
+                        margin-left: calc(var(--icon-margin) / 2);
+                        color: var(--text-color-secondary);
+                    }
                 }
                 & + .item {
                     margin-top: 0.25em;
@@ -283,21 +347,19 @@ Explore More
             }
             & > .item {
                 &.title {
-                    font-weight: normal;
                 }
-                &.link {
+                &.link,
+                &.explore {
                     color: var(--text-color-primary);
-                    text-decoration: none;
                     transition-property: transform, background-color;
                     padding-left: var(--padding-left-with-icon);
-                    &:not(:has(svg))::before {
+                    &::before {
                         --dot-size: 0.75em;
-                        content: "";
                         position: absolute;
                         top: 50%;
                         left: calc(
                             var(--icon-size) * 3 / 4 +
-                                var(--extra-padding-left) + 1em -
+                                var(--extra-padding-left) + 0.85em -
                                 var(--dot-size)
                         );
                         margin-top: calc(var(--dot-size) / -2);
@@ -307,10 +369,17 @@ Explore More
                         border: 2px solid var(--border-color);
                         border-radius: 100%;
                     }
+                    &:not(:has(> svg))::before,
+                    &:has(> svg.right-arrow)::before {
+                        content: "";
+                    }
                     &:hover,
                     &.is-active {
                         background: var(--tag-background-color);
                     }
+                }
+                &.link {
+                    text-decoration: none;
                     &.is-active {
                         &::before {
                             background-color: var(--accent-color-purple);
@@ -320,6 +389,25 @@ Explore More
                         --extra-padding-left: 1em;
                     }
                 }
+                &.explore {
+                    appearance: none;
+                    width: 100%;
+                    text-align: left;
+                    border: 0;
+                    background: transparent;
+                    &.is-active {
+                        &::before {
+                            background-color: var(--accent-color-green);
+                        }
+                    }
+                    // &:has([class*="is-status-loading"]) {
+                    //     pointer-events: none;
+                    // }
+                }
+            }
+            & > hr {
+                margin: 0.6667em auto;
+                border-top-width: 0;
             }
             & > .screen-sm-button-collapse-categories {
                 cursor: pointer;
@@ -431,7 +519,9 @@ Explore More
             overflow: hidden;
             transition: opacity var(--base-transition-duration) allow-discrete;
             & > .wrapper{
-                width: calc(66.6667dvw);
+                min-width: @min-width;
+                width: 50vw;
+                width: 50dvw;
                 padding-top: calc(var(--global-edge-safe-distance) / 2);
                 padding-left: var(--global-edge-safe-distance);
                 padding-right: var(--global-edge-safe-distance);
