@@ -6,7 +6,7 @@ import useWindow from "@/react-hooks/use-window";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
-import bannerCoverImage from "@/assets/banner-video/cover.jpg";
+import bannerCoverImage from "@/assets/banner-video/cover.webp";
 
 import styles from "./index.module.less";
 
@@ -156,7 +156,7 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
                         crossOrigin="anonymous"
                         preload="auto"
                         playsInline
-                        autoPlay
+                        autoPlay={false}
                         loop
                         muted
                         ref={VideoRef}
