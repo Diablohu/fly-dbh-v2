@@ -1,0 +1,45 @@
+{
+    "short_name": "FLY-DBH",
+    "name": "FLY-DBH | 假飞机驾驶员伴侣",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "32x32"
+        },
+        {
+            "src": "/favicon.svg",
+            "type": "image/svg+xml",
+            "sizes": "16x16 32x32 64x64"
+        },
+        {
+            "src": "/app-icon-128x.png",
+            "type": "image/png",
+            "sizes": "128x128"
+        },
+        {
+            "src": "/app-icon-192x.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/app-icon-256x.png",
+            "type": "image/png",
+            "sizes": "256x256"
+        },
+        {
+            "src": "/app-icon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "/app-icon-maskable.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+    ],
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#0f0f0f",
+    "description": "假飞机驾驶员伴侣"
+}

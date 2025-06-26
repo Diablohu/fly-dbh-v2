@@ -15,11 +15,13 @@ export const routeNameSanityImageCdn = `/sanity-images`;
 
 export const navLinks = [
     {
+        key: "home",
         route: "/",
         name: "首页",
         icon: "",
     },
     {
+        key: "videos",
         route: "/videos",
         name: import.meta.env.DEV ? "视频" : "模拟飞行视频",
         icon: "",
@@ -27,6 +29,7 @@ export const navLinks = [
     },
     import.meta.env.DEV
         ? {
+              key: "streams",
               route: "/streams",
               name: "直播",
               icon: "",
@@ -35,6 +38,7 @@ export const navLinks = [
         : null,
     import.meta.env.DEV
         ? {
+              key: "activities",
               route: "/activities",
               name: "活动",
               icon: "",
@@ -42,17 +46,20 @@ export const navLinks = [
         : null,
     import.meta.env.DEV
         ? {
+              key: "donate",
               route: "/donate",
               name: "资助",
               icon: "",
           }
         : null,
-].filter<{
+].filter((v) => !!v) as {
+    key: "home" | "videos" | "streams" | "activities" | "donate";
     route: string;
     name: string;
     icon: string;
     extraChecks?: RegExp[];
-}>((v) => !!v);
+}[];
 
 export const defaultVideoSource: ValidVideoSourceType = "bilibili";
-export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType = "1";
+export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType =
+    "1";
