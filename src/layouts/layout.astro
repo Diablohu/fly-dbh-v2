@@ -94,7 +94,7 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale} data-content-type={contentType} class:list={[
+<html lang={Astro.currentLocale || 'zh'} data-content-type={contentType} class:list={[
     forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : ''
 ]}>
     <head>
