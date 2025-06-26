@@ -1,6 +1,11 @@
 ---
 import { navLinks } from "@/global";
 
+import HomeHollow from "@/assets/svg-symbols/home-hollow.svg";
+import HomeFill from "@/assets/svg-symbols/home-fill.svg";
+import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg";
+import VideosFill from "@/assets/svg-symbols/videos-fill.svg";
+
 import isRouteActive from "@/utils/is-route-active";
 
 type Props = {
@@ -12,24 +17,41 @@ type Props = {
 {
     Astro.props.showHeader && (
         <section class="navbar">
-            {navLinks.map(({ route, name, icon, extraChecks }) => (
-                <a
-                    href={route}
-                    class:list={[
-                        "link",
-                        {
-                            "is-active": isRouteActive(
-                                route,
-                                Astro.originPathname,
-                                extraChecks
-                            ),
-                        },
-                    ]}
-                >
-                    <span class="icon">{icon || null}</span>
-                    {name}
-                </a>
-            ))}
+            {navLinks.map(({ key, route, name, extraChecks }) => {
+                const isActive = isRouteActive(
+                    route,
+                    Astro.originPathname,
+                    extraChecks
+                );
+                return (
+                    <a
+                        href={route}
+                        class:list={[
+                            "link",
+                            {
+                                "is-active": isActive,
+                            },
+                        ]}
+                    >
+                        <span class="icon">
+                            {key === "home" ? (
+                                isActive ? (
+                                    <HomeFill />
+                                ) : (
+                                    <HomeHollow />
+                                )
+                            ) : key === "videos" ? (
+                                isActive ? (
+                                    <VideosFill />
+                                ) : (
+                                    <VideosHollow />
+                                )
+                            ) : null}
+                        </span>
+                        {name}
+                    </a>
+                );
+            })}
         </section>
     )
 }
