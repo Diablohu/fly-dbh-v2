@@ -1,0 +1,418 @@
+---
+import Block from "@/components/block.astro";
+
+import iconLive from "@/assets/svg-symbols/livestream-fill.svg?raw";
+import iconKook from "@/assets/icon-kook.svg?raw";
+import iconX from "@/assets/icon-x.svg?raw";
+import iconEmail from "@/assets/svg-symbols/envelop-fill.svg?raw";
+import IconGitHubSvg from "@/assets/icon-github.svg";
+import QrcodeKookSvg from "@/assets/qrcode-kook.svg";
+
+import videoPlatforms from "@/constants/video-platforms";
+
+type InfoGridType = {
+    title: string;
+    links: {
+        platform: string;
+        title: string;
+        href: string;
+        iconHtml: string;
+    }[];
+};
+const channels: InfoGridType = {
+    title: "频道",
+    links: [
+        ...videoPlatforms.map(({ name, title, href, iconHtml }) => ({
+            platform: name,
+            title,
+            href,
+            iconHtml: iconHtml || "",
+        })),
+        {
+            platform: "live",
+            title: "直播间",
+            href: "https://live.fly-dbh.com",
+            iconHtml: iconLive,
+        },
+    ],
+};
+const contact: InfoGridType = {
+    title: "交流",
+    links: [
+        {
+            platform: "kook",
+            title: "粉丝群 KOOK",
+            href: "https://qun.fly-dbh.com",
+            iconHtml: iconKook,
+        },
+        {
+            platform: "twitter",
+            title: "/ @diablohu",
+            href: "https://x.com/diablohu",
+            iconHtml: iconX,
+        },
+        {
+            platform: "email",
+            title: "电子邮件",
+            href: "mailto:diablohudream@gmail.com",
+            iconHtml: iconEmail,
+        },
+    ],
+};
+---
+
+<Block tag="footer" class="footer">
+    <section class="grid">
+        <section data-grid="general">
+            <a class="logo" href="/"><slot name="logo" /></a>
+        </section>
+        <dl class="info-grid" data-grid="channels">
+            <dt>{channels.title}</dt>
+            {
+                channels.links.map(({ platform, title, href, iconHtml }) => (
+                    <dd>
+                        <a
+                            class="with-icon"
+                            href={href}
+                            target="_blank"
+                            data-platform={platform}
+                            set:html={`${iconHtml}${title}`}
+                        />
+                    </dd>
+                ))
+            }
+        </dl>
+        <dl class="info-grid" data-grid="contact">
+            <dt>{contact.title}</dt>
+            {
+                contact.links.map(({ platform, title, href, iconHtml }) => (
+                    <dd>
+                        <a
+                            class="with-icon"
+                            href={href}
+                            target="_blank"
+                            data-platform={platform}
+                            set:html={`${iconHtml}${title}`}
+                        />
+                    </dd>
+                ))
+            }
+        </dl>
+        <section data-grid="kook">
+            <span class="qrcode"><QrcodeKookSvg /></span>
+            <a href="https://qun.fly-dbh.com" target="_blank">扫码入群</a>
+        </section>
+        <section data-grid="infos">
+            <p>© {new Date().getFullYear()} <a href="/">FLY-DBH.com</a></p>
+            <p>
+                Powered by <a href="https://astro.build/" target="_blank"
+                    >Astro</a
+                > & <a href="https://www.sanity.io/" target="_blank">Sanity</a>
+            </p>
+            <p>
+                <a
+                    class="with-icon"
+                    href="https://github.com/Diablohu/fly-dbh-v2"
+                    target="_blank"><IconGitHubSvg />开源</a
+                >
+            </p>
+        </section>
+        <section data-grid="dev">
+            {
+                import.meta.env.DEV ? (
+                    <Fragment>
+                        <hr />
+                        <dl>
+                            <dt>Stage 1</dt>
+                            <dd>
+                                Custom 404, check old tag name
+                                <br />
+                                Custom 500
+                                <br />
+                                social share
+                                <br />
+                                cache strategy
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Stage 2</dt>
+                            <dd>
+                                /sanity-images persist cache
+                                <br />
+                                ?s=
+                                <br />
+                                /search/:keyword
+                                <br />
+                                /watch/:slug expand infos, related (tutorial) or
+                                latest videos?
+                                <br />
+                                /donate
+                                <br />
+                                PWA
+                                {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
+                                <br />
+                                favicon & app-icon re-design
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Stage 3</dt>
+                            <dd>
+                                /streams
+                                <br />
+                                /streams/challenges
+                                <br />
+                                /streams/flightseeing
+                                <br />
+                                other stream types
+                                <br />
+                                /vod/:slug
+                                <br />
+                                /activities
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Stage 4</dt>
+                            <dd>
+                                /streams/clips
+                                <br />
+                                /shots
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Stage 5</dt>
+                            <dd>/tools</dd>
+                        </dl>
+                    </Fragment>
+                ) : null
+            }
+        </section>
+    </section>
+</Block>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    footer {
+        --line-margin: 0.3333em;
+
+        // .font-size-clamp-with-line-height(
+        //     unit((13px / 0.85), px),
+        //     unit((1.5 * 13px / 0.85), px)
+        // );
+        position: relative;
+        z-index: var(--global-footer-z-index);
+        display: block;
+        flex: 0;
+        background-color: var(--theme-color);
+        padding-top: 4em;
+        padding-bottom: calc(
+            var(--global-bottom-safe-distance) +
+                var(--global-edge-safe-distance) + 2em
+        );
+
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--tag-background-color);
+        }
+
+        :global(svg) {
+            transition: none var(--base-transition-duration);
+            transition-property: color, fill, box-shadow, opacity;
+        }
+
+        a {
+            text-decoration: none;
+            transition-property: color, opacity, transform;
+            display: inline-block;
+        }
+        a.with-icon {
+            --icon-size: 1.2em;
+            --platform-color: var(--text-color-primary);
+            position: relative;
+            padding-left: calc(var(--icon-size) + 0.3333em);
+            :global(svg) {
+                display: block;
+                width: var(--icon-size);
+                height: var(--icon-size);
+                position: absolute;
+                top: 50%;
+                left: 0;
+                margin-top: calc(var(--icon-size) * -0.5);
+                opacity: 0.75;
+            }
+            &:hover {
+                color: var(--platform-color);
+                &:global(svg) {
+                    opacity: 1;
+                }
+            }
+            &[data-platform="bilibili"],
+            &[data-platform="live"] {
+                --platform-color: var(--theme-color-bilibili);
+            }
+            &[data-platform="youtube"] {
+                --platform-color: var(--theme-color-youtube);
+            }
+            &[data-platform="douyin"] {
+                --platform-color: var(--theme-color-tiktok);
+            }
+            &[data-platform="kook"] {
+                --platform-color: var(--theme-color-kook);
+            }
+            &[data-platform="twitter"] {
+                --platform-color: var(--theme-color-twitter);
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "general channels contact kook"
+                "infos channels contact kook"
+                "dev dev dev dev";
+
+            [data-grid="general"] {
+                grid-area: general;
+                margin-bottom: 0.3333em;
+                .logo {
+                    opacity: 0.75;
+                    :global(svg) {
+                        display: block;
+                        width: 10em;
+                        height: auto;
+                        box-shadow: var(--logo-shadow);
+                        border-radius: 10px;
+                    }
+                    &:hover {
+                        --logo-shadow: 0 0 10px var(--accent-color-purple);
+                        color: var(--text-color-primary);
+                        opacity: 1;
+                    }
+                }
+            }
+            [data-grid="channels"] {
+                grid-area: channels;
+            }
+            [data-grid="contact"] {
+                grid-area: contact;
+            }
+            [data-grid="infos"] {
+                grid-area: infos;
+                p {
+                    margin: 0;
+                    + p {
+                        margin-top: var(--line-margin);
+                    }
+                }
+            }
+            [data-grid="kook"] {
+                grid-area: kook;
+                width: 10em;
+                position: relative;
+                text-align: center;
+                .qrcode {
+                    position: relative;
+                    display: block;
+                    width: 100%;
+                    height: 0;
+                    padding-bottom: 100%;
+                    background: var(--text-color-secondary);
+                    color: var(--theme-color-p-80);
+                    border-radius: 20px;
+                    margin-bottom: 0.3333em;
+                    :global(svg) {
+                        display: block;
+                        position: absolute;
+                        top: -0.5em;
+                        left: -0.5em;
+                        width: calc(100% + 1em);
+                        height: auto;
+                    }
+                    .color-scheme-light({
+                        background: var(--theme-color);
+                        color: var(--text-color-secondary);
+                    });
+                }
+            }
+            [data-grid="dev"] {
+                grid-area: dev;
+                text-align: left;
+            }
+            .info-grid {
+                margin: 0;
+                padding: 0;
+                dt {
+                    margin: 0 0 0.6667em 0;
+                    padding: 0;
+                    // color: var(--text-color-primary);
+                    font-weight: bolder;
+                    font-size: 1.1em;
+                }
+                dd {
+                    margin: 0.5em 0;
+                    padding: 0;
+                }
+            }
+
+            .screen-md({
+                grid-template-columns: 2fr 1fr 1fr;
+                grid-template-areas:
+                    "general channels contact"
+                    "infos channels contact"
+                    "dev dev dev dev";
+                [data-grid="kook"] {
+                    display: none;
+                }
+            });
+            .screen-sm({
+                --line-margin: 0.6667em;
+
+                text-align: center;
+                grid-template-columns: auto;
+                grid-template-rows: auto;
+                grid-template-areas:
+                    "general"
+                    "channels"
+                    "contact"
+                    "infos"
+                    "dev";
+                gap: 2em 0;
+
+                .info-grid {
+                    display: flex;
+                    flex-flow: row wrap;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1.5em;
+                    dt {
+                        flex: 1 0 100%;
+                        margin-bottom: -1em;
+                    }
+                    dd {
+                        display: inline-block;
+                        flex: none;
+                    }
+                }
+                [data-grid="kook"] {
+                    display: none;
+                }
+            });
+        }
+
+        .screen-sm({
+            padding-bottom: calc(
+                var(--global-navbar-height) +
+                var(--global-navbar-bottom-edge) * 2 + 
+                var(--global-bottom-safe-distance)
+            );
+        });
+    }
+</style>

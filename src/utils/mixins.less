@@ -102,6 +102,17 @@
     }
 }
 
+.color-scheme-light(@rules) {
+    :root.force-color-scheme-light & {
+        @rules();
+    }
+    @media (prefers-color-scheme: light) {
+        :root:not(.force-color-scheme-dark) & {
+            @rules();
+        }
+    }
+}
+
 .tag-styles() {
     --border-radius: 0.3333em;
     line-height: calc(1.6667em - 2px);
