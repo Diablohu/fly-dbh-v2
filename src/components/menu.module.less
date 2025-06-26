@@ -5,10 +5,10 @@
 }
 
 .menu {
-    --position-top: auto;
-    --position-left: auto;
-    --position-bottom: auto;
-    --position-right: auto;
+    // --position-top: auto;
+    // --position-left: auto;
+    // --position-bottom: auto;
+    // --position-right: auto;
 
     --item-min-height: 2.5em;
     --item-line-height: 1.1em;
@@ -17,23 +17,50 @@
 
     position: fixed;
     z-index: calc(var(--global-header-z-index) + 1);
-    top: var(--position-top);
-    left: var(--position-left);
-    bottom: var(--position-bottom);
-    right: var(--position-right);
+    top: var(--position-top, auto);
+    left: var(--position-left, auto);
+    bottom: var(--position-bottom, auto);
+    right: var(--position-right, auto);
     color: #fff;
     background: var(--theme-color-p-80);
-    // border: 1px solid var(--border-color);
+    border: 1px solid var(--menu-border-color);
     box-shadow: inset 0 0 2px var(--border-color);
     backdrop-filter: var(--backdrop-filter-glass);
     border-radius: 10px;
     margin: 0;
     padding: var(--space-y) 0;
     user-select: none;
-    animation: fade-in @base-transition-duration;
+    animation: fade-in-down @base-transition-duration;
     transition: opacity @base-transition-duration;
+    max-height: calc(
+        100% + var(--position-top, 0px) - var(--position-bottom, 0px) - 1em
+    );
+    max-height: calc(
+        100vh + var(--position-top, 0px) - var(--position-bottom, 0px) - 1em
+    );
+    max-height: calc(
+        100dvh + var(--position-top, 0px) - var(--position-bottom, 0px) - 1em
+    );
+    max-width: calc(
+        100% - var(--position-left, 0px) + var(--position-right, 0px) - 1em
+    );
+    max-width: calc(
+        100vw - var(--position-left, 0px) + var(--position-right, 0px) - 1em
+    );
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    box-shadow: 0 4px 10px 0 var(--shadow-color);
 
-    @keyframes fade-in {
+    &.mod-fading-out {
+        opacity: 0;
+    }
+
+    &.is-grou-up {
+        animation-name: fade-in-up;
+    }
+
+    @keyframes fade-in-down {
         0% {
             --base-transition-duration: 0s;
             opacity: 0;
@@ -48,8 +75,19 @@
         }
     }
 
-    &.mod-fading-out {
-        opacity: 0;
+    @keyframes fade-in-up {
+        0% {
+            --base-transition-duration: 0s;
+            opacity: 0;
+            transform: translateY(1em);
+        }
+        99% {
+            --base-transition-duration: 0s;
+        }
+        100% {
+            --base-transition-duration: @base-transition-duration;
+            opacity: 1;
+        }
     }
 }
 

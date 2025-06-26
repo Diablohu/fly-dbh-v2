@@ -239,7 +239,8 @@ const VideoListGrid: FC<Props> = ({
                     "developer",
                     "platform",
                     "platformUpdate",
-                ].includes(type || "")
+                ].includes(type || "") ||
+                (type === "tag" && slug === "fun")
             )
                 topTag = getVideoItemTopTag(post, "latest")?.name;
 

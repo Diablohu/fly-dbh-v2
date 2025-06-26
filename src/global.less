@@ -109,6 +109,7 @@
     --tag-background-color-invert: #f1f1f1;
     --menu-background-color: #282828;
     --menu-background-color-highlight: #535353;
+    --menu-border-color: rgba(255, 255, 255, 0.1);
     --border-color: rgba(255, 255, 255, 0.2);
     --shadow-color: var(--theme-color-p-80);
 
@@ -145,8 +146,9 @@
         --tag-background-color-invert: #0f0f0f;
         --menu-background-color: #fff;
         --menu-background-color-highlight: #e5e5e5;
+        --menu-border-color: rgba(0, 0, 0, 0.1);
         --border-color: rgba(0, 0, 0, 0.1);
-        --shadow-color: var(--dark-theme-color-p-50);
+        --shadow-color: var(--dark-theme-color-p-20);
     });
     &.force-color-scheme-light {
         --color-scheme: only dark;
@@ -239,4 +241,10 @@ h5 {
 
 hr {
     border-color: var(--border-color);
+    border-top-width: 0;
+    border-bottom-width: 1px;
+}
+
+select {
+    cursor: pointer;
 }
