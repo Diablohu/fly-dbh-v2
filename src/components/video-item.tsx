@@ -55,7 +55,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
             href={`/watch/${slug || cmsId}`}
             // href={searchString}
             // onClick={onClick}
-            data-astro-prefetch="false"
+            // data-astro-prefetch="false"
         >
             <picture className={styles["cover"]}>
                 <source

@@ -2,6 +2,7 @@ import {
     type ValidVideoSourceType,
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 export const themeColorLight = "#ffffff";
 export const themeColorDark = "#0f0f0f";
@@ -13,6 +14,13 @@ export const isUnderConstruction = true;
 
 export const routeNameSanityImageCdn = `/sanity-images`;
 
+export const specialTagsTutorial = [
+    "tutorial-aircraft", // 机型操作
+    "tutorial-avionics", // 通用航电
+    "game-guide", // 攻略技巧
+    "aviation-knowledge", // 航空知识
+];
+
 export const navLinks = [
     {
         key: "home",
@@ -22,7 +30,7 @@ export const navLinks = [
     },
     {
         key: "videos",
-        route: "/videos",
+        route: getVideoListPageLink(),
         name: import.meta.env.DEV ? "视频" : "模拟飞行视频",
         icon: "",
         extraChecks: [/^\/watch\//],

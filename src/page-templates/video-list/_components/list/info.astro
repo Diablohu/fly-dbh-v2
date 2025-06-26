@@ -2,6 +2,11 @@
 import { actions } from "astro:actions";
 import dayjs from "dayjs";
 import { type VideoListPageTypesType } from "@/types";
+import { specialTagsTutorial } from "@/global";
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
+import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/element-ids";
+
+import MenuSvg from "@/assets/svg-symbols/menu.svg";
 
 type Props = {
     category?: string;
@@ -16,8 +21,26 @@ type Props = {
 
 <Fragment>
     <h1>
+        <label for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
+            ><MenuSvg />展开视频分类</label
+        >
         {!!Astro.props.category && <small>{Astro.props.category}</small>}
-        <span>{Astro.props.title}</span>
+        <span
+            >{
+                Astro.props.type === "tag" &&
+                Astro.props.slug &&
+                specialTagsTutorial.includes(Astro.props.slug) ? (
+                    <Fragment>
+                        <a href={getVideoListPageLink("tag", "tutorial")}>
+                            教程攻略
+                        </a>{" "}
+                        / {Astro.props.title}
+                    </Fragment>
+                ) : (
+                    Astro.props.title
+                )
+            }</span
+        >
         {!!Astro.props.subTitle && <small>{Astro.props.subTitle}</small>}
     </h1>
 
@@ -145,11 +168,15 @@ type Props = {
     @import "@/utils/mixins.less";
 
     h1 {
-        margin: 0 calc(var(--global-edge-safe-distance) * -1);
-        padding: 1em var(--global-edge-safe-distance);
-        line-height: 1;
-        // position: sticky;
-        // top: var(--global-sticky-top);
+        --extra-padding-left: 0px;
+        --extra-margin-top: -0.2em;
+        margin: var(--extra-margin-top) calc(var(--global-edge-safe-distance) * -1) 0.3333em
+            calc(var(--global-edge-safe-distance) * -1);
+        padding: 1em var(--global-edge-safe-distance) 0.6667em
+            calc(var(--global-edge-safe-distance) + var(--extra-padding-left));
+        line-height: 1.2;
+        position: sticky;
+        top: calc(var(--global-sticky-top) + var(--extra-margin-top));
         z-index: 5;
         background-color: var(--global-header-background-color);
         backdrop-filter: var(--global-header-backdrop-filter);
@@ -157,13 +184,58 @@ type Props = {
             display: block;
             font-weight: normal;
             font-size: 0.6667em;
+            line-height: 1em;
             &:first-child {
-                margin-bottom: 0.5em;
+                margin-bottom: 0.3333em;
             }
             &:last-child {
-                margin-top: 0.5em;
+                margin-top: 0.3333em;
             }
         }
+        & > label + small {
+            margin-bottom: 0.3333em;
+        }
+        a {
+            text-decoration: none;
+        }
+        & > label[for] {
+            --size: 1.13333em;
+            display: none;
+            position: relative;
+            // top: 1em;
+            // left: var(--global-edge-safe-distance);
+            // width: var(--size);
+            // height: var(--size);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.6667em;
+            font-weight: normal;
+            padding: 0.3333em 0.6667em;
+            margin: 0 0 0.6667em 0;
+            color: var(--text-color-primary);
+            background: var(--tag-background-color);
+            transition: background-color var(--base-transition-duration);
+            & > svg {
+                display: inline-block;
+                vertical-align: top;
+                width: var(--size);
+                height: var(--size);
+                margin-right: 0.3333em;
+            }
+            &:hover {
+                background: var(--menu-background-color-highlight);
+            }
+        }
+        .screen-sm({
+            --extra-margin-top: -0.5em;
+            & > label[for] {
+                display: inline-block;
+                // & + small {
+                //     padding-left: 9em;
+                //     margin-top: -2em;
+                // }
+            }
+        });
     }
 
     .info {
@@ -203,6 +275,13 @@ type Props = {
                 margin: 0;
                 font-weight: normal;
                 color: var(--text-color-primary);
+                display: flex;
+                flex-flow: row wrap;
+                gap: 0.75em;
+                & > * {
+                    flex: 0;
+                    white-space: nowrap;
+                }
                 .tag {
                     .tag-styles();
                     margin-right: 0.75em;

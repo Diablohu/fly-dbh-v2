@@ -30,6 +30,11 @@ export default defineConfig({
     // 多语言设置
     // i18n: {},
 
+    // 客户端设置
+    prefetch: {
+        defaultStrategy: "tap",
+    },
+
     // Vite 打包工具相关设置
     // Asotro 框架默认使用 Vite 进行打包
     vite: {

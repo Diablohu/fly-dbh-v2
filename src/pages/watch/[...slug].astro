@@ -22,7 +22,7 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 
 // ============================================================================
 
-if (!Astro.params.slug) return Astro.redirect("/videos");
+if (!Astro.params.slug) return Astro.redirect(getVideoListPageLink());
 
 const { data: video, error: error } = await Astro.callAction(
     actions.watchPageFetch,
