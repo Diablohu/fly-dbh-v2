@@ -211,15 +211,22 @@ const VideoListGrid: FC<Props> = ({
                                   : type === "tag" && slug === "world"
                                     ? getVideoItemTopTag(post, "world")?.name ||
                                       ""
-                                    : [
-                                            "aerodrome",
-                                            "developer",
-                                            "platform",
-                                            "platformUpdate",
-                                        ].includes(type || "")
-                                      ? getVideoItemTopTag(post, "latest")
+                                    : type === "tag" && slug === "chat"
+                                      ? getVideoItemTopTag(post, "chat")
                                             ?.name || ""
-                                      : "",
+                                      : type === "tag" && slug === "short"
+                                        ? getVideoItemTopTag(post, "short")
+                                              ?.name || ""
+                                        : [
+                                                "aerodrome",
+                                                "aircraftOnboardDevice",
+                                                "developer",
+                                                "platform",
+                                                "platformUpdate",
+                                            ].includes(type || "")
+                                          ? getVideoItemTopTag(post, "latest")
+                                                ?.name || ""
+                                          : "",
                     ].filter(Boolean)}
                     infos={[
                         // [

@@ -5,10 +5,11 @@ import { actions } from "astro:actions";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
-import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
+// import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 import TagButton from "@/components/tag-button.astro";
 
-import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+// import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 import Collection from "./homepage/collection.astro";
 
@@ -172,7 +173,7 @@ if (error) {
                             <span class="tags">
                                 {tags.map(([prefix, name, route]) => (
                                     <TagButton
-                                        href={`/videos/${route}`}
+                                        href={`${getVideoListPageLink()}/${route}`}
                                         prefix={prefix}
                                     >
                                         {name}
@@ -202,7 +203,8 @@ if (error) {
         }
 
         <section class="check-more">
-            <TagButton href="/videos">分类浏览更多视频</TagButton>
+            <TagButton href={getVideoListPageLink()}>分类浏览更多视频</TagButton
+            >
             <!-- TOOD: SEARCH -->
             {
                 import.meta.env.DEV && (

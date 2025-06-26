@@ -82,7 +82,7 @@
     --accent-color-teal: #00ffff;
     --accent-color-green: #76b900;
     --accent-color-red: #ed1c24;
-    --accent-color: var(--accent-color-green);
+    --accent-color: var(--accent-color-purple);
     --theme-color-youtube: #ff0000;
     --theme-color-bilibili: #00a1d6;
     --theme-color-tiktok: #00faf0;
@@ -185,6 +185,7 @@ a,
 button[type="button"],
 button[type="submit"] {
     transition: var(--base-transition-duration);
+    transition-property: transform, color;
     &:active {
         transform: translateY(2px);
     }
@@ -195,12 +196,12 @@ a {
     color: var(--text-color-secondary);
     &:hover {
         color: var(--text-color-primary);
+        text-decoration: none;
     }
 }
 
 button[type="button"],
 button[type="submit"] {
-    transition-property: transform;
     cursor: pointer;
 }
 

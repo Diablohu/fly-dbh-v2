@@ -1,8 +1,16 @@
 import { type VideoItemType, type VideoListPageTypesType } from "@/types";
+import { specialTagsTutorial } from "@/global";
 
 const getVideoItemTopTag = (
     post: Partial<VideoItemType>,
-    purpose: "latest" | "tutorial" | "news" | "review" | "world"
+    purpose:
+        | "latest"
+        | "tutorial"
+        | "news"
+        | "review"
+        | "world"
+        | "chat"
+        | "short"
 ):
     | {
           type: VideoListPageTypesType;
@@ -24,7 +32,7 @@ const getVideoItemTopTag = (
 
         case "tutorial": {
             const thisTag = post.tags?.filter((tag) =>
-                ["training", "tip", "aviation"].includes(tag.slug || "")
+                specialTagsTutorial.includes(tag.slug || "")
             )[0];
             return thisTag
                 ? {
@@ -77,6 +85,19 @@ const getVideoItemTopTag = (
             const thisTag = post.tags?.filter((tag) =>
                 ["extreme-airport"].includes(tag.slug || "")
             )[0];
+            return thisTag
+                ? {
+                      type: "tag",
+                      _id: thisTag._id,
+                      name: thisTag.name,
+                      slug: thisTag.slug,
+                  }
+                : undefined;
+        }
+
+        case "chat":
+        case "short": {
+            const thisTag = post.tags?.filter((tag) => tag.slug !== purpose)[0];
             return thisTag
                 ? {
                       type: "tag",

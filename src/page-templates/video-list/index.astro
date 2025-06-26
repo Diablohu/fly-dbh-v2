@@ -4,6 +4,7 @@ import numeral from "numeral";
 import { type VideoListPageTypesType } from "@/types";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getGameUpdateName from "@/utils/get-game-update-name";
+import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/element-ids";
 
 // import log from "@/page-templates/index/_log.ts";
 
@@ -100,6 +101,10 @@ const title = {
 >
     <Block class="video-list-page">
         <section class="video-list-page-container">
+            <input
+                id={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
+                type="checkbox"
+            />
             <section class="list">
                 <VideoListInfo
                     category={title.category}
@@ -140,6 +145,17 @@ const title = {
                 flex: 1;
                 order: 2;
                 padding-bottom: 4em;
+            }
+
+            & > input[type="checkbox"] {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0;
+                height: 0;
+                overflow: hidden;
+                z-index: -1;
             }
         }
     }

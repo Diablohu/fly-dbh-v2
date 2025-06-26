@@ -1,8 +1,10 @@
 ---
 import { actions } from "astro:actions";
 import { type ValueOf } from "@/types";
+// import { specialTagsTutorial } from "@/global";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 type Props = {
     name: string;
@@ -32,7 +34,7 @@ const { showMore = true } = Astro.props;
     <dt>
         <h3>
             <a
-                href={`/videos${Astro.props.route ? `/${Astro.props.route}` : ""}`}
+                href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
             >
                 {Astro.props.title}
             </a>
@@ -40,7 +42,7 @@ const { showMore = true } = Astro.props;
         {
             showMore && (
                 <a
-                    href={`/videos${Astro.props.route ? `/${Astro.props.route}` : ""}`}
+                    href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
                 >
                     更多
                 </a>
@@ -67,11 +69,7 @@ const { showMore = true } = Astro.props;
                         //         : Astro.props.name === "tutorials"
                         //           ? [
                         //                 post.tags.filter((tag) =>
-                        //                     [
-                        //                         "training",
-                        //                         "tip",
-                        //                         "aviation",
-                        //                     ].includes(tag.slug)
+                        //                     specialTagsTutorial.includes(tag.slug)
                         //                 )[0]?.Astro.props.name,
                         //             ].filter(Boolean)
                         //           : [],
@@ -197,7 +195,7 @@ const { showMore = true } = Astro.props;
     }
 
     .collection.mod-highlight {
-        background: var(--tag-background-color);
+        // background: var(--tag-background-color);
         padding: 1.5em var(--global-edge-safe-distance) 1.75em
             var(--global-edge-safe-distance);
         border-radius: 10px;
@@ -206,6 +204,18 @@ const { showMore = true } = Astro.props;
         margin-bottom: calc(var(--margin-bottom) / 1.25);
         &::after {
             display: none;
+        }
+        &::before{
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            background: var(--accent-color-teal);
+            border-radius: inherit;
+            opacity: 0.1;
         }
         .screen-lg-below({
             border-radius: 0;
