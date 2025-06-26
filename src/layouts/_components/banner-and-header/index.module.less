@@ -396,9 +396,10 @@
             height: var(--logo-height);
             width: auto;
             margin-top: var(--logo-extra-edge);
-            transition: inherit;
-            transition-property: box-shadow;
+            transition: none var(--base-transition-duration);
+            transition-property: color, fill, box-shadow;
             box-shadow: var(--logo-shadow);
+            border-radius: 6px;
         }
     }
 
