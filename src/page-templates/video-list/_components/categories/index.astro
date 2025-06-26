@@ -7,7 +7,8 @@ import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/elemen
 
 import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg?raw";
 import VideosFill from "@/assets/svg-symbols/videos-fill.svg?raw";
-import ArrowSvg from "@/assets/arrow/left3.svg";
+import ArrowLeftSvg from "@/assets/arrow/left3.svg";
+import ArrowRightSvg from "@/assets/arrow/right3.svg";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -136,60 +137,85 @@ Explore More
 */
 ---
 
-<aside class="categories">
-    <section class="wrapper">
-        <label for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
-            ><ArrowSvg />收起分类</label
-        >
-        {
-            list.map((item) => {
-                if (item === "divider") {
-                    return <hr />;
-                }
-                switch (item.type) {
-                    case "link": {
-                        return (
-                            <a
-                                href={
-                                    item.route ||
-                                    getVideoListPageLink(
-                                        item.linkType,
-                                        item.linkSlug
-                                    )
-                                }
-                                class:list={[
-                                    "item",
-                                    "link",
-                                    `is-level-${item.level || 1}`,
-                                    ,
-                                    {
-                                        "is-active": item.isActive,
-                                    },
-                                ]}
-                                set:html={`
+<Fragment>
+    <input id={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN} type="checkbox" />
+    <aside class="categories">
+        <section class="wrapper">
+            <label
+                for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
+                class="screen-sm-button-collapse-categories"
+                ><ArrowLeftSvg />收起分类</label
+            >
+            {
+                list.map((item) => {
+                    if (item === "divider") {
+                        return <hr />;
+                    }
+                    switch (item.type) {
+                        case "link": {
+                            return (
+                                <a
+                                    href={
+                                        item.route ||
+                                        getVideoListPageLink(
+                                            item.linkType,
+                                            item.linkSlug
+                                        )
+                                    }
+                                    class:list={[
+                                        "item",
+                                        "link",
+                                        `is-level-${item.level || 1}`,
+                                        ,
+                                        {
+                                            "is-active": item.isActive,
+                                        },
+                                    ]}
+                                    set:html={`
                                     ${item.isActive ? item.iconHtmlActive || "" : item.iconHtml || ""}
                                     ${item.text}`}
-                            />
-                        );
+                                />
+                            );
+                        }
+                        case "subtitle": {
+                            return (
+                                <strong class="item title">{item.text}</strong>
+                            );
+                        }
+                        case "explore": {
+                            return null;
+                        }
+                        default:
+                            return null;
                     }
-                    case "subtitle": {
-                        return <strong class="item title">{item.text}</strong>;
-                    }
-                    case "explore": {
-                        return null;
-                    }
-                    default:
-                        return null;
-                }
-            })
-        }
-        <span>TODO: MORE CATEGORIES</span>
-    </section>
-    <label for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}></label>
-</aside>
+                })
+            }
+            <span>TODO: MORE CATEGORIES</span>
+        </section>
+        <label
+            for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
+            class="screen-sm-categories-background"></label>
+        <label
+            for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
+            class="screen-sm-button-expand-categories"
+            ><ArrowRightSvg />展开分类</label
+        >
+    </aside></Fragment
+>
 
 <style lang="less">
     @import "@/utils/mixins.less";
+
+    input[type="checkbox"] {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        z-index: -1;
+    }
 
     .categories {
         --item-min-height: 2.5em;
@@ -199,9 +225,9 @@ Explore More
         top: calc(var(--global-sticky-top) + 1em);
         flex: 0 0 175px;
         margin: 1em 0 4em 0;
-        border-radius: 10px;
+        // border-radius: 10px;
         overflow: hidden;
-        z-index: 10;
+        z-index: calc(var(--global-footer-z-index) + 1);
         overscroll-behavior: contain;
 
         & > .wrapper {
@@ -210,20 +236,26 @@ Explore More
             height: 100%;
             overflow: auto;
             scrollbar-width: thin;
-            max-height: calc(100dvh - var(--global-sticky-top) - 3em);
-            padding: 0 0;
+            max-height: calc(100dvh - var(--global-sticky-top) - 2em);
+            padding: 0 1em 0 0;
             overscroll-behavior: contain;
 
             & > .item,
-            & > label[for],
+            & > .screen-sm-button-collapse-categories,
             & > hr {
                 display: block;
             }
             & > .item,
-            & > label[for] {
+            & > .screen-sm-button-collapse-categories {
                 --extra-padding-left: 0px;
                 --icon-size: 1.25em;
                 --icon-margin: 0.6667em;
+                --padding-left-with-icon: calc(
+                    (@global-edge-safe-distance-sm * 2 / 3) +
+                        var(--extra-padding-left) + var(--icon-size) +
+                        var(--icon-margin)
+                );
+
                 position: relative;
                 color: inherit;
                 min-height: var(--item-min-height);
@@ -233,6 +265,23 @@ Explore More
                     )
                     (@global-edge-safe-distance-sm * 2/3);
                 border-radius: 8px;
+                & > :global(svg) {
+                    position: absolute;
+                    display: block;
+                    width: var(--icon-size);
+                    height: var(--icon-size);
+                    top: 50%;
+                    margin-left: calc(
+                        var(--icon-size) * -1 - var(--icon-margin)
+                    );
+                    margin-right: calc(var(--icon-margin) / 2);
+                    margin-top: calc(var(--icon-size) * -0.5);
+                }
+                & + .item {
+                    margin-top: 0.25em;
+                }
+            }
+            & > .item {
                 &.title {
                     font-weight: normal;
                 }
@@ -240,11 +289,7 @@ Explore More
                     color: var(--text-color-primary);
                     text-decoration: none;
                     transition-property: transform, background-color;
-                    padding-left: calc(
-                        (@global-edge-safe-distance-sm * 2 / 3) +
-                            var(--extra-padding-left) + var(--icon-size) +
-                            var(--icon-margin)
-                    );
+                    padding-left: var(--padding-left-with-icon);
                     &:not(:has(svg))::before {
                         --dot-size: 0.75em;
                         content: "";
@@ -262,17 +307,6 @@ Explore More
                         border: 2px solid var(--border-color);
                         border-radius: 100%;
                     }
-                    & > :global(svg) {
-                        position: relative;
-                        display: inline-block;
-                        vertical-align: top;
-                        width: var(--icon-size);
-                        height: var(--icon-size);
-                        margin-left: calc(
-                            var(--icon-size) * -1 - var(--icon-margin)
-                        );
-                        margin-right: calc(var(--icon-margin) / 2);
-                    }
                     &:hover,
                     &.is-active {
                         background: var(--tag-background-color);
@@ -286,31 +320,27 @@ Explore More
                         --extra-padding-left: 1em;
                     }
                 }
-                & + .item {
-                    margin-top: 0.25em;
-                }
             }
-            & > label[for] {
-                --size: 1.2em;
+            & > .screen-sm-button-collapse-categories {
                 cursor: pointer;
                 transition: color var(--base-transition-duration);
                 display: none;
-                svg {
-                    display: inline-block;
-                    vertical-align: top;
-                    position: relative;
-                    width: var(--size);
-                    height: var(--size);
-                    // top: 0.2em;
-                    margin-right: 0.6667em;
+                padding-left: var(--padding-left-with-icon);
+                & > :global(svg) {
+                    --icon-size: 1em;
                 }
                 &:hover {
                     color: var(--text-color-primary);
                 }
             }
         }
-        & > label[for] {
+
+        & > .screen-sm-categories-background,
+        & > .screen-sm-button-expand-categories {
             display: none;
+            backdrop-filter: var(--global-header-backdrop-filter);
+        }
+        & > .screen-sm-categories-background {
             position: absolute;
             top: 0;
             left: 0;
@@ -319,6 +349,11 @@ Explore More
             overflow: auto;
             overscroll-behavior: contain;
             scrollbar-width: none;
+            background-color: var(--global-header-background-color);
+            backdrop-filter: var(--global-header-backdrop-filter);
+            transition: inherit;
+            opacity: 0;
+            pointer-events: none;
             &::before {
                 content: "";
                 position: relative;
@@ -327,9 +362,64 @@ Explore More
                 height: 200vh;
             }
         }
+        & > .screen-sm-button-expand-categories {
+            --size: 1.13333em;
+            position: absolute;
+            top: 0.6667em;
+            left: 0;
+            display: none;
+            // top: 1em;
+            // left: var(--global-edge-safe-distance);
+            // width: var(--size);
+            // height: var(--size);
+            border-radius: 0 100em 100em 0;
+            cursor: pointer;
+            font-weight: normal;
+            padding: 0.3333em var(--global-edge-safe-distance);
+            margin: 0 0 0.6667em 0;
+            color: var(--text-color-secondary);
+            background: var(--tag-background-color);
+            transition: background-color var(--base-transition-duration);
+            border: 1px solid var(--border-color);
+            border-left: 0;
+            box-shadow: 0 4px 10px 0 var(--shadow-color);
+            & > svg {
+                position: relative;
+                display: inline-block;
+                vertical-align: top;
+                width: var(--size);
+                height: var(--size);
+                margin-right: 0.3333em;
+                top: 0.15em;
+            }
+            &:hover {
+                background: var(--menu-background-color-highlight);
+            }
+            &::after {
+                content: "";
+                position: absolute;
+                z-index: -1;
+                top: -1px;
+                bottom: -1px;
+                left: 0;
+                right: -1px;
+                border: inherit;
+                border-radius: inherit;
+                background: var(--global-header-background-color);
+            }
+            // &::before {
+            //     content: "";
+            //     position: absolute;
+            //     z-index: 2;
+            //     top: 0.5em;
+            //     bottom: 0.5em;
+            //     left: 2.5em;
+            //     width: 2.5px;
+            //     background: currentColor;
+            // }
+        }
 
         .screen-sm({
-            pointer-events: none;
             position: fixed;
             top: var(--global-sticky-top);
             left: 0;
@@ -338,41 +428,45 @@ Explore More
             height: calc(100dvh - var(--global-sticky-top));
             width: 100%;
             margin: 0;
-            background-color: var(--global-header-background-color);
-            backdrop-filter: var(--global-header-backdrop-filter);
             overflow: hidden;
-            opacity: 0;
             transition: opacity var(--base-transition-duration) allow-discrete;
             & > .wrapper{
                 width: calc(66.6667dvw);
-                padding-top: var(--global-edge-safe-distance);
+                padding-top: calc(var(--global-edge-safe-distance) / 2);
                 padding-left: var(--global-edge-safe-distance);
                 padding-right: var(--global-edge-safe-distance);
                 padding-bottom: calc(
                     var(--global-navbar-height) +
-                    var(--global-navbar-bottom-edge) * 2 + 
+                    var(--global-navbar-bottom-edge) * 3 + 
                     var(--global-bottom-safe-distance)
                 );
                 max-height: none;
                 overflow: auto;
                 transform: translateX(-100%);
-                transition: transform var(--base-transition-duration) allow-discrete;
+                transition: transform var(--base-transition-duration) allow-discrete, opacity var(--base-transition-duration) allow-discrete;
                 background: var(--theme-color);
-                & > label[for] {
+                pointer-events: none;
+                & > .screen-sm-button-collapse-categories {
                     display: block;
                 }
             }
-            & > label[for] {
+            & > .screen-sm-categories-background,
+            & > .screen-sm-button-expand-categories {
                 display: block;
             }
         });
     }
 
-    :global(input[type="checkbox"]:checked) ~ .categories {
-        opacity: 1;
-        pointer-events: all;
+    input[type="checkbox"]:checked ~ .categories {
+        & > .wrapper,
+        & > .screen-sm-categories-background {
+            pointer-events: all;
+        }
         & > .wrapper {
             transform: none;
+        }
+        & > .screen-sm-categories-background {
+            opacity: 1;
         }
     }
 </style>

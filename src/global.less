@@ -46,6 +46,7 @@
         var(--global-header-height) + var(--global-announcement-height) *
             var(--global-announcement-count)
     );
+    --global-footer-z-index: 10;
 
     --font-family-base:
         Roboto, "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica",
@@ -109,6 +110,7 @@
     --menu-background-color: #282828;
     --menu-background-color-highlight: #535353;
     --border-color: rgba(255, 255, 255, 0.2);
+    --shadow-color: var(--theme-color-p-80);
 
     .color-scheme-light(@rules) {
         &.force-color-scheme-light {
@@ -144,6 +146,7 @@
         --menu-background-color: #fff;
         --menu-background-color-highlight: #e5e5e5;
         --border-color: rgba(0, 0, 0, 0.1);
+        --shadow-color: var(--dark-theme-color-p-50);
     });
     &.force-color-scheme-light {
         --color-scheme: only dark;

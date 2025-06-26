@@ -19,13 +19,13 @@ body {
 
     & > main {
         flex: 1;
-        position: relative;
+        position: static;
     }
 
     & > footer {
         .font-size-clamp-with-line-height(18px, 22.6px);
         position: relative;
-        z-index: 10;
+        z-index: var(--global-footer-z-index);
         display: block;
         flex: 0;
         background-color: var(--theme-color);

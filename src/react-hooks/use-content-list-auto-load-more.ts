@@ -47,7 +47,7 @@ const useContentListAutoLoadMore = (
      * 为什么需要传入初始值
      *  - 为确保 _Astro_ 渲染结果和 _React_ 脱水结果一致
      */
-    selected?: ValidContentListAutoLoadMoreType
+    selected: ValidContentListAutoLoadMoreType
 ): [
     ValidContentListAutoLoadMoreType | undefined,
     typeof contentListAutoLoadMore.set,

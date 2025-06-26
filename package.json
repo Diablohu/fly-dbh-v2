@@ -22,7 +22,7 @@
         "@nanostores/react": "^1.0.0",
         "@react-oauth/google": "^0.12.2",
         "@sanity/client": "^7.6.0",
-        "astro": "^5.10.0",
+        "astro": "^5.10.1",
         "astro-portabletext": "^0.11.1",
         "axios": "^1.10.0",
         "cache-manager": "^7.0.0",
@@ -44,7 +44,7 @@
         "react-dropzone": "^14.3.8",
         "react-inlinesvg": "^4.2.0",
         "react-is": "^19.1.0",
-        "sanity": "^3.93.0",
+        "sanity": "^3.95.0",
         "styled-components": "^6.1.19",
         "toastify-js": "^1.12.0"
     },

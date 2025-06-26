@@ -21,9 +21,6 @@ type Props = {
 
 <Fragment>
     <h1>
-        <label for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
-            ><MenuSvg />展开视频分类</label
-        >
         {!!Astro.props.category && <small>{Astro.props.category}</small>}
         <span
             >{
@@ -170,16 +167,17 @@ type Props = {
     h1 {
         --extra-padding-left: 0px;
         --extra-margin-top: -0.2em;
-        margin: var(--extra-margin-top) calc(var(--global-edge-safe-distance) * -1) 0.3333em
+        margin: var(--extra-margin-top)
+            calc(var(--global-edge-safe-distance) * -1) 0.3333em
             calc(var(--global-edge-safe-distance) * -1);
         padding: 1em var(--global-edge-safe-distance) 0.6667em
             calc(var(--global-edge-safe-distance) + var(--extra-padding-left));
         line-height: 1.2;
-        position: sticky;
-        top: calc(var(--global-sticky-top) + var(--extra-margin-top));
+        // position: sticky;
+        // top: calc(var(--global-sticky-top) + var(--extra-margin-top));
         z-index: 5;
-        background-color: var(--global-header-background-color);
-        backdrop-filter: var(--global-header-backdrop-filter);
+        // background-color: var(--global-header-background-color);
+        // backdrop-filter: var(--global-header-backdrop-filter);
         small {
             display: block;
             font-weight: normal;
@@ -192,49 +190,11 @@ type Props = {
                 margin-top: 0.3333em;
             }
         }
-        & > label + small {
-            margin-bottom: 0.3333em;
-        }
         a {
             text-decoration: none;
         }
-        & > label[for] {
-            --size: 1.13333em;
-            display: none;
-            position: relative;
-            // top: 1em;
-            // left: var(--global-edge-safe-distance);
-            // width: var(--size);
-            // height: var(--size);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.6667em;
-            font-weight: normal;
-            padding: 0.3333em 0.6667em;
-            margin: 0 0 0.6667em 0;
-            color: var(--text-color-primary);
-            background: var(--tag-background-color);
-            transition: background-color var(--base-transition-duration);
-            & > svg {
-                display: inline-block;
-                vertical-align: top;
-                width: var(--size);
-                height: var(--size);
-                margin-right: 0.3333em;
-            }
-            &:hover {
-                background: var(--menu-background-color-highlight);
-            }
-        }
         .screen-sm({
-            --extra-margin-top: -0.5em;
-            & > label[for] {
-                display: inline-block;
-                // & + small {
-                //     padding-left: 9em;
-                //     margin-top: -2em;
-                // }
-            }
+            --extra-margin-top: 1.5em;
         });
     }
 
