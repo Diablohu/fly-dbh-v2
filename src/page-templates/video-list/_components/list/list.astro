@@ -78,7 +78,7 @@ if (error) {
 <section class="video-list">
     {
         !data ? (
-            "列表获取失败"
+            "暂无内容"
         ) : Astro.props.type === "aircraftFamily" ? (
             Object.entries(
                 data.list.reduce(
@@ -153,6 +153,62 @@ if (error) {
                             )}
                     </Fragment>
                 ))
+        ) : Astro.props.type === "aircraftOnboardDevice" ? (
+            Object.entries(
+                data.list.reduce(
+                    (listByCategory, currentPost) => {
+                        if (!listByCategory[currentPost.tags[0]._id])
+                            listByCategory["OTHER"].list.push(currentPost);
+                        else
+                            listByCategory[currentPost.tags[0]._id].list.push(
+                                currentPost
+                            );
+                        return listByCategory;
+                    },
+                    {
+                        "a8c9106d-729d-4ef0-8856-2427033a3fb7": {
+                            name: "教程攻略",
+                            slug: "tutorial",
+                            list: [],
+                        },
+                        OTHER: {
+                            name: "其他视频",
+                            slug: "",
+                            list: [],
+                        },
+                    } as {
+                        [category: string]: {
+                            name: string;
+                            slug?: string;
+                            list: List;
+                        };
+                    }
+                )
+            )
+                // .filter(
+                //     ([_id, { name, list }]) =>
+                //         Array.isArray(list) && list.length > 0
+                // )
+                .map(
+                    ([_id, { name, list }], index, arr) =>
+                        Array.isArray(list) &&
+                        list.length > 0 && (
+                            <Fragment>
+                                <h3>{name}</h3>
+                                <VideoListGrid
+                                    type="aircraftFamily"
+                                    initialList={list}
+                                    initialListIsComplete
+                                    showLoadMoreButton={false}
+                                    tagPurpose={
+                                        name === "教程攻略"
+                                            ? undefined
+                                            : "latest"
+                                    }
+                                />
+                            </Fragment>
+                        )
+                )
         ) : (
             <VideoListGrid
                 client:idle
