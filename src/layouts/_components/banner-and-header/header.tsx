@@ -13,6 +13,7 @@ import styles from "./index.module.less";
 const Header: FC<
     Pick<Props, "showHeader" | "logo" | "originPathname" | "defaults">
 > = ({ showHeader, logo, originPathname, defaults }) => {
+    if (!showHeader) return null;
     return (
         <header
             className={classNames([
