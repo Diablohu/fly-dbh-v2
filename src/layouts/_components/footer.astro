@@ -117,75 +117,73 @@ const contact: InfoGridType = {
                 >
             </p>
         </section>
-        <section data-grid="dev">
-            {
-                import.meta.env.DEV ? (
-                    <Fragment>
-                        <hr />
-                        <dl>
-                            <dt>Stage 1</dt>
-                            <dd>
-                                Custom 404, check old tag name
-                                <br />
-                                Custom 500
-                                <br />
-                                social share
-                                <br />
-                                cache strategy
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>Stage 2</dt>
-                            <dd>
-                                /sanity-images persist cache
-                                <br />
-                                ?s=
-                                <br />
-                                /search/:keyword
-                                <br />
-                                /watch/:slug expand infos, related (tutorial) or
-                                latest videos?
-                                <br />
-                                /donate
-                                <br />
-                                PWA
-                                {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
-                                <br />
-                                favicon & app-icon re-design
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>Stage 3</dt>
-                            <dd>
-                                /streams
-                                <br />
-                                /streams/challenges
-                                <br />
-                                /streams/flightseeing
-                                <br />
-                                other stream types
-                                <br />
-                                /vod/:slug
-                                <br />
-                                /activities
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>Stage 4</dt>
-                            <dd>
-                                /streams/clips
-                                <br />
-                                /shots
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>Stage 5</dt>
-                            <dd>/tools</dd>
-                        </dl>
-                    </Fragment>
-                ) : null
-            }
-        </section>
+        {
+            false && import.meta.env.DEV ? (
+                <section data-grid="dev">
+                    <hr />
+                    <dl>
+                        <dt>Stage 1</dt>
+                        <dd>
+                            Custom 404, check old tag name
+                            <br />
+                            Custom 500
+                            <br />
+                            social share
+                            <br />
+                            cache strategy
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Stage 2</dt>
+                        <dd>
+                            /sanity-images persist cache
+                            <br />
+                            ?s=
+                            <br />
+                            /search/:keyword
+                            <br />
+                            /watch/:slug expand infos, related (tutorial) or
+                            latest videos?
+                            <br />
+                            /donate
+                            <br />
+                            PWA
+                            {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
+                            <br />
+                            favicon & app-icon re-design
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Stage 3</dt>
+                        <dd>
+                            /streams
+                            <br />
+                            /streams/challenges
+                            <br />
+                            /streams/flightseeing
+                            <br />
+                            other stream types
+                            <br />
+                            /vod/:slug
+                            <br />
+                            /activities
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Stage 4</dt>
+                        <dd>
+                            /streams/clips
+                            <br />
+                            /shots
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Stage 5</dt>
+                        <dd>/tools</dd>
+                    </dl>
+                </section>
+            ) : null
+        }
     </section>
 </Block>
 
@@ -345,6 +343,10 @@ const contact: InfoGridType = {
             [data-grid="dev"] {
                 grid-area: dev;
                 text-align: left;
+                margin-top: calc(var(--global-edge-safe-distance) + 2em);
+                & > hr:first-child {
+                    margin-bottom: calc(var(--global-edge-safe-distance) + 2em);
+                }
             }
             .info-grid {
                 margin: 0;
