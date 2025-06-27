@@ -65,7 +65,12 @@ type Props = {
                                         name: unknown;
                                     }) => (
                                         <span class="tag">
-                                            <span>{aircraft.icao_code} /</span>{" "}
+                                            {aircraft.icao_code !==
+                                                aircraft.name && (
+                                                <span>
+                                                    {aircraft.icao_code} /
+                                                </span>
+                                            )}
                                             {aircraft.name}
                                         </span>
                                     )
@@ -237,14 +242,14 @@ type Props = {
                 color: var(--text-color-primary);
                 display: flex;
                 flex-flow: row wrap;
-                gap: 0.75em;
+                gap: 0.75em 1em;
                 & > * {
                     flex: 0;
                     white-space: nowrap;
                 }
                 .tag {
                     .tag-styles();
-                    margin-right: 0.75em;
+                    // margin-right: 0.25em;
                     background: inherit;
                     display: inline-block;
                     &:hover {
