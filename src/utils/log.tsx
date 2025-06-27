@@ -4,6 +4,7 @@ import dbg from "debug";
 
 const names = {
     FLY_DBH_V2: "FLY-DBH.com V2",
+    ERROR: "Error",
     COOKIES: "Cookies",
     VIDEO_LIST_GRID: "Video List Grid",
     VIDEO_LIST_PAGE_CATEGORIES: "Video List Page: Categories",
@@ -18,6 +19,9 @@ debug.namespace = names.FLY_DBH_V2;
 export default debug;
 
 // ============================================================================
+
+export const errorLog = dbg(names.ERROR);
+errorLog.namespace = names.ERROR;
 
 export const cookie = dbg(names.COOKIES);
 cookie.namespace = names.COOKIES;
@@ -36,3 +40,5 @@ if (import.meta.env.DEV || import.meta.env.MODE === "test") {
     videoListGrid.enabled = true;
     videoListPageCategories.enabled = true;
 }
+
+errorLog.enabled = true;

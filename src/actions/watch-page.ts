@@ -4,6 +4,7 @@ import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
 import { type VideoItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
+import { E30000 } from "@/constants/error-codes";
 
 const fetchProjections = `{
     _id,
@@ -61,19 +62,35 @@ const fetchProjections = `{
 const actions = {
     watchPageFetch: defineAction({
         input: z.string(),
-        handler: async (cmsIdOrSlug) => {
+        handler: async (cmsIdOrSlug, context) => {
             try {
+                const queryString = `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`;
                 const res = (
                     await fetch<VideoItemType>(
-                        `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`,
-                        (res) => {
+                        queryString,
+                        (res, queryString) => {
+                            if (!res[0]) {
+                                const err = new ActionError({
+                                    message: E30000,
+                                    code: "NOT_FOUND",
+                                });
+                                err.cause = { GROQ: queryString };
+                                throw err;
+                            }
                             res[0].cover = transformImagePath(res[0].cover);
                             return res;
                         }
                     )
                 )[0];
 
-                if (!res) throw new Error("Video not found");
+                if (!res) {
+                    const err = new ActionError({
+                        message: E30000,
+                        code: "NOT_FOUND",
+                    });
+                    err.cause = { GROQ: queryString };
+                    throw err;
+                }
                 return res;
             } catch (err) {
                 actionErrorHandler(err);

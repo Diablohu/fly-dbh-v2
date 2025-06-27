@@ -2,14 +2,16 @@
 import { actions } from "astro:actions";
 import numeral from "numeral";
 import { type VideoListPageTypesType } from "@/types";
+
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getGameUpdateName from "@/utils/get-game-update-name";
-import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/element-ids";
+import { errorLog } from "@/utils/log";
 
 // import log from "@/page-templates/index/_log.ts";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
+import Page404 from "@/pages/404.astro";
 
 import VideoListInfo from "./_components/list/info.astro";
 import VideoList from "./_components/list/list.astro";
@@ -34,17 +36,34 @@ const type: VideoListPageTypesType | undefined =
             ? "platformUpdate"
             : Astro.props.type;
 
-const { data: currentCategoryInfo, error: error } = isIndex
+const { data: currentCategoryInfo, error } = isIndex
     ? {}
     : await Astro.callAction(actions.videoListPageFetchInfo, {
           type: type as VideoListPageTypesType,
           slug: Astro.props.slug as Required<Props>["slug"],
       });
 if (error) {
-    console.trace(error);
-    Astro.response.status = 500;
+    if (error.code === "NOT_FOUND") {
+        errorLog(
+            [
+                `${Astro.originPathname} -> 404`,
+                error.code,
+                error.message,
+                (error.cause as any)?.GROQ
+                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                    : "",
+            ]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    } else {
+        console.error(error);
+        throw error;
+    }
+    // Astro.response.status = 500;
+    // Astro.props.error =error
     // Astro.response.statusText = (error.cause || error.message || "") as string;
-    return Astro.rewrite("/500");
+    // return Astro.redirect("/500");
 }
 
 const title = {
@@ -94,38 +113,44 @@ const title = {
 };
 ---
 
-<Layout
-    showHeader
-    showFooter
-    title={`${title.category ? `${title.category} : ` : ""}${title.main}${title.sub ? ` (${title.sub})` : ""}`}
->
-    <Block class="video-list-page">
-        <section class="video-list-page-container">
-            <section class="list">
-                <VideoListInfo
-                    category={title.category}
-                    title={title.main}
-                    subTitle={title.sub}
-                    type={type}
-                    slug={Astro.props.slug}
-                    isIndex={isIndex}
-                    info={currentCategoryInfo}
-                />
-                <VideoList
-                    type={type}
-                    slug={Astro.props.slug}
-                    isIndex={isIndex}
-                    info={currentCategoryInfo}
-                />
-            </section>
-            <VideoCategories
-                type={type}
-                slug={Astro.props.slug}
-                isIndex={isIndex}
-            />
-        </section>
-    </Block>
-</Layout>
+{
+    error && error.code === "NOT_FOUND" ? (
+        <Page404 />
+    ) : (
+        <Layout
+            showHeader
+            showFooter
+            title={`${title.category ? `${title.category} : ` : ""}${title.main}${title.sub ? ` (${title.sub})` : ""}`}
+        >
+            <Block class="video-list-page">
+                <section class="video-list-page-container">
+                    <section class="list">
+                        <VideoListInfo
+                            category={title.category}
+                            title={title.main}
+                            subTitle={title.sub}
+                            type={type}
+                            slug={Astro.props.slug}
+                            isIndex={isIndex}
+                            info={currentCategoryInfo}
+                        />
+                        <VideoList
+                            type={type}
+                            slug={Astro.props.slug}
+                            isIndex={isIndex}
+                            info={currentCategoryInfo}
+                        />
+                    </section>
+                    <VideoCategories
+                        type={type}
+                        slug={Astro.props.slug}
+                        isIndex={isIndex}
+                    />
+                </section>
+            </Block>
+        </Layout>
+    )
+}
 
 <style lang="less">
     @import "@/utils/mixins.less";

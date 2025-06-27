@@ -9,6 +9,7 @@ import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
+import { E20000, E20001 } from "@/constants/error-codes";
 
 // ============================================================================
 
@@ -168,8 +169,16 @@ const actions = {
 'total' : count(${query}),
 ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
 }`,
-                    (res) => {
+                    (res, queryString) => {
                         const r = res as unknown as ResponseDataType;
+                        if (!r) {
+                            const err = new ActionError({
+                                message: E20000,
+                                code: "NOT_FOUND",
+                            });
+                            err.cause = { GROQ: queryString };
+                            throw err;
+                        }
                         for (const list of Object.values(r)) {
                             if (!Array.isArray(list)) continue;
                             list.forEach((post) => {
@@ -196,7 +205,7 @@ ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
             type: VideoListPageTypesType;
             slug: string;
         }>,
-        handler: async ({ type, slug: cmsIdOrSlug }) => {
+        handler: async ({ type, slug: cmsIdOrSlug }, context) => {
             try {
                 const info = getVideoListPageTypeInfo(type);
                 const res = (
@@ -267,8 +276,16 @@ ${
                     : ``
 }
 }`,
-                        (res) => {
+                        (res, queryString) => {
                             const r = res[0];
+                            if (!r) {
+                                const err = new ActionError({
+                                    message: E20001,
+                                    code: "NOT_FOUND",
+                                });
+                                err.cause = { GROQ: queryString };
+                                throw err;
+                            }
                             if (r.logo) r.logo = transformImagePath(r.logo);
                             return [r];
                         }
@@ -311,7 +328,7 @@ ${
                     release?: string;
                 };
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

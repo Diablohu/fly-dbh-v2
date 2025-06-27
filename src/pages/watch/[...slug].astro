@@ -1,5 +1,5 @@
 ---
-import { actions } from "astro:actions";
+import { actions, ActionError } from "astro:actions";
 import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
 import dayjs from "dayjs";
@@ -20,16 +20,52 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getVideoCategoryInfoFromRawTypeData, {
     type CategoryInfoType,
 } from "@/utils/get-video-category-info-from-raw-type-data";
+import { errorLog } from "@/utils/log";
 
 // ============================================================================
 
 if (!Astro.params.slug) return Astro.redirect(getVideoListPageLink());
 
-const { data: video, error: error } = await Astro.callAction(
+const { data: video, error } = await Astro.callAction(
     actions.watchPageFetch,
     Astro.params.slug
 );
-if (!video || error) {
+if ((error && error.code === "NOT_FOUND") || !video) {
+    if (error)
+        errorLog(
+            [
+                `${Astro.originPathname} -> 404`,
+                error.code,
+                error.message,
+                (error.cause as any)?.GROQ
+                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                    : "",
+            ]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    else
+        errorLog(
+            [`${Astro.originPathname} -> 404`, "No video info"]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    return Astro.rewrite("/404");
+}
+if (error) {
+    const err = error as unknown as ActionError;
+    errorLog(
+        [
+            `${Astro.originPathname} -> 500`,
+            err.code,
+            err.message,
+            (err.cause as any)?.GROQ
+                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                : "",
+        ]
+            .filter(Boolean)
+            .join(" | ")
+    );
     Astro.response.status = 500;
     Astro.props.error = error;
     return Astro.rewrite("/500");
