@@ -1,0 +1,11 @@
+---
+import ErrorPage from "@/page-templates/error.astro";
+
+interface Props {
+    error?: Error;
+}
+
+const { error } = Astro.props;
+---
+
+<ErrorPage http={500} error={error} />
