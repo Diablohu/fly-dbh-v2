@@ -439,7 +439,7 @@ const list: Array<
             scrollbar-width: none;
             background-color: var(--global-header-background-color);
             backdrop-filter: var(--global-header-backdrop-filter);
-            transition: inherit;
+            transition: opacity var(--base-transition-duration) allow-discrete;
             opacity: 0;
             pointer-events: none;
             &::before {
@@ -508,17 +508,23 @@ const list: Array<
         }
 
         .screen-sm({
-            position: fixed;
-            top: var(--global-sticky-top);
-            left: 0;
-            height: calc(100% - var(--global-sticky-top));
-            height: calc(100vh - var(--global-sticky-top));
-            height: calc(100dvh - var(--global-sticky-top));
-            width: 100%;
-            margin: 0;
-            overflow: hidden;
-            transition: opacity var(--base-transition-duration) allow-discrete;
-            & > .wrapper{
+            position: static;
+            width: auto;
+            height: auto;
+            left: auto;
+            top: auto;
+            overflow: visible;
+            flex: none;
+            & > .wrapper,
+            & > .screen-sm-categories-background {
+                position: fixed;
+                left: 0;
+                top: var(--global-sticky-top);
+                height: calc(100% - var(--global-sticky-top));
+                height: calc(100vh - var(--global-sticky-top));
+                height: calc(100dvh - var(--global-sticky-top));
+            }
+            & > .wrapper, {
                 min-width: @min-width;
                 width: 50vw;
                 width: 50dvw;
