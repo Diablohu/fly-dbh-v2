@@ -2,6 +2,59 @@
 import Layout from "@/layouts/layout.astro";
 
 import backgroundImage from "@/assets/404-background.webp";
+
+if (import.meta.env.DEV)
+    switch (Astro.originPathname) {
+        // 以下内容在生产环境已通过 `nginx` 进行了 301 跳转
+
+        // V1 主分类
+        case "/news":
+            return Astro.redirect("/videos/tag-news");
+        case "/training":
+            return Astro.redirect("/videos/tag-tutorial");
+        case "/benchmark":
+            return Astro.redirect("/videos/tag-review");
+        case "/chat":
+            return Astro.redirect("/videos/tag-chat");
+        case "/world":
+            return Astro.redirect("/videos/tag-world");
+        case "/flight":
+            return Astro.redirect("/videos/tag-short");
+
+        // V1 次分类
+        case "/patch":
+            return Astro.redirect("/videos/tag-msfs-news");
+        case "/aircraft":
+            return Astro.redirect("/videos/tag-tutorial-aircraft");
+        case "/avionics":
+            return Astro.redirect("/videos/tag-tutorial-avionics");
+        case "/tip":
+            return Astro.redirect("/videos/tag-game-guide");
+        case "/aviation":
+            return Astro.redirect("/videos/tag-aviation-knowledge");
+        case "/mod":
+            return Astro.redirect("/videos/tag-mod");
+        case "/device":
+            return Astro.redirect("/videos/tag-peripheral");
+        case "/vr":
+            return Astro.redirect("/videos/tag-vr");
+        case "/danger":
+            return Astro.redirect("/videos/tag-extreme-airport");
+        case "/sightseeing":
+            return Astro.redirect("/videos/tag-flightseeing");
+        case "/test":
+            return Astro.redirect("/videos/tag-gameplay");
+        case "/groups":
+            return Astro.redirect("/videos/tag-activities");
+        case "/clip":
+            return Astro.redirect("/videos/tag-fun");
+        case "/atc":
+            return Astro.redirect("/videos/tag-atc");
+        case "/tour":
+            return Astro.redirect("/videos/tag-scenery");
+        case "/dev-qa":
+            return Astro.redirect("/videos/tag-official-stream");
+    }
 ---
 
 <Layout showHeader>
