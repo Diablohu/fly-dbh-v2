@@ -147,6 +147,8 @@ const contact: InfoGridType = {
                             {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
                             <br />
                             favicon & app-icon re-design
+                            <br />
+                            custom 500: show error
                         </dd>
                     </dl>
                     <dl>
@@ -266,7 +268,7 @@ const contact: InfoGridType = {
 
         .grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr auto;
+            grid-template-columns: 1.5fr 1fr 1fr 0.75fr;
             grid-template-rows: auto 1fr auto;
             grid-template-areas:
                 "general channels contact kook"
@@ -312,6 +314,7 @@ const contact: InfoGridType = {
                 width: 10em;
                 position: relative;
                 text-align: center;
+                margin: 0 0 0 auto;
                 .qrcode {
                     position: relative;
                     display: block;
@@ -361,7 +364,7 @@ const contact: InfoGridType = {
             }
 
             .screen-md({
-                grid-template-columns: 2fr 1fr 1fr;
+                grid-template-columns: 1.75fr 1fr auto;
                 grid-template-areas:
                     "general channels contact"
                     "infos channels contact"
