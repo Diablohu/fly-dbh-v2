@@ -89,7 +89,8 @@ const title = {
                           ""
                       )}`
                     : type === "developer" || type === "platform"
-                      ? currentCategoryInfo?.name_full
+                      ? currentCategoryInfo?.name_full ||
+                        currentCategoryInfo?.name
                       : type === "platformUpdate"
                         ? `微软${currentCategoryInfo?.game} ${getGameUpdateName(
                               {
@@ -101,8 +102,10 @@ const title = {
           Astro.params.slug ||
           "",
     sub:
-        type === "platform"
-            ? currentCategoryInfo?.name_full !== currentCategoryInfo?.name
+        type === "developer" || type === "platform"
+            ? currentCategoryInfo?.name_full &&
+              currentCategoryInfo?.name &&
+              currentCategoryInfo?.name_full !== currentCategoryInfo?.name
                 ? currentCategoryInfo?.name
                 : ""
             : type === "platformUpdate"

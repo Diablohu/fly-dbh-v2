@@ -222,11 +222,14 @@ const list: Array<
                                                 !isCurrentMainTag,
                                         },
                                     ]}
+                                    data-explore={item.explore}
                                 >
                                     <Explore
                                         client:idle
                                         type={item.explore}
                                         title={item.text}
+                                        listType={Astro.props.type}
+                                        listSlug={Astro.props.slug}
                                     >
                                         {item.text}
                                     </Explore>
@@ -239,7 +242,6 @@ const list: Array<
                     }
                 })
             }
-            <!-- <span>TODO: MORE CATEGORIES</span> -->
         </section>
         <label
             for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
@@ -400,6 +402,11 @@ const list: Array<
                             background-color: var(--accent-color-green);
                         }
                     }
+                    // &[data-explore="aircraftFamily"].is-active {
+                    //     &::before {
+                    //         background-color: var(--accent-color-teal);
+                    //     }
+                    // }
                     // &:has([class*="is-status-loading"]) {
                     //     pointer-events: none;
                     // }
@@ -452,8 +459,8 @@ const list: Array<
         }
         & > .screen-sm-button-expand-categories {
             --size: 1.13333em;
-            position: absolute;
-            top: 0.6667em;
+            position: fixed;
+            top: calc(var(--global-sticky-top) + 0.6667em);
             left: 0;
             display: none;
             // top: 1em;
@@ -508,13 +515,14 @@ const list: Array<
         }
 
         .screen-sm({
-            position: static;
+            position: fixed;
             width: auto;
             height: auto;
             left: auto;
             top: auto;
             overflow: visible;
             flex: none;
+            // margin-right: -1em;
             & > .wrapper,
             & > .screen-sm-categories-background {
                 position: fixed;
@@ -542,6 +550,7 @@ const list: Array<
                 transition: transform var(--base-transition-duration) allow-discrete, opacity var(--base-transition-duration) allow-discrete;
                 background: var(--theme-color);
                 pointer-events: none;
+                box-shadow: var(--overlay-box-shadow);
                 & > .screen-sm-button-collapse-categories {
                     display: block;
                 }
