@@ -38,22 +38,28 @@ const Explore: FC<
     Pick<HTMLAttributes<HTMLSpanElement>, "children"> & {
         type: VideoListPageTypesType;
         title: string;
+        listType?: VideoListPageTypesType;
+        listSlug?: string;
     }
-> = ({ children, type, title }) => {
+> = ({ children, type, title, listType, listSlug }) => {
     const StatusRef = useRef<StatusType>("ready");
     // const SelectRef = useRef<HTMLSelectElement>(null);
 
     const [status, setStatus] = useState<StatusType>(StatusRef.current);
-    const [list, setList] = useState<CategoryInfoType[]>([]);
+    const [list, setList] = useState<
+        (CategoryInfoType & {
+            isActive?: boolean;
+        })[]
+    >([]);
     const [showMenu, setShowMenu] = useState(false);
 
-    const toggleMenu = useCallback(
-        (evt: MouseEvent | Parameters<MouseEventHandler<HTMLElement>>[0]) => {
-            evt.stopPropagation();
-            setShowMenu((prev) => !prev);
-        },
-        []
-    );
+    // const toggleMenu = useCallback(
+    //     (evt: MouseEvent | Parameters<MouseEventHandler<HTMLElement>>[0]) => {
+    //         evt.stopPropagation();
+    //         setShowMenu((prev) => !prev);
+    //     },
+    //     []
+    // );
 
     const onClick = useCallback(() => {
         if (["complete"].includes(StatusRef.current)) {
@@ -85,11 +91,19 @@ const Explore: FC<
                                           type,
                                           item.slug
                                       ),
+                                      isActive:
+                                          listType === type &&
+                                          listSlug === item.slug,
                                   }
-                                : getVideoCategoryInfoFromRawTypeData(
-                                      type,
-                                      item
-                                  )
+                                : {
+                                      ...getVideoCategoryInfoFromRawTypeData(
+                                          type,
+                                          item
+                                      ),
+                                      isActive:
+                                          listType === type &&
+                                          listSlug === item.slug,
+                                  }
                         )
                         .filter(Boolean);
                     setList(list as CategoryInfoType[]);
@@ -102,7 +116,7 @@ const Explore: FC<
                 setStatus("complete");
                 console.trace(err);
             });
-    }, [type]);
+    }, [type, listType, listSlug]);
 
     // 同步 `StatusRef` 和 _State_ `status`
     useEffect(() => {
@@ -144,9 +158,20 @@ const Explore: FC<
                         >
                             <a
                                 href={item.route}
-                                className={styles["menu-link"]}
+                                className={classNames([
+                                    styles["menu-link"],
+                                    {
+                                        [styles["is-active"]]: item.isActive,
+                                    },
+                                ])}
                             >
-                                {item.prefix ? `${item.prefix} / ` : ""}
+                                {item.prefix ? (
+                                    <small className={styles["prefix"]}>
+                                        {item.prefix}
+                                    </small>
+                                ) : (
+                                    ""
+                                )}
                                 {item.name}
                                 {item.suffix ? ` (${item.suffix})` : ""}
                             </a>

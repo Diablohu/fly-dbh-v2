@@ -69,7 +69,14 @@
         border-radius: 8px;
         transition: opacity var(--base-transition-duration);
     }
-    &:hover::before {
-        opacity: 1;
+    &.is-active,
+    &:hover {
+        &::before {
+            opacity: 1;
+        }
+    }
+    & > small {
+        display: block;
+        margin-bottom: 0.15em;
     }
 }

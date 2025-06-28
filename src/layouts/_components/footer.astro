@@ -37,7 +37,7 @@ const channels: InfoGridType = {
     ],
 };
 const contact: InfoGridType = {
-    title: "交流",
+    title: "联络",
     links: [
         {
             platform: "kook",
@@ -103,7 +103,10 @@ const contact: InfoGridType = {
             <a href="https://qun.fly-dbh.com" target="_blank">扫码入群</a>
         </section>
         <section data-grid="infos">
-            <p>© {new Date().getFullYear()} <a href="/">FLY-DBH.com</a></p>
+            <p class="line-copyright">
+                © {new Date().getFullYear()}
+                <a href="/">FLY-DBH.com</a>
+            </p>
             <p>
                 Powered by <a href="https://astro.build/" target="_blank"
                     >Astro</a
@@ -143,12 +146,17 @@ const contact: InfoGridType = {
                             <br />
                             /donate
                             <br />
-                            PWA
-                            {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
-                            <br />
                             favicon & app-icon re-design
                             <br />
                             custom 500: show error
+                            <br />
+                            RSS
+                            <br />
+                            Custom Astro View Transition
+                            <br />
+                            PWA: Trigger Install, Manifest Overhaul,
+                            Service-Worker?
+                            {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
                         </dd>
                     </dl>
                     <dl>
@@ -172,12 +180,18 @@ const contact: InfoGridType = {
                         <dd>
                             /streams/clips
                             <br />
+                            clips @ home page
+                            <br />
                             /shots
                         </dd>
                     </dl>
                     <dl>
                         <dt>Stage 5</dt>
-                        <dd>/tools</dd>
+                        <dd>
+                            /tools
+                            <br />
+                            /shots
+                        </dd>
                     </dl>
                 </section>
             ) : null
@@ -189,7 +203,7 @@ const contact: InfoGridType = {
     @import "@/utils/mixins.less";
 
     footer {
-        --line-margin: 0.3333em;
+        --infos-line-margin: 0.5em;
 
         // .font-size-clamp-with-line-height(
         //     unit((13px / 0.85), px),
@@ -282,7 +296,7 @@ const contact: InfoGridType = {
                     opacity: 0.75;
                     :global(svg) {
                         display: block;
-                        width: 10em;
+                        width: 9.75em;
                         height: auto;
                         box-shadow: var(--logo-shadow);
                         border-radius: 10px;
@@ -303,9 +317,10 @@ const contact: InfoGridType = {
             [data-grid="infos"] {
                 grid-area: infos;
                 p {
-                    margin: 0;
-                    + p {
-                        margin-top: var(--line-margin);
+                    margin: calc(var(--infos-line-margin) * 2 / 3) 0
+                        var(--infos-line-margin) 0;
+                    & + p {
+                        margin-top: var(--infos-line-margin);
                     }
                 }
             }
@@ -364,7 +379,7 @@ const contact: InfoGridType = {
             }
 
             .screen-md({
-                grid-template-columns: 1.75fr 1fr auto;
+                grid-template-columns: calc(50% - 1em) 1fr auto;
                 grid-template-areas:
                     "general channels contact"
                     "infos channels contact"
@@ -374,7 +389,7 @@ const contact: InfoGridType = {
                 }
             });
             .screen-sm({
-                --line-margin: 0.6667em;
+                --infos-line-margin: 0.6667em;
 
                 text-align: center;
                 grid-template-columns: auto;
