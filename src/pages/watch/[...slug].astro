@@ -77,6 +77,9 @@ if (error) {
 <Layout
     title={prettifyTitle(video.title)}
     contentType="video-player"
+    coverImage={video.cover}
+    coverImageWidth={video.cover_dimensions?.width}
+    coverImageHeight={video.cover_dimensions?.height}
     showHeader
     showFooter
 >

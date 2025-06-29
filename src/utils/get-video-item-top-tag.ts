@@ -7,6 +7,7 @@ const getVideoItemTopTag = (
         | "latest"
         | "tutorial"
         | "news"
+        | "preview"
         | "review"
         | "world"
         | "chat"
@@ -45,9 +46,11 @@ const getVideoItemTopTag = (
         }
 
         case "news": {
-            const level2Tag = post.tags?.filter((tag) =>
-                level2Tags["news"].includes(tag.slug || "")
-            )[0];
+            const level2Tag =
+                "news" in level2Tags &&
+                post.tags?.filter((tag) =>
+                    level2Tags["news"].includes(tag.slug || "")
+                )[0];
             if (level2Tag)
                 return {
                     type: "tag",
@@ -73,6 +76,7 @@ const getVideoItemTopTag = (
                   : undefined;
         }
 
+        case "preview":
         case "review": {
             return post.developers?.[0]
                 ? {

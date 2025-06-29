@@ -16,10 +16,10 @@ export const routeNameSanityImageCdn = `/sanity-images`;
 
 /** 隶属于某个主分类（`tag_type` === 'category'）的标签（tag） */
 export const level2Tags: { [key: string]: string[] } = {
-    news: [
-        "featured", // 专题报道
-        "preview", // 前瞻
-    ],
+    // news: [
+    //     "featured", // 专题报道
+    //     "preview", // 前瞻
+    // ],
     tutorial: [
         "tutorial-aircraft", // 机型操作
         "tutorial-avionics", // 通用航电

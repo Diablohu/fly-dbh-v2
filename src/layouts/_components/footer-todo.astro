@@ -1,0 +1,149 @@
+---
+import { marked } from "marked";
+
+interface Props extends astroHTML.JSX.HTMLAttributes {
+    "data-grid"?: string;
+}
+
+const { class: className, ...props } = Astro.props;
+
+const todo = [
+    [
+        "`/sanity-images` Persist Cache",
+        "Interactive Search `?s=`",
+        "Search Button on _Navbar_",
+        "Search Page `/search/:keyword`",
+        "RSS `/feed`",
+        `Watch Page \`/watch/:slug\` More Infos
+* Related Tutorial and/or Latest Videos (?)`,
+        "Custom 500 Page `/500`: Show Error",
+        "Custom Astro View Transition",
+    ],
+    [
+        "PWA: Install Button on _Navbar_",
+        "Re-design favicon & App Icon",
+        "Implement [Service-Worker](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons)",
+        "Refine [Cache Strategy](https://github.com/withastro/roadmap/issues/1140) **AFTER** Astro Update",
+    ],
+    ["Membership Bonuses", "Donate Page `/donate`"],
+    [
+        `Re-design Video List Page for Aircraft/Avionics \`/videos/aircraftfamily-?\` \`/videos/aircraftonboarddevice-?\`
+* Put all videos other than Tutorial & Reviews into a Grid List with auto-load`,
+    ],
+    [
+        "New Sanity Document Type: Stream VOD `vod`",
+        `New Sanity Document Type: Stream Tag/Type \`stream_tag\`
+* \`challenges\`
+* \`flightseeing\`
+* Other types`,
+        "Stream List Page `/stream/:type-:slug`",
+        "VOD Watch Page `/vod/:slug`",
+    ],
+    [
+        "Tools `/tools",
+        "Tool Roulette `/tools/roulette`",
+        "Tool News-Bot `/tools/news`",
+    ],
+    [
+        "Activities `/activities`",
+        "Clips `/streams/clips`, `Clips on Home Page",
+        "Screenshots `/shots`",
+    ],
+];
+---
+
+{
+    import.meta.env.DEV && (
+        <section class:list={["to-do", className]} {...props}>
+            {todo.map((list, index) => (
+                <dl data-stage={index}>
+                    <dt>Stage {index}</dt>
+                    {list.map((item) => (
+                        <dd set:html={marked.parse(item)} />
+                    ))}
+                </dl>
+            ))}
+        </section>
+    )
+}
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .to-do {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
+        gap: 2em;
+        & > dl {
+            margin: 0;
+            & > dt {
+                margin: 0;
+                padding: 0;
+                font-weight: bolder;
+                color: var(--text-color-primary);
+            }
+            & > dd {
+                --line-left-edge: 0.3333em;
+                --line-width: 2px;
+                --line-border-radius: 0;
+                --line-horizontal-width: 0.6667em;
+                margin: 0.5em 0;
+                padding: 0 0 0 1.5em;
+                position: relative;
+                &::before,
+                &::after {
+                    content: "";
+                    position: absolute;
+                    border: 0px solid var(--border-color);
+                    border-bottom-left-radius: var(--line-border-radius);
+                }
+                &::before {
+                    width: calc(
+                        var(--line-horizontal-width) + var(--line-width)
+                    );
+                    left: var(--line-left-edge);
+                    top: -0.25em;
+                    bottom: -0.25em;
+                    border-left-width: var(--line-width);
+                }
+                &::after {
+                    width: var(--line-horizontal-width);
+                    top: 0;
+                    left: calc(var(--line-left-edge) + var(--line-width));
+                    height: 0.8em;
+                    border-bottom-width: var(--line-width);
+                }
+                &:last-child {
+                    --line-border-radius: 0.25em;
+                    &::before {
+                        height: 1em;
+                        bottom: auto;
+                        border-bottom-width: var(--line-width);
+                    }
+                    &::after {
+                        display: none;
+                    }
+                }
+                & > :global(p) {
+                    &:first-child {
+                        margin-top: 0;
+                    }
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+                :global(code) {
+                    font-family: Consolas;
+                    font-size: 0.9em;
+                    line-height: 1.4em;
+                    background: var(--theme-color-p-70);
+                    padding: 0 0.5em;
+                    margin: 0.125em 0;
+                    display: inline-block;
+                    vertical-align: top;
+                    border-radius: 0.5em;
+                }
+            }
+        }
+    }
+</style>

@@ -1,0 +1,92 @@
+---
+import { type ValidPageContentType } from "@/types";
+import { title as siteTitle, slogan } from "@/global";
+
+type Props = {
+    title?: string;
+    type?: ValidPageContentType;
+    /**
+     * 头部 Meta 信息 `keyword`
+     * - 默认为兜底文字
+     */
+    keywords?: string;
+    /**
+     * 头部 Meta 信息 `description`
+     * - 默认无内容
+     */
+    description?: string;
+    /** 用于社交分享 */
+    image?: string;
+    imageWidth?: number;
+    imageHeight?: number;
+};
+const {
+    title = siteTitle,
+    keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
+    description = slogan,
+} = Astro.props;
+---
+
+<Fragment>
+    <title>
+        {title === siteTitle ? title : `${title} | FLY-DBH.com`}
+    </title>
+    {
+        description && (
+            <>
+                <meta name="description" content={description} />
+                <meta itemprop="description" content={description} />
+            </>
+        )
+    }
+    {keywords && <meta name="keywords" content={keywords} />}
+    {
+        Astro.props.image && (
+            <>
+                <link rel="image_src" href={Astro.props.image} />
+                <link itemprop="thumbnailUrl" href={Astro.props.image} />
+            </>
+        )
+    }
+    <link itemprop="url" href={Astro.request.url} />
+    <meta itemprop="name" content={title} />
+
+    <meta property="og:url" content={Astro.request.url} />
+    <meta property="og:site_name" content={[siteTitle, slogan].join(" ")} />
+    <meta property="og:title" content={title ?? siteTitle} />
+    <meta
+        property="og:type"
+        content={Astro.props.type === "video-player"
+            ? "video.other"
+            : "website"}
+    />
+    {description && <meta property="og:description" content={description} />}
+    {
+        Astro.props.image && (
+            <>
+                <meta property="og:image" content={Astro.props.image} />
+                {Astro.props.imageWidth && (
+                    <meta
+                        property="og:image:width"
+                        content={Astro.props.imageWidth + ""}
+                    />
+                )}
+                {Astro.props.imageHeight && (
+                    <meta
+                        property="og:image:height"
+                        content={Astro.props.imageHeight + ""}
+                    />
+                )}
+            </>
+        )
+    }
+
+    <meta name="twitter:url" content={Astro.request.url} />
+    <meta name="twitter:title" content={title ?? siteTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    {
+        Astro.props.image && (
+            <meta name="twitter:image" content={Astro.props.image} />
+        )
+    }
+</Fragment>

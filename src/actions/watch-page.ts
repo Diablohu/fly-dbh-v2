@@ -18,6 +18,10 @@ const fetchProjections = `{
     release,
     duration,
     "cover": cover.asset->path,
+    "cover_dimensions": cover.asset->{
+        'width': metadata.dimensions.width,
+        'height': metadata.dimensions.height
+    },
     description,
     links,
     'aircraft_families': aircraft_families[]->{

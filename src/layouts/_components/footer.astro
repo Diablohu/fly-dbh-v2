@@ -7,6 +7,7 @@ import iconX from "@/assets/icon-x.svg?raw";
 import iconEmail from "@/assets/svg-symbols/envelop-fill.svg?raw";
 import IconGitHubSvg from "@/assets/icon-github.svg";
 import QrcodeKookSvg from "@/assets/qrcode-kook.svg";
+import DevTodo from "./footer-todo.astro";
 
 import videoPlatforms from "@/constants/video-platforms";
 
@@ -122,81 +123,7 @@ const contact: InfoGridType = {
                 >
             </p>
         </section>
-        {
-            import.meta.env.DEV ? (
-                <section data-grid="dev">
-                    <hr />
-                    <dl>
-                        <dt>Stage 1</dt>
-                        <dd>social share</dd>
-                    </dl>
-                    <dl>
-                        <dt>Stage 2</dt>
-                        <dd>
-                            /sanity-images persist cache
-                            <br />
-                            ?s=
-                            <br />
-                            /search/:keyword
-                            <br />
-                            /watch/:slug expand infos, related (tutorial) or
-                            latest videos?
-                            <br />
-                            /donate
-                            <br />
-                            favicon & app-icon re-design
-                            <br />
-                            custom 500: show error
-                            <br />
-                            RSS
-                            <br />
-                            Custom Astro View Transition
-                            <br />
-                            PWA: Trigger Install, Manifest Overhaul,
-                            Service-Worker?
-                            {/* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons */}
-                            <br />
-                            cache strategy
-                            {/* https://github.com/withastro/roadmap/issues/1140 */}
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>Stage 3</dt>
-                        <dd>
-                            /streams
-                            <br />
-                            /streams/challenges
-                            <br />
-                            /streams/flightseeing
-                            <br />
-                            other stream types
-                            <br />
-                            /vod/:slug
-                            <br />
-                            /activities
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>Stage 4</dt>
-                        <dd>
-                            /streams/clips
-                            <br />
-                            clips @ home page
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>Stage 5</dt>
-                        <dd>
-                            /tools
-                            <br />
-                            /roulette
-                            <br />
-                            /shots
-                        </dd>
-                    </dl>
-                </section>
-            ) : null
-        }
+        {import.meta.env.DEV ? <DevTodo data-grid="dev" /> : null}
     </section>
 </Block>
 
@@ -359,8 +286,16 @@ const contact: InfoGridType = {
                 grid-area: dev;
                 text-align: left;
                 margin-top: calc(var(--global-edge-safe-distance) + 2em);
-                & > hr:first-child {
-                    margin-bottom: calc(var(--global-edge-safe-distance) + 2em);
+                // padding-top: 2em;
+                position: relative;
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: -2em;
+                    left: 0;
+                    width: 100%;
+                    height: 1px;
+                    background: var(--border-color);
                 }
             }
             .info-grid {
