@@ -1,5 +1,5 @@
 import { type VideoItemType, type VideoListPageTypesType } from "@/types";
-import { specialTagsTutorial } from "@/global";
+import { level2Tags } from "@/global";
 
 const getVideoItemTopTag = (
     post: Partial<VideoItemType>,
@@ -32,7 +32,7 @@ const getVideoItemTopTag = (
 
         case "tutorial": {
             const thisTag = post.tags?.filter((tag) =>
-                specialTagsTutorial.includes(tag.slug || "")
+                level2Tags["tutorial"].includes(tag.slug || "")
             )[0];
             return thisTag
                 ? {
@@ -45,6 +45,16 @@ const getVideoItemTopTag = (
         }
 
         case "news": {
+            const level2Tag = post.tags?.filter((tag) =>
+                level2Tags["news"].includes(tag.slug || "")
+            )[0];
+            if (level2Tag)
+                return {
+                    type: "tag",
+                    _id: level2Tag._id,
+                    name: level2Tag.name,
+                    slug: level2Tag.slug,
+                };
             const thisTag = post.tags?.filter((tag) => tag.slug !== "news")[0];
             return thisTag
                 ? {

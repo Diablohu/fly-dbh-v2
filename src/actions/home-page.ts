@@ -16,6 +16,7 @@ const getProjections = (collection: string) => `{
         "name": title
     },
     release,
+    duration,
     "cover": cover.asset->path,
     ${
         collection === "reviews"

@@ -1,7 +1,6 @@
 ---
 import { actions } from "astro:actions";
 import { type ValueOf } from "@/types";
-// import { specialTagsTutorial } from "@/global";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
@@ -63,16 +62,7 @@ const { showMore = true } = Astro.props;
                         slug: post.slug,
                         title: post.title,
                         cover: post.cover,
-                        // tags:
-                        //     Astro.props.name === "latest"
-                        //         ? [post.tags[0].Astro.props.name]
-                        //         : Astro.props.name === "tutorials"
-                        //           ? [
-                        //                 post.tags.filter((tag) =>
-                        //                     specialTagsTutorial.includes(tag.slug)
-                        //                 )[0]?.Astro.props.name,
-                        //             ].filter(Boolean)
-                        //           : [],
+                        duration: post.duration,
                         infos: [
                             [
                                 getVideoItemTopTag(
@@ -205,7 +195,7 @@ const { showMore = true } = Astro.props;
         &::after {
             display: none;
         }
-        &::before{
+        &::before {
             content: "";
             position: absolute;
             top: 0;

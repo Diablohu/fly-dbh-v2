@@ -2,7 +2,7 @@
 import { actions } from "astro:actions";
 import { type VideoListPageTypesType } from "@/types";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
-import { specialTagsTutorial } from "@/global";
+import { level2Tags, allLevel2Tags } from "@/global";
 import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/element-ids";
 
 import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg?raw";
@@ -34,11 +34,12 @@ const subTags: typeof list = [];
 let isCurrentMainTag = false;
 
 // 遍历所有标签（Tag），根据 `tag_type` 归属主要和次要标签
-// 特殊：`教程攻略` 子类直接归属主要标签
+// 特殊子标签（如 `新鲜事` 和 `教程攻略` 下属）子类直接归属主要标签
 data?.forEach((tag) => {
     if (!tag.title) return;
     if (!tag.slug) return;
-    if (specialTagsTutorial.includes(tag.slug)) {
+
+    if (allLevel2Tags.includes(tag.slug)) {
         if (Astro.props.slug === tag.slug) isCurrentMainTag = true;
         return;
     }
@@ -57,9 +58,9 @@ data?.forEach((tag) => {
         subTags.push(item);
     }
 
-    // 遍历到“教程攻略”，直接追加子类别
-    if (tag.slug === "tutorial") {
-        specialTagsTutorial.forEach((slug) => {
+    // 遍历子分类，追加到对应主类别
+    if (tag.slug in level2Tags) {
+        level2Tags[tag.slug].forEach((slug) => {
             const thisData = data.find((d) => d.slug === slug);
             if (!thisData) return;
             if (!thisData.title) return;
@@ -384,11 +385,14 @@ const list: Array<
                     &:has(> svg.right-arrow)::before {
                         content: "";
                     }
-                    &:hover,
-                    &.is-active,
-                    &:has(.is-menu-open) {
+                    .styles-hover() {
                         background: var(--tag-background-color);
                     }
+                    &.is-active,
+                    &:has(.is-menu-open) {
+                        .styles-hover();
+                    }
+                    .pointer-hover(.styles-hover());
                 }
                 &.link {
                     text-decoration: none;
@@ -585,3 +589,11 @@ const list: Array<
         }
     }
 </style>
+
+<!-- <script>
+    document
+        .querySelector("aside.categories")
+        ?.addEventListener("scroll", () => {
+            console.log(1111);
+        });
+</script> -->

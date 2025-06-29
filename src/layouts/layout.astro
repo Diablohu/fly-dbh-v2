@@ -130,7 +130,7 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
 
         <!-- Google Tag Manager -->
         {gtmId && (
-            <script is:inline define:vars={{ gtmId }}>
+            <script is:inline async defer define:vars={{ gtmId }}>
                 (function (w, d, s, l, i) {
                     w[l] = w[l] || [];
                     w[l].push({
@@ -198,9 +198,10 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
         <script
             is:inline
             async
+            defer
             src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
         ></script>
-        <script is:inline define:vars={{ gtagId }}>
+        <script is:inline defer define:vars={{ gtagId }}>
             window.dataLayer = window.dataLayer || [];
             function gtag() {
                 dataLayer.push(arguments);
@@ -272,7 +273,7 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
     }
 </style>
 
-<script is:inline>
+<script is:inline defer>
     document.documentElement.setAttribute("javascript-enabled", "");
 
     if (globalThis.window) {

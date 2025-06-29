@@ -1,3 +1,5 @@
+@import "@/utils/mixins.less";
+
 .explore-interactive {
     .spacing {
         &,
@@ -69,12 +71,15 @@
         border-radius: 8px;
         transition: opacity var(--base-transition-duration);
     }
-    &.is-active,
-    &:hover {
+    .styles-hover() {
         &::before {
             opacity: 1;
         }
     }
+    &.is-active {
+        .styles-hover();
+    }
+    .pointer-hover(.styles-hover());
     & > small {
         display: block;
         margin-bottom: 0.15em;

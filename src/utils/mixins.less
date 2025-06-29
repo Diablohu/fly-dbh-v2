@@ -135,3 +135,11 @@
         pointer-events: none;
     }
 }
+
+.pointer-hover(@rules) {
+    @media (pointer: fine) {
+        &:hover {
+            @rules();
+        }
+    }
+}

@@ -3,7 +3,7 @@ import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
 
 import { type VideoListPageTypesType, type VideoItemType } from "@/types";
-import { specialTagsTutorial, defaultCacheTtl } from "@/global";
+import { allLevel2Tags, defaultCacheTtl } from "@/global";
 
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
@@ -50,6 +50,7 @@ const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
     'slug': slug.current,
     title,
     release,
+    duration,
     "cover": cover.asset->path,
     'tags': tags[]->{
         _id,
@@ -355,7 +356,9 @@ ${
                             : ""
                     }${
                         type === "tagSubCategory"
-                            ? ` && tag_type == "topic" && !(slug.current in [${specialTagsTutorial.map((s) => `"${s}"`).join(",")}])`
+                            ? ` && tag_type == "topic" && !(slug.current in [${allLevel2Tags
+                                  .map((s) => `"${s}"`)
+                                  .join(",")}])`
                             : ""
                     }] | order(${
                         currentType === "tag"
