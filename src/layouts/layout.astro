@@ -3,9 +3,14 @@ import { ClientRouter } from "astro:transitions";
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
 import { VIDEO_SOURCE, FORCE_COLOR_SCHEME, CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
-import { type ValidVideoSourceType, type ValidContentListAutoLoadMoreType } from "@/types";
+import {
+    type ValidVideoSourceType,
+    type ValidContentListAutoLoadMoreType,
+    type ValidPageContentType,
+} from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
+import HeadPageInfos from './_components/head-page-infos.astro';
 import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
 import Announcements from "./_components/announcements.astro";
@@ -41,9 +46,11 @@ interface Props {
      *  - `<html>` 标签会有 `data-content-type` 属性，若组件需要响应内容类型，可基于此做 CSS 选择器，如
      *      - `:root[data-content-type="video-player"] .logo { opacity: 0.5 }`
      */
-    contentType?: 'video-player';
+    contentType?: ValidPageContentType;
     /** 用于社交分享 */
     coverImage?: string;
+    coverImageWidth?: number;
+    coverImageHeight?: number;
 
     /**
      * 是否显示顶部导航条
@@ -80,10 +87,6 @@ interface Props {
 // ============================================================================
 
 const {
-    title = siteTitle,
-    keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
-    description = slogan,
-    contentType,
     showHeader = false,
     showBanner = false,
     showFooter = false,
@@ -94,9 +97,12 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale || 'zh'} data-content-type={contentType} class:list={[
-    forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : ''
-]}>
+<html
+    lang={Astro.currentLocale || 'zh'}
+    data-content-type={Astro.props.contentType}
+    class:list={[
+        forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : ''
+    ]}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -124,9 +130,15 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
             </Fragment>)
         }
 
-        <title>
-            {title === "FLY-DBH.com" ? title : `${title} | FLY-DBH.com`}
-        </title>
+        <HeadPageInfos
+            title={Astro.props.title}
+            type={Astro.props.contentType}
+            description={Astro.props.description}
+            keywords={Astro.props.keywords}
+            image={Astro.props.coverImage}
+            imageWidth={Astro.props.coverImageWidth}
+            imageHeight={Astro.props.coverImageHeight}
+        />
 
         <!-- Google Tag Manager -->
         {gtmId && (
@@ -153,8 +165,6 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="manifest" href="/manifest.json">
 
-        {description && <meta name="description" content={description} />}
-        {keywords && <meta name="keywords" content={keywords} />}
         <meta name="generator" content={Astro.generator} />
 
         <style

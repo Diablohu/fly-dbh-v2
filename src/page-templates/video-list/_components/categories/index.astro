@@ -7,6 +7,22 @@ import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/elemen
 
 import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg?raw";
 import VideosFill from "@/assets/svg-symbols/videos-fill.svg?raw";
+import CompassHollow from "@/assets/svg-symbols/compass-hollow.svg?raw";
+import CompassFill from "@/assets/svg-symbols/compass-fill.svg?raw";
+import StarHollow from "@/assets/svg-symbols/star-hollow.svg?raw";
+import StarFill from "@/assets/svg-symbols/star-fill.svg?raw";
+import EarthHollow from "@/assets/svg-symbols/earth-hollow.svg?raw";
+import EarthFill from "@/assets/svg-symbols/earth-fill.svg?raw";
+import MovieHollow from "@/assets/svg-symbols/movie-hollow.svg?raw";
+import MovieFill from "@/assets/svg-symbols/movie-fill.svg?raw";
+import LeafHollow from "@/assets/svg-symbols/leaf-hollow.svg?raw";
+import LeafFill from "@/assets/svg-symbols/leaf-fill.svg?raw";
+import CupHollow from "@/assets/svg-symbols/cup-hollow.svg?raw";
+import CupFill from "@/assets/svg-symbols/cup-fill.svg?raw";
+import ClockHollow from "@/assets/svg-symbols/clock-hollow.svg?raw";
+import ClockFill from "@/assets/svg-symbols/clock-fill.svg?raw";
+import TagsHollow from "@/assets/svg-symbols/tags-hollow.svg?raw";
+import TagsFill from "@/assets/svg-symbols/tags-fill.svg?raw";
 import ArrowLeftSvg from "@/assets/arrow/left3.svg";
 import ArrowRightSvg from "@/assets/arrow/right3.svg";
 import Explore from "./explore";
@@ -54,6 +70,48 @@ data?.forEach((tag) => {
     if (tag.tag_type === "category") {
         mainTags.push(item);
         if (Astro.props.slug === item.linkSlug) isCurrentMainTag = true;
+        switch (tag.slug) {
+            case "featured": {
+                item.iconHtml = StarHollow;
+                item.iconHtmlActive = StarFill;
+                break;
+            }
+            case "tutorial": {
+                item.iconHtml = CompassHollow;
+                item.iconHtmlActive = CompassFill;
+                break;
+            }
+            case "review": {
+                item.iconHtml = TagsHollow;
+                item.iconHtmlActive = TagsFill;
+                break;
+            }
+            case "preview": {
+                item.iconHtml = LeafHollow;
+                item.iconHtmlActive = LeafFill;
+                break;
+            }
+            case "news": {
+                item.iconHtml = ClockHollow;
+                item.iconHtmlActive = ClockFill;
+                break;
+            }
+            case "chat": {
+                item.iconHtml = CupHollow;
+                item.iconHtmlActive = CupFill;
+                break;
+            }
+            case "world": {
+                item.iconHtml = EarthHollow;
+                item.iconHtmlActive = EarthFill;
+                break;
+            }
+            case "short": {
+                item.iconHtml = MovieHollow;
+                item.iconHtmlActive = MovieFill;
+                break;
+            }
+        }
     } else {
         subTags.push(item);
     }
@@ -297,7 +355,7 @@ const list: Array<
             height: 100%;
             overflow: auto;
             max-height: calc(100dvh - var(--global-sticky-top) - 2em);
-            padding: 0 1em 1em 0;
+            padding: 0em 1em 1em 0;
             overscroll-behavior: contain;
             scrollbar-width: thin;
             // scrollbar-width: none;
@@ -313,12 +371,11 @@ const list: Array<
             & > .item,
             & > .screen-sm-button-collapse-categories {
                 --extra-padding-left: 0px;
-                --icon-size: 1.25em;
-                --icon-margin: 0.6667em;
+                --icon-size: 1.5em;
+                --icon-margin: 0.75em;
                 --padding-left-with-icon: calc(
-                    (@global-edge-safe-distance-sm * 2 / 3) +
                         var(--extra-padding-left) + var(--icon-size) +
-                        var(--icon-margin)
+                        var(--icon-margin) * 2
                 );
 
                 position: relative;
@@ -342,15 +399,16 @@ const list: Array<
                     );
                     margin-right: calc(var(--icon-margin) / 2);
                     margin-top: calc(var(--icon-size) * -0.5);
+                    color: var(--text-color-secondary);
                     &.right-arrow {
                         --icon-size: 0.75em;
                         position: relative;
-                        top: 0.175em;
+                        top: 0.225em;
                         margin: auto;
                         display: inline-block;
                         vertical-align: top;
                         margin-left: calc(var(--icon-margin) / 2);
-                        color: var(--text-color-secondary);
+                        // color: var(--text-color-secondary);
                     }
                 }
                 & + .item {
@@ -371,7 +429,7 @@ const list: Array<
                         top: 50%;
                         left: calc(
                             var(--icon-size) * 3 / 4 +
-                                var(--extra-padding-left) + 0.85em -
+                                var(--extra-padding-left) + 0.75em -
                                 var(--dot-size)
                         );
                         margin-top: calc(var(--dot-size) / -2);
@@ -398,7 +456,11 @@ const list: Array<
                     text-decoration: none;
                     &.is-active {
                         &::before {
-                            background-color: var(--accent-color-purple);
+                            // background-color: var(--accent-color-purple);
+                            background-color: var(--text-color-secondary);
+                        }
+                        & > :global(svg) {
+                            color: var(--text-color-primary);
                         }
                     }
                     &.is-level-2 {
@@ -512,7 +574,7 @@ const list: Array<
                 bottom: -1px;
                 left: 0;
                 right: -1px;
-                border: inherit;
+                // border: inherit;
                 border-radius: inherit;
                 background: var(--global-header-background-color);
             }
@@ -561,10 +623,10 @@ const list: Array<
                 max-height: none;
                 overflow: auto;
                 transform: translateX(-100%);
-                transition: transform var(--base-transition-duration) allow-discrete, opacity var(--base-transition-duration) allow-discrete;
+                transition: none var(--base-transition-duration) allow-discrete;
+                transition-property: transform, opacity, box-shadow;
                 background: var(--theme-color);
                 pointer-events: none;
-                box-shadow: var(--overlay-box-shadow);
                 & > .screen-sm-button-collapse-categories {
                     display: block;
                 }
@@ -583,6 +645,7 @@ const list: Array<
         }
         & > .wrapper {
             transform: none;
+            box-shadow: var(--overlay-box-shadow);
         }
         & > .screen-sm-categories-background {
             opacity: 1;

@@ -72,7 +72,7 @@ if (error) {
     <Block class="home-page">
         <Collection
             name="latest"
-            title="最新视频"
+            title="最新模拟飞行视频"
             videos={collections?.["latest"]}
         />
 
@@ -80,9 +80,11 @@ if (error) {
 
         {
             [
-                ["tutorials", "模拟飞行教学视频", "tag-tutorial"],
-                ["news", "模拟飞行资讯视频", "tag-news"],
-                ["reviews", "模拟飞行评测视频", "tag-review"],
+                ["tutorials", "最新模拟飞行教学视频", "tag-tutorial"],
+                ["featured", "最新专题报道视频", "tag-featured"],
+                ["reviews", "最新评测视频", "tag-review"],
+                ["preview", "最新前瞻视频", "tag-preview"],
+                // ["news", "新鲜事", "tag-news"],
                 ["world", "航空专题视频", "tag-world"],
             ].map(([collectionName, title, routeName]) => (
                 <Collection

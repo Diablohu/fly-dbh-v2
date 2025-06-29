@@ -6,6 +6,7 @@
 // };
 export type ValueOf<T> = T[keyof T];
 
+export type ValidPageContentType = "video-player";
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
 export type ValidColorSchemeType = "dark" | "light";
 export type ValidContentListAutoLoadMoreType = "0" | "1";
@@ -26,7 +27,11 @@ export type VideoItemType = {
     title: string;
     release: string;
     cover: string;
-    duration?: number,
+    cover_dimensions?: {
+        width: number;
+        height: number;
+    };
+    duration?: number;
     tags: {
         _id: string;
         slug?: string;

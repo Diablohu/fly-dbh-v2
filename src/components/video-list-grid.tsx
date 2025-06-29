@@ -219,6 +219,11 @@ const VideoListGrid: FC<Props> = ({
             )
                 topTag = getVideoItemTopTag(post, "review")?.name;
             else if (
+                tagPurpose === "preview" ||
+                (type === "tag" && slug === "preview")
+            )
+                topTag = getVideoItemTopTag(post, "preview")?.name;
+            else if (
                 tagPurpose === "world" ||
                 (type === "tag" && slug === "world")
             )

@@ -49,17 +49,25 @@ const actions = {
             try {
                 return (await fetch(
                     `{
-${[
-    ["latest"],
-    ["tutorials", "tutorial"],
-    ["news", "news"],
-    ["reviews", "review"],
-    ["world", "world"],
-]
+${(
+    [
+        ["latest"],
+        ["featured", "featured"],
+        ["tutorials", "tutorial"],
+        // ["news", ["news", "preview"]],
+        ["reviews", "review"],
+        ["preview", "preview"],
+        ["world", "world"],
+    ] as [string, string | string[]][]
+)
     .map(
         ([name, tagSlug, count = 10]) =>
             `'${name}': *[_type == "video"${
-                tagSlug ? ` && "${tagSlug}" in tags[]->slug.current` : ""
+                Array.isArray(tagSlug)
+                    ? ` && (${tagSlug.map((s) => `"${s}" in tags[]->slug.current`).join(" || ")})`
+                    : tagSlug
+                      ? ` && "${tagSlug}" in tags[]->slug.current`
+                      : ""
             }] ${fetchSorting} ${getProjections(name)} [0...${count}]`
     )
     .join(",")}

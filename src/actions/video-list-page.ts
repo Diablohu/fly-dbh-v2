@@ -65,7 +65,7 @@ const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
         'slug': slug.current,
         name
     },`
-            : type === "tag" && slug === "review"
+            : type === "tag" && ["review", "preview"].includes(slug || "")
               ? `'developers': developers[]->{
         _id,
         'slug': slug.current,
