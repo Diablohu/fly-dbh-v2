@@ -150,11 +150,11 @@ const list: Array<
         text: "平台更新",
         explore: "platformUpdate",
     },
-    {
-        type: "explore",
-        text: "事件",
-        explore: "event",
-    },
+    // {
+    //     type: "explore",
+    //     text: "事件",
+    //     explore: "event",
+    // },
     // {
     //     type: "explore",
     //     text: "工作室",
@@ -295,10 +295,14 @@ const list: Array<
             z-index: 5;
             height: 100%;
             overflow: auto;
-            scrollbar-width: thin;
             max-height: calc(100dvh - var(--global-sticky-top) - 2em);
             padding: 0 1em 1em 0;
             overscroll-behavior: contain;
+            scrollbar-width: thin;
+            // scrollbar-width: none;
+            // &:hover {
+            //     scrollbar-width: thin;
+            // }
 
             & > .item,
             & > .screen-sm-button-collapse-categories,
@@ -381,7 +385,8 @@ const list: Array<
                         content: "";
                     }
                     &:hover,
-                    &.is-active {
+                    &.is-active,
+                    &:has(.is-menu-open) {
                         background: var(--tag-background-color);
                     }
                 }

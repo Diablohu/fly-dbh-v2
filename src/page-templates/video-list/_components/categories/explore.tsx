@@ -129,6 +129,9 @@ const Explore: FC<
             className={classNames([
                 styles["explore-interactive"],
                 styles[`is-status-${status}`],
+                {
+                    "is-menu-open": showMenu,
+                },
             ])}
         >
             {children}

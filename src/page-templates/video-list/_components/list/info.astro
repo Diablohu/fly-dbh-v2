@@ -161,27 +161,52 @@ type Props = {
                         </dd>
                     </dl>
                 ) : Astro.props.type === "event" ? (
-                    <dl>
-                        <dt>类型</dt>
-                        <dd>
-                            {Astro.props.info?.type === 'exhibition' ? '展会' : ''}
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>时间</dt>
-                        <dd>
-                            {[...new Set(
-                                [
-                                    dayjs(Astro.props.info?.start).format(
-                                        "YYYY 年 M 月 D 日"
-                                    ),
-                                    dayjs(Astro.props.info?.end).format(
-                                        "YYYY 年 M 月 D 日"
-                                    )
-                                ]
-                            )].join(' ~ ')}
-                        </dd>
-                    </dl>
+                    <Fragment>
+                        <dl>
+                            <dt>类型</dt>
+                            <dd>
+                                {Astro.props.info?.type === "exhibition"
+                                    ? "展会"
+                                    : ""}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>时间</dt>
+                            <dd>
+                                {[
+                                    ...new Set([
+                                        dayjs(Astro.props.info?.start).format(
+                                            "YYYY 年 M 月 D 日"
+                                        ),
+                                        dayjs(Astro.props.info?.end).format(
+                                            "YYYY 年 M 月 D 日"
+                                        ),
+                                    ]),
+                                ].join(" ~ ")}
+                            </dd>
+                        </dl>
+                        {Astro.props.info?.links &&
+                            Object.keys(Astro.props.info.links).length > 0 && (
+                                <dl>
+                                    <dt>链接</dt>
+                                    <dd>
+                                        {Object.entries(
+                                            Astro.props.info.links
+                                        ).map((l) => (
+                                            <a
+                                                href={l[1] as string}
+                                                class="link"
+                                            >
+                                                {l[0] === "official"
+                                                    ? "官网"
+                                                    : l[0][0].toLocaleUpperCase() +
+                                                      l[0].slice(1)}
+                                            </a>
+                                        ))}
+                                    </dd>
+                                </dl>
+                            )}
+                    </Fragment>
                 ) : null}
             </section>
         )
@@ -195,7 +220,7 @@ type Props = {
         --extra-padding-left: 0px;
         --extra-margin-top: -0.2em;
         margin: var(--extra-margin-top)
-            calc(var(--global-edge-safe-distance) * -1) 0.3333em
+            calc(var(--global-edge-safe-distance) * -1) 0em
             calc(var(--global-edge-safe-distance) * -1);
         padding: 1em var(--global-edge-safe-distance) 0.6667em
             calc(var(--global-edge-safe-distance) + var(--extra-padding-left));
