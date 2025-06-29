@@ -88,25 +88,25 @@ const title = {
                           new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
                           ""
                       )}`
-                    : type === "developer" || type === "platform"
-                      ? currentCategoryInfo?.name_full ||
-                        currentCategoryInfo?.name
+                    : type === "developer" ||
+                        type === "platform" ||
+                        type === "event"
+                      ? currentCategoryInfo?.name ||
+                        currentCategoryInfo?.name_full
                       : type === "platformUpdate"
-                        ? `微软${currentCategoryInfo?.game} ${getGameUpdateName(
-                              {
-                                  series: currentCategoryInfo?.series || "",
-                                  number: currentCategoryInfo?.number || "",
-                              }
-                          )}`
+                        ? `${currentCategoryInfo?.game} ${getGameUpdateName({
+                              series: currentCategoryInfo?.series || "",
+                              number: currentCategoryInfo?.number || "",
+                          })}`
                         : Astro.params.slug) ||
           Astro.params.slug ||
           "",
     sub:
-        type === "developer" || type === "platform"
+        type === "developer" || type === "platform" || type === "event"
             ? currentCategoryInfo?.name_full &&
               currentCategoryInfo?.name &&
               currentCategoryInfo?.name_full !== currentCategoryInfo?.name
-                ? currentCategoryInfo?.name
+                ? currentCategoryInfo?.name_full
                 : ""
             : type === "platformUpdate"
               ? currentCategoryInfo?.series === "su"
@@ -159,11 +159,13 @@ const title = {
     @import "@/utils/mixins.less";
 
     .video-list-page {
+        --gap-category-list: 1em;
+
         .video-list-page-container {
             display: flex;
             flex-flow: row nowrap;
             align-items: flex-start;
-            gap: 1em;
+            gap: var(--gap-category-list);
 
             .list {
                 flex: 1;

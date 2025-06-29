@@ -17,7 +17,8 @@ export type VideoListPageTypesType =
     | "aerodrome"
     | "developer"
     | "platform"
-    | "platformUpdate";
+    | "platformUpdate"
+    | "event";
 
 export type VideoItemType = {
     _id: string;
@@ -65,12 +66,19 @@ export type VideoItemType = {
         slug?: string;
         name: string;
     }[];
-    msfs_updates: {
+    game_updates: {
         _id: string;
         slug?: string;
         game: string;
         series: string;
         number: number;
         release: string;
+    }[];
+    events: {
+        _id: string;
+        slug?: string;
+        name: string;
+        start: string;
+        end: string;
     }[];
 };

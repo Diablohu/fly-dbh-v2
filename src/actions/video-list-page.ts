@@ -37,6 +37,9 @@ const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
         case "platformUpdate": {
             return ` && ("${slug}" in msfs_updates[]->slug.current || "${slug}" in msfs_updates[]->_id)`;
         }
+        case "event": {
+            return ` && ("${slug}" in events[]->slug.current || "${slug}" in events[]->_id)`;
+        }
         default: {
         }
     }
@@ -75,47 +78,6 @@ const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
               : ""
     }
 }`;
-// const fetchProjections = `{
-//     _id,
-//     'slug': slug.current,
-//     title,
-//     release,
-//     "cover": cover.asset->path,
-//     description,
-//     links,
-//     'aircraft_families': aircraft_families[]->{
-//         _id,
-//         'slug': slug.current,
-//         name,
-//         'maker': maker->name_zh_cn
-//     },
-//     'aerodromes': aerodromes[]->{
-//         _id,
-//         'slug': slug.current,
-//         name,
-//         icao,
-//         iata
-//     },
-//     'developers': developers[]->{
-//         _id,
-//         'slug': slug.current,
-//         name
-//     },
-//     'games': games[]->{
-//         _id,
-//         'slug': slug.current,
-//         name
-//     },
-//     'msfs_updates': msfs_updates[]->{
-//         _id,
-//         'slug': slug.current,
-//         game,
-//         series,
-//         number,
-//         release
-//     }
-// }`;
-// links
 type ReturnVideoItemType = Partial<VideoItemType> &
     Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">;
 type ResponseDataType = {
@@ -268,12 +230,20 @@ ${
 `
                   : type === "platformUpdate"
                     ? `
-    game,
+    'game': platform->name,
     series,
     number,
     release
 `
-                    : ``
+                    : type === "event"
+                      ? `
+    name,
+    name_full,
+    start,
+    end,
+    type,
+`
+                      : ``
 }
 }`,
                         (res, queryString) => {
@@ -326,6 +296,9 @@ ${
                     series?: string;
                     number?: number;
                     release?: string;
+                    start?: string;
+                    end?: string;
+                    type?: string;
                 };
             } catch (err) {
                 actionErrorHandler(err, context);
@@ -365,6 +338,9 @@ ${
                     series?: string;
                     number?: number;
                     release?: string;
+                    start?: string;
+                    end?: string;
+                    type?: string;
                 }>(`
 *[_type == "${currentType}"${
                     type
@@ -389,7 +365,9 @@ ${
                                   ? "name_full asc"
                                   : type === "platformUpdate"
                                     ? "release desc"
-                                    : ""
+                                    : type === "event"
+                                      ? "start desc"
+                                      : ""
                 }) {
     _id,
     'slug': slug.current,${
@@ -424,11 +402,18 @@ ${
     name_full,`
                       : type === "platformUpdate"
                         ? `
-    game,
+    'game': platform->name,
     series,
     number,
     release,`
-                        : ""
+                        : type === "event"
+                          ? `
+    name,
+    name_full,
+    type,
+    start,
+    end,`
+                          : ""
     }
 }
                 `);

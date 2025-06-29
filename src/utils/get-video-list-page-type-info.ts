@@ -16,6 +16,8 @@ const getVideoListPageTypeInfo = (t?: VideoListPageTypesType) => {
             return { type: "game", name: "平台" };
         case "platformUpdate":
             return { type: "msfs_update", name: "平台更新" };
+        case "event":
+            return { type: "event", name: "事件" };
     }
     return { type: "", name: "" };
 };
