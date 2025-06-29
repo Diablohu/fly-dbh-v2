@@ -1,0 +1,188 @@
+---
+import Collection from "./collection.astro";
+import TagButton from "@/components/tag-button.astro";
+
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
+---
+
+<Collection name="tags" title="亮点内容" showMore={false} highlighted>
+    <section class="hot-tags">
+        {
+            [
+                {
+                    name: "大型民航机教学",
+                    tags: [
+                        ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
+                        ["空客", "A380", "aircraftfamily-airbus-a380"],
+                        [
+                            "空客",
+                            "A318/A319/A320/A321",
+                            "aircraftfamily-airbus-a320-ceo",
+                        ],
+                        [
+                            "空客",
+                            "A319/A320/A321 NEO",
+                            "aircraftfamily-airbus-a320-neo",
+                        ],
+                        // [
+                        //     "空客",
+                        //     "A330 CEO",
+                        //     "aircraftfamily-airbus-a330-ceo",
+                        // ],
+                        ["波音", "747-8", "aircraftfamily-boeing-747-8"],
+                        [
+                            "波音",
+                            "787 梦想客机",
+                            "aircraftfamily-boeing-787-dreamliner",
+                        ],
+                        [
+                            "安东诺夫",
+                            "An-225 梦幻",
+                            "aircraftfamily-antonov-an-225",
+                        ],
+                    ],
+                },
+                {
+                    name: "中小型机教学",
+                    tags: [
+                        ["ATR", "72-600", "aircraftfamily-atr-72-600"],
+                        [
+                            "西瑞",
+                            "SF-50 展望喷气 G2",
+                            "aircraftfamily-cirrus-sf50-vision-jet",
+                        ],
+                        ["西瑞", "SR-22T G6", "aircraftfamily-cirrus-sr22t"],
+                        [
+                            "钻石",
+                            "DA-42 双星",
+                            "aircraftfamily-diamond-da42-twin-star",
+                        ],
+                        ["派珀", "M500", "aircraftfamily-piper-m500"],
+                        [
+                            "派珀",
+                            "PA-24 科曼奇",
+                            "aircraftfamily-piper-pa24-comanche",
+                        ],
+                    ],
+                },
+                {
+                    name: "热点资讯",
+                    tags: [
+                        [
+                            "微软2024",
+                            "SU03 更新",
+                            "platformupdate-msfs2024-su03",
+                        ],
+                        [
+                            "微软2020",
+                            "SU16 更新",
+                            "platformupdate-msfs2020-su16",
+                        ],
+                        [
+                            "微软2024",
+                            "SU02 更新",
+                            "platformupdate-msfs2024-su02",
+                        ],
+                    ],
+                },
+                // {
+                //     name: '模拟飞行入门',
+                //     videos: [],
+                // }
+            ].map(({ name, tags }) => (
+                <section class="hot-tag">
+                    <strong class="name">{name}</strong>
+                    {Array.isArray(tags) && tags.length > 0 && (
+                        <span class="tags">
+                            {tags.map(([prefix, name, route]) => (
+                                <TagButton
+                                    href={`${getVideoListPageLink()}/${route}`}
+                                    prefix={prefix}
+                                >
+                                    {name}
+                                </TagButton>
+                            ))}
+                        </span>
+                    )}
+                </section>
+            ))
+        }
+    </section>
+</Collection>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .hot-tags {
+        display: grid;
+        grid-template-columns: 3fr 3fr 14em;
+        gap: 2em 1em;
+        font-size: 1.1em;
+        .hot-tag {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            & > .name {
+                font-size: unit((14px / @base-font-size-number), em);
+                color: var(--text-color-primary);
+                display: block;
+                flex: 0;
+                margin: 0 0 0.6667em 0;
+            }
+            & > .tags {
+                flex: 0;
+                font-size: unit((14px / @base-font-size-number), em);
+                font-weight: normal;
+                display: flex;
+                flex-flow: row wrap;
+                gap: 0.75em;
+                justify-content: center;
+                &:empty {
+                    display: none;
+                }
+                & > span {
+                    flex: 1 0 100%;
+                    display: block;
+                    margin-bottom: -0.3333em;
+                    & + span {
+                        margin-top: 0.3333em;
+                    }
+                }
+                a {
+                    display: inline-flex;
+                    flex: 0 0 auto;
+                }
+            }
+            & + .hot-tag {
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: -0.5em;
+                    width: 1px;
+                    background: var(--border-color);
+                }
+            }
+        }
+        .screen-md-below({
+            grid-template-columns: 1fr;
+            .hot-tag {
+                align-items: flex-start;
+                & > .tags {
+                    justify-content: flex-start;
+                }
+                & + .hot-tag {
+                    &::before {
+                        display: none;
+                    }
+                }
+            }
+        });
+        .screen-lg({
+            grid-template-columns: 4fr 4fr 3fr;
+        });
+    }
+</style>

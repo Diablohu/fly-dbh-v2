@@ -1,12 +1,18 @@
 import { createCache } from "cache-manager";
+import { defaultCacheTtl, defaultCacheRefreshThreshold } from "@/global";
 
 const cache = createCache({
     /**
-     * 缓存的内容存活有这个时长后，才会被更新
-     * - 单位 `毫秒`
+     * 缓存存活的最长时间
+     *  - 超过这个时长才会被更新或清理
+     *  - 单位 `毫秒`
      */
-    ttl: import.meta.env.DEV ? 10_000 : 600_000,
-    refreshThreshold: import.meta.env.DEV ? 5_000 : 60_000, // milliseconds
+    ttl: defaultCacheTtl,
+    /**
+     * 刷新缓存值的阈值
+     *  - 当缓存的 `ttl` 剩余时间小于这个数值时，刷新缓存
+     */
+    refreshThreshold: defaultCacheRefreshThreshold, // milliseconds
     nonBlocking: true,
 });
 

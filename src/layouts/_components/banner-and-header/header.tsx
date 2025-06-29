@@ -27,7 +27,9 @@ const Header: FC<
                 <section
                     className={classNames([styles["aside"], styles["logo"]])}
                 >
-                    <a href="/">{logo}</a>
+                    <a href="/" aria-label="FLY-DBH.com">
+                        {logo}
+                    </a>
                 </section>
                 <nav className={styles["nav"]}>
                     {navLinks.map(({ route, name, extraChecks }) => (

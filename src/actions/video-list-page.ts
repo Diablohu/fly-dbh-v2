@@ -3,7 +3,7 @@ import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
 
 import { type VideoListPageTypesType, type VideoItemType } from "@/types";
-import { specialTagsTutorial } from "@/global";
+import { specialTagsTutorial, defaultCacheTtl } from "@/global";
 
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
@@ -131,26 +131,28 @@ const actions = {
 'total' : count(${query}),
 ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
 }`,
-                    (res, queryString) => {
-                        const r = res as unknown as ResponseDataType;
-                        if (!r) {
-                            const err = new ActionError({
-                                message: E20000,
-                                code: "NOT_FOUND",
-                            });
-                            err.cause = { GROQ: queryString };
-                            throw err;
-                        }
-                        for (const list of Object.values(r)) {
-                            if (!Array.isArray(list)) continue;
-                            list.forEach((post) => {
-                                post.cover = transformImagePath(post.cover);
-                            });
-                        }
-                        // const maxPage = Math.ceil(r.total / length);
-                        // console.log(r.total, from, length, maxPage);
-                        r.page = Math.floor(from / length) + 1;
-                        return r as unknown as SanityDocument<ReturnVideoItemType>[];
+                    {
+                        transform: (res, queryString) => {
+                            const r = res as unknown as ResponseDataType;
+                            if (!r) {
+                                const err = new ActionError({
+                                    message: E20000,
+                                    code: "NOT_FOUND",
+                                });
+                                err.cause = { GROQ: queryString };
+                                throw err;
+                            }
+                            for (const list of Object.values(r)) {
+                                if (!Array.isArray(list)) continue;
+                                list.forEach((post) => {
+                                    post.cover = transformImagePath(post.cover);
+                                });
+                            }
+                            // const maxPage = Math.ceil(r.total / length);
+                            // console.log(r.total, from, length, maxPage);
+                            r.page = Math.floor(from / length) + 1;
+                            return r as unknown as SanityDocument<ReturnVideoItemType>[];
+                        },
                     }
                 )) as unknown as ResponseDataType;
             } catch (err) {
@@ -247,18 +249,21 @@ ${
                       : ``
 }
 }`,
-                        (res, queryString) => {
-                            const r = res[0];
-                            if (!r) {
-                                const err = new ActionError({
-                                    message: E20001,
-                                    code: "NOT_FOUND",
-                                });
-                                err.cause = { GROQ: queryString };
-                                throw err;
-                            }
-                            if (r.logo) r.logo = transformImagePath(r.logo);
-                            return [r];
+                        {
+                            transform: (res, queryString) => {
+                                const r = res[0];
+                                if (!r) {
+                                    const err = new ActionError({
+                                        message: E20001,
+                                        code: "NOT_FOUND",
+                                    });
+                                    err.cause = { GROQ: queryString };
+                                    throw err;
+                                }
+                                if (r.logo) r.logo = transformImagePath(r.logo);
+                                return [r];
+                            },
+                            ttl: defaultCacheTtl * 3,
                         }
                     )
                 )[0];
@@ -342,34 +347,35 @@ ${
                     start?: string;
                     end?: string;
                     type?: string;
-                }>(`
+                }>(
+                    `
 *[_type == "${currentType}"${
-                    type
-                        ? ` && count(*[_type == 'video' && references(^._id)]) > 0`
-                        : ""
-                }${
-                    type === "tagSubCategory"
-                        ? ` && tag_type == "topic" && !(slug.current in [${specialTagsTutorial.map((s) => `"${s}"`).join(",")}])`
-                        : ""
-                }] | order(${
-                    currentType === "tag"
-                        ? `sort asc`
-                        : type === "aerodrome"
-                          ? "icao asc"
-                          : type === "aircraftFamily"
-                            ? "maker->icao_code asc, name asc"
-                            : type === "aircraftOnboardDevice"
-                              ? "maker->icao_code asc, name asc"
-                              : type === "developer"
-                                ? "name asc"
-                                : type === "platform"
-                                  ? "name_full asc"
-                                  : type === "platformUpdate"
-                                    ? "release desc"
-                                    : type === "event"
-                                      ? "start desc"
-                                      : ""
-                }) {
+                        type
+                            ? ` && count(*[_type == 'video' && references(^._id)]) > 0`
+                            : ""
+                    }${
+                        type === "tagSubCategory"
+                            ? ` && tag_type == "topic" && !(slug.current in [${specialTagsTutorial.map((s) => `"${s}"`).join(",")}])`
+                            : ""
+                    }] | order(${
+                        currentType === "tag"
+                            ? `sort asc`
+                            : type === "aerodrome"
+                              ? "icao asc"
+                              : type === "aircraftFamily"
+                                ? "maker->icao_code asc, name asc"
+                                : type === "aircraftOnboardDevice"
+                                  ? "maker->icao_code asc, name asc"
+                                  : type === "developer"
+                                    ? "name asc"
+                                    : type === "platform"
+                                      ? "name_full asc"
+                                      : type === "platformUpdate"
+                                        ? "release desc"
+                                        : type === "event"
+                                          ? "start desc"
+                                          : ""
+                    }) {
     _id,
     'slug': slug.current,${
         currentType === "tag"
@@ -417,7 +423,11 @@ ${
                           : ""
     }
 }
-                `);
+                `,
+                    {
+                        ttl: defaultCacheTtl * 3,
+                    }
+                );
             } catch (err) {
                 actionErrorHandler(err);
             }
