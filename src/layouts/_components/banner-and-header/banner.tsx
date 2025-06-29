@@ -21,7 +21,9 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
     const VideoRef = useRef<HTMLVideoElement>(null);
+
     const [renderBanner, setRenderBanner] = useState(showBanner);
+    const [renderVideo, setRenderVideo] = useState(false);
 
     useWindow(
         (force?: boolean) => {
@@ -115,6 +117,8 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
     }, [showBanner]);
 
     useEffect(() => {
+        setRenderVideo(true);
+
         return () => {
             Banner.observer?.disconnect();
             Banner.observer = undefined;
@@ -151,19 +155,21 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
                         backgroundImage: `url(${bannerCoverImage.src})`,
                     }}
                 >
-                    <video
-                        // poster={require('@assets/banner/cover.jpg').default}
-                        crossOrigin="anonymous"
-                        preload="auto"
-                        playsInline
-                        autoPlay={false}
-                        loop
-                        muted
-                        ref={VideoRef}
-                    >
-                        <source type="video/webm" src={bannerVidMedWebm} />
-                        <source type="video/mp4" src={bannerVidLowMP4} />
-                    </video>
+                    {renderVideo && (
+                        <video
+                            // poster={require('@assets/banner/cover.jpg').default}
+                            crossOrigin="anonymous"
+                            preload="auto"
+                            playsInline
+                            autoPlay={false}
+                            loop
+                            muted
+                            ref={VideoRef}
+                        >
+                            <source type="video/webm" src={bannerVidMedWebm} />
+                            <source type="video/mp4" src={bannerVidLowMP4} />
+                        </video>
+                    )}
                 </section>
                 <div
                     className={styles["intersection-check"]}
