@@ -22,18 +22,23 @@ export const fetch = async <
     T extends Record<string, any> = Record<string, any>,
 >(
     queryString: string,
-    transformResult?: (
-        res: SanityDocument<T>[],
-        query: string
-    ) => SanityDocument<T>[]
+    options?: {
+        transform?: (
+            res: SanityDocument<T>[],
+            query: string
+        ) => SanityDocument<T>[];
+    } & Partial<Parameters<typeof cache.wrap>[2]>
 ) =>
-    await cache.wrap(`SANITY:${queryString}`, async () => {
-        try {
+    await cache.wrap(
+        `SANITY:${queryString}`,
+        async () => {
             const posts = await client.fetch<SanityDocument<T>[]>(queryString);
-            if (typeof transformResult === "function")
-                return transformResult(posts, queryString);
+
+            if (typeof options?.transform === "function")
+                return options.transform(posts, queryString);
+
             return posts;
-        } catch (err) {
-            throw err;
-        }
-    });
+        },
+        options?.ttl,
+        options?.refreshThreshold
+    );

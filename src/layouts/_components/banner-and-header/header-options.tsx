@@ -54,6 +54,7 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
                 dangerouslySetInnerHTML={{
                     __html: showMenu ? symbolCogFill : symbolCogHollow,
                 }}
+                aria-label="网站设置"
             />
             <Menu
                 open={showMenu}

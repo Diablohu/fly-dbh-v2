@@ -63,22 +63,24 @@ ${[
     )
     .join(",")}
 }`,
-                    (res) => {
-                        return Object.entries(
-                            res as unknown as CollectionsType
-                        ).reduce<CollectionsType>(
-                            (collections, [collection, posts]) => {
-                                // console.log(posts[0]);
-                                collections[collection] = posts.map(
-                                    ({ cover, ...post }) => ({
-                                        cover: transformImagePath(cover),
-                                        ...post,
-                                    })
-                                );
-                                return collections;
-                            },
-                            {}
-                        ) as unknown as DocumentType[];
+                    {
+                        transform: (res) => {
+                            return Object.entries(
+                                res as unknown as CollectionsType
+                            ).reduce<CollectionsType>(
+                                (collections, [collection, posts]) => {
+                                    // console.log(posts[0]);
+                                    collections[collection] = posts.map(
+                                        ({ cover, ...post }) => ({
+                                            cover: transformImagePath(cover),
+                                            ...post,
+                                        })
+                                    );
+                                    return collections;
+                                },
+                                {}
+                            ) as unknown as DocumentType[];
+                        },
                     }
                 )) as unknown as CollectionsType;
             } catch (err) {

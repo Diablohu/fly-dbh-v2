@@ -71,3 +71,15 @@ export const navLinks = [
 export const defaultVideoSource: ValidVideoSourceType = "bilibili";
 export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType =
     "1";
+
+// ============================================================================
+//
+// 缓存相关
+// 详见 `@/src/services/_cache.ts`
+//
+// ============================================================================
+
+export const defaultCacheTtl = import.meta.env.DEV ? 10_000 : 600_000;
+export const defaultCacheRefreshThreshold = import.meta.env.DEV
+    ? 5_000
+    : 60_000;

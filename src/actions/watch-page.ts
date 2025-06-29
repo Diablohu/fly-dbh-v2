@@ -73,9 +73,8 @@ const actions = {
             try {
                 const queryString = `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`;
                 const res = (
-                    await fetch<VideoItemType>(
-                        queryString,
-                        (res, queryString) => {
+                    await fetch<VideoItemType>(queryString, {
+                        transform: (res, queryString) => {
                             if (!res[0]) {
                                 const err = new ActionError({
                                     message: E30000,
@@ -86,8 +85,8 @@ const actions = {
                             }
                             res[0].cover = transformImagePath(res[0].cover);
                             return res;
-                        }
-                    )
+                        },
+                    })
                 )[0];
 
                 if (!res) {

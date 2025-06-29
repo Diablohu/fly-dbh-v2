@@ -131,6 +131,7 @@ const VideoListHorizontal: FC<{
                 dangerouslySetInnerHTML={{
                     __html: arrowLeft,
                 }}
+                aria-label="前一个"
             />
             <button
                 className={classNames([
@@ -145,6 +146,7 @@ const VideoListHorizontal: FC<{
                 dangerouslySetInnerHTML={{
                     __html: arrowRight,
                 }}
+                aria-label="后一个"
             />
         </div>
     );
