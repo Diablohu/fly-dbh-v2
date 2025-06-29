@@ -48,13 +48,20 @@ const fetchProjections = `{
         'slug': slug.current,
         name
     },
-    'msfs_updates': msfs_updates[]->{
+    'game_updates': msfs_updates[]->{
         _id,
         'slug': slug.current,
-        game,
+        'game': platform->name,
         series,
         number,
         release
+    },
+    'events': events[]->{
+        _id,
+        'slug': slug.current,
+        name,
+        start,
+        end
     }
 }`;
 // links

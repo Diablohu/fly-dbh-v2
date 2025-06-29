@@ -78,6 +78,16 @@ const getVideoCategoryInfoFromRawTypeData = (
                     raw.slug || raw._id
                 ),
             };
+
+        case "event":
+            return {
+                name: raw.name,
+                suffix: dayjs(raw.start).format("YY年M月"),
+                route: getVideoListPageLink(
+                    "event",
+                    raw.slug || raw._id
+                ),
+            };
     }
     return undefined;
 };

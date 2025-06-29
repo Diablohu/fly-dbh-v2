@@ -239,6 +239,7 @@ const VideoListGrid: FC<Props> = ({
                     "developer",
                     "platform",
                     "platformUpdate",
+                    "event",
                 ].includes(type || "") ||
                 (type === "tag" && slug === "fun")
             )

@@ -185,9 +185,18 @@ if (error) {
                             ],
                             [
                                 getVideoListPageTypeInfo("platformUpdate").name,
-                                video.msfs_updates?.map((item) =>
+                                video.game_updates?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "platformUpdate",
+                                        item
+                                    )
+                                ),
+                            ],
+                            [
+                                getVideoListPageTypeInfo("event").name,
+                                video.events?.map((item) =>
+                                    getVideoCategoryInfoFromRawTypeData(
+                                        "event",
                                         item
                                     )
                                 ),
