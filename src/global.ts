@@ -14,12 +14,28 @@ export const isUnderConstruction = false;
 
 export const routeNameSanityImageCdn = `/sanity-images`;
 
-export const specialTagsTutorial = [
-    "tutorial-aircraft", // 机型操作
-    "tutorial-avionics", // 通用航电
-    "game-guide", // 攻略技巧
-    "aviation-knowledge", // 航空知识
-];
+/** 隶属于某个主分类（`tag_type` === 'category'）的标签（tag） */
+export const level2Tags: { [key: string]: string[] } = {
+    news: [
+        "featured", // 专题报道
+        "preview", // 前瞻
+    ],
+    tutorial: [
+        "tutorial-aircraft", // 机型操作
+        "tutorial-avionics", // 通用航电
+        "game-guide", // 攻略技巧
+        "aviation-knowledge", // 航空知识
+    ],
+};
+export const allLevel2Tags = Object.values(level2Tags).flat();
+export const level2TagsMap = Object.entries(level2Tags).reduce<{
+    [key: string]: string;
+}>((map, [level1, tags]) => {
+    tags.forEach((level2) => {
+        map[level2] = level1;
+    });
+    return map;
+}, {});
 
 export const navLinks = [
     {

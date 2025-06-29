@@ -311,6 +311,7 @@ const VideoListGrid: FC<Props> = ({
                     slug={post.slug}
                     title={post.title}
                     cover={post.cover}
+                    duration={post.duration}
                     tags={getTags(post)}
                     infos={[
                         // [

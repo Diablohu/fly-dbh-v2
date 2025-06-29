@@ -16,6 +16,7 @@ const fetchProjections = `{
         "name": title
     },
     release,
+    duration,
     "cover": cover.asset->path,
     description,
     links,

@@ -7,6 +7,7 @@ import {
     // type MouseEventHandler,
 } from "react";
 import classNames from "classnames";
+import numeral from "numeral";
 
 import prettifyTitle from "@/utils/prettify-title";
 import getDateString from "@/utils/get-date-string";
@@ -20,21 +21,16 @@ export type Props = {
     slug?: string;
     title: string;
     cover: string;
+    duration?: number;
     tags?: string[];
     infos?: (string | Date | Array<string | Date>)[];
 };
 
 // ============================================================================
 
-const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
-    cmsId,
-    slug,
-    title,
-    cover,
-    tags,
-    infos,
-    className,
-}) => {
+const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
+    getDurationText?: (duration: number) => string;
+} = memo(({ cmsId, slug, title, cover, duration, tags, infos, className }) => {
     // const searchString = useMemo(() => `?v=${cmsId}`, [cmsId]);
     // const onClick = useCallback<MouseEventHandler<HTMLAnchorElement>>(
     //     (evt) => {
@@ -57,7 +53,14 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
             // onClick={onClick}
             // data-astro-prefetch="false"
         >
-            <picture className={styles["cover"]}>
+            <picture
+                className={styles["cover"]}
+                data-duration={
+                    typeof duration === "number"
+                        ? VideoItem.getDurationText?.(duration)
+                        : undefined
+                }
+            >
                 <source
                     srcSet={[
                         `${cover}?fm=webp&w=400&q=60`,
@@ -103,6 +106,16 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> = ({
                 ))}
         </a>
     );
+});
+VideoItem.getDurationText = (duration: number) => {
+    const h = Math.floor(duration / (60 * 60));
+    const m = Math.floor((duration - h * 60 * 60) / 60);
+    return [h > 0 ? h : null, m, duration % 60]
+        .filter((number) => typeof number === "number")
+        .map((number, index) =>
+            index > 0 ? `${number}`.padStart(2, "0") : number
+        )
+        .join(":");
 };
 
-export default memo(VideoItem);
+export default VideoItem;

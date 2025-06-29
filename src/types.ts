@@ -26,6 +26,7 @@ export type VideoItemType = {
     title: string;
     release: string;
     cover: string;
+    duration?: number,
     tags: {
         _id: string;
         slug?: string;

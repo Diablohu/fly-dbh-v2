@@ -1,3 +1,5 @@
+@import "@/utils/mixins.less";
+
 .video-item {
     display: inline-block;
     position: relative;
@@ -23,6 +25,20 @@
             height: 100%;
             object-fit: cover;
             transition: transform var(--base-transition-duration) ease-in-out;
+        }
+
+        &[data-duration] {
+            &::after{
+                content: attr(data-duration);
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                background: var(--dark-theme-color-p-70);
+                font-size: smaller;
+                font-weight: 500;
+                padding: 0 0.5em;
+                border-radius: 6px;
+            }
         }
     }
 
@@ -102,14 +118,12 @@
     //     border-radius: 10px;
     // }
 
-    @media (pointer: fine) {
-        &:hover {
-            & > .cover > img {
-                transform: scale(1.06667);
-            }
-            & > .info {
-                color: var(--text-color-primary);
-            }
+    .pointer-hover({
+        & > .cover > img {
+            transform: scale(1.06667);
         }
-    }
+        & > .info {
+            color: var(--text-color-primary);
+        }
+    });
 }
