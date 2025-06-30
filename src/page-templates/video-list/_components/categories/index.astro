@@ -238,7 +238,7 @@ const list: Array<
                 ><ArrowLeftSvg />收起分类</label
             >
             {
-                list.map((item) => {
+                list.map((item, index, list) => {
                     if (item === "divider") {
                         return <hr />;
                     }
@@ -337,8 +337,21 @@ const list: Array<
 
     .categories {
         @min-width: 10.75em;
+
         --item-min-height: 2.5em;
         --item-line-height: 1.1em;
+        --item-gap: 0.25em;
+
+        --link-item-padding-x: unit((@global-edge-safe-distance-sm * 2/3), px);
+        --link-item-padding-left-extra: 0px;
+        --link-item-icon-size: 1.5em;
+        --link-item-icon-margin: 0.75em;
+        --link-item-with-icon-padding-left: calc(
+            var(--link-item-padding-left-extra) + var(--link-item-icon-size) +
+                var(--link-item-icon-margin) * 2
+        );
+        --link-item-no-icon-dot-size: 0.75em;
+        --link-item-no-icon-dot-border-width: 2px;
 
         position: sticky;
         top: calc(var(--global-sticky-top) + 1em);
@@ -370,14 +383,6 @@ const list: Array<
             }
             & > .item,
             & > .screen-sm-button-collapse-categories {
-                --extra-padding-left: 0px;
-                --icon-size: 1.5em;
-                --icon-margin: 0.75em;
-                --padding-left-with-icon: calc(
-                        var(--extra-padding-left) + var(--icon-size) +
-                        var(--icon-margin) * 2
-                );
-
                 position: relative;
                 color: inherit;
                 font-weight: normal;
@@ -386,33 +391,34 @@ const list: Array<
                 padding: calc(
                         (var(--item-min-height) - var(--item-line-height)) / 2
                     )
-                    (@global-edge-safe-distance-sm * 2/3);
+                    var(--link-item-padding-x);
                 border-radius: 8px;
                 & > :global(svg) {
                     position: absolute;
                     display: block;
-                    width: var(--icon-size);
-                    height: var(--icon-size);
+                    width: var(--link-item-icon-size);
+                    height: var(--link-item-icon-size);
                     top: 50%;
                     margin-left: calc(
-                        var(--icon-size) * -1 - var(--icon-margin)
+                        var(--link-item-icon-size) * -1 -
+                            var(--link-item-icon-margin)
                     );
-                    margin-right: calc(var(--icon-margin) / 2);
-                    margin-top: calc(var(--icon-size) * -0.5);
+                    margin-right: calc(var(--link-item-icon-margin) / 2);
+                    margin-top: calc(var(--link-item-icon-size) * -0.5);
                     color: var(--text-color-secondary);
                     &.right-arrow {
-                        --icon-size: 0.75em;
+                        --link-item-icon-size: 0.75em;
                         position: relative;
                         top: 0.225em;
                         margin: auto;
                         display: inline-block;
                         vertical-align: top;
-                        margin-left: calc(var(--icon-margin) / 2);
+                        margin-left: calc(var(--link-item-icon-margin) / 2);
                         // color: var(--text-color-secondary);
                     }
                 }
                 & + .item {
-                    margin-top: 0.25em;
+                    margin-top: var(--item-gap);
                 }
             }
             & > .item {
@@ -422,27 +428,7 @@ const list: Array<
                 &.explore {
                     color: var(--text-color-primary);
                     transition-property: transform, background-color;
-                    padding-left: var(--padding-left-with-icon);
-                    &::before {
-                        --dot-size: 0.75em;
-                        position: absolute;
-                        top: 50%;
-                        left: calc(
-                            var(--icon-size) * 3 / 4 +
-                                var(--extra-padding-left) + 0.75em -
-                                var(--dot-size)
-                        );
-                        margin-top: calc(var(--dot-size) / -2);
-                        width: var(--dot-size);
-                        height: var(--dot-size);
-                        background: transparent;
-                        border: 2px solid var(--border-color);
-                        border-radius: 100%;
-                    }
-                    &:not(:has(> svg))::before,
-                    &:has(> svg.right-arrow)::before {
-                        content: "";
-                    }
+                    padding-left: var(--link-item-with-icon-padding-left);
                     .styles-hover() {
                         background: var(--tag-background-color);
                     }
@@ -451,6 +437,27 @@ const list: Array<
                         .styles-hover();
                     }
                     .pointer-hover(.styles-hover());
+                    &::before {
+                        position: absolute;
+                        top: 50%;
+                        left: calc(
+                            var(--link-item-with-icon-padding-left) / 2 -
+                                var(--link-item-no-icon-dot-size) / 2
+                        );
+                        margin-top: calc(
+                            var(--link-item-no-icon-dot-size) / -2
+                        );
+                        width: var(--link-item-no-icon-dot-size);
+                        height: var(--link-item-no-icon-dot-size);
+                        background: transparent;
+                        border: var(--link-item-no-icon-dot-border-width) solid
+                            var(--border-color);
+                        border-radius: 100%;
+                    }
+                    &:not(:has(> svg))::before,
+                    &:has(> svg.right-arrow)::before {
+                        content: "";
+                    }
                 }
                 &.link {
                     text-decoration: none;
@@ -464,8 +471,96 @@ const list: Array<
                         }
                     }
                     &.is-level-2 {
-                        --extra-padding-left: 1em;
+                        &::after {
+                            position: absolute;
+                            content: "";
+                            left: calc(
+                                var(--link-item-with-icon-padding-left) / 2 -
+                                    var(--link-item-no-icon-dot-border-width) /
+                                    2
+                            );
+                            top: calc(var(--item-gap) * -1);
+                            bottom: calc(
+                                50% + var(--link-item-no-icon-dot-size) / 2
+                            );
+                            width: var(--link-item-no-icon-dot-border-width);
+                            background: var(--border-color);
+                        }
+                        & + .is-level-2 {
+                            &::after {
+                                top: calc(
+                                    -50% +
+                                        var(
+                                            --link-item-no-icon-dot-border-width
+                                        )
+                                );
+                            }
+                        }
                     }
+                    /*
+                    &.is-level-2 {
+                        --line-left-edge: calc(
+                            var(--link-item-icon-size) - var(--link-item-icon-margin) * 1 / 4
+                        );
+                        --line-width: 2px;
+                        --line-border-radius: 0;
+                        --line-horizontal-width: 0.6667em;
+                        --line-horizontal-box-height: calc(
+                            50% + var(--item-gap) / 2
+                        );
+                        // margin-left: calc(
+                        //     var(--link-item-icon-size) + var(--link-item-icon-margin)
+                        // );
+                        // padding-left: var(--link-item-icon-margin);
+                        &::before,
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            border: 0px solid var(--border-color);
+                            border-bottom-left-radius: var(
+                                --line-border-radius
+                            );
+                        }
+                        &::before {
+                            width: calc(
+                                var(--line-horizontal-width) + var(--line-width)
+                            );
+                            left: var(--line-left-edge);
+                            top: 0;
+                            bottom: 0;
+                            border-left-width: var(--line-width);
+                        }
+                        &::after {
+                            width: var(--line-horizontal-width);
+                            top: 0;
+                            left: calc(
+                                var(--line-left-edge) + var(--line-width)
+                            );
+                            height: var(--line-horizontal-box-height);
+                            border-bottom-width: var(--line-width);
+                        }
+                        // --link-item-padding-left-extra: 1em;
+                        & + .is-level-2 {
+                            &::before {
+                                top: calc(var(--item-gap) * -1);
+                            }
+                        }
+                        &:not(:has(+ .is-level-2)) {
+                            --line-border-radius: 0.5em;
+                            &::before {
+                                height: calc(
+                                    var(--line-horizontal-box-height) +
+                                        var(--item-gap)
+                                );
+                                bottom: auto;
+                                border-bottom-width: var(--line-width);
+                            }
+                            &::after {
+                                display: none;
+                            }
+                        }
+                    }
+                    */
                 }
                 &.explore {
                     appearance: none;
@@ -475,7 +570,8 @@ const list: Array<
                     background: transparent;
                     &.is-active {
                         &::before {
-                            background-color: var(--accent-color-green);
+                            // background-color: var(--accent-color);
+                            background-color: var(--text-color-secondary);
                         }
                     }
                     // &[data-explore="aircraftFamily"].is-active {
@@ -496,9 +592,9 @@ const list: Array<
                 cursor: pointer;
                 transition: color var(--base-transition-duration);
                 display: none;
-                padding-left: var(--padding-left-with-icon);
+                padding-left: var(--link-item-with-icon-padding-left);
                 & > :global(svg) {
-                    --icon-size: 1em;
+                    --link-item-icon-size: 1em;
                 }
                 &:hover {
                     color: var(--text-color-primary);
