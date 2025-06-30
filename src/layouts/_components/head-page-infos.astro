@@ -1,6 +1,7 @@
 ---
 import { type ValidPageContentType } from "@/types";
 import { title as siteTitle, slogan } from "@/global";
+import { undefined } from "astro:schema";
 
 type Props = {
     title?: string;
@@ -25,6 +26,7 @@ const {
     keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
     description = slogan,
 } = Astro.props;
+const image = Astro.props.image ? new URL(Astro.props.image, Astro.url) : "";
 ---
 
 <Fragment>
@@ -41,17 +43,17 @@ const {
     }
     {keywords && <meta name="keywords" content={keywords} />}
     {
-        Astro.props.image && (
+        image && (
             <>
-                <link rel="image_src" href={Astro.props.image} />
-                <link itemprop="thumbnailUrl" href={Astro.props.image} />
+                <link rel="image_src" href={image} />
+                <link itemprop="thumbnailUrl" href={image} />
             </>
         )
     }
-    <link itemprop="url" href={Astro.request.url} />
+    <link itemprop="url" href={Astro.url.href} />
     <meta itemprop="name" content={title} />
 
-    <meta property="og:url" content={Astro.request.url} />
+    <meta property="og:url" content={Astro.url.href} />
     <meta property="og:site_name" content={[siteTitle, slogan].join(" ")} />
     <meta property="og:title" content={title ?? siteTitle} />
     <meta
@@ -62,9 +64,9 @@ const {
     />
     {description && <meta property="og:description" content={description} />}
     {
-        Astro.props.image && (
+        image && (
             <>
-                <meta property="og:image" content={Astro.props.image} />
+                <meta property="og:image" content={image} />
                 {Astro.props.imageWidth && (
                     <meta
                         property="og:image:width"
@@ -81,12 +83,8 @@ const {
         )
     }
 
-    <meta name="twitter:url" content={Astro.request.url} />
+    <meta name="twitter:url" content={Astro.url.href} />
     <meta name="twitter:title" content={title ?? siteTitle} />
     {description && <meta name="twitter:description" content={description} />}
-    {
-        Astro.props.image && (
-            <meta name="twitter:image" content={Astro.props.image} />
-        )
-    }
+    {image && <meta name="twitter:image" content={image} />}
 </Fragment>
