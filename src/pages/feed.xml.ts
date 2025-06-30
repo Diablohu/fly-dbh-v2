@@ -4,6 +4,8 @@ import rss from "@astrojs/rss";
 
 import { title, slogan } from "@/global";
 
+const cdata = (str: string) => `<![CDATA[${str}]]>`;
+
 export const GET: APIRoute = async (context) => {
     return rss({
         // `<title>` field in output xml
@@ -24,8 +26,8 @@ export const GET: APIRoute = async (context) => {
                     title: post.title,
                     link: `/watch/${post.slug || post._id}`,
                     pubDate: new Date(post.release),
-                    description: post.description,
-                    categories: post.tags.map((tag) => tag.name),
+                    description: cdata(post.description),
+                    categories: post.tags.map((tag) => cdata(tag.name)),
                 };
             }) ?? [],
         // (optional) inject custom xml
