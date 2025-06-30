@@ -35,6 +35,9 @@ export default defineConfig({
         defaultStrategy: "tap",
     },
 
+    // 服务器设置
+    trailingSlash: "never",
+
     // Vite 打包工具相关设置
     // Asotro 框架默认使用 Vite 进行打包
     vite: {

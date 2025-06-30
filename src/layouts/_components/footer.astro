@@ -6,6 +6,7 @@ import iconKook from "@/assets/icon-kook.svg?raw";
 import iconX from "@/assets/icon-x.svg?raw";
 import iconEmail from "@/assets/svg-symbols/envelop-fill.svg?raw";
 import IconGitHubSvg from "@/assets/icon-github.svg";
+import IconFeedSvg from "@/assets/icon-feed.svg";
 import QrcodeKookSvg from "@/assets/qrcode-kook.svg";
 import DevTodo from "./footer-todo.astro";
 
@@ -116,7 +117,9 @@ const contact: InfoGridType = {
                 > & <a href="https://www.sanity.io/" target="_blank">Sanity</a>
             </p>
             <p>
-                <a
+                <a class="with-icon" href="/feed.xml" target="_blank"
+                    ><IconFeedSvg />RSS</a
+                ><span class="divider"></span><a
                     class="with-icon"
                     href="https://github.com/Diablohu/fly-dbh-v2"
                     target="_blank"><IconGitHubSvg />开源</a
@@ -249,6 +252,21 @@ const contact: InfoGridType = {
                         var(--infos-line-margin) 0;
                     & + p {
                         margin-top: var(--infos-line-margin);
+                    }
+                    .divider {
+                        display: inline-block;
+                        vertical-align: super;
+                        width: 1.5em;
+                        position: relative;
+                        &::before {
+                            content: "・";
+                            position: absolute;
+                            top: 50%;
+                            left: 0;
+                            right: 0;
+                            line-height: 0;
+                            text-align: center;
+                        }
                     }
                 }
             }
