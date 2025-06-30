@@ -162,6 +162,12 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="manifest" href="/manifest.json">
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="Your Site's Title"
+            href={new URL("/feed.xml", Astro.url)}
+        />
 
         <meta name="generator" content={Astro.generator} />
 
