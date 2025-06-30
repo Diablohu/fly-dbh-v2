@@ -25,7 +25,9 @@ const {
     keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
     description = slogan,
 } = Astro.props;
-const image = Astro.props.image ? new URL(Astro.props.image, Astro.url) : "";
+const image = Astro.props.image
+    ? `${new URL(Astro.props.image, Astro.url).href}?auto=format&w=960&q=60`
+    : "";
 ---
 
 <Fragment>
