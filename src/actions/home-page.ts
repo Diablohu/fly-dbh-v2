@@ -19,7 +19,7 @@ const getProjections = (collection: string) => `{
     duration,
     "cover": cover.asset->path,
     ${
-        collection === "reviews"
+        ["reviews", "preview"].includes(collection)
             ? `'developers': developers[]->{
         _id,
         'slug': slug.current,

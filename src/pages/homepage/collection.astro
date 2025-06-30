@@ -185,7 +185,14 @@ const { showMore = true } = Astro.props;
     }
 
     .collection.mod-highlight {
-        // background: var(--tag-background-color);
+        --collection-background-color: var(--menu-background-color-highlight);
+        --collection-background-color: color-mix(
+            in hsl,
+            var(--theme-color),
+            var(--accent-color-teal) 25%
+        );
+
+        background: var(--collection-background-color);
         padding: 1.5em var(--global-edge-safe-distance) 1.75em
             var(--global-edge-safe-distance);
         border-radius: 10px;
@@ -195,18 +202,18 @@ const { showMore = true } = Astro.props;
         &::after {
             display: none;
         }
-        &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: -1;
-            background: var(--accent-color-teal);
-            border-radius: inherit;
-            opacity: 0.1;
-        }
+        // &::before {
+        //     content: "";
+        //     position: absolute;
+        //     top: 0;
+        //     bottom: 0;
+        //     left: 0;
+        //     right: 0;
+        //     z-index: -1;
+        //     background: var(--accent-color-teal);
+        //     border-radius: inherit;
+        //     opacity: 0.1;
+        // }
         .screen-lg-below({
             border-radius: 0;
         });
