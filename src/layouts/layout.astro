@@ -17,7 +17,7 @@ import Announcements from "./_components/announcements.astro";
 import PrepareClient from "./_components/prepare-client";
 import Footer from './_components/footer.astro'
 
-import { themeColorLight, themeColorDark } from "@/global";
+import { themeColorLight, themeColorDark, title } from "@/global";
 import "@/global.less";
 
 // ============================================================================
@@ -165,7 +165,7 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
         <link
             rel="alternate"
             type="application/rss+xml"
-            title="Your Site's Title"
+            title={title + ' 最新模拟飞行视频'}
             href={new URL("/feed.xml", Astro.url)}
         />
 
