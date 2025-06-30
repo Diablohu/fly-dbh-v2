@@ -45,7 +45,7 @@ const SelectPlatform: FC<{
                         iconHtml={iconHtml}
                         defaultVideoSource={defaultVideoSource}
                         showLabel={isInsidePlayer}
-                        url={links[name as "bilibili"]}
+                        url={links[name as "bilibili"] || ""}
                     />
                 ))}
         </section>

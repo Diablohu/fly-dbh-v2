@@ -81,7 +81,7 @@ const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
                             </strong>
                             版本
                         </p>
-                        <p>请角更换视频平台</p>
+                        <p>请更换视频平台</p>
                         <SelectPlatform
                             defaultVideoSource={defaultVideoSource}
                             links={links}
