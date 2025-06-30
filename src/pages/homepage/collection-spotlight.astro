@@ -1,100 +1,131 @@
 ---
+import { type VideoItemType } from "@/types";
+
 import Collection from "./collection.astro";
 import TagButton from "@/components/tag-button.astro";
+import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
+
+const spotlights: Array<
+    | {
+          name: string;
+          tags: [string, string, string][];
+      }
+    | {
+          name: string;
+          videos: (Partial<VideoItemType> &
+              Pick<VideoItemType, "_id" | "title" | "cover">)[];
+      }
+> = [
+    {
+        name: "大型民航机教学",
+        tags: [
+            ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
+            ["空客", "A380", "aircraftfamily-airbus-a380"],
+            ["空客", "A318/A319/A320/A321", "aircraftfamily-airbus-a320-ceo"],
+            ["空客", "A319/A320/A321 NEO", "aircraftfamily-airbus-a320-neo"],
+            // [
+            //     "空客",
+            //     "A330 CEO",
+            //     "aircraftfamily-airbus-a330-ceo",
+            // ],
+            ["波音", "747-8", "aircraftfamily-boeing-747-8"],
+            ["波音", "787 梦想客机", "aircraftfamily-boeing-787-dreamliner"],
+            ["安东诺夫", "An-225 梦幻", "aircraftfamily-antonov-an-225"],
+        ],
+    },
+    {
+        name: "中小型机教学",
+        tags: [
+            ["ATR", "72-600", "aircraftfamily-atr-72-600"],
+            [
+                "西瑞",
+                "SF-50 展望喷气 G2",
+                "aircraftfamily-cirrus-sf50-vision-jet",
+            ],
+            ["西瑞", "SR-22T G6", "aircraftfamily-cirrus-sr22t"],
+            ["钻石", "DA-42 双星", "aircraftfamily-diamond-da42-twin-star"],
+            ["派珀", "M500", "aircraftfamily-piper-m500"],
+            ["派珀", "PA-24 科曼奇", "aircraftfamily-piper-pa24-comanche"],
+        ],
+    },
+    {
+        name: "热点资讯",
+        tags: [
+            ["微软2024", "SU03 更新", "platformupdate-msfs2024-su03"],
+            ["微软2020", "SU16 更新", "platformupdate-msfs2020-su16"],
+            ["微软2024", "SU02 更新", "platformupdate-msfs2024-su02"],
+        ],
+    },
+    {
+        name: "模拟飞行入门",
+        videos: [
+            {
+                _id: "86655e73-604b-4b51-9f75-7b35b89c0297",
+                slug: "",
+                title: "教学：手柄开飞机",
+                cover: "/sanity-images/a4ac2026b431ffc77592a235f705cd4976ec664c-1422x800.jpg",
+            },
+            {
+                _id: "27565480-5ea7-415d-9002-437a70281b85",
+                slug: "",
+                title: "上手：云游戏版",
+                cover: "/sanity-images/de8459aa7b1381279edbc488658126d62fcba9e8-1422x800.png",
+            },
+            {
+                _id: "cc7d2091-b163-4957-b687-552394875e14",
+                slug: "",
+                title: "上手：VR 空手开飞机",
+                cover: "/sanity-images/d389d7f3effaf815c2936ea521d4d7f09d70b53d-1422x800.jpg",
+            },
+            {
+                _id: "01c694b8-b645-49c5-a03e-6a51b7bcb3a9",
+                slug: "",
+                title: "零门槛・电动垂直起降：观光神器 Volocopter",
+                cover: "/sanity-images/b1e3529471afb2332053b2a97b450ed4c9fe3c30-1422x800.jpg",
+            },
+            {
+                _id: "cf1cde28-2e05-45f6-8cca-1f2f889816d4",
+                slug: "",
+                title: "零门槛・科幻垂直起降：光环鹈鹕号",
+                cover: "/sanity-images/e95ecb8b52bdc6062edfedba14ca14204d4a4ccf-1422x800.png",
+            },
+            {
+                _id: "a04ae3e4-2f78-41b2-bdfa-9a5ce49dc4eb",
+                slug: "",
+                title: "零门槛・虚构十倍音速：黑暗之星",
+                cover: "sanity-images/9921ec512218dd2434df4b4bf8635e0148e3ad5a-1422x800.png",
+            },
+            {
+                _id: "264d7669-8633-4094-a1f7-a127526af90d",
+                slug: "",
+                title: "微软2024：按键绑定",
+                cover: "/sanity-images/94a5465752b18c1b9095db4c56f17d5658762918-1422x800.jpg",
+            },
+            // {
+            //     _id: "fa2adb6b-8006-4172-ab08-09140e8fd103",
+            //     slug: "",
+            //     title: "微软2024：插件目录",
+            //     cover: "/sanity-images/1fc5d0552f838679472756ec84188ec3079870c8-1422x800.jpg",
+            // },
+        ],
+    },
+];
 ---
 
-<Collection name="tags" title="亮点内容" showMore={false} highlighted>
-    <section class="hot-tags">
+<Collection name="spotlight" title="亮点内容" showMore={false} highlighted>
+    <section class="spotlight">
         {
-            [
-                {
-                    name: "大型民航机教学",
-                    tags: [
-                        ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
-                        ["空客", "A380", "aircraftfamily-airbus-a380"],
-                        [
-                            "空客",
-                            "A318/A319/A320/A321",
-                            "aircraftfamily-airbus-a320-ceo",
-                        ],
-                        [
-                            "空客",
-                            "A319/A320/A321 NEO",
-                            "aircraftfamily-airbus-a320-neo",
-                        ],
-                        // [
-                        //     "空客",
-                        //     "A330 CEO",
-                        //     "aircraftfamily-airbus-a330-ceo",
-                        // ],
-                        ["波音", "747-8", "aircraftfamily-boeing-747-8"],
-                        [
-                            "波音",
-                            "787 梦想客机",
-                            "aircraftfamily-boeing-787-dreamliner",
-                        ],
-                        [
-                            "安东诺夫",
-                            "An-225 梦幻",
-                            "aircraftfamily-antonov-an-225",
-                        ],
-                    ],
-                },
-                {
-                    name: "中小型机教学",
-                    tags: [
-                        ["ATR", "72-600", "aircraftfamily-atr-72-600"],
-                        [
-                            "西瑞",
-                            "SF-50 展望喷气 G2",
-                            "aircraftfamily-cirrus-sf50-vision-jet",
-                        ],
-                        ["西瑞", "SR-22T G6", "aircraftfamily-cirrus-sr22t"],
-                        [
-                            "钻石",
-                            "DA-42 双星",
-                            "aircraftfamily-diamond-da42-twin-star",
-                        ],
-                        ["派珀", "M500", "aircraftfamily-piper-m500"],
-                        [
-                            "派珀",
-                            "PA-24 科曼奇",
-                            "aircraftfamily-piper-pa24-comanche",
-                        ],
-                    ],
-                },
-                {
-                    name: "热点资讯",
-                    tags: [
-                        [
-                            "微软2024",
-                            "SU03 更新",
-                            "platformupdate-msfs2024-su03",
-                        ],
-                        [
-                            "微软2020",
-                            "SU16 更新",
-                            "platformupdate-msfs2020-su16",
-                        ],
-                        [
-                            "微软2024",
-                            "SU02 更新",
-                            "platformupdate-msfs2024-su02",
-                        ],
-                    ],
-                },
-                // {
-                //     name: '模拟飞行入门',
-                //     videos: [],
-                // }
-            ].map(({ name, tags }) => (
-                <section class="hot-tag">
-                    <strong class="name">{name}</strong>
-                    {Array.isArray(tags) && tags.length > 0 && (
+            spotlights.map((list) =>
+                "tags" in list &&
+                Array.isArray(list.tags) &&
+                list.tags.length > 0 ? (
+                    <section class="tag-list" data-name={list.name}>
+                        <strong class="list-title">{list.name}</strong>
+
                         <span class="tags">
-                            {tags.map(([prefix, name, route]) => (
+                            {list.tags.map(([prefix, name, route]) => (
                                 <TagButton
                                     href={`${getVideoListPageLink()}/${route}`}
                                     prefix={prefix}
@@ -103,9 +134,27 @@ import getVideoListPageLink from "@/utils/get-video-list-page-link";
                                 </TagButton>
                             ))}
                         </span>
-                    )}
-                </section>
-            ))
+                    </section>
+                ) : "videos" in list &&
+                  Array.isArray(list.videos) &&
+                  list.videos.length > 0 ? (
+                    <section
+                        class="video-list-horizontal"
+                        data-name={list.name}
+                    >
+                        <strong class="list-title">{list.name}</strong>
+                        <VideoListHorizontal
+                            client:idle
+                            videos={list.videos.map((post) => ({
+                                cmsId: post._id,
+                                slug: post.slug,
+                                title: post.title,
+                                cover: post.cover,
+                            }))}
+                        />
+                    </section>
+                ) : null
+            )
         }
     </section>
 </Collection>
@@ -113,32 +162,77 @@ import getVideoListPageLink from "@/utils/get-video-list-page-link";
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .hot-tags {
+    .spotlight {
         display: grid;
-        grid-template-columns: 3fr 3fr 14em;
-        gap: 2em 1em;
-        font-size: 1.1em;
-        .hot-tag {
+        grid-template-columns: 4fr 4fr 12em;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "tutorial-airliner tutorial-light hot-news"
+            "basics basics basics";
+        gap: 3em;
+        padding-top: 0.5em;
+
+        .screen-lg({
+            gap: 2em;
+            grid-template-columns: auto;
+            grid-template-areas:
+                "tutorial-airliner tutorial-light"
+                "hot-news hot-news"
+                "basics basics";
+        });
+
+        .screen-md-below({
+            gap: 2em;
+            grid-template-columns: auto;
+            grid-template-areas:
+                "tutorial-airliner"
+                "tutorial-light"
+                "hot-news"
+                "basics";
+        });
+
+        [data-name="大型民航机教学"] {
+            grid-area: tutorial-airliner;
+        }
+        [data-name="中小型机教学"] {
+            grid-area: tutorial-light;
+        }
+        [data-name="热点资讯"] {
+            grid-area: hot-news;
+        }
+        [data-name="模拟飞行入门"] {
+            grid-area: basics;
+        }
+
+        .list-title {
+            font-size: unit((15px / @base-font-size-number), em);
+            color: var(--text-color-primary);
+            display: block;
+            margin: 0 0 0.6667em 0;
+        }
+
+        & > .tag-list,
+        & > .video-list-horizontal {
             display: flex;
             flex-flow: column nowrap;
             justify-content: flex-start;
-            align-items: center;
+            align-items: stretch;
+        }
+
+        & > .tag-list {
+            // align-items: center;
             position: relative;
-            & > .name {
-                font-size: unit((14px / @base-font-size-number), em);
-                color: var(--text-color-primary);
-                display: block;
+            & > .list-title {
                 flex: 0;
-                margin: 0 0 0.6667em 0;
             }
             & > .tags {
                 flex: 0;
-                font-size: unit((14px / @base-font-size-number), em);
+                font-size: unit((15px / @base-font-size-number), em);
                 font-weight: normal;
                 display: flex;
                 flex-flow: row wrap;
                 gap: 0.75em;
-                justify-content: center;
+                // justify-content: center;
                 &:empty {
                     display: none;
                 }
@@ -155,34 +249,28 @@ import getVideoListPageLink from "@/utils/get-video-list-page-link";
                     flex: 0 0 auto;
                 }
             }
-            & + .hot-tag {
-                &::before {
-                    content: "";
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    left: -0.5em;
-                    width: 1px;
-                    background: var(--border-color);
-                }
-            }
         }
-        .screen-md-below({
-            grid-template-columns: 1fr;
-            .hot-tag {
-                align-items: flex-start;
-                & > .tags {
-                    justify-content: flex-start;
-                }
-                & + .hot-tag {
-                    &::before {
-                        display: none;
-                    }
-                }
-            }
-        });
-        .screen-lg({
-            grid-template-columns: 4fr 4fr 3fr;
-        });
+
+        & > .video-list-horizontal {
+            --edge-gradient-color-from: var(--collection-background-color);
+        }
+
+        // .screen-md-below({
+        //     grid-template-columns: 1fr;
+        //     .list {
+        //         align-items: flex-start;
+        //         & > .tags {
+        //             justify-content: flex-start;
+        //         }
+        //         & + .list {
+        //             &::before {
+        //                 display: none;
+        //             }
+        //         }
+        //     }
+        // });
+        // .screen-lg({
+        //     grid-template-columns: 4fr 4fr 3fr;
+        // });
     }
 </style>
