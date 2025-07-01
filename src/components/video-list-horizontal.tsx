@@ -24,8 +24,8 @@ const VideoListHorizontal: FC<{
     videos: VideoItemProps[];
 }> = ({ videos }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
-    const IntersectionCheckBegin = useRef<HTMLDivElement>(null);
-    const IntersectionCheckEnd = useRef<HTMLDivElement>(null);
+    const IntersectionProbeBegin = useRef<HTMLDivElement>(null);
+    const IntersectionProbeEnd = useRef<HTMLDivElement>(null);
     const ObserverRef = useRef<IntersectionObserver>(null);
 
     const [atBegin, setAtBegin] = useState(true);
@@ -64,10 +64,10 @@ const VideoListHorizontal: FC<{
             ObserverRef.current = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
-                        if (entry.target === IntersectionCheckBegin.current) {
+                        if (entry.target === IntersectionProbeBegin.current) {
                             setAtBegin(entry.isIntersecting);
                         } else if (
-                            entry.target === IntersectionCheckEnd.current
+                            entry.target === IntersectionProbeEnd.current
                         ) {
                             setAtEnd(entry.isIntersecting);
                         }
@@ -79,21 +79,21 @@ const VideoListHorizontal: FC<{
 
         if (
             ObserverRef.current &&
-            IntersectionCheckBegin.current &&
-            IntersectionCheckEnd.current
+            IntersectionProbeBegin.current &&
+            IntersectionProbeEnd.current
         ) {
-            ObserverRef.current.observe(IntersectionCheckBegin.current);
-            ObserverRef.current.observe(IntersectionCheckEnd.current);
+            ObserverRef.current.observe(IntersectionProbeBegin.current);
+            ObserverRef.current.observe(IntersectionProbeEnd.current);
         }
 
         return () => {
             if (
                 ObserverRef.current &&
-                IntersectionCheckBegin.current &&
-                IntersectionCheckEnd.current
+                IntersectionProbeBegin.current &&
+                IntersectionProbeEnd.current
             ) {
-                ObserverRef.current.unobserve(IntersectionCheckBegin.current);
-                ObserverRef.current.unobserve(IntersectionCheckEnd.current);
+                ObserverRef.current.unobserve(IntersectionProbeBegin.current);
+                ObserverRef.current.unobserve(IntersectionProbeEnd.current);
             }
             ObserverRef.current?.disconnect();
             ObserverRef.current = null;
@@ -105,10 +105,10 @@ const VideoListHorizontal: FC<{
             <div className={styles["scroll-container"]} ref={ContainerRef}>
                 <div
                     className={classNames([
-                        styles["intersection-check"],
-                        styles["intersection-check-begin"],
+                        styles["intersection-probe"],
+                        styles["intersection-probe-begin"],
                     ])}
-                    ref={IntersectionCheckBegin}
+                    ref={IntersectionProbeBegin}
                 />
                 {videos.map((v) => (
                     <VideoItem
@@ -120,29 +120,21 @@ const VideoListHorizontal: FC<{
                 {/* TODO: added last block link to more */}
                 <div
                     className={classNames([
-                        styles["intersection-check"],
-                        styles["intersection-check-end"],
+                        styles["intersection-probe"],
+                        styles["intersection-probe-end"],
                     ])}
-                    ref={IntersectionCheckEnd}
+                    ref={IntersectionProbeEnd}
                 />
             </div>
             <ArrowButton
-                direction="left"
+                direction="prev"
                 isActive={atBegin}
                 onClick={scrollLeft}
-                dangerouslySetInnerHTML={{
-                    __html: arrowLeft,
-                }}
-                aria-label="前一个"
             />
             <ArrowButton
-                direction="right"
+                direction="next"
                 isActive={atEnd}
                 onClick={scrollRight}
-                dangerouslySetInnerHTML={{
-                    __html: arrowRight,
-                }}
-                aria-label="后一个"
             />
         </div>
     );
@@ -154,7 +146,7 @@ export default memo(VideoListHorizontal);
 
 const ArrowButton: FC<
     ButtonHTMLAttributes<HTMLButtonElement> & {
-        direction: "left" | "right";
+        direction: "prev" | "next";
         isActive?: boolean;
     }
 > = ({ direction, isActive = false, className, ...props }) => {
@@ -171,7 +163,10 @@ const ArrowButton: FC<
             <button
                 className={classNames([styles["arrow"], className])}
                 type="button"
-                aria-label="前一个"
+                aria-label={direction === "prev" ? "前一个" : "后一个"}
+                dangerouslySetInnerHTML={{
+                    __html: direction === "prev" ? arrowLeft : arrowRight,
+                }}
                 {...props}
             />
         </span>
