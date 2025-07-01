@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, useCallback, memo, type FC } from "react";
+import {
+    useEffect,
+    useRef,
+    useState,
+    useCallback,
+    memo,
+    type FC,
+    type ButtonHTMLAttributes,
+} from "react";
 import classNames from "classnames";
 
 import arrowLeft from "@/assets/arrow/left3.svg?raw";
@@ -118,30 +126,18 @@ const VideoListHorizontal: FC<{
                     ref={IntersectionCheckEnd}
                 />
             </div>
-            <button
-                className={classNames([
-                    styles["arrow"],
-                    styles["arrow-left"],
-                    {
-                        [styles["is-active"]]: !atBegin,
-                    },
-                ])}
-                type="button"
+            <ArrowButton
+                direction="left"
+                isActive={atBegin}
                 onClick={scrollLeft}
                 dangerouslySetInnerHTML={{
                     __html: arrowLeft,
                 }}
                 aria-label="前一个"
             />
-            <button
-                className={classNames([
-                    styles["arrow"],
-                    styles["arrow-right"],
-                    {
-                        [styles["is-active"]]: !atEnd,
-                    },
-                ])}
-                type="button"
+            <ArrowButton
+                direction="right"
+                isActive={atEnd}
                 onClick={scrollRight}
                 dangerouslySetInnerHTML={{
                     __html: arrowRight,
@@ -153,3 +149,31 @@ const VideoListHorizontal: FC<{
 };
 
 export default memo(VideoListHorizontal);
+
+// ============================================================================
+
+const ArrowButton: FC<
+    ButtonHTMLAttributes<HTMLButtonElement> & {
+        direction: "left" | "right";
+        isActive?: boolean;
+    }
+> = ({ direction, isActive = false, className, ...props }) => {
+    return (
+        <span
+            className={classNames([
+                styles["arrow-container"],
+                styles[`arrow-${direction}`],
+                {
+                    [styles["is-active"]]: !isActive,
+                },
+            ])}
+        >
+            <button
+                className={classNames([styles["arrow"], className])}
+                type="button"
+                aria-label="前一个"
+                {...props}
+            />
+        </span>
+    );
+};
