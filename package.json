@@ -13,6 +13,7 @@
         "check": "astro check",
         "astro": "astro",
         "astro:upgrade": "npx @astrojs/upgrade",
+        "test": "vitest",
         "up": "npx npm-check-updates -i"
     },
     "dependencies": {
@@ -63,6 +64,7 @@
         "cross-env": "^7.0.3",
         "npm-run-script": "^0.0.4",
         "rollup-plugin-visualizer": "^6.0.3",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4"
     }
 }
