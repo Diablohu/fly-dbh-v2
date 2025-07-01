@@ -10,6 +10,14 @@
     container-name: video-list-horizontal;
     container-type: inline-size;
 
+    & > .scroll-container,
+    & > .arrow-container {
+        --item-width: calc(
+            100% / var(--items-in-view) - var(--item-gap) -
+                var(--global-edge-safe-distance) / var(--items-in-view)
+        );
+    }
+
     & > .scroll-container {
         position: relative;
         display: flex;
@@ -28,11 +36,7 @@
 
         .item {
             scroll-snap-align: var(--item-scroll-snap-align);
-            flex: 1 0
-                calc(
-                    100% / var(--items-in-view) - var(--item-gap) -
-                        var(--global-edge-safe-distance) / var(--items-in-view)
-                );
+            flex: 1 0 var(--item-width);
         }
 
         .intersection-check {
@@ -50,58 +54,89 @@
         }
     }
 
-    & > .arrow {
+    & > .arrow-container {
         --size: 38px;
 
         position: absolute;
         z-index: 10;
-        top: 33.3333%;
-        display: block;
-        appearance: none;
-        border: 0;
-        background: var(--theme-color-p-20);
-        width: var(--size);
-        height: var(--size);
-        margin-top: calc(var(--size) * -0.5);
-        border-radius: 100%;
-        border: 1px solid var(--border-color);
-        transition-property: transform, opacity, background-color, color;
-        opacity: 0;
-        pointer-events: none;
-        backdrop-filter: var(--backdrop-filter-glass);
-        color: var(--text-color-secondary);
+        top: 0;
+        height: 0;
+        width: var(--item-width);
+        overflow: visible;
 
-        & > svg {
-            --size: 18px;
+        // 占位：半个视频元素高度
+        // 这样可以让箭头按钮在纵向永远在和视频元素的中间对齐
+        &::before {
+            position: relative;
+            content: "";
+            display: block;
+            width: 0;
+            height: 0;
+            padding-bottom: percentage((0.5 * 9 / 16));
+            // background: #f00;
+        }
+
+        & > .arrow {
+            position: relative;
+            z-index: 10;
+            top: 50%;
+            display: inline-block;
+            appearance: none;
+            border: 0;
+            background: var(--theme-color-p-20);
             width: var(--size);
             height: var(--size);
-            position: absolute;
-            top: 50%;
-            left: 50%;
             margin-top: calc(var(--size) * -0.5);
-            margin-left: calc(var(--size) * -0.5);
-        }
+            border-radius: 100%;
+            border: 1px solid var(--border-color);
+            transition-property: transform, opacity, background-color, color;
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: var(--backdrop-filter-glass);
+            color: var(--text-color-secondary);
+            // box-shadow: var(--overlay-box-shadow);
 
-        &.arrow-left {
-            left: calc(2px - var(--global-edge-safe-distance));
-            // & > svg {
-            //     margin-left: calc(var(--size) * -0.5 - 1px);
-            // }
-        }
-        &.arrow-right {
-            right: calc(2px - var(--global-edge-safe-distance));
-            // & > svg {
-            //     margin-left: calc(var(--size) * -0.5 + 1px);
-            // }
-        }
-        &.is-active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .pointer-hover({
+            & > svg {
+                --size: 18px;
+                width: var(--size);
+                height: var(--size);
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: calc(var(--size) * -0.5);
+                margin-left: calc(var(--size) * -0.5);
+            }
+
+            .pointer-hover({
             color: var(--text-color-primary);
             background-color: var(--theme-color-p-50);
         });
+        }
+
+        &.arrow-left {
+            left: 0;
+            text-align: left;
+            & > .arrow {
+                margin-left: calc(2px - var(--global-edge-safe-distance));
+                // & > svg {
+                //     margin-left: calc(var(--size) * -0.5 - 1px);
+                // }
+            }
+        }
+        &.arrow-right {
+            right: 0;
+            text-align: right;
+            & > .arrow {
+                margin-right: calc(2px - var(--global-edge-safe-distance));
+                // & > svg {
+                //     margin-left: calc(var(--size) * -0.5 + 1px);
+                // }
+            }
+        }
+        &.is-active > .arrow {
+            opacity: 1;
+            pointer-events: all;
+        }
     }
 
     &::before,
@@ -133,33 +168,42 @@
 }
 
 @container video-list-horizontal (width < @screen-size-xl-plus-edge-safe-distance) {
-    .scroll-container {
+    .scroll-container,
+    .arrow-container {
         --items-in-view: 4;
     }
 }
 
 @container video-list-horizontal (width < @screen-size-lg-plus-edge-safe-distance) {
-    .scroll-container {
+    .scroll-container,
+    .arrow-container {
         --items-in-view: 3;
     }
 }
 
 @container video-list-horizontal (width < @screen-size-md-plus-edge-safe-distance) {
-    .scroll-container {
+    .scroll-container,
+    .arrow-container {
         --items-in-view: 2;
     }
 }
 
 @container video-list-horizontal (width < @screen-size-sm-plus-edge-safe-distance) {
-    .scroll-container {
+    .scroll-container,
+    .arrow-container {
         --items-in-view: 2;
-        // --item-scroll-snap-align: center;
     }
+    // .scroll-container{
+    //     --item-scroll-snap-align: center;
+    // }
 }
 
 @container video-list-horizontal (width < @screen-size-xs) {
-    .scroll-container {
+    .scroll-container,
+    .arrow-container {
         --items-in-view: 1;
-        --item-scroll-snap-align: center;
     }
+    // .scroll-container{
+    //     --item-scroll-snap-align: center;
+    // }
 }
