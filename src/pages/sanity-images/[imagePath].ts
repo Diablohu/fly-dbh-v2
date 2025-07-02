@@ -7,7 +7,6 @@ export const ALL: APIRoute = async ({ params, url }) => {
     // console.log({ fullUrl });
     try {
         return fetch(fullUrl);
-        // return (await axios.get(fullUrl)).data;
     } catch (e) {
         console.log(e);
         console.trace(e);

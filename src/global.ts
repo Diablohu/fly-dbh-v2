@@ -12,7 +12,11 @@ export const slogan = "假飞机驾驶员";
 
 export const isUnderConstruction = false;
 
-export const routeNameSanityImageCdn = `/sanity-images`;
+export const routeNameSanityImageCdn = import.meta.env.DEV
+    ? `/sanity-images`
+    : "https://assets.fly-dbh.com/images";
+// export const routeNameSanityImageCdn = `https://assets.fly-dbh.com/images`;
+// export const routeNameSanityImageCdn = `http://127.0.0.1:8081/images`;
 
 /** 隶属于某个主分类（`tag_type` === 'category'）的标签（tag） */
 export const level2Tags: { [key: string]: string[] } = {
