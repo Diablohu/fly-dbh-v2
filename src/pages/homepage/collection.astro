@@ -109,6 +109,7 @@ const { showMore = true } = Astro.props;
         & > dd {
             position: relative;
             padding: 0;
+            z-index: 5;
         }
         & > dt {
             display: flex;
@@ -123,46 +124,7 @@ const { showMore = true } = Astro.props;
                 font-size: 1.25em;
             }
             a {
-                --arrow-line-width: 2px;
-                --arrow-translate-x: -10px;
-                --arrow-opacity: 0;
-                display: inline-block;
-                position: relative;
-                color: var(--text-color-primary);
-                text-decoration: none;
-                transition-property:
-                    color, transform, opacity, background-color;
-                &::before,
-                &::after {
-                    content: "";
-                    position: absolute;
-                    z-index: -1;
-                    top: 50%;
-                    right: -0.4em;
-                    border: var(--arrow-line-width) solid currentColor;
-                    width: 0.5em;
-                    height: 0.5em;
-                    margin-top: -0.125em;
-                    border-left-width: 0;
-                    border-bottom-width: 0;
-                    opacity: var(--arrow-opacity);
-                    transform-origin: 100% 100%;
-                    transform: translateX(var(--arrow-translate-x))
-                        rotate(45deg);
-                    transition: inherit;
-                    transition-property: transform, opacity;
-                }
-                &::before {
-                }
-                &::after {
-                    --arrow-line-width: 1px;
-                    border-color: var(--text-color-secondary);
-                    right: calc(-0.4em - 5px);
-                }
-                &:hover {
-                    --arrow-translate-x: 0;
-                    --arrow-opacity: 1;
-                }
+                .link-with-arrow-styles();
             }
             & > a {
                 white-space: nowrap;

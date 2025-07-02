@@ -13,6 +13,7 @@ import {
     type ChangeEventHandler,
     type Dispatch,
     type SetStateAction,
+    type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 import classNames from "classnames";
@@ -27,16 +28,23 @@ const Menu: FC<
     {
         open?: boolean;
         setOpenState?: Dispatch<SetStateAction<boolean>>;
+        onOpen?: (elMenu: HTMLMenuElement) => unknown;
         onClose?: () => unknown;
         anchorPoint?: "topLeft" | "topRight" | "bottomRight" | "bottomLeft";
         grow?: Array<"up" | "down" | "left" | "right">;
+        /**
+         * 菜单的标题，会以 `sticky` 方式渲染，固定在菜单顶部，层级在所有菜单元素之上
+         */
+        stickyTitle?: ReactNode;
     } & Pick<MenuHTMLAttributes<HTMLMenuElement>, "children" | "className">
 > = ({
     open: _open = false,
     setOpenState: _setOpenState,
+    onOpen,
     onClose,
     anchorPoint = "topLeft",
     grow = [],
+    stickyTitle,
     children,
     className,
 }) => {
@@ -194,10 +202,15 @@ const Menu: FC<
         }
     }, [openState, onDocumentBodyClick]);
 
-    // 触发渲染时，重新定位菜单位置
+    // 触发渲染时
+    // 1. 重新定位菜单位置
+    // 2. 触发 `onOpen`
     useEffect(() => {
-        if (render) repositionMenu();
-    }, [render, repositionMenu]);
+        if (render) {
+            repositionMenu();
+            if (MenuRef.current) onOpen?.(MenuRef.current);
+        }
+    }, [render, repositionMenu, onOpen]);
 
     return globalThis.window ? (
         <>
@@ -223,7 +236,10 @@ const Menu: FC<
                         onAnimationEnd={onMenuAnimationEnd}
                         ref={MenuRef}
                     >
-                        {children ?? <>AAA</>}
+                        {typeof stickyTitle !== "undefined" && (
+                            <MenuTitleItem sticky>{stickyTitle}</MenuTitleItem>
+                        )}
+                        {children}
                     </menu>,
                     document.body
                 )}
@@ -246,21 +262,26 @@ export const MenuItem: FC<HTMLAttributes<HTMLDivElement>> = memo(
     }
 );
 
-export const MenuTitleItem: FC<HTMLAttributes<HTMLHeadingElement>> = memo(
-    ({ className, children }) => {
-        return (
-            <h5
-                className={classNames([
-                    styles["menu-item"],
-                    styles["menu-title-item"],
-                    className,
-                ])}
-            >
-                {children}
-            </h5>
-        );
+export const MenuTitleItem: FC<
+    HTMLAttributes<HTMLHeadingElement> & {
+        sticky?: boolean;
     }
-);
+> = memo(({ className, children, sticky = false }) => {
+    return (
+        <h5
+            className={classNames([
+                styles["menu-item"],
+                styles["menu-title-item"],
+                className,
+                {
+                    [styles["mod-sticky"]]: sticky,
+                },
+            ])}
+        >
+            {children}
+        </h5>
+    );
+});
 
 export const MenuLineItem: FC = memo(() => {
     return <hr className={styles["menu-line-item"]} />;
