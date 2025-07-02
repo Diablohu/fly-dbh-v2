@@ -25,7 +25,9 @@ import TagsHollow from "@/assets/svg-symbols/tags-hollow.svg?raw";
 import TagsFill from "@/assets/svg-symbols/tags-fill.svg?raw";
 import ArrowLeftSvg from "@/assets/arrow/left3.svg";
 import ArrowRightSvg from "@/assets/arrow/right3.svg";
+
 import Explore from "./explore";
+import ClientInit from "./client-init";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -229,8 +231,11 @@ const list: Array<
 ---
 
 <Fragment>
-    <input id={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN} type="checkbox" />
     <aside class="categories">
+        <input
+            id={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
+            type="checkbox"
+        />
         <section class="wrapper">
             <label
                 for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
@@ -306,6 +311,7 @@ const list: Array<
                     }
                 })
             }
+            <ClientInit client:load />
         </section>
         <label
             for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
@@ -734,25 +740,17 @@ const list: Array<
         });
     }
 
-    input[type="checkbox"]:checked ~ .categories {
-        & > .wrapper,
-        & > .screen-sm-categories-background {
+    .categories > input[type="checkbox"]:checked {
+        & ~ .wrapper,
+        & ~ .screen-sm-categories-background {
             pointer-events: all;
         }
-        & > .wrapper {
+        & ~ .wrapper {
             transform: none;
             box-shadow: var(--overlay-box-shadow);
         }
-        & > .screen-sm-categories-background {
+        & ~ .screen-sm-categories-background {
             opacity: 1;
         }
     }
 </style>
-
-<!-- <script>
-    document
-        .querySelector("aside.categories")
-        ?.addEventListener("scroll", () => {
-            console.log(1111);
-        });
-</script> -->
