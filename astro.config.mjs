@@ -12,6 +12,8 @@ const { FLYDBH_BUILD_MODE } = process.env;
 const isDev = process.env.NODE_ENV === "development";
 /** 模式：分析打包文件尺寸 */
 const isAnalyze = FLYDBH_BUILD_MODE === "analyze";
+/** 模式：next.fly-dbh.com */
+const isNext = FLYDBH_BUILD_MODE === "next";
 
 // ============================================================================
 
@@ -25,7 +27,7 @@ export default defineConfig({
     output: "server",
     server: ({ command }) => ({ port: command === "dev" ? 8088 : 8080 }),
     // @ts-ignore
-    site: "https://fly-dbh.com",
+    site: isNext ? "https://next.fly-dbh.com" : "https://fly-dbh.com",
 
     // 多语言设置
     // i18n: {},

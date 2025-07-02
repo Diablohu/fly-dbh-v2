@@ -20,6 +20,8 @@ const Header: FC<
                 styles["header"],
                 {
                     [styles["mod-hidden"]]: !showHeader,
+                    [styles[`mod-mode-${import.meta.env.MODE}`]]:
+                        import.meta.env.MODE !== "production",
                 },
             ])}
         >
