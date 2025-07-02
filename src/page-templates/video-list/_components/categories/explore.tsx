@@ -7,7 +7,6 @@ import {
     memo,
     type FC,
     type HTMLAttributes,
-    type MouseEventHandler,
 } from "react";
 import classNames from "classnames";
 
@@ -19,12 +18,7 @@ import getVideoCategoryInfoFromRawTypeData, {
     type CategoryInfoType,
 } from "@/utils/get-video-category-info-from-raw-type-data";
 
-import Menu, {
-    MenuItem,
-    MenuTitleItem,
-    MenuLineItem,
-    MenuSwitchItem,
-} from "@/components/menu";
+import Menu, { MenuItem } from "@/components/menu";
 
 import styles from "./explore.module.less";
 
