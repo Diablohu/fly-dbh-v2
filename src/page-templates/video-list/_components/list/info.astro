@@ -59,28 +59,26 @@ type Props = {
                                 .join(" / ")}
                         </dd>
                     </dl>
-                ) : Astro.props.type === "aircraftFamily" ? (
+                ) : Astro.props.type === "aircraftFamily" &&
+                  Array.isArray(Astro.props.info?.aircrafts) &&
+                  Astro.props.info.aircrafts.length > 0 ? (
                     <dl>
                         <dt>机型</dt>
                         <dd>
-                            {Array.isArray(Astro.props.info?.aircrafts) &&
-                                Astro.props.info.aircrafts.length > 0 &&
-                                Astro.props.info.aircrafts.map(
-                                    (aircraft: {
-                                        icao_code: unknown;
-                                        name: unknown;
-                                    }) => (
-                                        <span class="tag">
-                                            {aircraft.icao_code !==
-                                                aircraft.name && (
-                                                <span>
-                                                    {aircraft.icao_code} /
-                                                </span>
-                                            )}
-                                            {aircraft.name}
-                                        </span>
-                                    )
-                                )}
+                            {Astro.props.info.aircrafts.map(
+                                (aircraft: {
+                                    icao_code: unknown;
+                                    name: unknown;
+                                }) => (
+                                    <span class="tag">
+                                        {aircraft.icao_code !==
+                                            aircraft.name && (
+                                            <span>{aircraft.icao_code} /</span>
+                                        )}
+                                        {aircraft.name}
+                                    </span>
+                                )
+                            )}
                         </dd>
                     </dl>
                 ) : Astro.props.type === "developer" ? (
@@ -271,7 +269,8 @@ type Props = {
         // background-size: 100% 100%;
         // border-radius: 10px;
         padding: 1em 0;
-        margin: 0 0 1.3333em 0;
+        // margin: 0 0 1.3333em 0;
+        margin: 0;
         border-top: 1px solid var(--border-color);
         border-bottom: 1px solid var(--border-color);
 
