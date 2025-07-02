@@ -11,16 +11,19 @@ import getVideoListPageLink from "@/utils/get-video-list-page-link";
 const spotlights: Array<
     | {
           name: string;
+          href?: string;
           tags: [string, string, string][];
       }
     | {
           name: string;
+          href?: string;
           videos: (Partial<VideoItemType> &
               Pick<VideoItemType, "_id" | "title" | "cover">)[];
       }
 > = [
     {
         name: "大型民航机教学",
+        href: getVideoListPageLink("aircraftFamily", "airbus-a350-xwb"),
         tags: [
             ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
             ["空客", "A380", "aircraftfamily-airbus-a380"],
@@ -38,6 +41,7 @@ const spotlights: Array<
     },
     {
         name: "中小型机教学",
+        href: getVideoListPageLink("aircraftFamily", "cessna-172"),
         tags: [
             ["ATR", "72-600", "aircraftfamily-atr-72-600"],
             [
@@ -53,6 +57,7 @@ const spotlights: Array<
     },
     {
         name: "热点资讯",
+        href: getVideoListPageLink("tag", "featured"),
         tags: [
             ["微软2024", "SU03 更新", "platformupdate-msfs2024-su03"],
             ["微软2020", "SU16 更新", "platformupdate-msfs2020-su16"],
@@ -61,6 +66,7 @@ const spotlights: Array<
     },
     {
         name: "模拟飞行入门",
+        href: getVideoListPageLink("tag", "game-guide"),
         videos: [
             {
                 _id: "86655e73-604b-4b51-9f75-7b35b89c0297",
@@ -123,7 +129,13 @@ const spotlights: Array<
                 Array.isArray(list.tags) &&
                 list.tags.length > 0 ? (
                     <section class="tag-list" data-name={list.name}>
-                        <strong class="list-title">{list.name}</strong>
+                        <strong class="list-title">
+                            {list.href ? (
+                                <a href={list.href}>{list.name}</a>
+                            ) : (
+                                list.name
+                            )}
+                        </strong>
 
                         <span class="tags">
                             {list.tags.map(([prefix, name, route]) => (
@@ -143,7 +155,13 @@ const spotlights: Array<
                         class="video-list-horizontal"
                         data-name={list.name}
                     >
-                        <strong class="list-title">{list.name}</strong>
+                        <strong class="list-title">
+                            {list.href ? (
+                                <a href={list.href}>{list.name}</a>
+                            ) : (
+                                list.name
+                            )}
+                        </strong>
                         <VideoListHorizontal
                             client:idle
                             videos={list.videos.map((post) => ({
@@ -207,9 +225,14 @@ const spotlights: Array<
 
         .list-title {
             font-size: unit((15px / @base-font-size-number), em);
+            // font-style: italic;
+            font-weight: normal;
             color: var(--text-color-primary);
             display: block;
             margin: 0 0 0.6667em 0;
+            a {
+                .link-with-arrow-styles();
+            }
         }
 
         & > .tag-list,
