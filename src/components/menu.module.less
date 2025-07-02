@@ -9,6 +9,7 @@
     // --position-left: auto;
     // --position-bottom: auto;
     // --position-right: auto;
+    --menu-safe-edge: 1em;
 
     --item-min-height: 2.5em;
     --item-line-height: 1.1em;
@@ -32,20 +33,40 @@
     user-select: none;
     animation: fade-in-down @base-transition-duration;
     transition: opacity @base-transition-duration;
-    max-height: calc(
-        100% + var(--position-top, 0px) - var(--position-bottom, 0px) - 1em
+    max-height: min(
+        calc(
+            100% + var(--position-top, 0px) - var(--position-bottom, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100% + var(--position-top, 0px) - var(--menu-safe-edge))
     );
-    max-height: calc(
-        100vh + var(--position-top, 0px) - var(--position-bottom, 0px) - 1em
+    max-height: min(
+        calc(
+            100vh + var(--position-top, 0px) - var(--position-bottom, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100vh + var(--position-top, 0px) - var(--menu-safe-edge))
     );
-    max-height: calc(
-        100dvh + var(--position-top, 0px) - var(--position-bottom, 0px) - 1em
+    max-height: min(
+        calc(
+            100dvh + var(--position-top, 0px) - var(--position-bottom, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100dvh + var(--position-top, 0px) - var(--menu-safe-edge))
     );
-    max-width: calc(
-        100% - var(--position-left, 0px) + var(--position-right, 0px) - 1em
+    max-width: min(
+        calc(
+            100% - var(--position-left, 0px) + var(--position-right, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100% - var(--position-left, 0px) - var(--menu-safe-edge))
     );
-    max-width: calc(
-        100vw - var(--position-left, 0px) + var(--position-right, 0px) - 1em
+    max-width: min(
+        calc(
+            100vw - var(--position-left, 0px) + var(--position-right, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100vw - var(--position-left, 0px) - var(--menu-safe-edge))
     );
     overflow: auto;
     overscroll-behavior: contain;

@@ -37,6 +37,13 @@ const Explore: FC<
     }
 > = ({ children, type, title, listType, listSlug }) => {
     const StatusRef = useRef<StatusType>("ready");
+    const AnimateTickingRef = useRef(false);
+    const AnimateRequestTick = useRef(() => {
+        if (!AnimateTickingRef.current) {
+            requestAnimationFrame(AnimateRequestTick.current);
+        }
+        AnimateTickingRef.current = true;
+    });
     // const SelectRef = useRef<HTMLSelectElement>(null);
 
     const [status, setStatus] = useState<StatusType>(StatusRef.current);
