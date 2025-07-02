@@ -4,7 +4,7 @@ import { defaultCacheTtl, defaultCacheRefreshThreshold } from "@/global";
 const cache = createCache({
     /**
      * 缓存存活的最长时间
-     *  - 超过这个时长才会被更新或清理
+     *  - 只有超过这个时长才会被清理
      *  - 单位 `毫秒`
      */
     ttl: defaultCacheTtl,
