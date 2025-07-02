@@ -5,6 +5,7 @@ import Collection from "./collection.astro";
 import TagButton from "@/components/tag-button.astro";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 
+import { routeNameSanityImageCdn } from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 const spotlights: Array<
@@ -65,49 +66,49 @@ const spotlights: Array<
                 _id: "86655e73-604b-4b51-9f75-7b35b89c0297",
                 slug: "",
                 title: "教学：手柄开飞机",
-                cover: "/sanity-images/a4ac2026b431ffc77592a235f705cd4976ec664c-1422x800.jpg",
+                cover: "/a4ac2026b431ffc77592a235f705cd4976ec664c-1422x800.jpg",
             },
             {
                 _id: "27565480-5ea7-415d-9002-437a70281b85",
                 slug: "",
                 title: "上手：云游戏版",
-                cover: "/sanity-images/de8459aa7b1381279edbc488658126d62fcba9e8-1422x800.png",
+                cover: "/de8459aa7b1381279edbc488658126d62fcba9e8-1422x800.png",
             },
             {
                 _id: "cc7d2091-b163-4957-b687-552394875e14",
                 slug: "",
                 title: "上手：VR 空手开飞机",
-                cover: "/sanity-images/d389d7f3effaf815c2936ea521d4d7f09d70b53d-1422x800.jpg",
+                cover: "/d389d7f3effaf815c2936ea521d4d7f09d70b53d-1422x800.jpg",
             },
             {
                 _id: "01c694b8-b645-49c5-a03e-6a51b7bcb3a9",
                 slug: "",
                 title: "零门槛・电动垂直起降：观光神器 Volocopter",
-                cover: "/sanity-images/b1e3529471afb2332053b2a97b450ed4c9fe3c30-1422x800.jpg",
+                cover: "/b1e3529471afb2332053b2a97b450ed4c9fe3c30-1422x800.jpg",
             },
             {
                 _id: "cf1cde28-2e05-45f6-8cca-1f2f889816d4",
                 slug: "",
                 title: "零门槛・科幻垂直起降：光环鹈鹕号",
-                cover: "/sanity-images/e95ecb8b52bdc6062edfedba14ca14204d4a4ccf-1422x800.png",
+                cover: "/e95ecb8b52bdc6062edfedba14ca14204d4a4ccf-1422x800.png",
             },
             {
                 _id: "a04ae3e4-2f78-41b2-bdfa-9a5ce49dc4eb",
                 slug: "",
                 title: "零门槛・虚构十倍音速：黑暗之星",
-                cover: "sanity-images/9921ec512218dd2434df4b4bf8635e0148e3ad5a-1422x800.png",
+                cover: "9921ec512218dd2434df4b4bf8635e0148e3ad5a-1422x800.png",
             },
             {
                 _id: "264d7669-8633-4094-a1f7-a127526af90d",
                 slug: "",
                 title: "微软2024：按键绑定",
-                cover: "/sanity-images/94a5465752b18c1b9095db4c56f17d5658762918-1422x800.jpg",
+                cover: "/94a5465752b18c1b9095db4c56f17d5658762918-1422x800.jpg",
             },
             // {
             //     _id: "fa2adb6b-8006-4172-ab08-09140e8fd103",
             //     slug: "",
             //     title: "微软2024：插件目录",
-            //     cover: "/sanity-images/1fc5d0552f838679472756ec84188ec3079870c8-1422x800.jpg",
+            //     cover: "/1fc5d0552f838679472756ec84188ec3079870c8-1422x800.jpg",
             // },
         ],
     },
@@ -149,7 +150,7 @@ const spotlights: Array<
                                 cmsId: post._id,
                                 slug: post.slug,
                                 title: post.title,
-                                cover: post.cover,
+                                cover: routeNameSanityImageCdn + post.cover,
                             }))}
                         />
                     </section>
