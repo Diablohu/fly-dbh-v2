@@ -99,7 +99,7 @@ export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType =
 //
 // ============================================================================
 
-export const defaultCacheTtl = 30 * 24 * 60 * 60_1000; // 30 days
+export const defaultCacheTtl = 60 * 60_1000; // 1 hour
 export const defaultCacheRefreshThreshold =
     defaultCacheTtl -
     (import.meta.env.DEV
