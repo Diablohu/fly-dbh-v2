@@ -351,9 +351,14 @@ ${
                 }>(
                     `
 *[_type == "${currentType}"${
-                        type
-                            ? ` && count(*[_type == 'video' && references(^._id)]) > 0`
-                            : ""
+                        type === "aircraftFamily"
+                            ? ` && (
+    count(*[_type == 'video' && references(^._id)]) > 0
+    || (defined(onboard_devices) && count(*[_type == 'video' && references(^.onboard_devices[]->_id)]) > 0)
+)`
+                            : type
+                              ? ` && count(*[_type == 'video' && references(^._id)]) > 0`
+                              : ""
                     }${
                         type === "tagSubCategory"
                             ? ` && tag_type == "topic" && !(slug.current in [${allLevel2Tags
