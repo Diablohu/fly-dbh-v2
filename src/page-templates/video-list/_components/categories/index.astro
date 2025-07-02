@@ -356,6 +356,12 @@ const list: Array<
             var(--link-item-padding-left-extra) + var(--link-item-icon-size) +
                 var(--link-item-icon-margin) * 2
         );
+        --link-item-no-icon-line-color: var(--border-color);
+        --link-item-no-icon-line-color: color-mix(
+            in hsl,
+            var(--theme-color),
+            var(--text-color-primary) 25%
+        );
         --link-item-no-icon-dot-size: 0.75em;
         --link-item-no-icon-dot-border-width: 2px;
 
@@ -381,6 +387,35 @@ const list: Array<
             // &:hover {
             //     scrollbar-width: thin;
             // }
+
+            &::before,
+            &::after {
+                content: "";
+                position: sticky;
+                display: block;
+                z-index: 5;
+                left: 0;
+                width: 100%;
+                height: var(--item-gap);
+            }
+            &::before {
+                top: 0;
+                margin-bottom: calc(var(--item-gap) * -1);
+                background: linear-gradient(
+                    to bottom,
+                    var(--theme-color) 0%,
+                    transparent
+                );
+            }
+            &::after {
+                bottom: -1em;
+                margin-top: calc(var(--item-gap) * -1);
+                background: linear-gradient(
+                    to top,
+                    var(--theme-color) 0%,
+                    transparent
+                );
+            }
 
             & > .item,
             & > .screen-sm-button-collapse-categories,
@@ -457,8 +492,10 @@ const list: Array<
                         height: var(--link-item-no-icon-dot-size);
                         background: transparent;
                         border: var(--link-item-no-icon-dot-border-width) solid
-                            var(--border-color);
+                            var(--link-item-no-icon-line-color);
                         border-radius: 100%;
+                        transition: inherit;
+                        transition-property: border-color, background-color;
                     }
                     &:not(:has(> svg))::before,
                     &:has(> svg.right-arrow)::before {
@@ -470,6 +507,7 @@ const list: Array<
                     &.is-active {
                         &::before {
                             // background-color: var(--accent-color-purple);
+                            border-color: var(--text-color-secondary);
                             background-color: var(--text-color-secondary);
                         }
                         & > :global(svg) {
@@ -490,7 +528,9 @@ const list: Array<
                                 50% + var(--link-item-no-icon-dot-size) / 2
                             );
                             width: var(--link-item-no-icon-dot-border-width);
-                            background: var(--border-color);
+                            background: var(--link-item-no-icon-line-color);
+                            transition: inherit;
+                            transition-property: background-color;
                         }
                         & + .is-level-2 {
                             &::after {
@@ -522,7 +562,7 @@ const list: Array<
                         &::after {
                             content: "";
                             position: absolute;
-                            border: 0px solid var(--border-color);
+                            border: 0px solid var(--link-item-no-icon-line-color);
                             border-bottom-left-radius: var(
                                 --line-border-radius
                             );
@@ -578,6 +618,7 @@ const list: Array<
                         &::before {
                             // background-color: var(--accent-color);
                             background-color: var(--text-color-secondary);
+                            border-color: var(--text-color-secondary);
                         }
                     }
                     // &[data-explore="aircraftFamily"].is-active {
@@ -711,6 +752,10 @@ const list: Array<
                 height: calc(100dvh - var(--global-sticky-top));
             }
             & > .wrapper, {
+                &::before,
+                &::after {
+                    display: none;
+                }
                 min-width: @min-width;
                 width: 50vw;
                 width: 50dvw;

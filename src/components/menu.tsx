@@ -143,7 +143,9 @@ const Menu: FC<
             }
             case "bottomRight": {
                 if (grow.includes("up"))
-                    position.bottom = `${window.innerHeight - rect.top - rect.height}px`;
+                    position.bottom = `max(var(--menu-safe-edge), ${
+                        window.innerHeight - rect.top - rect.height
+                    }px)`;
                 else position.top = `${rect.top + rect.height}px`;
 
                 if (grow.includes("right"))

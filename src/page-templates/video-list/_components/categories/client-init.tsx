@@ -63,7 +63,10 @@ const CategoriesClientInit: FC = () => {
                 activeItem.offsetTop + activeItem.offsetHeight + 100 >
                     thisLevel.offsetHeight
             ) {
-                thisLevel.scrollTop = activeItem.offsetTop / 2;
+                thisLevel.scrollTo({
+                    top: activeItem.offsetTop / 2,
+                    behavior: "smooth",
+                });
             }
         }
 
