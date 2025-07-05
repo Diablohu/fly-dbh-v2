@@ -76,7 +76,12 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
             </picture>
 
             {Array.isArray(tags) && tags.length > 0 && (
-                <span className={styles["tags"]}>
+                <span
+                    className={classNames([
+                        styles["info-section"],
+                        styles["tags"],
+                    ])}
+                >
                     {tags.map((tag, index) => (
                         <span className={styles["tag"]} key={index}>
                             {tag}
@@ -85,12 +90,25 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                 </span>
             )}
 
-            <strong>{prettifiedTitle}</strong>
+            <strong
+                className={classNames([
+                    styles["info-section"],
+                    styles["title"],
+                ])}
+            >
+                {prettifiedTitle}
+            </strong>
 
             {Array.isArray(infos) &&
                 infos.length > 0 &&
                 infos.map((info, index) => (
-                    <span className={styles["info"]} key={index}>
+                    <span
+                        className={classNames([
+                            styles["info-section"],
+                            styles["infos"],
+                        ])}
+                        key={index}
+                    >
                         {info instanceof Date
                             ? getDateString(info)
                             : Array.isArray(info)
