@@ -1,8 +1,10 @@
 ---
 import { actions, ActionError } from "astro:actions";
+import dayjs from "dayjs";
+import { marked } from "marked";
+
 import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
-import dayjs from "dayjs";
 
 import videoPlatforms from "@/constants/video-platforms";
 // import log from "@/page-templates/index/_log.ts";
@@ -276,6 +278,17 @@ if (error) {
                     </dd>
                 </dl>
             </section>
+
+            {
+                !!video.sources && (
+                    <section class="sources">
+                        <dl>
+                            <dt>参考资料</dt>
+                            <dd set:html={marked.parse(video.sources)} />
+                        </dl>
+                    </section>
+                )
+            }
         </section>
     </Block>
 </Layout>
@@ -329,7 +342,8 @@ if (error) {
         grid-template-areas:
             "title title"
             "description relations"
-            "links relations";
+            "links relations"
+            "sources relations";
 
         .tags {
             font-weight: normal;
@@ -377,6 +391,12 @@ if (error) {
         }
         & > .description {
             grid-area: description;
+        }
+        & > .sources {
+            grid-area: sources;
+            :global(ul) {
+                padding-left: 1.5em;
+            }
         }
         & > .relations,
         & > .links {
@@ -440,7 +460,8 @@ if (error) {
                 "title"
                 "description"
                 "links"
-                "relations";
+                "relations"
+                "sources";
         });
     }
 </style>

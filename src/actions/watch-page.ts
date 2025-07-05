@@ -23,6 +23,7 @@ const fetchProjections = `{
         'height': metadata.dimensions.height
     },
     description,
+    sources,
     links,
     'aircraft_families': aircraft_families[]->{
         _id,

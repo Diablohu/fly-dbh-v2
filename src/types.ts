@@ -39,6 +39,7 @@ export type VideoItemType = {
     }[];
 
     description: string;
+    sources: string;
     links: {
         [platform in ValidVideoSourceType]?: string;
     };
