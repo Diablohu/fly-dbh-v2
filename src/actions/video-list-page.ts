@@ -59,14 +59,16 @@ const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
         "name": title
     },
     ${
-        type === "tag" && slug === "news"
-            ? `'developers': developers[]->{
+        (type === "tag" && slug === "news") || type === "aircraftFamily"
+            ? `
+    'developers': developers[]->{
         _id,
         'slug': slug.current,
         name
     },`
             : type === "tag" && ["review", "preview"].includes(slug || "")
-              ? `'developers': developers[]->{
+              ? `
+    'developers': developers[]->{
         _id,
         'slug': slug.current,
         name

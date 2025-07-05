@@ -70,12 +70,14 @@ type Props = {
                                     icao_code: unknown;
                                     name: unknown;
                                 }) => (
-                                    <span class="tag">
-                                        {aircraft.icao_code !==
-                                            aircraft.name && (
-                                            <span>{aircraft.icao_code} /</span>
+                                    <span class="aircraft-type">
+                                        {aircraft.icao_code && (
+                                            <span class="icao-code">
+                                                {aircraft.icao_code}
+                                            </span>
                                         )}
-                                        {aircraft.name}
+                                        {aircraft.icao_code !== aircraft.name &&
+                                            aircraft.name}
                                     </span>
                                 )
                             )}
@@ -269,8 +271,8 @@ type Props = {
         // background-size: 100% 100%;
         // border-radius: 10px;
         padding: 1em 0;
-        // margin: 0 0 1.3333em 0;
-        margin: 0;
+        margin: 0 0 1.3333em 0;
+        // margin: 0;
         border-top: 1px solid var(--border-color);
         border-bottom: 1px solid var(--border-color);
 
@@ -294,18 +296,40 @@ type Props = {
                 color: var(--text-color-primary);
                 display: flex;
                 flex-flow: row wrap;
-                gap: 0.75em 1em;
+                gap: 0.75em 1.5em;
                 & > * {
                     flex: 0;
                     white-space: nowrap;
                 }
-                .tag {
-                    .tag-styles();
-                    // margin-right: 0.25em;
-                    background: inherit;
+                // .tag {
+                //     .tag-styles();
+                //     // margin-right: 0.25em;
+                //     background: inherit;
+                //     display: inline-block;
+                //     &:hover {
+                //         background: inherit;
+                //     }
+                // }
+                .aircraft-type {
                     display: inline-block;
-                    &:hover {
-                        background: inherit;
+                    white-space: nowrap;
+                    position: relative;
+                    .icao-code {
+                        // margin-top: calc(-1px - 0.125em);
+                        margin-top: -0.125em;
+                        margin-right: 0.5em;
+                        padding: 0.125em 0.5em;
+                        // border: 1px solid var(--border-color);
+                        border-radius: 0.3333em;
+                        background: var(--border-color);
+                        // color: var(--text-color-secondary);
+                    }
+                    &:has(.icao-code) {
+                        padding-left: 3.75em;
+                        .icao-code {
+                            position: absolute;
+                            left: 0;
+                        }
                     }
                 }
                 .link {
@@ -319,7 +343,8 @@ type Props = {
             }
         }
 
-        &:empty {
+        &:empty,
+        &:has(dd:empty) {
             display: none;
         }
     }
