@@ -14,8 +14,8 @@
         padding-bottom: percentage((9 / 16));
         overflow: hidden;
         border-radius: 10px;
-        margin-bottom: 0.5em;
         background: var(--border-color);
+        margin-bottom: 0.5em;
 
         & > img {
             position: absolute;
@@ -46,67 +46,63 @@
         }
     }
 
-    & > .tags,
-    & > strong,
-    & > .info {
-        display: block;
-        margin-left: 0.25em;
-        margin-right: 0.25m;
-    }
+    & > .info-section {
+        --font-size-scale: 1;
 
-    & > .tags {
-        font-size: 0.85em;
-        // margin-left: -0.125em;
-        margin-top: 0.3333em;
-        margin-bottom: 0.1333em;
-        font-weight: normal;
-        // color: var(--text-color-secondary);
-        color: var(--dark-text-color-primary);
-        .tag {
-            --border-radius: 0.3333em;
-            display: inline-block;
-            // background: var(--tag-background-color);
-            background: var(--accent-color-purple);
-            line-height: 1.6667em;
-            padding: 0 0.5em;
-            & + .tag {
-                margin-left: 1px;
-            }
-            &:first-child {
-                border-top-left-radius: var(--border-radius);
-                border-bottom-left-radius: var(--border-radius);
-            }
-            &:last-child {
-                border-top-right-radius: var(--border-radius);
-                border-bottom-right-radius: var(--border-radius);
+        display: block;
+        // margin: calc(@base-font-size-number * var(--font-size)) 0.25em 0 0.25em;
+        margin: calc(0.3333em / var(--font-size-scale)) 0.25em 0 0.25em;
+        font-size: calc(1em * var(--font-size-scale));
+        line-height: calc(1em / var(--font-size-scale));
+
+        &.tags {
+            --font-size-scale: 0.85;
+            // margin-left: -0.125em;
+            font-weight: normal;
+            // color: var(--text-color-secondary);
+            color: var(--dark-text-color-primary);
+            .tag {
+                --border-radius: 0.3333em;
+                display: inline-block;
+                // background: var(--tag-background-color);
+                background: var(--accent-color-purple);
+                line-height: 1.6667em;
+                padding: 0 0.5em;
+                & + .tag {
+                    margin-left: 1px;
+                }
+                &:first-child {
+                    border-top-left-radius: var(--border-radius);
+                    border-bottom-left-radius: var(--border-radius);
+                }
+                &:last-child {
+                    border-top-right-radius: var(--border-radius);
+                    border-bottom-right-radius: var(--border-radius);
+                }
             }
         }
-    }
 
-    & > strong {
-        line-height: 1.3333em;
-        margin-top: 0.1333em;
-    }
+        &.title {
+            line-height: 1.3333em;
+        }
 
-    & > .info {
-        font-weight: normal;
-        color: var(--text-color-secondary);
-        font-size: 0.85em;
-        line-height: 1.3333em;
-        transition: inherit;
-        margin-top: 0.3333em;
+        &.infos {
+            --font-size-scale: 0.85;
+            color: var(--text-color-secondary);
+            transition: inherit;
 
-        & > span {
-            display: inline-block;
-            position: relative;
-            + span {
-                margin-left: 1em;
-                &::before {
-                    content: "・";
-                    position: absolute;
-                    top: 50%;
-                    line-height: 0;
-                    left: -1em;
+            & > span {
+                display: inline-block;
+                position: relative;
+                + span {
+                    margin-left: 1em;
+                    &::before {
+                        content: "・";
+                        position: absolute;
+                        top: 50%;
+                        line-height: 0;
+                        left: -1em;
+                    }
                 }
             }
         }
@@ -128,7 +124,7 @@
         & > .cover > img {
             transform: scale(1.06667);
         }
-        & > .info {
+        & > .info-section.infos {
             color: var(--text-color-primary);
         }
     });
