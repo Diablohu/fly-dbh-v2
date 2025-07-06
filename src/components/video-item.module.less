@@ -1,6 +1,9 @@
 @import "@/utils/mixins.less";
 
 .video-item {
+    --cover-scale: 1;
+    --infos-text-color: var(--text-color-secondary);
+
     display: inline-block;
     position: relative;
     text-decoration: none;
@@ -25,6 +28,7 @@
             height: 100%;
             object-fit: cover;
             transition: transform var(--base-transition-duration) ease-in-out;
+            transform: scale(var(--cover-scale));
         }
 
         &[data-duration] {
@@ -88,7 +92,7 @@
 
         &.infos {
             --font-size-scale: 0.85;
-            color: var(--text-color-secondary);
+            color: var(--infos-text-color);
             transition: inherit;
 
             & > span {
@@ -121,11 +125,7 @@
     // }
 
     .pointer-hover({
-        & > .cover > img {
-            transform: scale(1.06667);
-        }
-        & > .info-section.infos {
-            color: var(--text-color-primary);
-        }
+        --infos-text-color: var(--text-color-primary);
+        --cover-scale: 1.06667;
     });
 }
