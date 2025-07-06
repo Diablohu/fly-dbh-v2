@@ -144,6 +144,9 @@ const todo = [
                     &:last-child {
                         margin-bottom: 0;
                     }
+                    &:has(+ ul) {
+                        margin-bottom: 0.5em;
+                    }
                 }
                 :global(code) {
                     font-family: Consolas;
