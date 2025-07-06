@@ -1,8 +1,8 @@
 import type { SanityDocument } from "@sanity/client";
-import { defineAction, ActionError } from "astro:actions";
+import { defineAction } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
-import { type VideoItemType } from "@/types";
+import { type VideoItemType, type SiteConfigsType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 
 const fetchSorting = ` | order( release desc )`;
@@ -40,6 +40,8 @@ type DocumentType = SanityDocument<
         Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">
 >;
 type CollectionsType = {
+    config: SiteConfigsType;
+} & {
     [collection: string]: DocumentType[];
 };
 
@@ -70,7 +72,8 @@ ${(
                       : ""
             }] ${fetchSorting} ${getProjections(name)} [0...${count}]`
     )
-    .join(",")}
+    .join(",")},
+'config': *[_id == 'db0caed0-d756-4162-953b-f96a65a731e9']{config[]{key,'value':value.code}},
 }`,
                     {
                         transform: (res) => {
@@ -78,16 +81,29 @@ ${(
                                 res as unknown as CollectionsType
                             ).reduce<CollectionsType>(
                                 (collections, [collection, posts]) => {
-                                    // console.log(posts[0]);
-                                    collections[collection] = posts.map(
-                                        ({ cover, ...post }) => ({
-                                            cover: transformImagePath(cover),
-                                            ...post,
-                                        })
-                                    );
+                                    switch (collection) {
+                                        case "config": {
+                                            collections[collection] = (
+                                                posts[0] as unknown as {
+                                                    config: [];
+                                                }
+                                            ).config;
+                                            break;
+                                        }
+                                        default: {
+                                            collections[collection] = (
+                                                posts as DocumentType[]
+                                            ).map(({ cover, ...post }) => ({
+                                                cover: transformImagePath(
+                                                    cover
+                                                ),
+                                                ...post,
+                                            }));
+                                        }
+                                    }
                                     return collections;
                                 },
-                                {}
+                                { config: [] }
                             ) as unknown as DocumentType[];
                         },
                     }

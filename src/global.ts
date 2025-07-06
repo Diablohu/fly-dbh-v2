@@ -103,5 +103,5 @@ export const defaultCacheTtl = 60 * 60_1000; // 1 hour
 export const defaultCacheRefreshThreshold =
     defaultCacheTtl -
     (import.meta.env.DEV
-        ? 5_000 // remaining: 5 seconds
-        : 5 * 60_000); // remaining: 5 minutes
+        ? 5_000 // elapsed: 5 seconds
+        : 5 * 60_000); // elapsed: 5 minutes
