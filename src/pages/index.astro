@@ -66,6 +66,10 @@ if (error) {
     Astro.props.error = error;
     return Astro.rewrite("/500");
 }
+
+const spotlightConfigString = collections?.config.find(
+    ({ key }) => key === "Spotlight"
+)?.value;
 ---
 
 <Layout showHeader showBanner showFooter>
@@ -76,7 +80,11 @@ if (error) {
             videos={collections?.["latest"]}
         />
 
-        <CollectionSpotlight />
+        {
+            spotlightConfigString && (
+                <CollectionSpotlight configString={spotlightConfigString} />
+            )
+        }
 
         {
             [

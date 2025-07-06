@@ -89,3 +89,8 @@ export type VideoItemType = {
         end: string;
     }[];
 };
+
+export type SiteConfigsType = {
+    key: string;
+    value: string;
+}[];
