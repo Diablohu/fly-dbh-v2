@@ -1,0 +1,45 @@
+---
+import Layout from "@/layouts/layout.astro";
+import { ADMIN_LAST_LOGIN } from "@/constants/cookies";
+
+const loginValidPeriod = 1000 * 60 * 60 * 24; // 24 hours
+const lastLoggedIn = Astro.cookies.get(ADMIN_LAST_LOGIN)?.value;
+const isLoggedInValid =
+    lastLoggedIn && Date.now() - Number(lastLoggedIn) < loginValidPeriod;
+
+if (!isLoggedInValid) {
+    Astro.cookies.delete(ADMIN_LAST_LOGIN);
+}
+---
+
+<Layout title="🤫" showHeader showFooter>
+    {
+        isLoggedInValid ? (
+            <slot />
+        ) : (
+            <form class="login">
+                <h1>🤫</h1>
+            </form>
+        )
+    }
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .login {
+        text-align: center;
+        max-width: var(--body-safe-min-width);
+        margin: 0 auto;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4em 0;
+
+        h1 {
+            font-size: 10em;
+            margin: 0;
+        }
+    }
+</style>

@@ -61,7 +61,11 @@ const image = Astro.props.image
         property="og:type"
         content={Astro.props.type === "video-player"
             ? "video.other"
-            : "website"}
+            : Astro.props.type === "article"
+              ? "article"
+              : Astro.props.type === "profile"
+                ? "profile"
+                : "website"}
     />
     {description && <meta property="og:description" content={description} />}
     {

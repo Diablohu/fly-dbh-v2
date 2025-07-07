@@ -1,0 +1,22 @@
+---
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+---
+
+<Layout
+    title={`搜索${Astro.params.keyword ? `: ${Astro.params.keyword}` : ""}`}
+    showHeader
+    showFooter
+>
+    <Block>
+        <h2>搜索</h2>
+    </Block>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    h2 {
+        zoom: 1;
+    }
+</style>
