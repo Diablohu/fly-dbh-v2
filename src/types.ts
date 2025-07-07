@@ -6,7 +6,8 @@
 // };
 export type ValueOf<T> = T[keyof T];
 
-export type ValidPageContentType = "video-player";
+/** https://ogp.me/#types */
+export type ValidPageContentType = "video-player" | "article" | "profile";
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
 export type ValidColorSchemeType = "dark" | "light";
 export type ValidContentListAutoLoadMoreType = "0" | "1";

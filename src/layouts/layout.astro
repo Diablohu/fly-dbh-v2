@@ -285,6 +285,8 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
         & > main {
             flex: 1;
             position: static;
+            display: flex;
+            flex-flow: column nowrap;
         }
     }
 </style>

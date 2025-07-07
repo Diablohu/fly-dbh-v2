@@ -1,17 +1,16 @@
 ---
-import Layout from "@/layouts/layout.astro";
+import AdminPage from "@/page-templates/admin/index.astro";
 import Block from "@/components/block.astro";
 ---
 
-<Layout title="🤔" showHeader showFooter>
-    <Block>
-        <h2>🤫</h2>
-    </Block>
-</Layout>
+<AdminPage title="🤫">
+    <Block>ADMIN HOME</Block>
+</AdminPage>
 
 <style lang="less">
-    /* @import "@/utils/mixins.less"; */
+    @import "@/utils/mixins.less";
 
     h2 {
+        zoom: 1;
     }
 </style>
