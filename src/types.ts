@@ -21,6 +21,13 @@ export type VideoListPageTypesType =
     | "platformUpdate"
     | "event";
 
+export type VideoTagType = {
+    type: VideoListPageTypesType;
+    _id: string;
+    name: string;
+    slug?: string;
+};
+
 export type VideoItemType = {
     _id: string;
     slug?: string;

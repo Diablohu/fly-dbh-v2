@@ -2,7 +2,7 @@
 import { actions } from "astro:actions";
 import { type ValueOf } from "@/types";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
-import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+import getVideoItemTopTags from "@/utils/get-video-item-top-tags";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 type Props = {
@@ -65,16 +65,16 @@ const { showMore = true } = Astro.props;
                         duration: post.duration,
                         infos: [
                             [
-                                getVideoItemTopTag(
+                                ...(getVideoItemTopTags(
                                     post,
                                     Astro.props.name === "tutorials"
                                         ? "tutorial"
                                         : Astro.props.name === "reviews"
                                           ? "review"
                                           : (Astro.props.name as Parameters<
-                                                typeof getVideoItemTopTag
+                                                typeof getVideoItemTopTags
                                             >[1])
-                                )?.name || "",
+                                ) || []),
                                 new Date(post.release),
                             ].filter(Boolean),
                         ],

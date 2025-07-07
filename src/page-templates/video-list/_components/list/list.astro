@@ -134,7 +134,11 @@ if (error) {
                                     initialListIsComplete
                                     showLoadMoreButton={false}
                                     tagPurpose={
-                                        slug === "review" ? "review" : undefined
+                                        slug === "review"
+                                            ? "review"
+                                            : slug === "preview"
+                                              ? "preview"
+                                              : undefined
                                     }
                                 />
                             </Fragment>

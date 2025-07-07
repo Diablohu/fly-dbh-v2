@@ -1,13 +1,7 @@
-import {
-    memo,
-    // useCallback,
-    useMemo,
-    type FC,
-    type AnchorHTMLAttributes,
-    // type MouseEventHandler,
-} from "react";
+import { memo, useMemo, type FC, type AnchorHTMLAttributes } from "react";
 import classNames from "classnames";
-import numeral from "numeral";
+
+import { type VideoTagType } from "@/types";
 
 import prettifyTitle from "@/utils/prettify-title";
 import getDateString from "@/utils/get-date-string";
@@ -22,8 +16,13 @@ export type Props = {
     title: string;
     cover: string;
     duration?: number;
-    tags?: string[];
-    infos?: (string | Date | Array<string | Date>)[];
+    tags?: Array<VideoTagType | string>;
+    infos?: (
+        | string
+        | Date
+        | VideoTagType
+        | Array<string | Date | VideoTagType>
+    )[];
 };
 
 // ============================================================================
@@ -84,7 +83,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                 >
                     {tags.map((tag, index) => (
                         <span className={styles["tag"]} key={index}>
-                            {tag}
+                            {typeof tag === "string" ? tag : tag.name}
                         </span>
                     ))}
                 </span>
@@ -109,17 +108,21 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                         ])}
                         key={index}
                     >
-                        {info instanceof Date
-                            ? getDateString(info)
-                            : Array.isArray(info)
-                              ? info.map((i, index) => (
-                                    <span key={index}>
-                                        {i instanceof Date
-                                            ? getDateString(i)
-                                            : i}
-                                    </span>
-                                ))
-                              : info}
+                        {Array.isArray(info)
+                            ? info.map((i, index) => (
+                                  <span key={index}>
+                                      {i instanceof Date
+                                          ? getDateString(i)
+                                          : typeof i === "string"
+                                            ? i
+                                            : i.name}
+                                  </span>
+                              ))
+                            : info instanceof Date
+                              ? getDateString(info)
+                              : typeof info === "string"
+                                ? info
+                                : info.name}
                     </span>
                 ))}
         </a>
