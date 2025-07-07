@@ -13,13 +13,14 @@ import {
     type VideoListPageTypesType,
     type VideoItemType,
     type ValidContentListAutoLoadMoreType,
+    type VideoTagType,
 } from "@/types";
 
 import { videoListGrid as debug } from "@/utils/log";
 import VideoItem from "@/components/video-item";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 
-import getVideoItemTopTag from "@/utils/get-video-item-top-tag";
+import getVideoItemTopTags from "@/utils/get-video-item-top-tags";
 
 import styles from "./video-list-grid.module.less";
 
@@ -60,7 +61,7 @@ type Props = {
     /**
      * **强制** 指定是否显示标签，如果显示，确定显示的“目的”类型
      */
-    tagPurpose?: Parameters<typeof getVideoItemTopTag>[1];
+    tagPurpose?: Parameters<typeof getVideoItemTopTags>[1];
 };
 
 // ============================================================================
@@ -195,49 +196,47 @@ const VideoListGrid: FC<Props> = ({
     /**
      * 获取要显示的“标签”
      *  - 根据列表类型 `type` 和 `slug` 属性，以及 `tagPurpose` 属性决定
-     *  - 基于 `getVideoItemTopTag` 工具函数
+     *  - 基于 `getVideoItemTopTags` 工具函数
      */
     const getTags = useCallback(
         (post: (typeof initialList)[0]) => {
-            let topTag: string | undefined;
-
             if (tagPurpose === "latest" || isIndex)
-                topTag = getVideoItemTopTag(post, "latest")?.name;
+                return getVideoItemTopTags(post, "latest");
             else if (
                 tagPurpose === "news" ||
                 (type === "tag" && slug === "news")
             )
-                topTag = getVideoItemTopTag(post, "news")?.name;
+                return getVideoItemTopTags(post, "news");
             else if (
                 tagPurpose === "tutorial" ||
                 (type === "tag" && slug === "tutorial")
             )
-                topTag = getVideoItemTopTag(post, "tutorial")?.name;
+                return getVideoItemTopTags(post, "tutorial");
             else if (
                 tagPurpose === "review" ||
                 (type === "tag" && slug === "review")
             )
-                topTag = getVideoItemTopTag(post, "review")?.name;
+                return getVideoItemTopTags(post, "review");
             else if (
                 tagPurpose === "preview" ||
                 (type === "tag" && slug === "preview")
             )
-                topTag = getVideoItemTopTag(post, "preview")?.name;
+                return getVideoItemTopTags(post, "preview");
             else if (
                 tagPurpose === "world" ||
                 (type === "tag" && slug === "world")
             )
-                topTag = getVideoItemTopTag(post, "world")?.name;
+                return getVideoItemTopTags(post, "world");
             else if (
                 tagPurpose === "chat" ||
                 (type === "tag" && slug === "chat")
             )
-                topTag = getVideoItemTopTag(post, "chat")?.name;
+                return getVideoItemTopTags(post, "chat");
             else if (
                 tagPurpose === "short" ||
                 (type === "tag" && slug === "short")
             )
-                topTag = getVideoItemTopTag(post, "short")?.name;
+                return getVideoItemTopTags(post, "short");
             else if (
                 [
                     "aerodrome",
@@ -248,9 +247,8 @@ const VideoListGrid: FC<Props> = ({
                 ].includes(type || "") ||
                 (type === "tag" && slug === "fun")
             )
-                topTag = getVideoItemTopTag(post, "latest")?.name;
+                return getVideoItemTopTags(post, "latest");
 
-            if (topTag) return [topTag];
             return undefined;
         },
         [type, slug, isIndex, tagPurpose]
@@ -318,34 +316,7 @@ const VideoListGrid: FC<Props> = ({
                     cover={post.cover}
                     duration={post.duration}
                     tags={getTags(post)}
-                    infos={[
-                        // [
-                        //     isIndex
-                        //         ? getVideoItemTopTag(post, "latest")?.name || ""
-                        //         : type === "tag" && slug === "news"
-                        //           ? getVideoItemTopTag(post, "news")?.name || ""
-                        //           : type === "tag" && slug === "tutorial"
-                        //             ? getVideoItemTopTag(post, "tutorial")
-                        //                   ?.name || ""
-                        //             : type === "tag" && slug === "review"
-                        //               ? getVideoItemTopTag(post, "review")
-                        //                     ?.name || ""
-                        //               : type === "tag" && slug === "world"
-                        //                 ? getVideoItemTopTag(post, "world")
-                        //                       ?.name || ""
-                        //                 : [
-                        //                         "aerodrome",
-                        //                         "developer",
-                        //                         "platform",
-                        //                         "platformUpdate",
-                        //                     ].includes(type || "")
-                        //                   ? getVideoItemTopTag(post, "latest")
-                        //                         ?.name || ""
-                        //                   : "",
-                        //     new Date(post.release),
-                        // ].filter(Boolean),
-                        new Date(post.release),
-                    ]}
+                    infos={[new Date(post.release)]}
                 />
             ))}
 
