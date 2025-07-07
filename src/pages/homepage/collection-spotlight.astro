@@ -5,7 +5,7 @@ import Collection from "./collection.astro";
 import TagButton from "@/components/tag-button.astro";
 import VideoListHorizontal from "@/components/video-list-horizontal.tsx";
 
-import { routeNameSanityImageCdn } from "@/global";
+import { urlPrefixSanityImageCdn } from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 type Props = {
@@ -205,7 +205,7 @@ try {
                                 cmsId: post._id,
                                 slug: post.slug,
                                 title: post.title,
-                                cover: routeNameSanityImageCdn + post.cover,
+                                cover: urlPrefixSanityImageCdn + post.cover,
                             }))}
                         />
                     </section>

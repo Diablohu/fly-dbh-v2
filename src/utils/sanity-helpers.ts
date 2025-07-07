@@ -1,7 +1,7 @@
-import { routeNameSanityImageCdn } from "@/global";
+import { urlPrefixSanityImageCdn } from "@/global";
 
 export const transformImagePath = (pathname: string) =>
-    `${routeNameSanityImageCdn}${pathname.replace(
+    `${urlPrefixSanityImageCdn}${pathname.replace(
         `images/${process.env.SANITY_PROJECT_ID}/${process.env.SANITY_DATASET}`,
         ""
     )}`;
@@ -12,5 +12,5 @@ export const stringReplaceImagePath = (str: string) =>
             `\"images/${process.env.SANITY_PROJECT_ID}/${process.env.SANITY_DATASET}/`,
             "gm"
         ),
-        `"${routeNameSanityImageCdn}/`
+        `"${urlPrefixSanityImageCdn}/`
     );

@@ -323,7 +323,7 @@ const VideoListGrid: FC<Props> = ({
             <section className={styles["block"]}>
                 <span
                     ref={InfiniteScrollProbeRef}
-                    className={styles["infinite-scroll-indicator"]}
+                    className={styles["infinite-scroll-probe"]}
                 />
                 {showLoadMoreButton &&
                     (status === "complete" ? (
