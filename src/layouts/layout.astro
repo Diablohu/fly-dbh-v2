@@ -15,7 +15,8 @@ import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
 import Announcements from "./_components/announcements.astro";
 import PrepareClient from "./_components/prepare-client";
-import Footer from './_components/footer.astro'
+import Footer from './_components/footer.astro';
+import Block from "@/components/block.astro";
 
 import { themeColorLight, themeColorDark, title } from "@/global";
 import "@/global.less";
@@ -67,6 +68,30 @@ interface Props {
      * - 默认隐藏
      */
     showFooter?: boolean;
+
+    sideBar?: Array<
+        | "divider"
+        | {
+            type: "subtitle";
+            text: string;
+        }
+        | {
+            type: "link";
+            text: string;
+            route?: string;
+            level?: number;
+            isActive?: boolean;
+            iconHtml?: string;
+            iconHtmlActive?: string;
+        }
+        | {
+            type: "button";
+            text: string;
+            level?: number;
+            isActive?: boolean;
+            slot?: any;
+        }
+    >;
 }
 
 // ============================================================================
@@ -244,7 +269,19 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
 
             <Announcements showHeader={showHeader} />
 
-            <main><slot /></main>
+            <main>
+                {Astro.props.sideBar
+                    ? (
+                        <Block class="main-block-with-sidebar">
+                            <section class="main-block-with-sidebar-container">
+                                <section class="main"><slot /></section>
+                                <aside class="sidebar"></aside>
+                            </section>
+                        </Block>
+                    )
+                    : <slot />
+                }
+            </main>
 
             {showFooter && (
                 <Footer>
