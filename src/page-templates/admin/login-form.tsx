@@ -15,8 +15,6 @@ type StatusType = "ready" | "loading" | "error";
 // ============================================================================
 
 const LoginForm: FC = () => {
-    if (!import.meta.env.DEV) return null;
-
     const [status, setStatus] = useState<StatusType>("ready");
     const [error, setError] = useState<string>();
 
