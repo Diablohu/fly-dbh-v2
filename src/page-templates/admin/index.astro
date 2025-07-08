@@ -1,54 +1,59 @@
 ---
+import { actions } from "astro:actions";
 import Layout from "@/layouts/layout.astro";
-import { ADMIN_LAST_LOGIN } from "@/constants/cookies";
-import { adminLoginValidPeriod } from "@/server-vars";
 
 import LoginForm from "./login-form";
 import ReGenCode from "./re-gen-code";
-import Block from "@/components/block.astro";
 
-const lastLoggedIn = Astro.cookies.get(ADMIN_LAST_LOGIN)?.value;
-const isLoggedInValid =
-    lastLoggedIn && Date.now() - Number(lastLoggedIn) < adminLoginValidPeriod;
+type Props = {
+    title: string;
+};
 
-if (!isLoggedInValid) {
-    Astro.cookies.delete(ADMIN_LAST_LOGIN);
-}
+const { data: isLoginValid } = await Astro.callAction(
+    actions.adminIsLoginValid,
+    undefined
+);
+
+if (isLoginValid)
+    await Astro.callAction(actions.adminRefreshLoginCookie, undefined);
 ---
 
-<Layout title="🤫" showHeader showFooter>
+<Layout
+    title="🤫"
+    showHeader
+    showFooter
+    sideBar={isLoginValid
+        ? [
+              {
+                  type: "link",
+                  text: "管理首页",
+                  route: "/admin",
+              },
+              "divider",
+              {
+                  type: "link",
+                  text: "日志",
+                  route: "/admin/logs",
+              },
+              {
+                  type: "link",
+                  text: "API 缓存",
+                  route: "/admin/cache-api",
+              },
+              {
+                  type: "link",
+                  text: "图片缓存",
+                  route: "/admin/cache-images",
+              },
+          ]
+        : undefined}
+>
     {
-        isLoggedInValid ? (
-            <Block class="admin-page">
-                <section class="admin-page-container">
-                    <section class="main">
-                        <slot />
-                    </section>
-                    <aside class="sidebar">
-                        <section class="wrapper">
-                            {[
-                                ["/admin", "管理首页"],
-                                ["/admin/logs", "日志"],
-                                ["/admin/cache-images", "图片缓存"],
-                            ].map(([href, label]) => (
-                                <a
-                                    href={href}
-                                    class:list={[
-                                        "item",
-                                        "link",
-                                        {
-                                            "is-active":
-                                                Astro.url.pathname === href,
-                                        },
-                                    ]}
-                                >
-                                    {label}
-                                </a>
-                            ))}
-                        </section>
-                    </aside>
-                </section>
-            </Block>
+        isLoginValid ? (
+            <section class="main">
+                <h1>{Astro.props.title}</h1>
+                <slot />
+            </section>
         ) : (
             <section class="login">
                 <h1>🤫</h1>
@@ -80,211 +85,12 @@ if (!isLoggedInValid) {
         }
     }
 
-    .admin-page {
-        --gap: 1em;
-
-        .admin-page-container {
-            display: flex;
-            flex-flow: row nowrap;
-            align-items: flex-start;
-            gap: var(--gap);
-
-            .main {
-                flex: 1;
-                order: 2;
-                padding-bottom: 4em;
-            }
-
-            .sidebar {
-                @min-width: 11em;
-
-                --item-min-height: 2.5em;
-                --item-line-height: 1.1em;
-                --item-gap: 0.25em;
-
-                --link-item-padding-x: unit(
-                    (@global-edge-safe-distance-sm * 2/3),
-                    px
-                );
-                --link-item-padding-left-extra: 0px;
-                --link-item-icon-size: 1.5em;
-                --link-item-icon-margin: 0.75em;
-                --link-item-with-icon-padding-left: calc(
-                    var(--link-item-padding-left-extra) +
-                        var(--link-item-icon-size) +
-                        var(--link-item-icon-margin) * 2
-                );
-                --link-item-no-icon-line-color: var(--border-color);
-                --link-item-no-icon-line-color: color-mix(
-                    in hsl,
-                    var(--theme-color),
-                    var(--text-color-primary) 25%
-                );
-                --link-item-no-icon-dot-size: 0.75em;
-                --link-item-no-icon-dot-border-width: 2px;
-
-                position: sticky;
-                top: calc(var(--global-sticky-top) + 1em);
-                flex: 0 0 @min-width;
-                margin: 1em 0 4em 0;
-                // border-radius: 10px;
-                overflow: hidden;
-                z-index: calc(var(--global-footer-z-index) + 1);
-                overscroll-behavior: contain;
-
-                & > .wrapper {
-                    position: relative;
-                    z-index: 5;
-                    height: 100%;
-                    overflow: auto;
-                    max-height: calc(100dvh - var(--global-sticky-top) - 2em);
-                    padding: 0em 1em 1em 0;
-                    overscroll-behavior: contain;
-                    scrollbar-width: thin;
-                    // scrollbar-width: none;
-                    // &:hover {
-                    //     scrollbar-width: thin;
-                    // }
-
-                    // &::before,
-                    // &::after {
-                    //     content: "";
-                    //     position: sticky;
-                    //     display: block;
-                    //     z-index: 5;
-                    //     left: 0;
-                    //     width: 100%;
-                    //     height: var(--item-gap);
-                    // }
-                    // &::before {
-                    //     top: 0;
-                    //     margin-bottom: calc(var(--item-gap) * -1);
-                    //     background: linear-gradient(
-                    //         to bottom,
-                    //         var(--theme-color) 0%,
-                    //         transparent
-                    //     );
-                    // }
-                    // &::after {
-                    //     bottom: 0em;
-                    //     margin-top: calc(var(--item-gap) * -1);
-                    //     background: linear-gradient(
-                    //         to top,
-                    //         var(--theme-color) 0%,
-                    //         transparent
-                    //     );
-                    // }
-
-                    & > .item,
-                    & > hr {
-                        display: block;
-                    }
-                    & > .item {
-                        position: relative;
-                        color: inherit;
-                        font-weight: normal;
-                        min-height: var(--item-min-height);
-                        line-height: var(--item-line-height);
-                        padding: calc(
-                                (
-                                        var(--item-min-height) -
-                                            var(--item-line-height)
-                                    ) /
-                                    2
-                            )
-                            var(--link-item-padding-x);
-                        border-radius: 8px;
-                        margin-top: var(--item-gap);
-                        & > :global(svg) {
-                            position: absolute;
-                            display: block;
-                            width: var(--link-item-icon-size);
-                            height: var(--link-item-icon-size);
-                            top: 50%;
-                            margin-left: calc(
-                                var(--link-item-icon-size) * -1 -
-                                    var(--link-item-icon-margin)
-                            );
-                            margin-right: calc(
-                                var(--link-item-icon-margin) / 2
-                            );
-                            margin-top: calc(var(--link-item-icon-size) * -0.5);
-                            color: var(--text-color-secondary);
-                            &.right-arrow {
-                                --link-item-icon-size: 0.75em;
-                                position: relative;
-                                top: 0.225em;
-                                margin: auto;
-                                display: inline-block;
-                                vertical-align: top;
-                                margin-left: calc(
-                                    var(--link-item-icon-margin) / 2
-                                );
-                                // color: var(--text-color-secondary);
-                            }
-                        }
-                        &.link {
-                            color: var(--text-color-primary);
-                            transition-property: transform, background-color;
-                            padding-left: var(
-                                --link-item-with-icon-padding-left
-                            );
-                            .styles-hover() {
-                                background: var(--tag-background-color);
-                            }
-                            &.is-active,
-                            &:has(.is-menu-open) {
-                                .styles-hover();
-                            }
-                            .pointer-hover(.styles-hover());
-                            &::before {
-                                position: absolute;
-                                top: 50%;
-                                left: calc(
-                                    var(--link-item-with-icon-padding-left) /
-                                        2 - var(--link-item-no-icon-dot-size) /
-                                        2
-                                );
-                                margin-top: calc(
-                                    var(--link-item-no-icon-dot-size) / -2
-                                );
-                                width: var(--link-item-no-icon-dot-size);
-                                height: var(--link-item-no-icon-dot-size);
-                                background: transparent;
-                                border: var(
-                                        --link-item-no-icon-dot-border-width
-                                    )
-                                    solid var(--link-item-no-icon-line-color);
-                                border-radius: 100%;
-                                transition: inherit;
-                                transition-property:
-                                    border-color, background-color;
-                            }
-                            &:not(:has(> svg))::before,
-                            &:has(> svg.right-arrow)::before {
-                                content: "";
-                            }
-                            text-decoration: none;
-                            &.is-active {
-                                &::before {
-                                    // background-color: var(--accent-color-purple);
-                                    border-color: var(--text-color-secondary);
-                                    background-color: var(
-                                        --text-color-secondary
-                                    );
-                                }
-                                & > :global(svg) {
-                                    color: var(--text-color-primary);
-                                }
-                            }
-                        }
-                    }
-                    & > hr {
-                        margin: 0.6667em auto;
-                        border-top-width: 0;
-                    }
-                }
-            }
+    .main {
+        padding-bottom: 4em;
+        & > h1 {
+            margin: 0;
+            padding: 1em 0 0.6667em 0;
+            line-height: 1.2;
         }
     }
 </style>

@@ -16,10 +16,14 @@ import Navbar from "./_components/navbar.astro";
 import Announcements from "./_components/announcements.astro";
 import PrepareClient from "./_components/prepare-client";
 import Footer from './_components/footer.astro';
-import Block from "@/components/block.astro";
+import MainBlockWithSidebar, {
+    type Props as MainBlockWithSidebarProps
+} from "./_components/main-block-with-sidebar/index.astro";
 
 import { themeColorLight, themeColorDark, title } from "@/global";
 import "@/global.less";
+
+export { type MainBlockWithSidebarProps };
 
 // ============================================================================
 
@@ -69,29 +73,7 @@ interface Props {
      */
     showFooter?: boolean;
 
-    sideBar?: Array<
-        | "divider"
-        | {
-            type: "subtitle";
-            text: string;
-        }
-        | {
-            type: "link";
-            text: string;
-            route?: string;
-            level?: number;
-            isActive?: boolean;
-            iconHtml?: string;
-            iconHtmlActive?: string;
-        }
-        | {
-            type: "button";
-            text: string;
-            level?: number;
-            isActive?: boolean;
-            slot?: any;
-        }
-    >;
+    sideBar?: MainBlockWithSidebarProps['sideBar'];
 }
 
 // ============================================================================
@@ -272,12 +254,10 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
             <main>
                 {Astro.props.sideBar
                     ? (
-                        <Block class="main-block-with-sidebar">
-                            <section class="main-block-with-sidebar-container">
-                                <section class="main"><slot /></section>
-                                <aside class="sidebar"></aside>
-                            </section>
-                        </Block>
+                        <MainBlockWithSidebar sideBar={Astro.props.sideBar}>
+                            <slot />
+                            <slot name="sidebar-extra-items" slot="sidebar-extra-items" />
+                        </MainBlockWithSidebar>
                     )
                     : <slot />
                 }
