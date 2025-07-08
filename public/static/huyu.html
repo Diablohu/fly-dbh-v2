@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天津歌德语言中心 - VIP1对1课程薪酬体系</title>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f5ff 0%, #e6f7ff 100%);
+            color: #1a3a6c;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(26, 58, 108, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(120deg, #1a3a6c 0%, #4a6fa5 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 18px 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #ff6b35;
+            color: #ff6b35;
+            background: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background: rgba(26, 58, 108, 0.03);
+        }
+        
+        .tab-content {
+            padding: 30px 40px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            border-left: 4px solid #1a3a6c;
+        }
+        
+        .section-title {
+            color: #1a3a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            font-size: 1.5rem;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid #4a6fa5;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            color: #1a3a6c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        
+        .card h3 i {
+            margin-right: 10px;
+            color: #ff6b35;
+        }
+        
+        .criteria-list {
+            list-style-type: none;
+        }
+        
+        .criteria-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .criteria-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .points {
+            background: #ff6b35;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #1a3a6c;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .level-1 td:first-child { border-left: 4px solid #dc3545; }
+        .level-2 td:first-child { border-left: 4px solid #ffc107; }
+        .level-3 td:first-child { border-left: 4px solid #28a745; }
+        .level-4 td:first-child { border-left: 4px solid #007bff; }
+        
+        .calculator {
+            background: linear-gradient(120deg, #f0f7ff 0%, #e6f4ff 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #cde0ff;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a3a6c;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+        }
+        
+        .btn {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn:hover {
+            background: #e55a2b;
+        }
+        
+        .btn-download {
+            background: #1a3a6c;
+            margin-right: 15px;
+        }
+        
+        .btn-download:hover {
+            background: #0d2a52;
+        }
+        
+        .result-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #28a745;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .result-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a3a6c;
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        .profit-distribution {
+            display: flex;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .teacher-part {
+            background: linear-gradient(90deg, #4a6fa5, #1a3a6c);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .center-part {
+            background: linear-gradient(90deg, #ff9e7d, #ff6b35);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: 1px solid #ddd;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            .logo {
+                position: static;
+                margin-bottom: 15px;
+            }
+        }
+        
+        .dimension-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .dimension-title h3 {
+            font-size: 1.4rem;
+            color: #1a3a6c;
+        }
+        
+        .dimension-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            background: #4a6fa5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">天津歌德语言中心</div>
+            <h1>VIP1对1课程薪酬体系</h1>
+            <p class="subtitle">基于教师资质的多维度动态分成模型 | 优化版</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="criteria">评级标准</div>
+            <div class="tab" data-tab="levels">薪酬等级</div>
+            <div class="tab" data-tab="calculator">收益计算器</div>
+            <div class="tab" data-tab="download">下载表格</div>
+        </div>
+        
+        <div class="tab-content active" id="criteria">
+            <div class="section">
+                <h2 class="section-title">教师资质评级体系（优化版）</h2>
+                <p>根据要求重新排序并提升关键分值：教学经验 > 学历背景 > 留学背景 > 考官资质 > DLL培训</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <div class="dimension-title">
+                            <div class="dimension-icon">1</div>
+                            <h3>教学经验</h3>
+                        </div>
+                        <ul class="criteria-list">
+                            <li>&lt;2年 <span class="points">0分</span></li>
+                            <li>2-5年 <span class="points">10分</span></li>
+                            <li>6-10年 <span class="points">20分</span></li>
+                            <li>11-15年 <span class="points">25分</span></li>
+                            <li>15+年 <span class="points">30分</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="dimension-title">
+                            <div class="dimension-icon">2</div>
+                            <h3>学历背景</h3>
+                        </div>
+                        <ul class="criteria-list">
+                            <li>本科（德语相关专业） <span class="points">5分</span></li>
+                            <li>本科（其他专业） <span class="points">3分</span></li>
+                            <li>硕士（德语/教育学） <span class="points">10分</span></li>
+                            <li>博士（德语/教育学） <span class="points">20分</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="dimension-title">
+                            <div class="dimension-icon">3</div>
+                            <h3>留学德语国家背景</h3>
+                        </div>
+                        <ul class="criteria-list">
+                            <li>无留学经历 <span class="points">0分</span></li>
+                            <li>短期交换（&lt;6个月） <span class="points">5分</span></li>
+                            <li>长期留学（6-12个月） <span class="points">10分</span></li>
+                            <li>学位留学（1+年） <span class="points">15分</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="dimension-title">
+                            <div class="dimension-icon">4</div>
+                            <h3>德语欧标考官资质</h3>
+                        </div>
+                        <ul class="criteria-list">
+                            <li>非考官 <span class="points">0分</span></li>
+                            <li>A1-B1级别考官 <span class="points">10分</span></li>
+                            <li>B2-C1级别考官 <span class="points">15分</span></li>
+                            <li>C2级别考官 <span class="points">20分</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="dimension-title">
+                            <div class="dimension-icon">5</div>
+                            <h3>DLL培训数量</h3>
+                        </div>
+                        <ul class="criteria-list">
+                            <li>未参加培训 <span class="points">0分</span></li>
+                            <li>1-2个模块 <span class="points">5分</span></li>
+                            <li>3-5个模块 <span class="points">10分</span></li>
+                            <li>6个模块 <span class="points">15分</span></li>
+                            <li>6+模块（含高级） <span class="points">20分</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">总分评级标准</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>总分范围</th>
+                            <th>教师等级</th>
+                            <th>教师分成比例</th>
+                            <th>中心分成比例</th>
+                            <th>典型教师画像</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="level-1">
+                            <td>0-30分</td>
+                            <td>初级教师</td>
+                            <td>40%</td>
+                            <td>60%</td>
+                            <td>本科毕业，2-3年经验，无留学经历</td>
+                        </tr>
+                        <tr class="level-2">
+                            <td>31-55分</td>
+                            <td>中级教师</td>
+                            <td>45%</td>
+                            <td>55%</td>
+                            <td>硕士学历，5年经验，短期留学</td>
+                        </tr>
+                        <tr class="level-3">
+                            <td>56-80分</td>
+                            <td>高级教师</td>
+                            <td>50%</td>
+                            <td>50%</td>
+                            <td>硕士+长期留学，8年经验，B2考官</td>
+                        </tr>
+                        <tr class="level-4">
+                            <td>81+分</td>
+                            <td>专家教师</td>
+                            <td>55%</td>
+                            <td>45%</td>
+                            <td>博士+学位留学，15+年经验，C2考官</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="levels">
+            <div class="section">
+                <h2 class="section-title">VIP1对1课程薪酬等级</h2>
+                <p>基于教师评级制定的课时费标准（以45分钟为单位）</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>教师等级</th>
+                            <th>课时费范围</th>
+                            <th>教师收益</th>
+                            <th>中心收益</th>
+                            <th>中心毛利率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="level-1">
+                            <td>初级教师</td>
+                            <td>¥250 - ¥300</td>
+                            <td>¥100 - ¥120</td>
+                            <td>¥150 - ¥180</td>
+                            <td>58%-62%</td>
+                        </tr>
+                        <tr class="level-2">
+                            <td>中级教师</td>
+                            <td>¥320 - ¥380</td>
+                            <td>¥144 - ¥171</td>
+                            <td>¥176 - ¥209</td>
+                            <td>52%-56%</td>
+                        </tr>
+                        <tr class="level-3">
+                            <td>高级教师</td>
+                            <td>¥420 - ¥500</td>
+                            <td>¥210 - ¥250</td>
+                            <td>¥210 - ¥250</td>
+                            <td>48%-52%</td>
+                        </tr>
+                        <tr class="level-4">
+                            <td>专家教师</td>
+                            <td>¥550 - ¥650</td>
+                            <td>¥302 - ¥357</td>
+                            <td>¥247 - ¥293</td>
+                            <td>43%-47%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">收益分配模型</h2>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3><i>👨‍🏫</i> 初级教师收益分配</h3>
+                        <div class="profit-distribution">
+                            <div class="teacher-part" style="width:40%">教师 40%</div>
+                            <div class="center-part" style="width:60%">中心 60%</div>
+                        </div>
+                        <p>教师收益范围：¥100-¥120/课时</p>
+                        <p>中心收益范围：¥150-¥180/课时</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3><i>👩‍🏫</i> 中级教师收益分配</h3>
+                        <div class="profit-distribution">
+                            <div class="teacher-part" style="width:45%">教师 45%</div>
+                            <div class="center-part" style="width:55%">中心 55%</div>
+                        </div>
+                        <p>教师收益范围：¥144-¥171/课时</p>
+                        <p>中心收益范围：¥176-¥209/课时</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3><i>👨‍🎓</i> 高级教师收益分配</h3>
+                        <div class="profit-distribution">
+                            <div class="teacher-part" style="width:50%">教师 50%</div>
+                            <div class="center-part" style="width:50%">中心 50%</div>
+                        </div>
+                        <p>教师收益范围：¥210-¥250/课时</p>
+                        <p>中心收益范围：¥210-¥250/课时</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3><i>👩‍🎓</i> 专家教师收益分配</h3>
+                        <div class="profit-distribution">
+                            <div class="teacher-part" style="width:55%">教师 55%</div>
+                            <div class="center-part" style="width:45%">中心 45%</div>
+                        </div>
+                        <p>教师收益范围：¥302-¥357/课时</p>
+                        <p>中心收益范围：¥247-¥293/课时</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="calculator">
+            <div class="section">
+                <h2 class="section-title">课时收益计算器</h2>
+                <div class="calculator">
+                    <div class="form-group">
+                        <label for="experience">教学经验</label>
+                        <select id="experience">
+                            <option value="0">&lt;2年</option>
+                            <option value="10">2-5年</option>
+                            <option value="20">6-10年</option>
+                            <option value="25">11-15年</option>
+                            <option value="30" selected>15+年</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="education">学历背景</label>
+                        <select id="education">
+                            <option value="5">本科（德语相关专业）</option>
+                            <option value="3">本科（其他专业）</option>
+                            <option value="10">硕士（德语/教育学）</option>
+                            <option value="20" selected>博士（德语/教育学）</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="study-abroad">留学德语国家背景</label>
+                        <select id="study-abroad">
+                            <option value="0">无留学经历</option>
+                            <option value="5">短期交换（&lt;6个月）</option>
+                            <option value="10">长期留学（6-12个月）</option>
+                            <option value="15" selected>学位留学（1+年）</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="examiner">德语欧标考官资质</label>
+                        <select id="examiner">
+                            <option value="0">非考官</option>
+                            <option value="10">A1-B1级别考官</option>
+                            <option value="15">B2-C1级别考官</option>
+                            <option value="20" selected>C2级别考官</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dll">DLL培训数量</label>
+                        <select id="dll">
+                            <option value="0">未参加培训</option>
+                            <option value="5">1-2个模块</option>
+                            <option value="10">3-5个模块</option>
+                            <option value="15">6个模块</option>
+                            <option value="20" selected>6+模块（含高级）</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" id="calculate-btn"><i>🧮</i> 计算课时收益</button>
+                    
+                    <div id="result" style="display: none;">
+                        <div class="result-box">
+                            <h3 class="result-title"><i>📊</i> 课时收益计算结果</h3>
+                            <div class="result-grid">
+                                <div class="result-item">
+                                    <div class="result-label">综合评分</div>
+                                    <div class="result-value" id="total-score">0</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">教师等级</div>
+                                    <div class="result-value" id="teacher-level">初级</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">教师分成比例</div>
+                                    <div class="result-value" id="teacher-percent">40%</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">中心分成比例</div>
+                                    <div class="result-value" id="center-percent">60%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-grid" style="margin-top: 25px;">
+                                <div class="result-item">
+                                    <div class="result-label">教师课时收益</div>
+                                    <div class="result-value" id="teacher-income">¥0</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">中心课时收益</div>
+                                    <div class="result-value" id="center-income">¥0</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">总课时费</div>
+                                    <div class="result-value" id="total-price">¥0</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">中心毛利率</div>
+                                    <div class="result-value" id="profit-margin">0%</div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 25px;">
+                                <h4 style="margin-bottom: 15px; color: #1a3a6c;">收益分配比例</h4>
+                                <div class="profit-distribution">
+                                    <div class="teacher-part" id="teacher-dist" style="width:40%">教师 40%</div>
+                                    <div class="center-part" id="center-dist" style="width:60%">中心 60%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="download">
+            <div class="section">
+                <h2 class="section-title">薪酬体系表格下载</h2>
+                <p>完整薪酬体系表格（包含所有评级标准和分成比例）：</p>
+                
+                <div style="margin: 30px 0; text-align: center;">
+                    <button class="btn btn-download" id="download-excel"><i>📥</i> 下载Excel表格</button>
+                </div>
+                
+                <div class="card" style="max-width: 800px; margin: 0 auto;">
+                    <h3><i>ℹ️</i> 表格内容说明</h3>
+                    <ul class="criteria-list">
+                        <li>教师资质评分细则表（按新排序）</li>
+                        <li>各等级分成比例明细</li>
+                        <li>课时费标准对照表</li>
+                        <li>教师等级评定示例</li>
+                        <li>中心收益分析表</li>
+                        <li>教师资质权重说明</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>天津歌德语言中心 VIP1对1课程薪酬体系 | 更新日期: 2025年7月</p>
+            <p>© 2025 天津歌德语言中心 - 版权所有</p>
+        </div>
+    </div>
+
+    <script>
+        // 标签切换功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有活动标签
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 添加当前活动标签
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 计算器功能
+        document.getElementById('calculate-btn').addEventListener('click', calculateSalary);
+        
+        function calculateSalary() {
+            // 获取输入值
+            const experience = parseInt(document.getElementById('experience').value);
+            const education = parseInt(document.getElementById('education').value);
+            const studyAbroad = parseInt(document.getElementById('study-abroad').value);
+            const examiner = parseInt(document.getElementById('examiner').value);
+            const dll = parseInt(document.getElementById('dll').value);
+            
+            // 计算总分
+            const totalScore = experience + education + studyAbroad + examiner + dll;
+            
+            // 确定等级和分成比例
+            let level, teacherPercent, centerPercent, minFee, maxFee;
+            
+            if (totalScore <= 30) {
+                level = "初级教师";
+                teacherPercent = 40;
+                centerPercent = 60;
+                minFee = 250;
+                maxFee = 300;
+            } else if (totalScore <= 55) {
+                level = "中级教师";
+                teacherPercent = 45;
+                centerPercent = 55;
+                minFee = 320;
+                maxFee = 380;
+            } else if (totalScore <= 80) {
+                level = "高级教师";
+                teacherPercent = 50;
+                centerPercent = 50;
+                minFee = 420;
+                maxFee = 500;
+            } else {
+                level = "专家教师";
+                teacherPercent = 55;
+                centerPercent = 45;
+                minFee = 550;
+                maxFee = 650;
+            }
+            
+            // 计算平均课时费
+            const avgFee = (minFee + maxFee) / 2;
+            
+            // 计算课时收益
+            const teacherIncome = Math.round(avgFee * teacherPercent / 100);
+            const centerIncome = Math.round(avgFee * centerPercent / 100);
+            
+            // 计算毛利率（中心收益/总课时费）
+            const profitMargin = Math.round((centerIncome / (teacherIncome + centerIncome)) * 100);
+            
+            // 显示结果
+            document.getElementById('total-score').textContent = totalScore;
+            document.getElementById('teacher-level').textContent = level;
+            document.getElementById('teacher-percent').textContent = teacherPercent + "%";
+            document.getElementById('center-percent').textContent = centerPercent + "%";
+            document.getElementById('teacher-income').textContent = "¥" + teacherIncome;
+            document.getElementById('center-income').textContent = "¥" + centerIncome;
+            document.getElementById('total-price').textContent = "¥" + Math.round(avgFee);
+            document.getElementById('profit-margin').textContent = profitMargin + "%";
+            
+            // 更新收益分配图表
+            document.getElementById('teacher-dist').style.width = teacherPercent + "%";
+            document.getElementById('teacher-dist').textContent = "教师 " + teacherPercent + "%";
+            document.getElementById('center-dist').style.width = centerPercent + "%";
+            document.getElementById('center-dist').textContent = "中心 " + centerPercent + "%";
+            
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        // 初始化计算
+        calculateSalary();
+        
+        // Excel下载功能
+        document.getElementById('download-excel').addEventListener('click', function() {
+            // 创建工作簿
+            const wb = XLSX.utils.book_new();
+            
+            // 添加评分标准表
+            const criteriaData = [
+                ["维度", "级别", "评分"],
+                ["教学经验", "<2年", 0],
+                ["", "2-5年", 10],
+                ["", "6-10年", 20],
+                ["", "11-15年", 25],
+                ["", "15+年", 30],
+                ["学历背景", "本科（德语相关专业）", 5],
+                ["", "本科（其他专业）", 3],
+                ["", "硕士（德语/教育学）", 10],
+                ["", "博士（德语/教育学）", 20],
+                ["留学德语国家背景", "无留学经历", 0],
+                ["", "短期交换（<6个月）", 5],
+                ["", "长期留学（6-12个月）", 10],
+                ["", "学位留学（1+年）", 15],
+                ["德语欧标考官资质", "非考官", 0],
+                ["", "A1-B1级别考官", 10],
+                ["", "B2-C1级别考官", 15],
+                ["", "C2级别考官", 20],
+                ["DLL培训数量", "未参加培训", 0],
+                ["", "1-2个模块", 5],
+                ["", "3-5个模块", 10],
+                ["", "6个模块", 15],
+                ["", "6+模块（含高级）", 20]
+            ];
+            
+            const criteriaWs = XLSX.utils.aoa_to_sheet(criteriaData);
+            XLSX.utils.book_append_sheet(wb, criteriaWs, "评分标准");
+            
+            // 添加薪酬等级表
+            const levelsData = [
+                ["总分范围", "教师等级", "教师分成比例", "中心分成比例", "课时费范围", "教师课时收益", "中心课时收益"],
+                ["0-30分", "初级教师", "40%", "60%", "¥250-¥300", "¥100-¥120", "¥150-¥180"],
+                ["31-55分", "中级教师", "45%", "55%", "¥320-¥380", "¥144-¥171", "¥176-¥209"],
+                ["56-80分", "高级教师", "50%", "50%", "¥420-¥500", "¥210-¥250", "¥210-¥250"],
+                ["81+分", "专家教师", "55%", "45%", "¥550-¥650", "¥302-¥357", "¥247-¥293"]
+            ];
+            
+            const levelsWs = XLSX.utils.aoa_to_sheet(levelsData);
+            XLSX.utils.book_append_sheet(wb, levelsWs, "薪酬等级");
+            
+            // 添加示例教师表
+            const examplesData = [
+                ["姓名", "教学经验", "学历", "留学", "考官资质", "DLL", "总分", "等级"],
+                ["张老师", "8年(20分)", "硕士(10分)", "1年留学(15分)", "B2考官(15分)", "5模块(10分)", "20+10+15+15+10=70", "高级教师"],
+                ["李老师", "18年(30分)", "博士(20分)", "3年留学(15分)", "C2考官(20分)", "8模块(20分)", "30+20+15+20+20=105", "专家教师"],
+                ["王老师", "3年(10分)", "本科(5分)", "无(0分)", "非考官(0分)", "2模块(5分)", "10+5+0+0+5=20", "初级教师"]
+            ];
+            
+            const examplesWs = XLSX.utils.aoa_to_sheet(examplesData);
+            XLSX.utils.book_append_sheet(wb, examplesWs, "教师示例");
+            
+            // 导出文件
+            XLSX.writeFile(wb, "天津歌德语言中心_VIP课程薪酬体系.xlsx");
+        });
+    </script>
+</body>
+</html>
