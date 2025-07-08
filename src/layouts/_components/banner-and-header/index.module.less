@@ -30,6 +30,13 @@
     color: var(--dark-text-color-primary);
     font-size: unit(28, px);
     font-size: clamp(unit(28, px), unit((40 / 10), vh), unit(40, px));
+    margin-top: min(
+        0px,
+        calc(
+            var(--global-banner-offset, 0px) + var(--global-header-height)
+        )
+    );
+    transition-property: margin-top;
 
     .screen-sm({
         --global-edge-safe-distance: 0;

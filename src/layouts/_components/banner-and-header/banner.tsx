@@ -1,4 +1,12 @@
-import { useState, useRef, useEffect, memo, type FC } from "react";
+import {
+    useState,
+    useRef,
+    useEffect,
+    useCallback,
+    memo,
+    type FC,
+    type TransitionEventHandler,
+} from "react";
 import classNames from "classnames";
 
 import { slogan } from "@/global";
@@ -24,6 +32,18 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
 
     const [renderBanner, setRenderBanner] = useState(showBanner);
     const [renderVideo, setRenderVideo] = useState(false);
+    const [unmountedOnce, setUnmountedOnce] = useState(false);
+
+    const onBannerTransitionEnd = useCallback<
+        TransitionEventHandler<HTMLElement>
+    >((evt) => {
+        // const marginTop = getComputedStyle(evt.currentTarget).marginTop;
+        // if (marginTop && parseInt(marginTop) < 0) {
+        //     Banner.bannerInView = false;
+        //     setRenderBanner(false);
+        //     setUnmountedOnce(true);
+        // }
+    }, []);
 
     useWindow(
         (force?: boolean) => {
@@ -106,13 +126,21 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
 
     useEffect(() => {
         // TODO: banner 关闭动画
-        setRenderBanner(showBanner);
         if (showBanner) {
+            setRenderBanner(true);
             // setTimeout(() => {
             //     console.log(BannerRef.current);
             // });
         } else {
-            Banner.bannerInView = false;
+            // console.log(window.pageYOffset)
+            // if (BannerRef.current) {
+            //     BannerRef.current.style.setProperty(
+            //         "--global-banner-offset",
+            //         `${BannerRef.current.offsetHeight * -1}px`
+            //     );
+            // }
+            setRenderBanner(false);
+            setUnmountedOnce(true);
         }
     }, [showBanner]);
 
@@ -127,7 +155,16 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
 
     return (
         renderBanner && (
-            <section className={styles["banner"]} ref={BannerRef}>
+            <section
+                className={classNames([
+                    styles["banner"],
+                    {
+                        [styles["mod-unmounted-once"]]: unmountedOnce,
+                    },
+                ])}
+                onTransitionEnd={onBannerTransitionEnd}
+                ref={BannerRef}
+            >
                 <section className={styles["wrapper"]}>
                     {logo}
                     <strong className={styles["slogan"]}>{slogan}</strong>
