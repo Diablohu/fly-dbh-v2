@@ -25,6 +25,7 @@ export const level2Tags: { [key: string]: string[] } = {
     //     "preview", // 前瞻
     // ],
     tutorial: [
+        "flightsim-basics", // 模拟入门
         "tutorial-aircraft", // 机型操作
         "tutorial-avionics", // 通用航电
         "game-guide", // 攻略技巧
