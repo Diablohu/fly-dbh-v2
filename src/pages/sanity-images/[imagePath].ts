@@ -10,11 +10,12 @@ import { Readable } from "stream";
 import { finished } from "stream/promises";
 import { type APIRoute } from "astro";
 import md5 from "md5";
+import { folderNameSanityImagesCache } from "@/server-vars";
 
 // ============================================================================
 
 const target = `https://cdn.sanity.io/images/${process.env.SANITY_PROJECT_ID}/${process.env.SANITY_DATASET}`;
-const cacheFolder = path.resolve(".cache", "sanity-images");
+const cacheFolder = path.resolve(folderNameSanityImagesCache);
 await fs.ensureDir(cacheFolder);
 
 // ============================================================================

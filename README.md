@@ -15,6 +15,7 @@
 ```dotenv
 SANITY_PROJECT_ID=[Sanity 项目 ID]
 SANITY_DATASET=[Sanity 数据集名称]
+ADMIN_TOTP_KEY=[登录管理页面所用一次性密码的生成密钥]
 ```
 
 2. 运行命令
