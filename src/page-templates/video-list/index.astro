@@ -3,19 +3,43 @@ import { actions } from "astro:actions";
 import numeral from "numeral";
 import { type VideoListPageTypesType } from "@/types";
 
+import { level2Tags, allLevel2Tags } from "@/global";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getGameUpdateName from "@/utils/get-game-update-name";
+import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import { errorLog } from "@/utils/log";
 
 // import log from "@/page-templates/index/_log.ts";
 
-import Layout from "@/layouts/layout.astro";
-import Block from "@/components/block.astro";
+import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg?raw";
+import VideosFill from "@/assets/svg-symbols/videos-fill.svg?raw";
+import CompassHollow from "@/assets/svg-symbols/compass-hollow.svg?raw";
+import CompassFill from "@/assets/svg-symbols/compass-fill.svg?raw";
+import StarHollow from "@/assets/svg-symbols/star-hollow.svg?raw";
+import StarFill from "@/assets/svg-symbols/star-fill.svg?raw";
+import EarthHollow from "@/assets/svg-symbols/earth-hollow.svg?raw";
+import EarthFill from "@/assets/svg-symbols/earth-fill.svg?raw";
+import MovieHollow from "@/assets/svg-symbols/movie-hollow.svg?raw";
+import MovieFill from "@/assets/svg-symbols/movie-fill.svg?raw";
+import LeafHollow from "@/assets/svg-symbols/leaf-hollow.svg?raw";
+import LeafFill from "@/assets/svg-symbols/leaf-fill.svg?raw";
+import CupHollow from "@/assets/svg-symbols/cup-hollow.svg?raw";
+import CupFill from "@/assets/svg-symbols/cup-fill.svg?raw";
+import ClockHollow from "@/assets/svg-symbols/clock-hollow.svg?raw";
+import ClockFill from "@/assets/svg-symbols/clock-fill.svg?raw";
+import TagsHollow from "@/assets/svg-symbols/tags-hollow.svg?raw";
+import TagsFill from "@/assets/svg-symbols/tags-fill.svg?raw";
+// import ArrowLeftSvg from "@/assets/arrow/left3.svg";
+import ArrowRightSvg from "@/assets/arrow/right3.svg";
+
+import Layout, { type MainBlockWithSidebarProps } from "@/layouts/layout.astro";
+// import Block from "@/components/block.astro";
 import Page404 from "@/pages/404.astro";
 
 import VideoListInfo from "./_components/list/info.astro";
 import VideoList from "./_components/list/list.astro";
-import VideoCategories from "./_components/categories/index.astro";
+// import VideoCategories from "./_components/categories/index.astro";
+import Explore from "./_components/categories/explore";
 
 type Props = {
     type?:
@@ -64,6 +88,16 @@ if (error) {
     // Astro.props.error =error
     // Astro.response.statusText = (error.cause || error.message || "") as string;
     // return Astro.redirect("/500");
+}
+const { data: sidebarInfos, error: sidebarInfosError } = await Astro.callAction(
+    actions.videoListPageFetchTags,
+    {}
+);
+if (sidebarInfosError) {
+    console.trace(error);
+    Astro.response.status = 500;
+    // Astro.response.statusText = (error.cause || error.message || "") as string;
+    return Astro.rewrite("/500");
 }
 
 const title = {
@@ -114,6 +148,94 @@ const title = {
                   : ""
               : "",
 };
+
+// Prepare side bar info
+const mainTags: MainBlockWithSidebarProps["sideBar"] = [];
+const subTags: MainBlockWithSidebarProps["sideBar"] = [];
+let isCurrentMainTag = false;
+
+// 遍历所有标签（Tag），根据 `tag_type` 归属主要和次要标签
+// 特殊子标签（如 `新鲜事` 和 `教程攻略` 下属）子类直接归属主要标签
+sidebarInfos?.forEach((tag) => {
+    if (!tag.title) return;
+    if (!tag.slug) return;
+
+    if (allLevel2Tags.includes(tag.slug)) {
+        if (Astro.props.slug === tag.slug) isCurrentMainTag = true;
+        return;
+    }
+
+    const item: MainBlockWithSidebarProps["sideBar"][0] = {
+        type: "link",
+        text: tag.title,
+        route: getVideoListPageLink("tag", tag.slug),
+        isActive: Astro.props.slug === tag.slug,
+    };
+    if (tag.tag_type === "category") {
+        mainTags.push(item);
+        if (Astro.props.slug === tag.slug) isCurrentMainTag = true;
+        switch (tag.slug) {
+            case "featured": {
+                item.iconHtml = StarHollow;
+                item.iconHtmlActive = StarFill;
+                break;
+            }
+            case "tutorial": {
+                item.iconHtml = CompassHollow;
+                item.iconHtmlActive = CompassFill;
+                break;
+            }
+            case "review": {
+                item.iconHtml = TagsHollow;
+                item.iconHtmlActive = TagsFill;
+                break;
+            }
+            case "preview": {
+                item.iconHtml = LeafHollow;
+                item.iconHtmlActive = LeafFill;
+                break;
+            }
+            case "news": {
+                item.iconHtml = ClockHollow;
+                item.iconHtmlActive = ClockFill;
+                break;
+            }
+            case "chat": {
+                item.iconHtml = CupHollow;
+                item.iconHtmlActive = CupFill;
+                break;
+            }
+            case "world": {
+                item.iconHtml = EarthHollow;
+                item.iconHtmlActive = EarthFill;
+                break;
+            }
+            case "short": {
+                item.iconHtml = MovieHollow;
+                item.iconHtmlActive = MovieFill;
+                break;
+            }
+        }
+    } else {
+        subTags.push(item);
+    }
+
+    // 遍历子分类，追加到对应主类别
+    if (tag.slug in level2Tags) {
+        level2Tags[tag.slug].forEach((slug) => {
+            const thisData = sidebarInfos.find((d) => d.slug === slug);
+            if (!thisData) return;
+            if (!thisData.title) return;
+            mainTags.push({
+                type: "link",
+                text: thisData.title,
+                route: getVideoListPageLink("tag", slug),
+                level: 2,
+                isActive: Astro.props.slug === slug,
+            });
+        });
+    }
+});
 ---
 
 {
@@ -124,33 +246,109 @@ const title = {
             showHeader
             showFooter
             title={`${title.category ? `${title.category} : ` : ""}${title.main}${title.sub ? ` (${title.sub})` : ""}`}
+            sideBar={[
+                {
+                    type: "link",
+                    text: "最新视频",
+                    route: getVideoListPageLink(),
+                    isActive: isIndex,
+                    iconHtml: VideosHollow,
+                    iconHtmlActive: VideosFill,
+                },
+                "divider",
+                // {
+                //     type: "subtitle",
+                //     text: "视频分类",
+                // },
+                ...mainTags,
+                "divider",
+                // {
+                //     type: "subtitle",
+                //     text: "更多内容",
+                // },
+            ]}
         >
-            <Block class="video-list-page">
-                <section class="video-list-page-container">
-                    <section class="list">
-                        <VideoListInfo
-                            category={title.category}
-                            title={title.main}
-                            subTitle={title.sub}
-                            type={type}
-                            slug={Astro.props.slug}
-                            isIndex={isIndex}
-                            info={currentCategoryInfo}
-                        />
-                        <VideoList
-                            type={type}
-                            slug={Astro.props.slug}
-                            isIndex={isIndex}
-                            info={currentCategoryInfo}
-                        />
-                    </section>
-                    <VideoCategories
-                        type={type}
-                        slug={Astro.props.slug}
-                        isIndex={isIndex}
-                    />
-                </section>
-            </Block>
+            <section class="list">
+                <VideoListInfo
+                    category={title.category}
+                    title={title.main}
+                    subTitle={title.sub}
+                    type={type}
+                    slug={Astro.props.slug}
+                    isIndex={isIndex}
+                    info={currentCategoryInfo}
+                />
+                <VideoList
+                    type={type}
+                    slug={Astro.props.slug}
+                    isIndex={isIndex}
+                    info={currentCategoryInfo}
+                />
+            </section>
+            <Fragment slot="sidebar-extra-items">
+                {(
+                    [
+                        {
+                            text: "分类标签",
+                            explore: "tag",
+                        },
+                        {
+                            text: "机型系列",
+                            explore: "aircraftFamily",
+                        },
+                        {
+                            text: "机载设备",
+                            explore: "aircraftOnboardDevice",
+                        },
+                        {
+                            text: "机场",
+                            explore: "aerodrome",
+                        },
+                        {
+                            text: "平台",
+                            explore: "platform",
+                        },
+                        {
+                            text: "平台更新",
+                            explore: "platformUpdate",
+                        },
+                        // {
+                        //     type: "explore",
+                        //     text: "事件",
+                        //     explore: "event",
+                        // },
+                        // {
+                        //     type: "explore",
+                        //     text: "工作室",
+                        //     explore: 'developer',
+                        // },
+                    ] as { text: string; explore: VideoListPageTypesType }[]
+                ).map(({ text, explore }) => (
+                    <button
+                        type="button"
+                        class:list={[
+                            "item",
+                            "explore",
+                            {
+                                "is-active":
+                                    type === explore && !isCurrentMainTag,
+                            },
+                        ]}
+                        data-explore={explore}
+                    >
+                        <Explore
+                            client:idle
+                            type={explore}
+                            title={text}
+                            listType={type}
+                            listSlug={Astro.props.slug}
+                        >
+                            {text}
+                        </Explore>
+                        <ArrowRightSvg class="right-arrow" />
+                    </button>
+                ))}
+            </Fragment>
         </Layout>
     )
 }
@@ -158,20 +356,7 @@ const title = {
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .video-list-page {
-        --gap-category-list: 1em;
-
-        .video-list-page-container {
-            display: flex;
-            flex-flow: row nowrap;
-            align-items: flex-start;
-            gap: var(--gap-category-list);
-
-            .list {
-                flex: 1;
-                order: 2;
-                padding-bottom: 4em;
-            }
-        }
+    .list {
+        padding-bottom: 4em;
     }
 </style>
