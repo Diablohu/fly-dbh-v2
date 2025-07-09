@@ -1,4 +1,5 @@
 export const folderNameSanityImagesCache = ".cache-assets/sanity-images";
+export const folderNameLogs = ".logs";
 export const adminTOTP = {
     intervalInSeconds: 30,
     digits: 6,
