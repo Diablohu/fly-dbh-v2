@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+import path from "node:path";
 import {
     defineAction,
     ActionError,
@@ -40,6 +41,18 @@ function refreshCookie(context: ActionAPIContext) {
     });
 
     return expiresTimestamp;
+}
+function handlerWrapper<R>(
+    context: ActionAPIContext,
+    func: () => R | Promise<R>
+) {
+    try {
+        if (!isLoginValid(context))
+            throw new ActionError({ code: "UNAUTHORIZED" });
+        return func();
+    } catch (err) {
+        actionErrorHandler(err);
+    }
 }
 
 // ============================================================================
@@ -106,29 +119,33 @@ const actions = {
     }),
 
     refreshLoginCookie: defineAction({
-        handler: async (_, context) => {
-            try {
-                if (!isLoginValid(context))
-                    throw new ActionError({ code: "UNAUTHORIZED" });
-                return {
-                    expires: refreshCookie(context),
-                };
-            } catch (err) {
-                actionErrorHandler(err);
-            }
-        },
+        handler: async (_, context) =>
+            handlerWrapper<{ expires: number }>(context, async () => ({
+                expires: refreshCookie(context),
+            })),
     }),
 
     getLogsList: defineAction({
-        handler: async (_, context) => {
-            try {
-                const files = await fs.readdir(folderNameLogs);
-                console.log(files);
+        handler: async (_, context) =>
+            handlerWrapper<string[]>(context, async () => {
+                const files = (await fs.readdir(folderNameLogs)).filter((f) =>
+                    /\d+\-\d+\-\d+\.combined\./.test(f)
+                );
                 return files;
-            } catch (err) {
-                actionErrorHandler(err);
-            }
-        },
+            }),
+    }),
+
+    readLog: defineAction({
+        input: z.object({
+            filename: z.string(),
+        }),
+        handler: async ({ filename }, context) =>
+            handlerWrapper(context, async () => {
+                const file = path.resolve(folderNameLogs, filename);
+                if (!fs.existsSync(file))
+                    throw new ActionError({ code: "NOT_FOUND" });
+                return await fs.readFile(file, "utf-8");
+            }),
     }),
 };
 

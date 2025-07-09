@@ -1,0 +1,29 @@
+---
+import { actions } from "astro:actions";
+
+type Props = {
+    filename: string;
+};
+
+const { data: content, error } = await Astro.callAction(actions.admin.readLog, {
+    filename: Astro.props.filename,
+});
+
+if (error && error.code === "NOT_FOUND") return Astro.rewrite("/404");
+if (error) return Astro.rewrite("/500");
+
+// let list = []
+console.log(content);
+---
+
+<section class="content"><pre>{content}</pre></section>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .content {
+        pre {
+            font-family: Consolas;
+        }
+    }
+</style>

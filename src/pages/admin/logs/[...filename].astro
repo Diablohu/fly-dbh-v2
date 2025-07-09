@@ -1,0 +1,37 @@
+---
+import { actions } from "astro:actions";
+import AdminPage from "@/page-templates/admin/index.astro";
+import Content from "./_components/content.astro";
+
+const { data: list, error } = await Astro.callAction(
+    actions.admin.getLogsList,
+    undefined
+);
+
+if (error) return Astro.rewrite("/500");
+---
+
+<AdminPage title="日志">
+    <section class="list">
+        {
+            list?.map((name) => (
+                <a href={`/admin/logs/${name}`}>
+                    {name.replace(/(\d+\-\d+\-\d+).+/, "$1")}
+                </a>
+            ))
+        }
+    </section>
+    {
+        Astro.params.filename ? (
+            <Content filename={Astro.params.filename} />
+        ) : null
+    }
+</AdminPage>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    h2 {
+        zoom: 1;
+    }
+</style>
