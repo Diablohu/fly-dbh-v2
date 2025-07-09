@@ -62,8 +62,11 @@ const actions = {
     }),
 
     adminLogin: defineAction({
-        input: z.string(),
-        handler: async (code, context) => {
+        accept: "form",
+        input: z.object({
+            code: z.string(),
+        }),
+        handler: async ({ code }, context) => {
             const valid = verifyTOTPWithGracePeriod(
                 adminTOTP.key,
                 adminTOTP.intervalInSeconds,

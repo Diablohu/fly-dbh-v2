@@ -23,6 +23,12 @@ async function main() {
                 value: "npm:analyze",
                 description: "执行打包，并自动生成分析报告\n",
             },
+            {
+                name: "更新 NPM 依赖",
+                short: "\n🚧 更新 NPM 依赖 Packages",
+                value: "npm:up",
+                description: "更新 NPM 依赖 Packages\n",
+            },
             new Separator(" "),
             new Separator("── 🚀 线上发布 ──────────"),
             {
