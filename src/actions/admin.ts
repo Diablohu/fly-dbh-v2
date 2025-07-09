@@ -67,38 +67,50 @@ const actions = {
             code: z.string(),
         }),
         handler: async ({ code }, context) => {
-            const valid = verifyTOTPWithGracePeriod(
-                adminTOTP.key,
-                adminTOTP.intervalInSeconds,
-                adminTOTP.digits,
-                code,
-                30
-            );
+            try {
+                const valid = verifyTOTPWithGracePeriod(
+                    adminTOTP.key,
+                    adminTOTP.intervalInSeconds,
+                    adminTOTP.digits,
+                    code,
+                    30
+                );
 
-            if (!valid) throw new ActionError({ code: "UNAUTHORIZED" });
+                if (!valid) throw new ActionError({ code: "UNAUTHORIZED" });
 
-            return {
-                expires: refreshCookie(context),
-            };
+                return {
+                    expires: refreshCookie(context),
+                };
+            } catch (err) {
+                actionErrorHandler(err);
+            }
         },
     }),
 
     adminIsLoginValid: defineAction({
         handler: async (_, context) => {
-            if (isLoginValid(context)) return true;
+            try {
+                if (isLoginValid(context)) return true;
 
-            context.cookies.delete(ADMIN_LAST_LOGIN);
-            return false;
+                context.cookies.delete(ADMIN_LAST_LOGIN);
+                return false;
+            } catch (err) {
+                actionErrorHandler(err);
+            }
         },
     }),
 
     adminRefreshLoginCookie: defineAction({
         handler: async (_, context) => {
-            if (!isLoginValid(context))
-                throw new ActionError({ code: "UNAUTHORIZED" });
-            return {
-                expires: refreshCookie(context),
-            };
+            try {
+                if (!isLoginValid(context))
+                    throw new ActionError({ code: "UNAUTHORIZED" });
+                return {
+                    expires: refreshCookie(context),
+                };
+            } catch (err) {
+                actionErrorHandler(err);
+            }
         },
     }),
 };
