@@ -21,8 +21,9 @@ const logger = winston.createLogger({
     format: winston.format.combine(
         // winston.format.label({ label: 'right meow!' }),
         winston.format.timestamp(),
-        winston.format.prettyPrint()
+        winston.format.prettyPrint(),
     ),
+    // format: winston.format.json(),
     defaultMeta: { service: "fly-dbh-kook-bot" },
     transports,
 });

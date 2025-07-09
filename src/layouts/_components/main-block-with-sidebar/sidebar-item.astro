@@ -27,7 +27,7 @@ const Element = Astro.props.route ? "a" : "button";
                 {
                     "is-active":
                         Astro.props.isActive ??
-                        Astro.url.pathname === Astro.props.route,
+                        Astro.url.pathname.startsWith(Astro.props.route || ""),
                 },
             ]}
         >

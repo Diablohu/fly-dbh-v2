@@ -28,6 +28,7 @@ if (isLoginValid)
                   type: "link",
                   text: "管理首页",
                   route: "/admin",
+                  isActive: Astro.url.pathname === "/admin",
               },
               { type: "divider" },
               {
