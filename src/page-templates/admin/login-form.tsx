@@ -55,7 +55,12 @@ const LoginForm: FC = () => {
 
     return (
         <>
-            <form action={loginAction} method="POST" onSubmit={onSubmit}>
+            <form
+                action={loginAction}
+                method="POST"
+                onSubmit={onSubmit}
+                encType="multipart/form-data"
+            >
                 <input type="text" name="code" autoComplete="off" required />
                 <input type="submit" value="GO" />
             </form>
