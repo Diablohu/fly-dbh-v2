@@ -3,7 +3,6 @@ import { actions } from "astro:actions";
 import { type VideoListPageTypesType } from "@/types";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import { level2Tags, allLevel2Tags } from "@/global";
-import { VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN } from "@/constants/element-ids";
 
 import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg?raw";
 import VideosFill from "@/assets/svg-symbols/videos-fill.svg?raw";
@@ -23,11 +22,12 @@ import ClockHollow from "@/assets/svg-symbols/clock-hollow.svg?raw";
 import ClockFill from "@/assets/svg-symbols/clock-fill.svg?raw";
 import TagsHollow from "@/assets/svg-symbols/tags-hollow.svg?raw";
 import TagsFill from "@/assets/svg-symbols/tags-fill.svg?raw";
-import ArrowLeftSvg from "@/assets/arrow/left3.svg";
+// import ArrowLeftSvg from "@/assets/arrow/left3.svg";
 import ArrowRightSvg from "@/assets/arrow/right3.svg";
 
+import { type MainBlockWithSidebarProps } from "@/layouts/layout.astro";
 import Explore from "./explore";
-import ClientInit from "./client-init";
+import SidebarItem from "@/layouts/_components/main-block-with-sidebar/sidebar-item.astro";
 
 type Props = {
     type?: VideoListPageTypesType;
@@ -35,25 +35,25 @@ type Props = {
     isIndex: boolean;
 };
 
-const { data, error: error } = await Astro.callAction(
+const { data: sidebarInfos, error: sidebarInfosError } = await Astro.callAction(
     actions.videoListPageFetchTags,
     {}
 );
-if (error) {
-    console.trace(error);
+if (sidebarInfosError) {
+    console.trace(sidebarInfosError);
     Astro.response.status = 500;
     // Astro.response.statusText = (error.cause || error.message || "") as string;
     return Astro.rewrite("/500");
 }
 
-const mainTags: typeof list = [];
-const subTags: typeof list = [];
-
+// Prepare side bar info
+const mainTags: typeof items = [];
+const subTags: typeof items = [];
 let isCurrentMainTag = false;
 
 // 遍历所有标签（Tag），根据 `tag_type` 归属主要和次要标签
 // 特殊子标签（如 `新鲜事` 和 `教程攻略` 下属）子类直接归属主要标签
-data?.forEach((tag) => {
+sidebarInfos?.forEach((tag) => {
     if (!tag.title) return;
     if (!tag.slug) return;
 
@@ -62,16 +62,15 @@ data?.forEach((tag) => {
         return;
     }
 
-    const item: (typeof list)[0] = {
+    const item: (typeof items)[0] = {
         type: "link",
         text: tag.title,
-        linkType: "tag",
-        linkSlug: tag.slug,
+        route: getVideoListPageLink("tag", tag.slug),
         isActive: Astro.props.slug === tag.slug,
     };
     if (tag.tag_type === "category") {
         mainTags.push(item);
-        if (Astro.props.slug === item.linkSlug) isCurrentMainTag = true;
+        if (Astro.props.slug === tag.slug) isCurrentMainTag = true;
         switch (tag.slug) {
             case "featured": {
                 item.iconHtml = StarHollow;
@@ -121,14 +120,13 @@ data?.forEach((tag) => {
     // 遍历子分类，追加到对应主类别
     if (tag.slug in level2Tags) {
         level2Tags[tag.slug].forEach((slug) => {
-            const thisData = data.find((d) => d.slug === slug);
+            const thisData = sidebarInfos.find((d) => d.slug === slug);
             if (!thisData) return;
             if (!thisData.title) return;
             mainTags.push({
                 type: "link",
                 text: thisData.title,
-                linkType: "tag",
-                linkSlug: slug,
+                route: getVideoListPageLink("tag", slug),
                 level: 2,
                 isActive: Astro.props.slug === slug,
             });
@@ -136,31 +134,13 @@ data?.forEach((tag) => {
     }
 });
 
-/**
- * 根据这一列表，渲染视频类别导航
- */
-const list: Array<
-    | {
-          type: "subtitle";
-          text: string;
-      }
-    | {
-          type: "link";
-          text: string;
-          linkType?: VideoListPageTypesType;
-          linkSlug?: string;
-          route?: string;
-          level?: number;
-          isActive?: boolean;
-          iconHtml?: string;
-          iconHtmlActive?: string;
-      }
+const items: Array<
+    | Required<MainBlockWithSidebarProps>["items"][0]
     | {
           type: "explore";
           text: string;
           explore: VideoListPageTypesType;
       }
-    | "divider"
 > = [
     {
         type: "link",
@@ -170,13 +150,13 @@ const list: Array<
         iconHtml: VideosHollow,
         iconHtmlActive: VideosFill,
     },
-    "divider",
+    { type: "divider" },
     // {
     //     type: "subtitle",
     //     text: "视频分类",
     // },
     ...mainTags,
-    "divider",
+    { type: "divider" },
     // {
     //     type: "subtitle",
     //     text: "更多内容",
@@ -222,580 +202,33 @@ const list: Array<
     //     explore: 'developer',
     // },
 ];
-// console.log(data, list, isCurrentMainTag);
-
-// 所有以 `.screen-sm-` 开头的 class，均为小屏幕特别覆盖
-// 小屏幕时，类别导航自动隐藏，需要手动展开显示
-// 使用 ID 为 {VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN} 的 checkbox 控制是否显示类别导航
-// 相关的 `<label />` 元素为操作按钮
 ---
 
 <Fragment>
-    <aside class="categories">
-        <input
-            id={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
-            type="checkbox"
-        />
-        <section class="wrapper">
-            <label
-                for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
-                class="screen-sm-button-collapse-categories"
-                ><ArrowLeftSvg />收起分类</label
-            >
-            {
-                list.map((item, index, list) => {
-                    if (item === "divider") {
-                        return <hr />;
+    {
+        items.map((item) =>
+            item.type === "explore" ? (
+                <SidebarItem
+                    type="button"
+                    isActive={
+                        Astro.props.type === item.explore && !isCurrentMainTag
                     }
-                    switch (item.type) {
-                        case "link": {
-                            return (
-                                <a
-                                    href={
-                                        item.route ||
-                                        getVideoListPageLink(
-                                            item.linkType,
-                                            item.linkSlug
-                                        )
-                                    }
-                                    class:list={[
-                                        "item",
-                                        "link",
-                                        `is-level-${item.level || 1}`,
-                                        {
-                                            "is-active": item.isActive,
-                                        },
-                                    ]}
-                                    set:html={`
-                                    ${item.isActive ? item.iconHtmlActive || "" : item.iconHtml || ""}
-                                    ${item.text}`}
-                                />
-                            );
-                        }
-                        case "subtitle": {
-                            return (
-                                <strong class="item title">{item.text}</strong>
-                            );
-                        }
-                        case "explore": {
-                            return (
-                                <button
-                                    type="button"
-                                    class:list={[
-                                        "item",
-                                        "explore",
-                                        {
-                                            "is-active":
-                                                Astro.props.type ===
-                                                    item.explore &&
-                                                !isCurrentMainTag,
-                                        },
-                                    ]}
-                                    data-explore={item.explore}
-                                >
-                                    <Explore
-                                        client:idle
-                                        type={item.explore}
-                                        title={item.text}
-                                        listType={Astro.props.type}
-                                        listSlug={Astro.props.slug}
-                                    >
-                                        {item.text}
-                                    </Explore>
-                                    <ArrowRightSvg class="right-arrow" />
-                                </button>
-                            );
-                        }
-                        default:
-                            return null;
-                    }
-                })
-            }
-            <ClientInit client:load />
-        </section>
-        <label
-            for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
-            class="screen-sm-categories-background"></label>
-        <label
-            for={VIDEO_LIST_PAGE_CATEGORY_SWITCH_SMALL_SCREEN}
-            class="screen-sm-button-expand-categories"
-            ><ArrowRightSvg />展开分类</label
-        >
-    </aside>
+                    data-explore={item.explore}
+                >
+                    <Explore
+                        client:idle
+                        type={item.explore}
+                        title={item.text}
+                        listType={Astro.props.type}
+                        listSlug={Astro.props.slug}
+                    >
+                        {item.text}
+                    </Explore>
+                    <ArrowRightSvg class="right-arrow" />
+                </SidebarItem>
+            ) : (
+                <SidebarItem {...item} />
+            )
+        )
+    }
 </Fragment>
-
-<style lang="less">
-    @import "@/utils/mixins.less";
-
-    // 所有以 `.screen-sm-` 开头的 class，均为小屏幕特别覆盖
-    // 小屏幕时，类别导航自动隐藏，需要手动展开显示
-
-    input[type="checkbox"] {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-        z-index: -1;
-    }
-
-    .categories {
-        @min-width: 11em;
-
-        --item-min-height: 2.5em;
-        --item-line-height: 1.1em;
-        --item-gap: 0.25em;
-
-        --link-item-padding-x: unit((@global-edge-safe-distance-sm * 2/3), px);
-        --link-item-padding-left-extra: 0px;
-        --link-item-icon-size: 1.5em;
-        --link-item-icon-margin: 0.75em;
-        --link-item-with-icon-padding-left: calc(
-            var(--link-item-padding-left-extra) + var(--link-item-icon-size) +
-                var(--link-item-icon-margin) * 2
-        );
-        --link-item-no-icon-line-color: var(--border-color);
-        --link-item-no-icon-line-color: color-mix(
-            in hsl,
-            var(--theme-color),
-            var(--text-color-primary) 25%
-        );
-        --link-item-no-icon-dot-size: 0.75em;
-        --link-item-no-icon-dot-border-width: 2px;
-
-        position: sticky;
-        top: calc(var(--global-sticky-top) + 1em);
-        flex: 0 0 @min-width;
-        margin: 1em 0 4em 0;
-        // border-radius: 10px;
-        overflow: hidden;
-        z-index: calc(var(--global-footer-z-index) + 1);
-        overscroll-behavior: contain;
-
-        & > .wrapper {
-            position: relative;
-            z-index: 5;
-            height: 100%;
-            overflow: auto;
-            max-height: calc(100dvh - var(--global-sticky-top) - 2em);
-            padding: 0em 1em 1em 0;
-            overscroll-behavior: contain;
-            scrollbar-width: thin;
-            // scrollbar-width: none;
-            // &:hover {
-            //     scrollbar-width: thin;
-            // }
-
-            &::before,
-            &::after {
-                content: "";
-                position: sticky;
-                display: block;
-                z-index: 5;
-                left: 0;
-                width: 100%;
-                height: var(--item-gap);
-            }
-            &::before {
-                top: 0;
-                margin-bottom: calc(var(--item-gap) * -1);
-                background: linear-gradient(
-                    to bottom,
-                    var(--theme-color) 0%,
-                    transparent
-                );
-            }
-            &::after {
-                bottom: -1em;
-                margin-top: calc(var(--item-gap) * -1);
-                background: linear-gradient(
-                    to top,
-                    var(--theme-color) 0%,
-                    transparent
-                );
-            }
-
-            & > .item,
-            & > .screen-sm-button-collapse-categories,
-            & > hr {
-                display: block;
-            }
-            & > .item,
-            & > .screen-sm-button-collapse-categories {
-                position: relative;
-                color: inherit;
-                font-weight: normal;
-                min-height: var(--item-min-height);
-                line-height: var(--item-line-height);
-                padding: calc(
-                        (var(--item-min-height) - var(--item-line-height)) / 2
-                    )
-                    var(--link-item-padding-x);
-                border-radius: 8px;
-                & > :global(svg) {
-                    position: absolute;
-                    display: block;
-                    width: var(--link-item-icon-size);
-                    height: var(--link-item-icon-size);
-                    top: 50%;
-                    margin-left: calc(
-                        var(--link-item-icon-size) * -1 -
-                            var(--link-item-icon-margin)
-                    );
-                    margin-right: calc(var(--link-item-icon-margin) / 2);
-                    margin-top: calc(var(--link-item-icon-size) * -0.5);
-                    color: var(--text-color-secondary);
-                    &.right-arrow {
-                        --link-item-icon-size: 0.75em;
-                        position: relative;
-                        top: 0.225em;
-                        margin: auto;
-                        display: inline-block;
-                        vertical-align: top;
-                        margin-left: calc(var(--link-item-icon-margin) / 2);
-                        // color: var(--text-color-secondary);
-                    }
-                }
-                & + .item {
-                    margin-top: var(--item-gap);
-                }
-            }
-            & > .item {
-                &.title {
-                }
-                &.link,
-                &.explore {
-                    color: var(--text-color-primary);
-                    transition-property: transform, background-color;
-                    padding-left: var(--link-item-with-icon-padding-left);
-                    .styles-hover() {
-                        background: var(--tag-background-color);
-                    }
-                    &.is-active,
-                    &:has(.is-menu-open) {
-                        .styles-hover();
-                    }
-                    .pointer-hover(.styles-hover());
-                    &::before {
-                        position: absolute;
-                        top: 50%;
-                        left: calc(
-                            var(--link-item-with-icon-padding-left) / 2 -
-                                var(--link-item-no-icon-dot-size) / 2
-                        );
-                        margin-top: calc(
-                            var(--link-item-no-icon-dot-size) / -2
-                        );
-                        width: var(--link-item-no-icon-dot-size);
-                        height: var(--link-item-no-icon-dot-size);
-                        background: transparent;
-                        border: var(--link-item-no-icon-dot-border-width) solid
-                            var(--link-item-no-icon-line-color);
-                        border-radius: 100%;
-                        transition: inherit;
-                        transition-property: border-color, background-color;
-                    }
-                    &:not(:has(> svg))::before,
-                    &:has(> svg.right-arrow)::before {
-                        content: "";
-                    }
-                }
-                &.link {
-                    text-decoration: none;
-                    &.is-active {
-                        &::before {
-                            // background-color: var(--accent-color-purple);
-                            border-color: var(--text-color-secondary);
-                            background-color: var(--text-color-secondary);
-                        }
-                        & > :global(svg) {
-                            color: var(--text-color-primary);
-                        }
-                    }
-                    &.is-level-2 {
-                        &::after {
-                            position: absolute;
-                            content: "";
-                            left: calc(
-                                var(--link-item-with-icon-padding-left) / 2 -
-                                    var(--link-item-no-icon-dot-border-width) /
-                                    2
-                            );
-                            top: calc(var(--item-gap) * -1);
-                            bottom: calc(
-                                50% + var(--link-item-no-icon-dot-size) / 2
-                            );
-                            width: var(--link-item-no-icon-dot-border-width);
-                            background: var(--link-item-no-icon-line-color);
-                            transition: inherit;
-                            transition-property: background-color;
-                        }
-                        & + .is-level-2 {
-                            &::after {
-                                top: calc(
-                                    -50% +
-                                        var(
-                                            --link-item-no-icon-dot-border-width
-                                        )
-                                );
-                            }
-                        }
-                    }
-                    /*
-                    &.is-level-2 {
-                        --line-left-edge: calc(
-                            var(--link-item-icon-size) - var(--link-item-icon-margin) * 1 / 4
-                        );
-                        --line-width: 2px;
-                        --line-border-radius: 0;
-                        --line-horizontal-width: 0.6667em;
-                        --line-horizontal-box-height: calc(
-                            50% + var(--item-gap) / 2
-                        );
-                        // margin-left: calc(
-                        //     var(--link-item-icon-size) + var(--link-item-icon-margin)
-                        // );
-                        // padding-left: var(--link-item-icon-margin);
-                        &::before,
-                        &::after {
-                            content: "";
-                            position: absolute;
-                            border: 0px solid var(--link-item-no-icon-line-color);
-                            border-bottom-left-radius: var(
-                                --line-border-radius
-                            );
-                        }
-                        &::before {
-                            width: calc(
-                                var(--line-horizontal-width) + var(--line-width)
-                            );
-                            left: var(--line-left-edge);
-                            top: 0;
-                            bottom: 0;
-                            border-left-width: var(--line-width);
-                        }
-                        &::after {
-                            width: var(--line-horizontal-width);
-                            top: 0;
-                            left: calc(
-                                var(--line-left-edge) + var(--line-width)
-                            );
-                            height: var(--line-horizontal-box-height);
-                            border-bottom-width: var(--line-width);
-                        }
-                        // --link-item-padding-left-extra: 1em;
-                        & + .is-level-2 {
-                            &::before {
-                                top: calc(var(--item-gap) * -1);
-                            }
-                        }
-                        &:not(:has(+ .is-level-2)) {
-                            --line-border-radius: 0.5em;
-                            &::before {
-                                height: calc(
-                                    var(--line-horizontal-box-height) +
-                                        var(--item-gap)
-                                );
-                                bottom: auto;
-                                border-bottom-width: var(--line-width);
-                            }
-                            &::after {
-                                display: none;
-                            }
-                        }
-                    }
-                    */
-                }
-                &.explore {
-                    appearance: none;
-                    width: 100%;
-                    text-align: left;
-                    border: 0;
-                    background: transparent;
-                    &.is-active {
-                        &::before {
-                            // background-color: var(--accent-color);
-                            background-color: var(--text-color-secondary);
-                            border-color: var(--text-color-secondary);
-                        }
-                    }
-                    // &[data-explore="aircraftFamily"].is-active {
-                    //     &::before {
-                    //         background-color: var(--accent-color-teal);
-                    //     }
-                    // }
-                    // &:has([class*="is-status-loading"]) {
-                    //     pointer-events: none;
-                    // }
-                }
-            }
-            & > hr {
-                margin: 0.6667em auto;
-                border-top-width: 0;
-            }
-            & > .screen-sm-button-collapse-categories {
-                cursor: pointer;
-                transition: color var(--base-transition-duration);
-                display: none;
-                padding-left: var(--link-item-with-icon-padding-left);
-                & > :global(svg) {
-                    --link-item-icon-size: 1em;
-                }
-                &:hover {
-                    color: var(--text-color-primary);
-                }
-            }
-        }
-
-        & > .screen-sm-categories-background,
-        & > .screen-sm-button-expand-categories {
-            display: none;
-            backdrop-filter: var(--global-header-backdrop-filter);
-        }
-        & > .screen-sm-categories-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            overscroll-behavior: contain;
-            scrollbar-width: none;
-            background-color: var(--global-header-background-color);
-            backdrop-filter: var(--global-header-backdrop-filter);
-            transition: opacity var(--base-transition-duration) allow-discrete;
-            opacity: 0;
-            pointer-events: none;
-            &::before {
-                content: "";
-                position: relative;
-                display: block;
-                top: 0;
-                height: 200vh;
-            }
-        }
-        & > .screen-sm-button-expand-categories {
-            --size: 1.13333em;
-            position: fixed;
-            top: calc(var(--global-sticky-top) + 0.6667em);
-            left: 0;
-            display: none;
-            // top: 1em;
-            // left: var(--global-edge-safe-distance);
-            // width: var(--size);
-            // height: var(--size);
-            border-radius: 0 100em 100em 0;
-            cursor: pointer;
-            font-weight: normal;
-            padding: 0.3333em var(--global-edge-safe-distance);
-            margin: 0 0 0.6667em 0;
-            color: var(--text-color-secondary);
-            background: var(--tag-background-color);
-            transition: background-color var(--base-transition-duration);
-            border: 1px solid var(--border-color);
-            border-left: 0;
-            box-shadow: var(--overlay-box-shadow);
-            & > svg {
-                position: relative;
-                display: inline-block;
-                vertical-align: top;
-                width: var(--size);
-                height: var(--size);
-                margin-right: 0.3333em;
-                top: 0.15em;
-            }
-            &:hover {
-                background: var(--menu-background-color-highlight);
-            }
-            &::after {
-                content: "";
-                position: absolute;
-                z-index: -1;
-                top: -1px;
-                bottom: -1px;
-                left: 0;
-                right: -1px;
-                // border: inherit;
-                border-radius: inherit;
-                background: var(--global-header-background-color);
-            }
-            // &::before {
-            //     content: "";
-            //     position: absolute;
-            //     z-index: 2;
-            //     top: 0.5em;
-            //     bottom: 0.5em;
-            //     left: 2.5em;
-            //     width: 2.5px;
-            //     background: currentColor;
-            // }
-        }
-
-        .screen-sm({
-            position: fixed;
-            width: auto;
-            height: auto;
-            left: auto;
-            top: auto;
-            overflow: visible;
-            flex: none;
-            // margin-right: -1em;
-            & > .wrapper,
-            & > .screen-sm-categories-background {
-                position: fixed;
-                left: 0;
-                top: var(--global-sticky-top);
-                height: calc(100% - var(--global-sticky-top));
-                height: calc(100vh - var(--global-sticky-top));
-                height: calc(100dvh - var(--global-sticky-top));
-            }
-            & > .wrapper, {
-                &::before,
-                &::after {
-                    display: none;
-                }
-                min-width: @min-width;
-                width: 50vw;
-                width: 50dvw;
-                padding-top: calc(var(--global-edge-safe-distance) / 2);
-                padding-left: var(--global-edge-safe-distance);
-                padding-right: var(--global-edge-safe-distance);
-                padding-bottom: calc(
-                    var(--global-navbar-height) +
-                    var(--global-navbar-bottom-edge) * 3 + 
-                    var(--global-bottom-safe-distance)
-                );
-                max-height: none;
-                overflow: auto;
-                transform: translateX(-100%);
-                transition: none var(--base-transition-duration) allow-discrete;
-                transition-property: transform, opacity, box-shadow;
-                background: var(--theme-color);
-                pointer-events: none;
-                & > .screen-sm-button-collapse-categories {
-                    display: block;
-                }
-            }
-            & > .screen-sm-categories-background,
-            & > .screen-sm-button-expand-categories {
-                display: block;
-            }
-        });
-    }
-
-    .categories > input[type="checkbox"]:checked {
-        & ~ .wrapper,
-        & ~ .screen-sm-categories-background {
-            pointer-events: all;
-        }
-        & ~ .wrapper {
-            transform: none;
-            box-shadow: var(--overlay-box-shadow);
-        }
-        & ~ .screen-sm-categories-background {
-            opacity: 1;
-        }
-    }
-</style>

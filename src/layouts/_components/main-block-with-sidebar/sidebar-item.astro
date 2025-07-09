@@ -1,0 +1,47 @@
+---
+type Props = {
+    type?: "link" | "button" | "divider" | "subtitle";
+    text?: string;
+    route?: string;
+    level?: number;
+    isActive?: boolean;
+    iconHtml?: string;
+    iconHtmlActive?: string;
+};
+
+const Element = Astro.props.route ? "a" : "button";
+---
+
+{
+    Astro.props.type === "divider" ? (
+        <hr />
+    ) : Astro.props.type === "subtitle" ? (
+        <strong class="item title">{Astro.props.text}</strong>
+    ) : (
+        <Element
+            href={Astro.props.route}
+            class:list={[
+                "item",
+                Element === "a" ? "link" : "button",
+                `is-level-${Astro.props.level || 1}`,
+                {
+                    "is-active":
+                        Astro.props.isActive ??
+                        Astro.url.pathname === Astro.props.route,
+                },
+            ]}
+        >
+            <Fragment
+                set:html={
+                    Astro.props.isActive && Astro.props.iconHtmlActive
+                        ? Astro.props.iconHtmlActive
+                        : Astro.props.iconHtml
+                          ? Astro.props.iconHtml
+                          : ""
+                }
+            />
+            {Astro.props.text}
+            <slot />
+        </Element>
+    )
+}
