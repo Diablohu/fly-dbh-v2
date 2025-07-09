@@ -6,10 +6,11 @@ import ArrowRightSvg from "@/assets/arrow/right3.svg";
 
 import Block from "@/components/block.astro";
 import ClientInit from "./client-init";
+import Item from "./sidebar-item.astro";
 
 export type Props = {
-    sideBar: Array<
-        | "divider"
+    items?: Array<
+        | { type: "divider" }
         | {
               type: "subtitle";
               text: string;
@@ -25,9 +26,9 @@ export type Props = {
           }
         | {
               type: "button";
+              text: string;
               level?: number;
               isActive?: boolean;
-              children?: any;
           }
     >;
 };
@@ -46,59 +47,7 @@ export type Props = {
                     for={MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN}
                     class="screen-sm-button-collapse-categories"
                     ><ArrowLeftSvg />收起分类</label
-                >{
-                    Astro.props.sideBar.map((item, index, list) => {
-                        if (item === "divider") {
-                            return <hr />;
-                        }
-                        switch (item.type) {
-                            case "subtitle": {
-                                return (
-                                    <strong class="item title">
-                                        {item.text}
-                                    </strong>
-                                );
-                            }
-                            case "link": {
-                                return (
-                                    <a
-                                        href={item.route}
-                                        class:list={[
-                                            "item",
-                                            "link",
-                                            `is-level-${item.level || 1}`,
-                                            {
-                                                "is-active":
-                                                    item.isActive ??
-                                                    Astro.url.pathname ===
-                                                        item.route,
-                                            },
-                                        ]}
-                                        set:html={`${item.isActive ? item.iconHtmlActive || "" : item.iconHtml || ""}${item.text}`}
-                                    />
-                                );
-                            }
-                            case "button": {
-                                return (
-                                    <button
-                                        type="button"
-                                        class:list={[
-                                            "item",
-                                            "explore",
-                                            {
-                                                "is-active": item.isActive,
-                                            },
-                                        ]}
-                                    >
-                                        {item.children}
-                                    </button>
-                                );
-                            }
-                            default:
-                                return null;
-                        }
-                    })
-                }
+                >{Astro.props.items?.map((item) => <Item {...item} />)}
                 <slot name="sidebar-extra-items" />
                 <ClientInit client:load />
             </section>
@@ -122,8 +71,8 @@ export type Props = {
     .main-block-with-sidebar-container {
         display: flex;
         flex-flow: row nowrap;
-        align-items: stretch;
-        gap: 1em;
+        align-items: flex-start;
+        gap: var(--global-edge-safe-distance);
     }
 
     .main {
@@ -235,7 +184,7 @@ export type Props = {
 
             & > :global(.item),
             & > .screen-sm-button-collapse-categories,
-            & > hr {
+            & > :global(hr) {
                 display: block;
             }
             & > :global(.item),
@@ -346,7 +295,7 @@ export type Props = {
                         transition: inherit;
                         transition-property: background-color;
                     }
-                    & + .is-level-2 {
+                    & + :global(.is-level-2) {
                         &::after {
                             top: calc(
                                 -50% + var(--link-item-no-icon-dot-border-width)
@@ -442,7 +391,7 @@ export type Props = {
                 //     pointer-events: none;
                 // }
             }
-            & > hr {
+            & > :global(hr) {
                 margin: 0.6667em auto;
                 border-top-width: 0;
             }
@@ -452,10 +401,10 @@ export type Props = {
                 display: none;
                 padding-left: var(--link-item-with-icon-padding-left);
                 margin-bottom: 1.3333em;
-                &::after{
+                &::after {
                     content: "";
                     position: absolute;
-                    bottom: -.6667em;
+                    bottom: -0.6667em;
                     height: 1px;
                     left: 0;
                     right: 0;

@@ -73,7 +73,7 @@ interface Props {
      */
     showFooter?: boolean;
 
-    sideBar?: MainBlockWithSidebarProps['sideBar'];
+    sideBar?: boolean | MainBlockWithSidebarProps['items'];
 }
 
 // ============================================================================
@@ -252,9 +252,13 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
             <Announcements showHeader={showHeader} />
 
             <main>
-                {Astro.props.sideBar
+                {Astro.props.sideBar === true || Array.isArray(Astro.props.sideBar)
                     ? (
-                        <MainBlockWithSidebar sideBar={Astro.props.sideBar}>
+                        <MainBlockWithSidebar items={
+                            Array.isArray(Astro.props.sideBar)
+                                ? Astro.props.sideBar
+                                : undefined
+                        }>
                             <slot />
                             <slot name="sidebar-extra-items" slot="sidebar-extra-items" />
                         </MainBlockWithSidebar>
