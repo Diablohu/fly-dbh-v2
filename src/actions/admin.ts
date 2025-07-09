@@ -108,7 +108,10 @@ const actions = {
     isLoginValid: defineAction({
         handler: async (_, context) => {
             try {
-                if (isLoginValid(context)) return true;
+                if (isLoginValid(context)) {
+                    refreshCookie(context);
+                    return true;
+                }
 
                 context.cookies.delete(ADMIN_LAST_LOGIN);
                 return false;
