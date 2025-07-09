@@ -20,7 +20,7 @@ export const GET: APIRoute = async (context) => {
         // See "Generating items" section for examples using content collections and glob imports
         items:
             (
-                await context.callAction(actions.rssFeedFetch, undefined)
+                await context.callAction(actions.rssFeed.fetch, undefined)
             ).data?.map((post) => {
                 return {
                     title: post.title,

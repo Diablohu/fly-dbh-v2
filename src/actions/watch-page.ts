@@ -73,7 +73,7 @@ const fetchProjections = `{
 // links
 
 const actions = {
-    watchPageFetch: defineAction({
+    fetch: defineAction({
         input: z.string(),
         handler: async (cmsIdOrSlug, context) => {
             try {

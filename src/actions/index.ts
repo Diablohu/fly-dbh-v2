@@ -1,13 +1,15 @@
-import adminActions from "./admin";
-import homePageActions from "./home-page";
-import watchPageActions from "./watch-page";
-import videoListPageActions from "./video-list-page";
-import rssFeedActions from "./rss-feed";
+import admin from "./admin";
+import homePage from "./home-page";
+import watchPage from "./watch-page";
+import videoListPage from "./video-list-page";
+import rssFeed from "./rss-feed";
 
 export const server = {
-    ...adminActions,
-    ...homePageActions,
-    ...watchPageActions,
-    ...videoListPageActions,
-    ...rssFeedActions,
+    admin,
+
+    homePage,
+    videoListPage,
+    watchPage,
+
+    rssFeed,
 };

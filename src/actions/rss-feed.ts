@@ -37,7 +37,7 @@ type ReturnVideoItemType = Partial<VideoItemType> &
 // ============================================================================
 
 const actions = {
-    rssFeedFetch: defineAction({
+    fetch: defineAction({
         handler: async () => {
             try {
                 // console.log({ query });

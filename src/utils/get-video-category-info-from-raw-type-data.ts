@@ -15,7 +15,7 @@ const getVideoCategoryInfoFromRawTypeData = (
     type: VideoListPageTypesType,
     raw: Omit<
         Exclude<
-            Awaited<ReturnType<typeof actions.videoListPageFetchTags>>["data"],
+            Awaited<ReturnType<typeof actions.videoListPage.fetchTags>>["data"],
             undefined
         >[0],
         "_rev" | "_type" | "_createdAt" | "_updatedAt" | '_originalId'

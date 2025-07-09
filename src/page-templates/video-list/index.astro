@@ -37,7 +37,7 @@ const type: VideoListPageTypesType | undefined =
 
 const { data: currentCategoryInfo, error } = isIndex
     ? {}
-    : await Astro.callAction(actions.videoListPageFetchInfo, {
+    : await Astro.callAction(actions.videoListPage.fetchInfo, {
           type: type as VideoListPageTypesType,
           slug: Astro.props.slug as Required<Props>["slug"],
       });

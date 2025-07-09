@@ -46,7 +46,7 @@ type CollectionsType = {
 };
 
 const actions = {
-    homePageFetch: defineAction({
+    fetch: defineAction({
         handler: async () => {
             try {
                 return (await fetch(

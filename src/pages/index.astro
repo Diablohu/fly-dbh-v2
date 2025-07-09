@@ -56,7 +56,7 @@ import CollectionSpotlight from "./homepage/collection-spotlight.astro";
 // ============================================================================
 
 const { data: collections, error: error } = await Astro.callAction(
-    actions.homePageFetch,
+    actions.homePage.fetch,
     undefined
 );
 if (error) {

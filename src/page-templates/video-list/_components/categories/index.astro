@@ -36,7 +36,7 @@ type Props = {
 };
 
 const { data: sidebarInfos, error: sidebarInfosError } = await Astro.callAction(
-    actions.videoListPageFetchTags,
+    actions.videoListPage.fetchTags,
     {}
 );
 if (sidebarInfosError) {

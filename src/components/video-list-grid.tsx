@@ -136,7 +136,7 @@ const VideoListGrid: FC<Props> = ({
 
         setStatus("loading");
         actions
-            .videoListPageFetch({
+            .videoListPage.fetchList({
                 type,
                 slug,
                 from: CurrentIndexRef.current,

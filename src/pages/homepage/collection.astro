@@ -11,7 +11,7 @@ type Props = {
     title: string;
     videos?: ValueOf<
         Exclude<
-            Awaited<ReturnType<typeof actions.homePageFetch>>["data"],
+            Awaited<ReturnType<typeof actions.homePage.fetch>>["data"],
             undefined
         >
     >;

@@ -72,7 +72,7 @@ const Explore: FC<
         setStatus("loading");
 
         actions
-            .videoListPageFetchTags({
+            .videoListPage.fetchTags({
                 type: type === "tag" ? "tagSubCategory" : type,
             })
             .then((res) => {
