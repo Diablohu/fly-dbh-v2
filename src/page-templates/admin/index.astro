@@ -10,12 +10,12 @@ type Props = {
 };
 
 const { data: isLoginValid } = await Astro.callAction(
-    actions.adminIsLoginValid,
+    actions.admin.isLoginValid,
     undefined
 );
 
 if (isLoginValid)
-    await Astro.callAction(actions.adminRefreshLoginCookie, undefined);
+    await Astro.callAction(actions.admin.refreshLoginCookie, undefined);
 ---
 
 <Layout

@@ -12,10 +12,10 @@ type Props = {
     type?: VideoListPageTypesType;
     slug?: string;
     isIndex: boolean;
-    info: Awaited<ReturnType<typeof actions.videoListPageFetchInfo>>["data"];
+    info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
 };
 const length = 20;
-const extra: Parameters<typeof actions.videoListPageFetch>[0]["extra"] = [];
+const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] = [];
 
 if (Astro.props.type === "aircraftFamily") {
     function getQueryString(ref: string) {
@@ -55,7 +55,7 @@ if (Astro.props.type === "aircraftFamily") {
 }
 
 const { data, error: error } = await Astro.callAction(
-    actions.videoListPageFetch,
+    actions.videoListPage.fetchList,
     {
         type: Astro.props.type,
         slug: Astro.props.slug,

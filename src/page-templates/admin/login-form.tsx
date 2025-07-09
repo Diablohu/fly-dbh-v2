@@ -4,7 +4,7 @@ import { actions } from "astro:actions";
 // ============================================================================
 
 type StatusType = "ready" | "loading" | "error";
-const loginAction = actions.adminLogin;
+const loginAction = actions.admin.login;
 
 // ============================================================================
 
@@ -40,7 +40,7 @@ const LoginForm: FC = () => {
             // }
             if (!data || error) {
                 setStatus("error");
-                setError(`${error.status} ${error.code}`);
+                setError(`${error?.status} ${error?.code}`);
                 return;
             }
 

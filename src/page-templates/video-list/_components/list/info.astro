@@ -12,7 +12,7 @@ type Props = {
     type?: VideoListPageTypesType;
     slug?: string;
     isIndex: boolean;
-    info: Awaited<ReturnType<typeof actions.videoListPageFetchInfo>>["data"];
+    info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
 };
 ---
 

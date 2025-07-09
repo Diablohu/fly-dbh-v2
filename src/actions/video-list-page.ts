@@ -94,7 +94,7 @@ type ResponseDataType = {
 // ============================================================================
 
 const actions = {
-    videoListPageFetch: defineAction({
+    fetchList: defineAction({
         input: z.object({
             type: z.string().optional(),
             slug: z.string().optional(),
@@ -164,7 +164,7 @@ ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
         },
     }),
 
-    videoListPageFetchInfo: defineAction({
+    fetchInfo: defineAction({
         input: z.object({
             type: z.string(),
             slug: z.string(),
@@ -315,7 +315,7 @@ ${
         },
     }),
 
-    videoListPageFetchTags: defineAction({
+    fetchTags: defineAction({
         input: z.object({
             type: z.string().optional(),
         }) as z.ZodType<{

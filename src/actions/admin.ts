@@ -1,3 +1,4 @@
+import fs from "fs-extra";
 import {
     defineAction,
     ActionError,
@@ -7,7 +8,11 @@ import { z } from "astro:schema";
 import { createTOTPKeyURI, verifyTOTPWithGracePeriod } from "@oslojs/otp";
 import dayjs from "dayjs";
 import { title } from "@/global";
-import { adminTOTP, adminLoginValidPeriod } from "@/server-vars";
+import {
+    adminTOTP,
+    adminLoginValidPeriod,
+    folderNameLogs,
+} from "@/server-vars";
 import { ADMIN_LAST_LOGIN } from "@/constants/cookies";
 
 import actionErrorHandler from "./_error-handler";
@@ -40,7 +45,7 @@ function refreshCookie(context: ActionAPIContext) {
 // ============================================================================
 
 const actions = {
-    adminReGenenerateTOTPKeyUri: defineAction({
+    reGenenerateTOTPKeyUri: defineAction({
         handler: async () => {
             if (!import.meta.env.DEV)
                 throw new ActionError({ code: "UNAUTHORIZED" });
@@ -61,7 +66,7 @@ const actions = {
         },
     }),
 
-    adminLogin: defineAction({
+    login: defineAction({
         accept: "form",
         input: z.object({
             code: z.string(),
@@ -87,7 +92,7 @@ const actions = {
         },
     }),
 
-    adminIsLoginValid: defineAction({
+    isLoginValid: defineAction({
         handler: async (_, context) => {
             try {
                 if (isLoginValid(context)) return true;
@@ -100,7 +105,7 @@ const actions = {
         },
     }),
 
-    adminRefreshLoginCookie: defineAction({
+    refreshLoginCookie: defineAction({
         handler: async (_, context) => {
             try {
                 if (!isLoginValid(context))
@@ -108,6 +113,18 @@ const actions = {
                 return {
                     expires: refreshCookie(context),
                 };
+            } catch (err) {
+                actionErrorHandler(err);
+            }
+        },
+    }),
+
+    getLogsList: defineAction({
+        handler: async (_, context) => {
+            try {
+                const files = await fs.readdir(folderNameLogs);
+                console.log(files);
+                return files;
             } catch (err) {
                 actionErrorHandler(err);
             }

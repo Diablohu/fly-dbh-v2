@@ -29,7 +29,7 @@ import { errorLog } from "@/utils/log";
 if (!Astro.params.slug) return Astro.redirect(getVideoListPageLink(), 303);
 
 const { data: video, error } = await Astro.callAction(
-    actions.watchPageFetch,
+    actions.watchPage.fetch,
     Astro.params.slug
 );
 if ((error && error.code === "NOT_FOUND") || !video) {
