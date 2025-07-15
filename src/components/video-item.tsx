@@ -1,4 +1,11 @@
-import { memo, useMemo, type FC, type AnchorHTMLAttributes } from "react";
+import {
+    memo,
+    useMemo,
+    // useState,
+    // useCallback,
+    type FC,
+    type AnchorHTMLAttributes,
+} from "react";
 import classNames from "classnames";
 
 import { type VideoTagType, type VideoItemType } from "@/types";
@@ -6,7 +13,9 @@ import { type VideoTagType, type VideoItemType } from "@/types";
 import prettifyTitle from "@/utils/prettify-title";
 import getDateString from "@/utils/get-date-string";
 
+// import Menu, { MenuItem } from "@/components/menu";
 import Symbol from "@/components/symbol";
+// import DotsVerticalSvg from "@/assets/svg-symbols/dots-vertical.svg?raw";
 
 import styles from "./video-item.module.less";
 
@@ -41,7 +50,11 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
         //     [searchString]
         // );
 
+        // const [showMenu, setShowMenu] = useState(false);
         const prettifiedTitle = useMemo(() => prettifyTitle(title), [title]);
+        // const onMenuHandleClick = useCallback(() => {
+        //     setShowMenu(true);
+        // }, []);
 
         return (
             <figure className={classNames([styles["video-item"], className])}>
@@ -127,6 +140,26 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                         ))}
                 </a>
 
+                {/* <span className={styles["menu-handle"]}>
+                    <span className={styles["wrapper"]}>
+                        <button
+                            type="button"
+                            dangerouslySetInnerHTML={{
+                                __html: DotsVerticalSvg,
+                            }}
+                            onClick={onMenuHandleClick}
+                        />
+                        <Menu
+                            open={showMenu}
+                            setOpenState={setShowMenu}
+                            anchorPoint="bottomLeft"
+                            grow={["down", "right"]}
+                        >
+                            <MenuItem>AAAAAAAAAA</MenuItem>
+                        </Menu>
+                    </span>
+                </span> */}
+
                 {!!links && (
                     <span className={styles["links"]}>
                         {Object.entries(links).map(([platform, url]) => (
@@ -135,6 +168,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                                 href={url}
                                 target="_blank"
                                 data-platform={platform}
+                                key={platform}
                             >
                                 <Symbol
                                     name={

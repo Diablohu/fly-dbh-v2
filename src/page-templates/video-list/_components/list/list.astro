@@ -18,7 +18,11 @@ const length = 20;
 const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] = [];
 
 if (Astro.props.type === "aircraftFamily") {
-    function getQueryString(ref: string) {
+    /**
+     * 追加请求的 GROQ
+     *  - 追加到页面初始化请求中，即：不会有额外网络请求
+     */
+    function getExtraQueryString(ref: string) {
         return `*[_type=="video" && "tutorial" in tags[]->slug.current && references(${ref})] {
     _id,
     'slug': slug.current,
@@ -31,6 +35,7 @@ if (Astro.props.type === "aircraftFamily") {
         "value": name,
         "name": title
     },
+    links,
 } | order(release desc)`;
     }
     if (
@@ -40,14 +45,14 @@ if (Astro.props.type === "aircraftFamily") {
         Astro.props.info.onboard_devices.forEach(({ _id, maker, name }) => {
             extra.push({
                 name: `机载设备 (${maker} ${name}) 教学`,
-                query: getQueryString(`"${_id}"`),
+                query: getExtraQueryString(`"${_id}"`),
             });
         });
     }
     if (Array.isArray(Astro.props.info?.tags) && Astro.props.info.tags.length) {
         extra.push({
             name: `相关航空知识`,
-            query: getQueryString(
+            query: getExtraQueryString(
                 `[${Astro.props.info.tags.map(({ _id }) => `"${_id}"`).join(",")}]`
             ),
         });
