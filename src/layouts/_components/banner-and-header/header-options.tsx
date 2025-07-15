@@ -21,6 +21,7 @@ import Menu, {
 import useColorScheme from "@/react-hooks/use-color-scheme";
 import useVideoSource from "@/react-hooks/use-video-source";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
+import useVideoItemShowPlatformLinksOnHover from "@/react-hooks/use-video-item-show-platform-links-on-hover";
 // import isRouteActive from "@/utils/is-route-active";
 import { type Props } from "./";
 import { links } from "./";
@@ -71,6 +72,10 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
                 <OptionContentListAutoLoadMore
                     label="列表自动加载更多内容"
                     defaultValue={defaults.contentListAutoLoadMore}
+                />
+                <OptionVideoItemShowPlatformLinksOnHover
+                    label="鼠标指向视频条目显示平台链接"
+                    defaultValue={defaults.videoItemShowPlatformLinksOnHover}
                 />
             </Menu>
         </>
@@ -205,6 +210,36 @@ const OptionContentListAutoLoadMore: FC<{
         <MenuSwitchItem
             label={label}
             checked={contentListAutoLoadMore === "1"}
+            onChange={onChange}
+        />
+    );
+};
+
+// ============================================================================
+
+const OptionVideoItemShowPlatformLinksOnHover: FC<{
+    label?: string;
+    defaultValue: Pick<
+        Props,
+        "defaults"
+    >["defaults"]["videoItemShowPlatformLinksOnHover"];
+}> = ({ label, defaultValue }) => {
+    const [
+        videoItemShowPlatformLinksOnHover,
+        setVideoItemShowPlatformLinksOnHover,
+    ] = useVideoItemShowPlatformLinksOnHover(defaultValue || "0");
+
+    const onChange = useCallback(
+        (checked: boolean) => {
+            setVideoItemShowPlatformLinksOnHover(checked ? "1" : "0");
+        },
+        [videoItemShowPlatformLinksOnHover]
+    );
+
+    return (
+        <MenuSwitchItem
+            label={label}
+            checked={videoItemShowPlatformLinksOnHover === "1"}
             onChange={onChange}
         />
     );

@@ -2,11 +2,17 @@
 import { ClientRouter } from "astro:transitions";
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
-import { VIDEO_SOURCE, FORCE_COLOR_SCHEME, CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
+import {
+    VIDEO_SOURCE,
+    FORCE_COLOR_SCHEME,
+    CONTENT_LIST_AUTO_LOAD_MORE,
+    VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
+} from "@/constants/cookies";
 import {
     type ValidVideoSourceType,
     type ValidContentListAutoLoadMoreType,
     type ValidPageContentType,
+    type ValidVideoItemShowPlatformLinksOnHoverType,
 } from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
@@ -100,6 +106,7 @@ const {
 
 const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
 const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.value;
+const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER)?.value;
 ---
 
 <!doctype html>
@@ -107,7 +114,10 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
     lang={Astro.currentLocale || 'zh'}
     data-content-type={Astro.props.contentType}
     class:list={[
-        forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : ''
+        forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : '',
+        videoItemShowPlatformLinksOnHover === '1'
+            ? 'option-video-item-show-platform-links-on-hover'
+            : ''
     ]}>
     <head>
         <meta charset="UTF-8" />
@@ -245,6 +255,7 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
                     videoSource: Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType,
                     forcedColorScheme: forcedColorScheme as 'dark' | 'light' | undefined,
                     contentListAutoLoadMore: contentListAutoLoadMore as ValidContentListAutoLoadMoreType,
+                    videoItemShowPlatformLinksOnHover: (videoItemShowPlatformLinksOnHover || '0') as ValidVideoItemShowPlatformLinksOnHoverType,
                 }}
             >
                 <LogoSVG slot="logo" />
@@ -281,7 +292,12 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
 
         </div>
 
-        <PrepareClient client:only />
+        <PrepareClient
+            client:only 
+            defaults={{
+                videoItemShowPlatformLinksOnHover: (videoItemShowPlatformLinksOnHover || '0') as ValidVideoItemShowPlatformLinksOnHoverType,
+            }}
+        />
         <Fragment set:html={GlobalSymbolDefinitionsRaw} />
     </body>
 </html>
