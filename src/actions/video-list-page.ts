@@ -58,6 +58,7 @@ const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
         "value": name,
         "name": title
     },
+    links,
     ${
         (type === "tag" && slug === "news") || type === "aircraftFamily"
             ? `

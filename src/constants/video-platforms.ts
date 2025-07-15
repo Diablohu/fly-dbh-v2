@@ -1,10 +1,10 @@
 import { type ValidVideoSourceType } from "@/types";
 
-import iconBilibili from "@/assets/icon-bilibili.svg?raw";
-import iconYouTube from "@/assets/icon-youtube.svg?raw";
-import iconTiktok from "@/assets/icon-tiktok.svg?raw";
-
 import getPlatformName from "@/utils/get-platform-name";
+
+function getUseSymbolHtml(name: string) {
+    return `<svg fill="currentColor" focusable="false" aria-hidden="true"><use xlink:href="#_g-symbol-${name}"></use></svg>`;
+}
 
 export const videoPlatforms: {
     name: ValidVideoSourceType;
@@ -18,21 +18,21 @@ export const videoPlatforms: {
         title: getPlatformName("bilibili"),
         href: "https://b.fly-dbh.com",
         iconType: "svg",
-        iconHtml: iconBilibili,
+        iconHtml: getUseSymbolHtml("bilibili"),
     },
     {
         name: "youtube",
         title: getPlatformName("youtube"),
         href: "https://ytb.fly-dbh.com",
         iconType: "svg",
-        iconHtml: iconYouTube,
+        iconHtml: getUseSymbolHtml("youtube"),
     },
     {
         name: "douyin",
         title: getPlatformName("douyin"),
         href: "https://douyin.fly-dbh.com",
         iconType: "svg",
-        iconHtml: iconTiktok,
+        iconHtml: getUseSymbolHtml("tiktok"),
     },
 ];
 
