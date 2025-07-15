@@ -12,14 +12,22 @@ type Props = {
     configString: string;
 };
 
+type ValidAreaType =
+    | "tutorial-airliner"
+    | "tutorial-light"
+    | "hot-news"
+    | "basics";
+
 type SpotlightListType = Array<
     | {
           name: string;
+          area?: ValidAreaType;
           href?: string;
           tags: [string, string, string][];
       }
     | {
           name: string;
+          area?: ValidAreaType;
           href?: string;
           videos: (Partial<VideoItemType> &
               Pick<VideoItemType, "_id" | "title" | "cover">)[];
@@ -47,6 +55,7 @@ try {
     spotlights = [
         {
             name: "大型民航机教学",
+            area: "tutorial-airliner",
             href: getVideoListPageLink("aircraftFamily", "airbus-a350-xwb"),
             tags: [
                 ["空客", "A350 XWB", "aircraftfamily-airbus-a350-xwb"],
@@ -77,6 +86,7 @@ try {
         },
         {
             name: "中小型机教学",
+            area: "tutorial-light",
             href: getVideoListPageLink("aircraftFamily", "cessna-172"),
             tags: [
                 ["ATR", "72-600", "aircraftfamily-atr-72-600"],
@@ -93,6 +103,7 @@ try {
         },
         {
             name: "热点资讯",
+            area: "hot-news",
             href: getVideoListPageLink("tag", "featured"),
             tags: [
                 ["微软2024", "SU03 更新", "platformupdate-msfs2024-su03"],
@@ -102,6 +113,7 @@ try {
         },
         {
             name: "模拟飞行入门",
+            area: "basics",
             href: getVideoListPageLink("tag", "game-guide"),
             videos: [
                 {
@@ -165,7 +177,11 @@ try {
                 "tags" in list &&
                 Array.isArray(list.tags) &&
                 list.tags.length > 0 ? (
-                    <section class="tag-list" data-name={list.name}>
+                    <section
+                        class="tag-list"
+                        data-name={list.name}
+                        data-area={list.area}
+                    >
                         <strong class="list-title">
                             {list.href ? (
                                 <a href={list.href}>{list.name}</a>
@@ -191,6 +207,7 @@ try {
                     <section
                         class="video-list-horizontal"
                         data-name={list.name}
+                        data-area={list.area}
                     >
                         <strong class="list-title">
                             {list.href ? (
@@ -202,10 +219,11 @@ try {
                         <VideoListHorizontal
                             client:idle
                             videos={list.videos.map((post) => ({
-                                cmsId: post._id,
+                                _id: post._id,
                                 slug: post.slug,
                                 title: post.title,
                                 cover: urlPrefixSanityImageCdn + post.cover,
+                                links: post.links,
                             }))}
                         />
                     </section>
@@ -247,16 +265,16 @@ try {
                 "basics";
         });
 
-        [data-name="大型民航机教学"] {
+        [data-area="tutorial-airliner"] {
             grid-area: tutorial-airliner;
         }
-        [data-name="中小型机教学"] {
+        [data-area="tutorial-light"] {
             grid-area: tutorial-light;
         }
-        [data-name="热点资讯"] {
+        [data-area="hot-news"] {
             grid-area: hot-news;
         }
-        [data-name*="模拟飞行入门"] {
+        [data-area="basics"] {
             grid-area: basics;
         }
 

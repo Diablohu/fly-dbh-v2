@@ -112,7 +112,7 @@ const VideoListHorizontal: FC<{
                 />
                 {videos.map((v) => (
                     <VideoItem
-                        key={v.cmsId}
+                        key={v._id}
                         className={styles["item"]}
                         {...v}
                     />

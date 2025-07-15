@@ -310,11 +310,12 @@ const VideoListGrid: FC<Props> = ({
             {list.map((post) => (
                 <VideoItem
                     key={post._id}
-                    cmsId={post._id}
+                    _id={post._id}
                     slug={post.slug}
                     title={post.title}
                     cover={post.cover}
                     duration={post.duration}
+                    links={post.links}
                     tags={getTags(post)}
                     infos={[new Date(post.release)]}
                 />

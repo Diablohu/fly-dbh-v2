@@ -18,6 +18,7 @@ const getProjections = (collection: string) => `{
     release,
     duration,
     "cover": cover.asset->path,
+    links,
     ${
         ["reviews", "preview"].includes(collection)
             ? `'developers': developers[]->{

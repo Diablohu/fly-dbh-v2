@@ -19,6 +19,7 @@ import Footer from './_components/footer.astro';
 import MainBlockWithSidebar, {
     type Props as MainBlockWithSidebarProps
 } from "./_components/main-block-with-sidebar/index.astro";
+import GlobalSymbolDefinitionsRaw from '@/assets/symbol-defs.svg?raw';
 
 import { themeColorLight, themeColorDark, title } from "@/global";
 import "@/global.less";
@@ -278,8 +279,10 @@ const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.
                 originPathname={Astro.originPathname}
             />
 
-            <PrepareClient client:only />
         </div>
+
+        <PrepareClient client:only />
+        <Fragment set:html={GlobalSymbolDefinitionsRaw} />
     </body>
 </html>
 

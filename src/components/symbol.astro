@@ -1,0 +1,9 @@
+---
+export type Props = {
+    name: "bilibili" | "youtube" | "tiktok";
+};
+---
+
+<svg fill="currentColor" focusable="false" aria-hidden="true"
+    ><use xlink:href={`#_g-symbol-${Astro.props.name}`}></use></svg
+>
