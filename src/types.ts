@@ -11,6 +11,7 @@ export type ValidPageContentType = "video-player" | "article" | "profile";
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
 export type ValidColorSchemeType = "dark" | "light";
 export type ValidContentListAutoLoadMoreType = "0" | "1";
+export type ValidVideoItemShowPlatformLinksOnHoverType = "0" | "1";
 
 export type VideoListPageTypesType =
     | "tag"

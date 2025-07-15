@@ -3,6 +3,7 @@ import {
     type ValidVideoSourceType,
     type ValidColorSchemeType,
     type ValidContentListAutoLoadMoreType,
+    type ValidVideoItemShowPlatformLinksOnHoverType,
 } from "@/types";
 
 import videoPlatforms from "@/constants/video-platforms";
@@ -40,6 +41,7 @@ export type Props = {
         videoSource: ValidVideoSourceType;
         forcedColorScheme?: ValidColorSchemeType;
         contentListAutoLoadMore: ValidContentListAutoLoadMoreType;
+        videoItemShowPlatformLinksOnHover?: ValidVideoItemShowPlatformLinksOnHoverType;
     };
 };
 

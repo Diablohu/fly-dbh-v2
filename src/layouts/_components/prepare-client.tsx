@@ -1,9 +1,12 @@
 import { memo, useEffect, type FC } from "react";
 
+import { type ValidVideoItemShowPlatformLinksOnHoverType } from "@/types";
+
 import hashHistory from "history/hash";
 import browserHistory from "history/browser";
 
 import useWindow from "@/react-hooks/use-window";
+import useVideoItemShowPlatformLinksOnHover from "@/react-hooks/use-video-item-show-platform-links-on-hover";
 
 // ============================================================================
 
@@ -12,7 +15,16 @@ import useWindow from "@/react-hooks/use-window";
  * - 为 `window` 挂载 `hashHistory` 和 `browserHistory`
  * - 监听 `window` 更改尺寸，实时更新滚动条宽度 CSS 变量 `--body-scrollbar-width`
  */
-const PrepareHistory: FC = () => {
+const PrepareHistory: FC<{
+    defaults: {
+        videoItemShowPlatformLinksOnHover?: ValidVideoItemShowPlatformLinksOnHoverType;
+    };
+}> = ({ defaults }) => {
+    const [videoItemShowPlatformLinksOnHover] =
+        useVideoItemShowPlatformLinksOnHover(
+            defaults.videoItemShowPlatformLinksOnHover || "0"
+        );
+
     useWindow(
         (force?: boolean) => {
             document.documentElement.style.setProperty(
@@ -34,6 +46,18 @@ const PrepareHistory: FC = () => {
             "body > .root"
         ) as HTMLDivElement;
     }, []);
+
+    useEffect(() => {
+        if (videoItemShowPlatformLinksOnHover === "1") {
+            document.documentElement.classList.add(
+                "option-video-item-show-platform-links-on-hover"
+            );
+        } else {
+            document.documentElement.classList.remove(
+                "option-video-item-show-platform-links-on-hover"
+            );
+        }
+    }, [videoItemShowPlatformLinksOnHover]);
 
     return null;
 };
