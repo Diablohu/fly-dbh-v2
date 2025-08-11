@@ -1,22 +1,26 @@
 ---
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
+
+// ============================================================================
+
+/*
+
+
+
+*/
 ---
 
-<Layout
-    title={`搜索${Astro.params.keyword ? `: ${Astro.params.keyword}` : ""}`}
-    header
-    footer
->
+<Layout title="工具" header footer>
     <Block>
-        <h2>搜索</h2>
+        <h2>直播工具：飞行进度条</h2>
     </Block>
 </Layout>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    h2 {
+    .player-container {
         zoom: 1;
     }
 </style>

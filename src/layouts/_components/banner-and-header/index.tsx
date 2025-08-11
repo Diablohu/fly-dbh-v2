@@ -33,8 +33,8 @@ export const links: {
     },
 ];
 export type Props = {
-    showBanner: boolean;
-    showHeader: boolean;
+    banner: boolean;
+    header: boolean;
     logo?: ReactNode;
     originPathname: string;
     defaults: {
@@ -48,17 +48,17 @@ export type Props = {
 // ============================================================================
 
 const BannerAndHeader: FC<Props> = ({
-    showHeader = false,
-    showBanner = false,
+    header = false,
+    banner = false,
     logo,
     originPathname,
     defaults,
 }) => {
     return (
         <>
-            <Banner showBanner={showBanner} logo={logo} />
+            <Banner banner={banner} logo={logo} />
             <Header
-                showHeader={showHeader}
+                header={header}
                 logo={logo}
                 originPathname={originPathname}
                 defaults={defaults}

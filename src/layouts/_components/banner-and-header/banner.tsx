@@ -22,15 +22,15 @@ import { links, type Props } from "./";
 
 // ============================================================================
 
-const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
+const Banner: FC<Pick<Props, "banner" | "logo">> & {
     observer?: IntersectionObserver;
     bannerInView?: boolean;
-} = ({ showBanner, logo }) => {
+} = ({ banner, logo }) => {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
     const VideoRef = useRef<HTMLVideoElement>(null);
 
-    const [renderBanner, setRenderBanner] = useState(showBanner);
+    const [renderBanner, setRenderBanner] = useState(banner);
     const [renderVideo, setRenderVideo] = useState(false);
     const [unmountedOnce, setUnmountedOnce] = useState(false);
 
@@ -126,7 +126,7 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
 
     useEffect(() => {
         // TODO: banner 关闭动画
-        if (showBanner) {
+        if (banner) {
             setRenderBanner(true);
             // setTimeout(() => {
             //     console.log(BannerRef.current);
@@ -142,7 +142,7 @@ const Banner: FC<Pick<Props, "showBanner" | "logo">> & {
             setRenderBanner(false);
             setUnmountedOnce(true);
         }
-    }, [showBanner]);
+    }, [banner]);
 
     useEffect(() => {
         setRenderVideo(true);

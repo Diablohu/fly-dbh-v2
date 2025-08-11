@@ -9,7 +9,7 @@ type Props = {
 };
 ---
 
-<Layout showHeader>
+<Layout header>
     <section class=`custom-error-page custom-${Astro.props.http}`>
         <strong>{Astro.props.http}</strong>
         <em>{Astro.props.http === 404 ? "能见度太低" : "服务器傻了"}</em>

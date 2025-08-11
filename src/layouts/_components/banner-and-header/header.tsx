@@ -11,15 +11,15 @@ import styles from "./index.module.less";
 // ============================================================================
 
 const Header: FC<
-    Pick<Props, "showHeader" | "logo" | "originPathname" | "defaults">
-> = ({ showHeader, logo, originPathname, defaults }) => {
-    if (!showHeader) return null;
+    Pick<Props, "header" | "logo" | "originPathname" | "defaults">
+> = ({ header, logo, originPathname, defaults }) => {
+    if (!header) return null;
     return (
         <header
             className={classNames([
                 styles["header"],
                 {
-                    [styles["mod-hidden"]]: !showHeader,
+                    [styles["mod-hidden"]]: !header,
                     [styles[`mod-mode-${import.meta.env.MODE}`]]:
                         import.meta.env.MODE !== "production",
                 },

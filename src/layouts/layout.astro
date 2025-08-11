@@ -52,6 +52,40 @@ interface Props {
     description?: string;
 
     /**
+     * 是否显示顶部导航条
+     * - 默认隐藏
+     */
+    header?: boolean;
+
+    /**
+     * 是否显示 Banner
+     * - 默认隐藏
+     */
+    banner?: boolean;
+
+    /**
+     * 是否显示全局页底
+     * - 默认隐藏
+     */
+    footer?: boolean;
+
+    /**
+     * 是否显示 Hero Banner
+     * - 默认不显示
+     */
+    hero?: false | string;
+
+    /**
+     * 是否显示侧边栏
+     *  - `true` 则显示空侧边栏
+     *      - _Slot_ `sidebar-extra-items` 会作为侧边栏内容
+     *  - `false` 则不显示侧边栏
+     *  - _Array_ 则作为侧边栏内容
+     *      - _Slot_ `sidebar-extra-items` 会追加到作为侧边栏内容末尾
+     */
+    sideBar?: boolean | MainBlockWithSidebarProps['items'];
+
+    /**
      * 用于社交分享 & 控制细节样式
      *  - `<html>` 标签会有 `data-content-type` 属性，若组件需要响应内容类型，可基于此做 CSS 选择器，如
      *      - `:root[data-content-type="video-player"] .logo { opacity: 0.5 }`
@@ -61,26 +95,6 @@ interface Props {
     coverImage?: string;
     coverImageWidth?: number;
     coverImageHeight?: number;
-
-    /**
-     * 是否显示顶部导航条
-     * - 默认隐藏
-     */
-    showHeader?: boolean;
-
-    /**
-     * 是否显示 Banner
-     * - 默认隐藏
-     */
-    showBanner?: boolean;
-
-    /**
-     * 是否显示全局页底
-     * - 默认隐藏
-     */
-    showFooter?: boolean;
-
-    sideBar?: boolean | MainBlockWithSidebarProps['items'];
 }
 
 // ============================================================================
@@ -99,9 +113,9 @@ interface Props {
 // ============================================================================
 
 const {
-    showHeader = false,
-    showBanner = false,
-    showFooter = false,
+    header = false,
+    banner = false,
+    footer = false,
 } = Astro.props;
 
 const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
@@ -248,8 +262,8 @@ const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLAT
         <div class="root">
             <BannerAndHeader
                 client:idle
-                showBanner={showBanner}
-                showHeader={showHeader}
+                banner={banner}
+                header={header}
                 originPathname={Astro.originPathname}
                 defaults={{
                     videoSource: Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType,
@@ -261,7 +275,7 @@ const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLAT
                 <LogoSVG slot="logo" />
             </BannerAndHeader>
 
-            <Announcements showHeader={showHeader} />
+            <Announcements header={header} />
 
             <main>
                 {Astro.props.sideBar === true || Array.isArray(Astro.props.sideBar)
@@ -279,14 +293,14 @@ const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLAT
                 }
             </main>
 
-            {showFooter && (
+            {footer && (
                 <Footer>
                     <LogoSVG slot="logo" />
                 </Footer>
             )}
 
             <Navbar
-                showHeader={showHeader}
+                header={header}
                 originPathname={Astro.originPathname}
             />
 
