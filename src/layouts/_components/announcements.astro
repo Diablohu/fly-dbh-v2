@@ -3,7 +3,7 @@ import { isUnderConstruction } from "@/global";
 import AnnouncementsHeightCheck from "./announcements-height-check";
 
 type Props = {
-    showHeader: boolean;
+    header: boolean;
 };
 
 const announcements: {
@@ -25,7 +25,7 @@ const announcements: {
             class:list={[
                 "announcements",
                 {
-                    "mod-has-header": Astro.props.showHeader === true,
+                    "mod-has-header": Astro.props.header === true,
                 },
             ]}
         >

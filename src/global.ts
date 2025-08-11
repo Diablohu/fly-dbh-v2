@@ -65,11 +65,19 @@ export const navLinks = [
               extraChecks: [/^\/vod\//],
           }
         : null,
+    // import.meta.env.DEV
+    //     ? {
+    //           key: "activities",
+    //           route: "/activities",
+    //           name: "活动",
+    //           icon: "",
+    //       }
+    //     : null,
     import.meta.env.DEV
         ? {
-              key: "activities",
-              route: "/activities",
-              name: "活动",
+              key: "challenges",
+              route: "/appr",
+              name: "挑战",
               icon: "",
           }
         : null,
@@ -82,7 +90,7 @@ export const navLinks = [
           }
         : null,
 ].filter((v) => !!v) as {
-    key: "home" | "videos" | "streams" | "activities" | "donate";
+    key: "home" | "videos" | "streams" | "activities" | "challenges" | "donate";
     route: string;
     name: string;
     icon: string;

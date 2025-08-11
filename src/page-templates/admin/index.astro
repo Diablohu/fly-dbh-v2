@@ -17,8 +17,8 @@ const { data: isLoginValid } = await Astro.callAction(
 
 <Layout
     title="🤫"
-    showHeader
-    showFooter
+    header
+    footer
     sideBar={isLoginValid
         ? [
               {

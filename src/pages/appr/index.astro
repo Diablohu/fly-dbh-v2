@@ -1,0 +1,73 @@
+---
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+
+// ============================================================================
+
+/*
+
+normal state
+	roll a dice
+	---
+	小有挑战 | 相当挑战 | 极具挑战
+	---
+	加入粉丝群(small text)
+	提议更多挑战
+
+dice state
+	highlight: roll a dice
+	---select difficulty (multiple)
+	小有挑战 | 相当挑战 | 极具挑战
+	---select aircraft category (multiple)
+	A | B | C | D
+	---actions
+	roulette right half | ROLL
+	---
+	加入粉丝群(small text)
+	提议更多挑战
+
+
+
+
+
+
+difficulty block
+🌱			⚠️			💀
+小有挑战	相当挑战	极具挑战
+rookie		challenge	extreme
+
+aircraft category title
+CATEGORY (OW2 Style gradient to transparent at bottom)
+A (above CATEGORY)
+轻型飞机 (small text at right)
+Help Icon at far right
+
+B	支线客机、商务喷气机
+C	大型喷气机
+D	重型喷气机
+D+	超重型
+
+
+
+
+item block
+ICAO OW2 Style gradient to transparent at bottom
+Airport Name + Approach Name above ICAO
+contry, location, etc,... small text below
+
+
+
+*/
+---
+
+<Layout title="挑战" header footer>
+    <Block class="video-infos"> 小有挑战 | 相当挑战 | 极具挑战 </Block>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .player-container {
+        zoom: 1;
+    }
+</style>

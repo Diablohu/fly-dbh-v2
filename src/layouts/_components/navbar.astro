@@ -9,13 +9,13 @@ import VideosFill from "@/assets/svg-symbols/videos-fill.svg";
 import isRouteActive from "@/utils/is-route-active";
 
 type Props = {
-    showHeader: boolean;
+    header: boolean;
     originPathname: string;
 };
 ---
 
 {
-    Astro.props.showHeader && (
+    Astro.props.header && (
         <section class="navbar">
             {navLinks.map(({ key, route, name, extraChecks }) => {
                 const isActive = isRouteActive(
