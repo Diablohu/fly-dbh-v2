@@ -1,6 +1,11 @@
 ---
+import { type ValidContentListAutoLoadMoreType } from "@/types";
+import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
+
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
+
+import FormAndResult from "./_form-and-result";
 ---
 
 <Layout
@@ -9,7 +14,13 @@ import Block from "@/components/block.astro";
     footer
 >
     <Block>
-        <h2>搜索</h2>
+        <FormAndResult
+            client:idle
+            initialKeyword={Astro.params.keyword || ""}
+            defaultContentListAutoLoadMore={Astro.cookies.get(
+                CONTENT_LIST_AUTO_LOAD_MORE
+            )?.value as ValidContentListAutoLoadMoreType}
+        />
     </Block>
 </Layout>
 

@@ -5,6 +5,7 @@ import { type VideoListPageTypesType } from "@/types";
 
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getGameUpdateName from "@/utils/get-game-update-name";
+import getAircraftFamilyName from "@/utils/get-aircraft-family-name";
 import { errorLog } from "@/utils/log";
 
 // import log from "@/page-templates/index/_log.ts";
@@ -78,10 +79,10 @@ const title = {
               : type === "aerodrome"
                 ? currentCategoryInfo?.name
                 : type === "aircraftFamily"
-                  ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
-                        new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
-                        ""
-                    )}`
+                  ? getAircraftFamilyName(
+                        currentCategoryInfo?.name || "",
+                        currentCategoryInfo?.maker || ""
+                    )
                   : type === "aircraftOnboardDevice"
                     ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
                           new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),

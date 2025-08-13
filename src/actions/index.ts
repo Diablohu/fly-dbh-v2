@@ -3,6 +3,7 @@ import homePage from "./home-page";
 import watchPage from "./watch-page";
 import videoListPage from "./video-list-page";
 import rssFeed from "./rss-feed";
+import search from "./search";
 
 export const server = {
     admin,
@@ -10,6 +11,8 @@ export const server = {
     homePage,
     videoListPage,
     watchPage,
+
+    search,
 
     rssFeed,
 };
