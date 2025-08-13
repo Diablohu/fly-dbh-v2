@@ -30,7 +30,7 @@ const { showMore = true } = Astro.props;
     ]}
     data-collection={Astro.props.name}
 >
-    <dt>
+    <dt class="collection-title">
         <h3>
             <a
                 href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
@@ -48,7 +48,7 @@ const { showMore = true } = Astro.props;
             )
         }
     </dt>
-    <dd>
+    <dd class="collection-list">
         {
             !Astro.props.videos ||
             !Array.isArray(Astro.props.videos) ||
@@ -84,6 +84,7 @@ const { showMore = true } = Astro.props;
             )
         }
     </dd>
+    <slot name="extra" />
 </dl>
 
 <style lang="less">
@@ -106,13 +107,13 @@ const { showMore = true } = Astro.props;
             background: var(--border-color);
         }
 
-        & > dt,
-        & > dd {
+        & > .collection-title,
+        & > .collection-list {
             position: relative;
             padding: 0;
             z-index: 5;
         }
-        & > dt {
+        & > .collection-title {
             display: flex;
             flex-flow: row nowrap;
             justify-content: space-between;
@@ -135,7 +136,7 @@ const { showMore = true } = Astro.props;
                 }
             }
         }
-        & > dd {
+        & > .collection-list {
             margin: 0;
         }
     }
