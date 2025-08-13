@@ -1,6 +1,9 @@
 @import "@/utils/mixins.less";
 
 .video-list-horizontal {
+    @edge-gradient-layer-z-index: 10;
+    @arrow-container-z-index: 20;
+
     --items-in-view: 5;
     --item-gap: 1em;
     --item-scroll-snap-align: start;
@@ -60,7 +63,7 @@
         --size: 40px;
 
         position: absolute;
-        z-index: 10;
+        z-index: @arrow-container-z-index;
         top: 0;
         height: 0;
         width: var(--item-width);
@@ -147,7 +150,7 @@
     &::after {
         content: "";
         position: absolute;
-        z-index: 5;
+        z-index: @edge-gradient-layer-z-index;
         top: 0;
         bottom: 0;
         width: var(--global-edge-safe-distance);
