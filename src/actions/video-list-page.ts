@@ -84,7 +84,7 @@ const getProjections = (type?: VideoListPageTypesType, slug?: string) => `{
 }`;
 type ReturnVideoItemType = Partial<VideoItemType> &
     Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">;
-type ResponseDataType = {
+export type ResponseDataType = {
     list: ReturnVideoItemType[];
     total: number;
     page: number;

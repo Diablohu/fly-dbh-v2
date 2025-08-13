@@ -28,7 +28,7 @@ import styles from "./video-list-grid.module.less";
 
 type StatusType = "ready" | "loading" | "complete" | "error";
 type Props = {
-    type?: VideoListPageTypesType;
+    type?: VideoListPageTypesType | "search";
     slug?: string;
     /**
      * 当前是否是“首页”型
@@ -89,6 +89,11 @@ const VideoListGrid: FC<Props> = ({
     const StatusRef = useRef<StatusType>(
         initialListIsComplete ? "complete" : "ready"
     );
+    /**
+     * _Ref_ 用于记录上次传入的 `slug` 值
+     *  - 用于判断是否需要重置列表
+     */
+    // const LastSlugRef = useRef<string | undefined>(slug);
 
     if (
         _infiniteScroll &&
@@ -135,13 +140,19 @@ const VideoListGrid: FC<Props> = ({
         if (["loading", "complete"].includes(StatusRef.current)) return;
 
         setStatus("loading");
-        actions
-            .videoListPage.fetchList({
-                type,
-                slug,
-                from: CurrentIndexRef.current,
-                length,
-            })
+        (type === "search"
+            ? actions.search.fetchVideos({
+                  keyword: slug || "",
+                  from: CurrentIndexRef.current,
+                  length,
+              })
+            : actions.videoListPage.fetchList({
+                  type,
+                  slug,
+                  from: CurrentIndexRef.current,
+                  length,
+              })
+        )
             .then((res) => {
                 debug("fetch action response: %O", res.data);
                 if (!res || !res.data || !Array.isArray(res.data.list)) {
@@ -304,6 +315,21 @@ const VideoListGrid: FC<Props> = ({
     useEffect(() => {
         CurrentIndexRef.current = list.length;
     }, [list]);
+
+    // useEffect(() => {
+    //     console.log(LastSlugRef.current, slug);
+    //     if (LastSlugRef.current === slug) return;
+
+    //     debug(
+    //         "slug changed from %s to %s. Reset list.",
+    //         LastSlugRef.current,
+    //         slug
+    //     );
+    //     setList(initialList);
+    //     setStatus(initialListIsComplete ? "complete" : "ready"); // Reset status
+
+    //     LastSlugRef.current = slug;
+    // }, [slug, initialList]);
 
     return (
         <div className={styles["video-list-grid"]} ref={ListContainerRef}>
