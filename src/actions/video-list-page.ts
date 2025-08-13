@@ -215,6 +215,10 @@ ${
               ? `
     name,
     'maker': maker->name_zh_cn,
+    'tags': tags[]->{
+        name,
+        _id,
+    }
 `
               : type === "developer"
                 ? `

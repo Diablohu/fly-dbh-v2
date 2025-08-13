@@ -15,9 +15,13 @@ type Props = {
     info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
 };
 const length = 20;
-const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] = [];
+const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] =
+    [];
 
-if (Astro.props.type === "aircraftFamily") {
+if (
+    Astro.props.type &&
+    ["aircraftFamily", "aircraftOnboardDevice"].includes(Astro.props.type)
+) {
     /**
      * 追加请求的 GROQ
      *  - 追加到页面初始化请求中，即：不会有额外网络请求
@@ -38,6 +42,7 @@ if (Astro.props.type === "aircraftFamily") {
     links,
 } | order(release desc)`;
     }
+
     if (
         Array.isArray(Astro.props.info?.onboard_devices) &&
         Astro.props.info.onboard_devices.length
@@ -88,6 +93,16 @@ if (error) {
             Object.entries(
                 data.list.reduce(
                     (listByCategory, currentPost) => {
+                        // 如果 `相关航空知识` 额外类别中包含该视频
+                        // 则不在主要类别（如 `教程`）中显示
+                        if (
+                            Array.isArray(data?.["相关航空知识"]) &&
+                            data?.["相关航空知识"].some(
+                                ({ _id }) => _id === currentPost._id
+                            )
+                        )
+                            return listByCategory;
+
                         if (!listByCategory[currentPost.tags[0]._id])
                             listByCategory[currentPost.tags[0]._id] = {
                                 name: currentPost.tags[0].name,
@@ -148,7 +163,8 @@ if (error) {
                                 />
                             </Fragment>
                         )}
-                        {name === "评测" &&
+                        {/* 遍历到 `评测` 类别，追加请求结果中的 `extra` 内容 */}
+                        {slug === "review" &&
                             extra.map(({ name }) =>
                                 Array.isArray(data[name]) &&
                                 data[name].length > 0 ? (
@@ -169,6 +185,16 @@ if (error) {
             Object.entries(
                 data.list.reduce(
                     (listByCategory, currentPost) => {
+                        // 如果 `相关航空知识` 额外类别中包含该视频
+                        // 则不在主要类别（如 `教程`）中显示
+                        if (
+                            Array.isArray(data?.["相关航空知识"]) &&
+                            data?.["相关航空知识"].some(
+                                ({ _id }) => _id === currentPost._id
+                            )
+                        )
+                            return listByCategory;
+
                         if (!listByCategory[currentPost.tags[0]._id])
                             listByCategory["OTHER"].list.push(currentPost);
                         else
@@ -201,10 +227,9 @@ if (error) {
                 //     ([_id, { name, list }]) =>
                 //         Array.isArray(list) && list.length > 0
                 // )
-                .map(
-                    ([_id, { name, list }], index, arr) =>
-                        Array.isArray(list) &&
-                        list.length > 0 && (
+                .map(([_id, { name, slug, list }], index, arr) => (
+                    <Fragment>
+                        {Array.isArray(list) && list.length > 0 && (
                             <Fragment>
                                 <h3>{name}</h3>
                                 <VideoListGrid
@@ -219,8 +244,25 @@ if (error) {
                                     }
                                 />
                             </Fragment>
-                        )
-                )
+                        )}
+                        {/* 遍历到 `评测` 类别，追加请求结果中的 `extra` 内容 */}
+                        {slug === "tutorial" &&
+                            extra.map(({ name }) =>
+                                Array.isArray(data[name]) &&
+                                data[name].length > 0 ? (
+                                    <Fragment>
+                                        <h3>{name}</h3>
+                                        <VideoListGrid
+                                            type="aircraftFamily"
+                                            initialList={data[name]}
+                                            initialListIsComplete
+                                            showLoadMoreButton={false}
+                                        />
+                                    </Fragment>
+                                ) : null
+                            )}
+                    </Fragment>
+                ))
         ) : (
             <VideoListGrid
                 client:idle
