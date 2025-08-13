@@ -15,6 +15,7 @@ type Props = {
     info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
 };
 const length = 20;
+const extraAviationKnowledgeTitle = "相关航空知识";
 const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] =
     [];
 
@@ -56,7 +57,7 @@ if (
     }
     if (Array.isArray(Astro.props.info?.tags) && Astro.props.info.tags.length) {
         extra.push({
-            name: `相关航空知识`,
+            name: extraAviationKnowledgeTitle,
             query: getExtraQueryString(
                 `[${Astro.props.info.tags.map(({ _id }) => `"${_id}"`).join(",")}]`
             ),
@@ -96,8 +97,10 @@ if (error) {
                         // 如果 `相关航空知识` 额外类别中包含该视频
                         // 则不在主要类别（如 `教程`）中显示
                         if (
-                            Array.isArray(data?.["相关航空知识"]) &&
-                            data?.["相关航空知识"].some(
+                            Array.isArray(
+                                data?.[extraAviationKnowledgeTitle]
+                            ) &&
+                            data?.[extraAviationKnowledgeTitle].some(
                                 ({ _id }) => _id === currentPost._id
                             )
                         )
@@ -172,7 +175,21 @@ if (error) {
                                         <h3>{name}</h3>
                                         <VideoListGrid
                                             type="aircraftFamily"
-                                            initialList={data[name]}
+                                            initialList={
+                                                name ===
+                                                extraAviationKnowledgeTitle
+                                                    ? data[name]
+                                                    : data[name].filter(
+                                                          (post) =>
+                                                              data?.[
+                                                                  extraAviationKnowledgeTitle
+                                                              ].every(
+                                                                  ({ _id }) =>
+                                                                      _id !==
+                                                                      post._id
+                                                              )
+                                                      )
+                                            }
                                             initialListIsComplete
                                             showLoadMoreButton={false}
                                         />
@@ -188,8 +205,10 @@ if (error) {
                         // 如果 `相关航空知识` 额外类别中包含该视频
                         // 则不在主要类别（如 `教程`）中显示
                         if (
-                            Array.isArray(data?.["相关航空知识"]) &&
-                            data?.["相关航空知识"].some(
+                            Array.isArray(
+                                data?.[extraAviationKnowledgeTitle]
+                            ) &&
+                            data?.[extraAviationKnowledgeTitle].some(
                                 ({ _id }) => _id === currentPost._id
                             )
                         )
