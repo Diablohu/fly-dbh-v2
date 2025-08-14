@@ -5,6 +5,7 @@ const getVideoItemTopTags = (
     post: Partial<VideoItemType>,
     purpose:
         | "latest"
+        | "search-result"
         | "tutorial"
         | "news"
         | "preview"
@@ -24,6 +25,16 @@ const getVideoItemTopTags = (
                           slug: post.tags[0].slug,
                       },
                   ]
+                : undefined;
+
+        case "search-result":
+            return Array.isArray(post.tags) && post.tags.length > 0
+                ? post.tags.slice(0, 2).map((tag) => ({
+                      type: "tag",
+                      _id: tag._id,
+                      name: tag.name,
+                      slug: tag.slug,
+                  }))
                 : undefined;
 
         case "tutorial": {

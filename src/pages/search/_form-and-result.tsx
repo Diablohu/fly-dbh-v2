@@ -16,18 +16,19 @@ import VideoListGrid from "@/components/video-list-grid";
 
 // ============================================================================
 
-type StatusType = "ready" | "loading" | "error";
+type StatusType = "pending" | "ready" | "loading" | "error";
 const searchAction = actions.search.query;
 
 // ============================================================================
 
 const SearchFormAndResult: FC<{
     initialKeyword: string;
+    initialResults?: Awaited<ReturnType<typeof searchAction>>["data"];
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
-}> = ({ initialKeyword, defaultContentListAutoLoadMore }) => {
-    const [status, setStatus] = useState<StatusType>("ready");
+}> = ({ initialKeyword, initialResults, defaultContentListAutoLoadMore }) => {
+    const [status, setStatus] = useState<StatusType>("pending");
     const [error, setError] = useState<string>();
-    const [keyword, setKeyword] = useState<string>(initialKeyword);
+    const [keyword, setKeyword] = useState<string>("");
     const [results, setResults] =
         useState<Awaited<ReturnType<typeof searchAction>>["data"]>();
 
@@ -35,6 +36,7 @@ const SearchFormAndResult: FC<{
         async (evt) => {
             evt.preventDefault();
 
+            if (status === "pending") return;
             if (status === "loading") return;
             setKeyword(
                 new FormData(evt.currentTarget).get("keyword") as string
@@ -78,6 +80,10 @@ const SearchFormAndResult: FC<{
         });
     }, [keyword]);
 
+    useEffect(() => {
+        setStatus("ready");
+    }, []);
+
     return (
         <>
             <form method="GET" onSubmit={onSubmit}>
@@ -95,10 +101,10 @@ const SearchFormAndResult: FC<{
                 />
             </form>
             {status === "error" && <div>{error}</div>}
-            {!!results && status !== "loading" && (
+            {(!!results || !!initialResults) && status !== "loading" && (
                 <Results
                     keyword={keyword}
-                    results={results}
+                    results={results || initialResults}
                     defaultContentListAutoLoadMore={
                         defaultContentListAutoLoadMore
                     }
@@ -157,7 +163,7 @@ const Results: FC<{
                                 defaultContentListAutoLoadMore
                             }
                             showLoadMoreButton
-                            tagPurpose="latest"
+                            tagPurpose="search-result"
                         />
                     </dd>
                 </dl>

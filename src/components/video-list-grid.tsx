@@ -211,8 +211,11 @@ const VideoListGrid: FC<Props> = ({
      */
     const getTags = useCallback(
         (post: (typeof initialList)[0]) => {
-            if (tagPurpose === "latest" || isIndex)
-                return getVideoItemTopTags(post, "latest");
+            if (
+                tagPurpose &&
+                (["latest", "search-result"].includes(tagPurpose) || isIndex)
+            )
+                return getVideoItemTopTags(post, tagPurpose);
             else if (
                 tagPurpose === "news" ||
                 (type === "tag" && slug === "news")

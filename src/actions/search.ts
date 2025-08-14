@@ -45,7 +45,19 @@ type ResultType = {
     }>[];
 };
 
+const keywordRegex = {
+    tutorial: /教学|教程|攻略|上手|指南/,
+    review: /评测|测评|试飞|体验|简评/,
+};
+
 function getValues(keyword: string) {
+    const isTutorial = keywordRegex.tutorial.test(keyword);
+    const isReview = keywordRegex.review.test(keyword);
+
+    if (isTutorial) keyword = keyword.replace(keywordRegex.tutorial, "");
+    if (isReview) keyword = keyword.replace(keywordRegex.review, "");
+    keyword = keyword.trim();
+
     const keywords = [
         ...new Set([
             keyword,
@@ -55,8 +67,17 @@ function getValues(keyword: string) {
     ];
     const getKeywordFilter = (name: string) =>
         `(${keywords.map((keyword) => `${name} match "*${keyword}*"`).join(" || ")})`;
+    const getKeywordFilterTags = () => {
+        const checkTags = [
+            isTutorial ? "tutorial" : null,
+            isReview ? "review" : null,
+        ].filter(Boolean) as string[];
 
-    const groqVideos = `*[_type == "video" && ${getKeywordFilter("title")}]
+        if (!checkTags.length) return "";
+        return ` && (${checkTags.map((slug) => `"${slug}" in tags[]->slug.current`).join(" || ")})`;
+    };
+
+    const groqVideos = `*[_type == "video" && ${getKeywordFilter("title")}${getKeywordFilterTags()}]
     | order( release desc )
     {
         _id,
