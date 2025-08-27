@@ -8,13 +8,15 @@ import {
     type FormEventHandler,
 } from "react";
 import { actions } from "astro:actions";
+import classNames from "classnames";
 
 import { type ValidContentListAutoLoadMoreType } from "@/types";
 
-import getAircraftFamilyName from "@/utils/get-aircraft-family-name";
 import { search as logSearch } from "@/utils/log";
 
 import VideoListGrid from "@/components/video-list-grid";
+import TagButton from "@/components/tag-button";
+import iconSearch from "@/assets/svg-symbols/search.svg?raw";
 
 import styles from "./_form-and-result.module.less";
 
@@ -92,16 +94,19 @@ const SearchFormAndResult: FC<{
         <>
             <form className={styles["form"]} method="GET" onSubmit={onSubmit}>
                 <input
-                    type="text"
+                    type="search"
                     name="keyword"
                     defaultValue={initialKeyword}
                     autoComplete="off"
+                    placeholder="请输入关键字..."
                     required
                 />
-                <input
+                <button
                     type="submit"
-                    value="GO"
                     disabled={status === "loading"}
+                    dangerouslySetInnerHTML={{
+                        __html: iconSearch,
+                    }}
                 />
             </form>
             {status === "error" && <div>{error}</div>}
@@ -113,6 +118,9 @@ const SearchFormAndResult: FC<{
                         defaultContentListAutoLoadMore
                     }
                 />
+            )}
+            {status === "loading" && (
+                <span className={styles["loading-spinner"]} />
             )}
         </>
     );
@@ -135,25 +143,34 @@ const Results: FC<{
         <>
             {!!matched &&
                 results?.tutorialsForMatchedAircraftOrDevice?.list && (
-                    <dl className={styles["matched-list"]}>
+                    <dl
+                        className={classNames([
+                            styles["list"],
+                            styles["matched-list"],
+                        ])}
+                    >
                         <dt>
                             <small>您是否在寻找</small>
-                            <br />
-                            <a
-                                href={
-                                    results?.tutorialsForMatchedAircraftOrDevice
-                                        .slug
-                                }
-                            >
-                                {
-                                    results?.tutorialsForMatchedAircraftOrDevice
-                                        .maker
-                                }{" "}
-                                {
-                                    results?.tutorialsForMatchedAircraftOrDevice
-                                        .name
-                                }
-                            </a>
+                            <h2>
+                                <a
+                                    href={
+                                        results
+                                            ?.tutorialsForMatchedAircraftOrDevice
+                                            .slug
+                                    }
+                                >
+                                    {
+                                        results
+                                            ?.tutorialsForMatchedAircraftOrDevice
+                                            .maker
+                                    }{" "}
+                                    {
+                                        results
+                                            ?.tutorialsForMatchedAircraftOrDevice
+                                            .name
+                                    }
+                                </a>
+                            </h2>
                         </dt>
                         <dd>
                             {Object.entries(
@@ -166,7 +183,7 @@ const Results: FC<{
                                 )
                                 .map(([type, list]) => (
                                     <Fragment key={type}>
-                                        <h3>{type}</h3>
+                                        <h4>{type}</h4>
                                         <VideoListGrid
                                             type="aircraftFamily"
                                             initialList={list}
@@ -181,21 +198,24 @@ const Results: FC<{
             {!matched &&
                 Array.isArray(results?.aircraftFamilies) &&
                 results?.aircraftFamilies.length > 0 && (
-                    <dl className={styles["list"]}>
-                        <dt>相关机型系列</dt>
+                    <dl
+                        className={classNames([
+                            styles["list"],
+                            styles["related-list"],
+                        ])}
+                    >
+                        <dt>
+                            <h3>相关机型系列</h3>
+                        </dt>
                         <dd>
                             {results.aircraftFamilies.map((item) => (
-                                <p key={item._id}>
-                                    <a
-                                        key={item._id}
-                                        href={`/videos/aircraftfamily-${item.slug}`}
-                                    >
-                                        {getAircraftFamilyName(
-                                            item.name,
-                                            item.maker
-                                        )}
-                                    </a>
-                                </p>
+                                <TagButton
+                                    key={item._id}
+                                    href={`/videos/aircraftfamily-${item.slug}`}
+                                    prefix={item.maker}
+                                >
+                                    {item.name}
+                                </TagButton>
                             ))}
                         </dd>
                     </dl>
@@ -203,28 +223,38 @@ const Results: FC<{
             {!matched &&
                 Array.isArray(results?.aircraftOnboardDevices) &&
                 results?.aircraftOnboardDevices.length > 0 && (
-                    <dl className={styles["list"]}>
-                        <dt>相关机载设备</dt>
+                    <dl
+                        className={classNames([
+                            styles["list"],
+                            styles["related-list"],
+                        ])}
+                    >
+                        <dt>
+                            <h3>相关机载设备</h3>
+                        </dt>
                         <dd>
                             {results.aircraftOnboardDevices.map((item) => (
-                                <p key={item._id}>
-                                    <a
-                                        key={item._id}
-                                        href={`/videos/aircraftonboarddevice-${item.slug}`}
-                                    >
-                                        {getAircraftFamilyName(
-                                            item.name,
-                                            item.maker
-                                        )}
-                                    </a>
-                                </p>
+                                <TagButton
+                                    key={item._id}
+                                    href={`/videos/aircraftonboarddevice-${item.slug}`}
+                                    prefix={item.maker}
+                                >
+                                    {item.name}
+                                </TagButton>
                             ))}
                         </dd>
                     </dl>
                 )}
             {Array.isArray(results?.list) && results?.list.length > 0 && (
-                <dl className={styles["video-list"]}>
-                    <dt>相关视频内容</dt>
+                <dl
+                    className={classNames([
+                        styles["list"],
+                        styles["video-list"],
+                    ])}
+                >
+                    <dt>
+                        <h3>{matched && "其他"}相关视频内容</h3>
+                    </dt>
                     <dd>
                         <VideoListGrid
                             type="search"
@@ -242,6 +272,12 @@ const Results: FC<{
                         />
                     </dd>
                 </dl>
+            )}
+            {results?.total === 0 && (
+                <div className={styles["no-result"]}>
+                    <strong>查询无结果</strong>
+                    <p>请尝试其他关键字</p>
+                </div>
             )}
         </>
     );

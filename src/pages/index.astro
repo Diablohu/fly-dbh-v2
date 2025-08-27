@@ -107,12 +107,7 @@ const spotlightConfigString = collections?.config.find(
         <section class="check-more">
             <TagButton href={getVideoListPageLink()}>分类浏览更多视频</TagButton
             >
-            <!-- TOOD: SEARCH -->
-            {
-                import.meta.env.DEV && (
-                    <TagButton href="/search">搜索视频</TagButton>
-                )
-            }
+            <TagButton href="/search">搜索视频</TagButton>
         </section>
     </Block>
 </Layout>

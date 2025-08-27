@@ -101,6 +101,7 @@ export const defaultVideoSource: ValidVideoSourceType = "bilibili";
 export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType =
     "1";
 export const extraAviationKnowledgeTitle = "相关航空知识";
+export const commonAircraftNameSuffix = ["ceo", "neo", "max", "ng"];
 
 // ============================================================================
 //

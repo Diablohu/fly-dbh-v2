@@ -3,7 +3,10 @@ import { z } from "astro:schema";
 import type { SanityDocument } from "@sanity/client";
 
 import { type VideoItemType, type VideoListPageTypesType } from "@/types";
-import { extraAviationKnowledgeTitle } from "@/global";
+import {
+    extraAviationKnowledgeTitle,
+    commonAircraftNameSuffix,
+} from "@/global";
 
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/utils/sanity-helpers";
@@ -20,6 +23,10 @@ const getKeywords = (keyword: string, split = false) => [
         keyword.replace(/([a-z])([0-9])/gi, "$1-$2"),
         keyword.replace(/^[a-z]{1}([0-9a-z]{3})/gi, "$1"),
         keyword.replace(/[^\s^0-9^a-z]+([0-9a-z])/gi, "$1"),
+        keyword.replace(
+            new RegExp(`(\\d+)(${commonAircraftNameSuffix.join("|")})`, "gi"),
+            "$1 $2"
+        ),
     ]),
 ];
 const projection = `{
@@ -222,17 +229,24 @@ const actions = {
                     const keywords = getKeywords(keyword, true);
 
                     /** 匹配的 `机型系列` 或 `航电设备` */
-                    const matched:
-                        | Required<ResultType>["aircraftFamilies"][0]
-                        | Required<ResultType>["aircraftOnboardDevices"][0]
-                        | undefined =
-                        res?.aircraftFamilies?.find((item) =>
+                    const matches:
+                        | Required<ResultType>["aircraftFamilies"]
+                        | Required<ResultType>["aircraftOnboardDevices"] = [
+                        ...(res?.aircraftFamilies?.filter((item) =>
                             keywords.find((kw) => {
                                 return (
                                     kw === item.name.toLowerCase() ||
                                     item.name
                                         .split(/\s+/g)
                                         .some((n) => kw === n.toLowerCase()) ||
+                                    (new RegExp(
+                                        `^\\d+(${commonAircraftNameSuffix.map((s) => ` ${s}`).join("|")}|$)`,
+                                        "i"
+                                    ).test(kw) &&
+                                        new RegExp(
+                                            `^[a-z]${kw}( |-|$)`,
+                                            "i"
+                                        ).test(item.name)) ||
                                     item.aircrafts?.some(
                                         (aircraft) =>
                                             kw ===
@@ -242,14 +256,29 @@ const actions = {
                                     )
                                 );
                             })
-                        ) ??
-                        res?.aircraftOnboardDevices?.find((item) =>
+                        ) || []),
+                        ...(res?.aircraftOnboardDevices?.filter((item) =>
                             keywords.find((kw) => {
-                                return kw === item.name.toLowerCase();
+                                return (
+                                    kw === item.name.toLowerCase() ||
+                                    (/^\d+$/i.test(kw) &&
+                                        new RegExp(
+                                            `^[a-z]${kw}( |-|$)`,
+                                            "i"
+                                        ).test(item.name))
+                                );
                             })
-                        );
+                        ) || []),
+                    ];
 
-                    if (matched) {
+                    // console.log(
+                    //     keywords,
+                    //     res?.aircraftFamilies,
+                    //     res.aircraftOnboardDevices,
+                    //     matches
+                    // );
+                    if (Array.isArray(matches) && matches.length === 1) {
+                        const matched = matches[0];
                         function getGorq(ref: string) {
                             return `
 *[_type=="video" && "tutorial" in tags[]->slug.current && references(${ref})]
