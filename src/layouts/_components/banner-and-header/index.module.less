@@ -32,9 +32,7 @@
     font-size: clamp(unit(28, px), unit((40 / 10), vh), unit(40, px));
     margin-top: min(
         0px,
-        calc(
-            var(--global-banner-offset, 0px) + var(--global-header-height)
-        )
+        calc(var(--global-banner-offset, 0px) + var(--global-header-height))
     );
     transition-property: margin-top;
 
@@ -453,6 +451,7 @@
 
     .right {
         text-align: right;
+        a.button,
         button[type="button"] {
             display: inline-block;
             vertical-align: top;
@@ -463,6 +462,7 @@
             border: 0;
             color: var(--text-color-secondary);
             transition-property: color, transform;
+            cursor: pointer;
             svg {
                 display: block;
                 width: var(--icon-size);
@@ -476,6 +476,15 @@
                 &.is-active {
                     transform: rotate(45deg);
                 }
+            }
+            & + a.button,
+            & + button[type="button"] {
+                margin-left: 0.5em;
+            }
+        }
+        a.button {
+            svg {
+                margin-top: calc((var(--button-height) - var(--icon-size)) / 2);
             }
         }
     }

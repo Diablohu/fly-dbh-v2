@@ -56,7 +56,10 @@ const Header: FC<
                 <section
                     className={classNames([styles["aside"], styles["right"]])}
                 >
-                    <HeaderOptions defaults={defaults} />
+                    <HeaderOptions
+                        defaults={defaults}
+                        originPathname={originPathname}
+                    />
                 </section>
             </section>
         </header>

@@ -10,6 +10,7 @@ import classNames from "classnames";
 
 import symbolCogFill from "@/assets/svg-symbols/cog-fill.svg?raw";
 import symbolCogHollow from "@/assets/svg-symbols/cog-hollow.svg?raw";
+import symbolSearch from "@/assets/svg-symbols/search-navbar.svg?raw";
 
 import Menu, {
     MenuItem,
@@ -22,7 +23,7 @@ import useColorScheme from "@/react-hooks/use-color-scheme";
 import useVideoSource from "@/react-hooks/use-video-source";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 import useVideoItemShowPlatformLinksOnHover from "@/react-hooks/use-video-item-show-platform-links-on-hover";
-// import isRouteActive from "@/utils/is-route-active";
+import isRouteActive from "@/utils/is-route-active";
 import { type Props } from "./";
 import { links } from "./";
 
@@ -30,7 +31,10 @@ import styles from "./index.module.less";
 
 // ============================================================================
 
-const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
+const HeaderOptions: FC<Pick<Props, "defaults" | "originPathname">> = ({
+    defaults,
+    originPathname,
+}) => {
     const [showMenu, setShowMenu] = useState(false);
 
     const toggleMenu = useCallback(
@@ -43,6 +47,23 @@ const HeaderOptions: FC<Pick<Props, "defaults">> = ({ defaults }) => {
 
     return (
         <>
+            <a
+                href="/search"
+                className={classNames([
+                    styles["button"],
+                    {
+                        [styles["is-active"]]: isRouteActive(
+                            "/search",
+                            originPathname,
+                            [/^\/search\//]
+                        ),
+                    },
+                ])}
+                dangerouslySetInnerHTML={{
+                    __html: symbolSearch,
+                }}
+                aria-label="搜索"
+            />
             <button
                 type="button"
                 className={classNames([
