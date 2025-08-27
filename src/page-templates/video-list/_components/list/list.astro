@@ -5,6 +5,7 @@ import {
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
 import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
+import { extraAviationKnowledgeTitle } from "@/global";
 
 import VideoListGrid from "@/components/video-list-grid";
 
@@ -15,7 +16,6 @@ type Props = {
     info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
 };
 const length = 20;
-const extraAviationKnowledgeTitle = "相关航空知识";
 const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] =
     [];
 
@@ -27,8 +27,8 @@ if (
      * 追加请求的 GROQ
      *  - 追加到页面初始化请求中，即：不会有额外网络请求
      */
-    function getExtraQueryString(ref: string) {
-        return `*[_type=="video" && "tutorial" in tags[]->slug.current && references(${ref})] {
+    function getExtraQueryString(_id: string) {
+        return `*[_type=="video" && "tutorial" in tags[]->slug.current && references(${_id})] {
     _id,
     'slug': slug.current,
     title,

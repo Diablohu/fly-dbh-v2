@@ -141,7 +141,7 @@ const VideoListGrid: FC<Props> = ({
 
         setStatus("loading");
         (type === "search"
-            ? actions.search.fetchVideos({
+            ? actions.search.query({
                   keyword: slug || "",
                   from: CurrentIndexRef.current,
                   length,

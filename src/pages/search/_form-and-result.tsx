@@ -2,6 +2,8 @@ import {
     useState,
     useCallback,
     useEffect,
+    useMemo,
+    Fragment,
     type FC,
     type FormEventHandler,
 } from "react";
@@ -13,6 +15,8 @@ import getAircraftFamilyName from "@/utils/get-aircraft-family-name";
 import { search as logSearch } from "@/utils/log";
 
 import VideoListGrid from "@/components/video-list-grid";
+
+import styles from "./_form-and-result.module.less";
 
 // ============================================================================
 
@@ -28,7 +32,7 @@ const SearchFormAndResult: FC<{
 }> = ({ initialKeyword, initialResults, defaultContentListAutoLoadMore }) => {
     const [status, setStatus] = useState<StatusType>("pending");
     const [error, setError] = useState<string>();
-    const [keyword, setKeyword] = useState<string>("");
+    const [keyword, setKeyword] = useState<string>();
     const [results, setResults] =
         useState<Awaited<ReturnType<typeof searchAction>>["data"]>();
 
@@ -86,7 +90,7 @@ const SearchFormAndResult: FC<{
 
     return (
         <>
-            <form method="GET" onSubmit={onSubmit}>
+            <form className={styles["form"]} method="GET" onSubmit={onSubmit}>
                 <input
                     type="text"
                     name="keyword"
@@ -103,7 +107,7 @@ const SearchFormAndResult: FC<{
             {status === "error" && <div>{error}</div>}
             {(!!results || !!initialResults) && status !== "loading" && (
                 <Results
-                    keyword={keyword}
+                    keyword={keyword ?? initialKeyword}
                     results={results || initialResults}
                     defaultContentListAutoLoadMore={
                         defaultContentListAutoLoadMore
@@ -122,12 +126,63 @@ const Results: FC<{
     results: Awaited<ReturnType<typeof searchAction>>["data"];
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 }> = ({ keyword, results, defaultContentListAutoLoadMore }) => {
+    const matched = useMemo(
+        () => results && "tutorialsForMatchedAircraftOrDevice" in results,
+        [results]
+    );
+
     return (
         <>
-            {Array.isArray(results?.aircraftFamilies) &&
+            {!!matched &&
+                results?.tutorialsForMatchedAircraftOrDevice?.list && (
+                    <dl className={styles["matched-list"]}>
+                        <dt>
+                            <small>您是否在寻找</small>
+                            <br />
+                            <a
+                                href={
+                                    results?.tutorialsForMatchedAircraftOrDevice
+                                        .slug
+                                }
+                            >
+                                {
+                                    results?.tutorialsForMatchedAircraftOrDevice
+                                        .maker
+                                }{" "}
+                                {
+                                    results?.tutorialsForMatchedAircraftOrDevice
+                                        .name
+                                }
+                            </a>
+                        </dt>
+                        <dd>
+                            {Object.entries(
+                                results?.tutorialsForMatchedAircraftOrDevice
+                                    ?.list
+                            )
+                                .filter(
+                                    ([_, list]) =>
+                                        Array.isArray(list) && list.length > 0
+                                )
+                                .map(([type, list]) => (
+                                    <Fragment key={type}>
+                                        <h3>{type}</h3>
+                                        <VideoListGrid
+                                            type="aircraftFamily"
+                                            initialList={list}
+                                            initialListIsComplete
+                                            showLoadMoreButton={false}
+                                        />
+                                    </Fragment>
+                                ))}
+                        </dd>
+                    </dl>
+                )}
+            {!matched &&
+                Array.isArray(results?.aircraftFamilies) &&
                 results?.aircraftFamilies.length > 0 && (
-                    <dl>
-                        <dt>机型</dt>
+                    <dl className={styles["list"]}>
+                        <dt>相关机型系列</dt>
                         <dd>
                             {results.aircraftFamilies.map((item) => (
                                 <p key={item._id}>
@@ -137,9 +192,7 @@ const Results: FC<{
                                     >
                                         {getAircraftFamilyName(
                                             item.name,
-                                            item.maker.name_zh_cn ||
-                                                item.maker.name ||
-                                                ""
+                                            item.maker
                                         )}
                                     </a>
                                 </p>
@@ -147,17 +200,39 @@ const Results: FC<{
                         </dd>
                     </dl>
                 )}
-            {Array.isArray(results?.videos) && results?.videos.length > 0 && (
-                <dl>
-                    <dt>视频</dt>
+            {!matched &&
+                Array.isArray(results?.aircraftOnboardDevices) &&
+                results?.aircraftOnboardDevices.length > 0 && (
+                    <dl className={styles["list"]}>
+                        <dt>相关机载设备</dt>
+                        <dd>
+                            {results.aircraftOnboardDevices.map((item) => (
+                                <p key={item._id}>
+                                    <a
+                                        key={item._id}
+                                        href={`/videos/aircraftonboarddevice-${item.slug}`}
+                                    >
+                                        {getAircraftFamilyName(
+                                            item.name,
+                                            item.maker
+                                        )}
+                                    </a>
+                                </p>
+                            ))}
+                        </dd>
+                    </dl>
+                )}
+            {Array.isArray(results?.list) && results?.list.length > 0 && (
+                <dl className={styles["video-list"]}>
+                    <dt>相关视频内容</dt>
                     <dd>
                         <VideoListGrid
                             type="search"
                             slug={keyword}
-                            initialList={results.videos}
+                            initialList={results.list}
                             infiniteScroll
                             initialListIsComplete={
-                                results.videos.length >= results.videosTotal
+                                results.list.length >= results.total
                             }
                             defaultContentListAutoLoadMore={
                                 defaultContentListAutoLoadMore

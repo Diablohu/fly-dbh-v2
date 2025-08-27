@@ -11,3 +11,6 @@ export const E30000 = "视频观看页 - 查询：内容 - 无结果"; // 应渲
 
 // 4XXXX RSS Feed
 export const E40000 = "RSS Feed - 查询：列表内容 - 无结果"; // 应渲染 404
+
+// 5XXXX RSS Feed
+export const E50000 = "搜索页 - 查询 - 无结果"; // 应渲染 404
