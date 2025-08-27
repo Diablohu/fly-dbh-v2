@@ -28,6 +28,9 @@ const {
 const image = Astro.props.image
     ? `${new URL(Astro.props.image, Astro.url).href}?auto=format&w=960&q=60`
     : "";
+
+const url = Astro.url;
+url.protocol = "https:";
 ---
 
 <Fragment>
@@ -51,7 +54,7 @@ const image = Astro.props.image
             </>
         )
     }
-    <link itemprop="url" href={Astro.url.href} />
+    <link itemprop="url" href={url.href} />
     <meta itemprop="name" content={title} />
 
     <meta property="og:url" content={Astro.url.href} />
