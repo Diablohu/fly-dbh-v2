@@ -153,11 +153,11 @@ const Results: FC<{
                             <small>您是否在寻找</small>
                             <h2>
                                 <a
-                                    href={
+                                    href={`/videos/aircraftfamily-${
                                         results
                                             ?.tutorialsForMatchedAircraftOrDevice
                                             .slug
-                                    }
+                                    }`}
                                 >
                                     {
                                         results
