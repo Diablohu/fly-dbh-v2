@@ -13,10 +13,12 @@ export type ValidColorSchemeType = "dark" | "light";
 export type ValidContentListAutoLoadMoreType = "0" | "1";
 export type ValidVideoItemShowPlatformLinksOnHoverType = "0" | "1";
 
+export type VideoListPageTypeAircraftFamily = "aircraftFamily";
+export type VideoListPageTypeAircraftOnboardDevice = "aircraftOnboardDevice";
 export type VideoListPageTypesType =
     | "tag"
-    | "aircraftFamily"
-    | "aircraftOnboardDevice"
+    | VideoListPageTypeAircraftFamily
+    | VideoListPageTypeAircraftOnboardDevice
     | "aerodrome"
     | "developer"
     | "platform"
