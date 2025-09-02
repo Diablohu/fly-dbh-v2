@@ -3,12 +3,10 @@ import { z } from "astro:schema";
 import type { SanityDocument } from "@sanity/client";
 
 import { type VideoItemType, type VideoListPageTypesType } from "@/types";
-import {
-    extraAviationKnowledgeTitle,
-    commonAircraftNameSuffix,
-} from "@/global";
+import { commonAircraftNameSuffix } from "@/global";
 
 import { fetch } from "@/services/sanity";
+import fetchAllTutorialVideosForSubject from "@/services/queries/fetch-all-tutorial-videos-for-subject";
 import { transformImagePath } from "@/utils/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
@@ -279,124 +277,38 @@ const actions = {
                     // );
                     if (Array.isArray(matches) && matches.length === 1) {
                         const matched = matches[0];
-                        function getGorq(ref: string) {
-                            return `
-*[_type=="video" && "tutorial" in tags[]->slug.current && references(${ref})]
-    ${projection}
-    | order(release desc)`;
-                        }
                         /** 匹配项目的类型 */
                         const type: VideoListPageTypesType =
                             "aircrafts" in matched
                                 ? "aircraftFamily"
                                 : "aircraftOnboardDevice";
-                        /** 额外查询的 GROQ */
-                        const toQuery = [
-                            {
-                                name: "教程攻略",
-                                query: getGorq(`"${matched._id}"`),
-                            },
-                        ];
-                        // 如果项目有 `机载设备`，添加到查询
-                        if ("onboard_devices" in matched) {
-                            (
-                                matched.onboard_devices as {
-                                    _id: string;
-                                    name: string;
-                                    maker: string;
-                                }[]
-                            )?.forEach(({ _id, maker, name }) => {
-                                toQuery.push({
-                                    name: `机载设备 (${maker} ${name}) 教学`,
-                                    query: getGorq(`"${_id}"`),
-                                });
-                            });
-                        }
-                        // 如果项目有 `标签`，添加到查询
-                        if (
-                            "tagsId" in matched &&
-                            Array.isArray(matched.tagsId) &&
-                            matched.tagsId.length > 0
-                        ) {
-                            toQuery.push({
-                                name: extraAviationKnowledgeTitle,
-                                query: getGorq(
-                                    `[${matched.tagsId.map((_id) => `"${_id}"`).join(",")}]`
-                                ),
-                            });
-                        }
                         // 开始查询
                         res.tutorialsForMatchedAircraftOrDevice = {
                             type,
                             ...matched,
-                            list: (await fetch(
-                                "{" +
-                                    toQuery
-                                        .map(
-                                            ({ name, query }) =>
-                                                `'${name}' : ${query},`
-                                        )
-                                        .join("\n") +
-                                    "}",
+                            list: await fetchAllTutorialVideosForSubject<ReturnVideoItemType>(
                                 {
-                                    transform: (res, queryString) => {
-                                        if (!res) {
-                                            const err = new ActionError({
-                                                message: E50000,
-                                                code: "NOT_FOUND",
-                                            });
-                                            err.cause = { GROQ: queryString };
-                                            throw err;
-                                        }
-
-                                        // console.log(queryString)
-
-                                        const list =
-                                            res as unknown as Required<ResultType>["tutorialsForMatchedAircraftOrDevice"]["list"];
-
-                                        // 最终处理获取的列表
-                                        for (const [
-                                            type,
-                                            posts,
-                                        ] of Object.entries(list)) {
-                                            // 如果该类别没有数据，过滤掉
-                                            if (
-                                                !Array.isArray(posts) ||
-                                                !posts.length
-                                            )
-                                                delete list[type];
-
-                                            // 如果不是 `航空知识` 类别
-                                            // 过滤掉在 `航空知识` 类别中出现的视频
-                                            if (
-                                                type !==
-                                                extraAviationKnowledgeTitle
-                                            ) {
-                                                list[type] = posts.filter(
-                                                    (post) =>
-                                                        list[
-                                                            extraAviationKnowledgeTitle
-                                                        ].every(
-                                                            ({ _id }) =>
-                                                                _id !== post._id
-                                                        )
-                                                );
-                                            }
-                                        }
-
-                                        // 转化缩略图地址
-                                        Object.values(list).forEach((list) => {
-                                            list.forEach((post) => {
-                                                post.cover = transformImagePath(
-                                                    post.cover
-                                                );
-                                            });
-                                        });
-
-                                        return res;
-                                    },
-                                }
-                            )) as unknown as Required<ResultType>["tutorialsForMatchedAircraftOrDevice"]["list"],
+                                    _id: matched._id,
+                                    type,
+                                    onboardDevices:
+                                        "onboard_devices" in matched
+                                            ? (
+                                                  matched.onboard_devices as {
+                                                      _id: string;
+                                                      name: string;
+                                                      maker: string;
+                                                  }[]
+                                              )?.map(
+                                                  ({ _id, maker, name }) => ({
+                                                      _id,
+                                                      label: `${maker} ${name}`,
+                                                  })
+                                              )
+                                            : undefined,
+                                    aircraftTags: matched.tagsId,
+                                },
+                                { projection }
+                            ),
                         };
                     }
                 }
