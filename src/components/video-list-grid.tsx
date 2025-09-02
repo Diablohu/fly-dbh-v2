@@ -211,7 +211,6 @@ const VideoListGrid: FC<Props> = ({
      */
     const getTags = useCallback(
         (post: (typeof initialList)[0]) => {
-            console.log({ tagPurpose, type, isIndex });
             if (tagPurpose && ["latest", "search-result"].includes(tagPurpose))
                 return getVideoItemTopTags(post, tagPurpose);
             if (isIndex) return getVideoItemTopTags(post, "latest");
