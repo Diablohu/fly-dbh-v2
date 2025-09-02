@@ -34,38 +34,6 @@
 
 // ============================================================================
 
-.local(@currentLocale, @rules) {
-    html[lang="@{currentLocale}"] & {
-        @rules();
-    }
-}
-
-.font-size-clamp(@min-font-size, @font-size) {
-    font-size: unit(@font-size, px);
-    font-size: clamp(
-        unit(@min-font-size, px),
-        unit((175 * @font-size / 1920), vw),
-        unit(@font-size, px)
-    );
-}
-
-.font-size-clamp-with-line-height(@size, @line-height) {
-    font-size: @size;
-    font-size: clamp((@size * 0.85), unit((175 * @size / 1920), vw), @size);
-    line-height: unit((@line-height / @size), em);
-}
-
-.block-wrapper() {
-    display: block;
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: var(--global-edge-safe-distance);
-    padding-right: var(--global-edge-safe-distance);
-    max-width: var(--global-block-max-width);
-    width: 100%;
-}
-
 .screen-sm(@rules) {
     @media screen and (max-width: @screen-size-sm) {
         & {
@@ -112,6 +80,50 @@
         }
     }
 }
+
+.local(@currentLocale, @rules) {
+    html[lang="@{currentLocale}"] & {
+        @rules();
+    }
+}
+
+// ============================================================================
+
+.font-size-clamp(@min-font-size, @font-size) {
+    font-size: unit(@font-size, px);
+    font-size: clamp(
+        unit(@min-font-size, px),
+        unit((175 * @font-size / 1920), vw),
+        unit(@font-size, px)
+    );
+}
+
+.font-size-clamp-with-line-height(@size, @line-height) {
+    font-size: @size;
+    font-size: clamp((@size * 0.85), unit((175 * @size / 1920), vw), @size);
+    line-height: unit((@line-height / @size), em);
+}
+
+.block-wrapper() {
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--global-edge-safe-distance);
+    padding-right: var(--global-edge-safe-distance);
+    max-width: var(--global-block-max-width);
+    width: 100%;
+}
+
+.pointer-hover(@rules) {
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            @rules();
+        }
+    }
+}
+
+// ============================================================================
 
 .tag-styles() {
     --border-radius: 0.3333em;
@@ -179,10 +191,22 @@
     });
 }
 
-.pointer-hover(@rules) {
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            @rules();
+.spinner-styles() {
+    display: block;
+    color: transparent;
+    overflow: hidden;
+    background-color: transparent;
+    border-radius: 100em;
+    border: 0.25em var(--text-color-secondary) solid;
+    border-left-color: transparent;
+    animation: rotating 1.5s infinite linear;
+    transform-origin: 50% 50%;
+    @keyframes rotating {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
         }
     }
 }

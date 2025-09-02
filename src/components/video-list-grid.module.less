@@ -42,27 +42,14 @@
         //     color, background-color, border-color, border-width, transform,
         //     opacity, padding;
         &.is-loading {
-            color: transparent;
+            .spinner-styles();
+            display: inline-block;
             width: 3em;
             height: 3em;
             padding: 0;
-            overflow: hidden;
-            background-color: transparent;
-            border: 0.25em var(--text-color-secondary) solid;
-            border-left-color: transparent;
-            animation: rotating 1.5s infinite linear;
-            transform-origin: 50% 50%;
             transition-property:
                 background-color, border-color, border-width, transform,
                 opacity, padding;
-            @keyframes rotating {
-                0% {
-                    transform: rotate(0deg);
-                }
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
             // &:disabled,
             // &[disabled] {
             //     opacity: 1;
