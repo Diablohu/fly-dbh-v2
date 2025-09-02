@@ -63,7 +63,7 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                 );
                 BannerRef.current.style.setProperty(
                     "--video-offset-y",
-                    `${window.scrollY / 2}px`
+                    `${Math.max(window.scrollY, 0) / 2}px`
                 );
             }
         },
