@@ -1,7 +1,7 @@
 import type { SanityDocument } from "@sanity/client";
 import { defineAction } from "astro:actions";
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/utils/sanity-helpers";
+import { transformImagePath } from "@/services/sanity-helpers";
 import { type VideoItemType, type SiteConfigsType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 

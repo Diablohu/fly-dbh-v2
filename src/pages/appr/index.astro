@@ -1,18 +1,17 @@
 ---
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
+import HeroImage from "@/components/hero-image";
 
 // ============================================================================
 
 /*
 
 normal state
-	roll a dice
+	browse | roll a dice (/roll) | 加入粉丝群/提议更多挑战
 	---
 	小有挑战 | 相当挑战 | 极具挑战
 	---
-	加入粉丝群(small text)
-	提议更多挑战
 
 dice state
 	highlight: roll a dice
@@ -37,9 +36,8 @@ difficulty block
 rookie		challenge	extreme
 
 aircraft category title
-CATEGORY (OW2 Style gradient to transparent at bottom)
-A (above CATEGORY)
-轻型飞机 (small text at right)
+CATEGORY A (OW2 Style gradient to transparent at bottom)
+轻型飞机
 Help Icon at far right
 
 B	支线客机、商务喷气机
@@ -50,17 +48,32 @@ D+	超重型
 
 
 
-item block
+challenge item block
 ICAO OW2 Style gradient to transparent at bottom
-Airport Name + Approach Name above ICAO
+Airport Name
+Difficulty | Approach Name
 contry, location, etc,... small text below
 
+
+
+
+sub route
+* `/roll`
+* `/[icao]/[...tab]`
+	* Airport Infos (location, runway, etc...)
+	* 
 
 
 */
 ---
 
 <Layout title="挑战" header footer>
+    <HeroImage
+        client:idle
+        sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
+    >
+        <Block> Browse | Roll-A-Dice </Block>
+    </HeroImage>
     <Block class="video-infos"> 小有挑战 | 相当挑战 | 极具挑战 </Block>
 </Layout>
 

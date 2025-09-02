@@ -6,7 +6,7 @@ import { type VideoListPageTypesType, type VideoItemType } from "@/types";
 import { allLevel2Tags, defaultCacheTtl } from "@/global";
 
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/utils/sanity-helpers";
+import { transformImagePath } from "@/services/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
 import { E20000, E20001 } from "@/constants/error-codes";

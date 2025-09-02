@@ -8,7 +8,7 @@ import {
 import { extraAviationKnowledgeTitle } from "@/global";
 import { E50000 } from "@/constants/error-codes";
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/utils/sanity-helpers";
+import { transformImagePath } from "@/services/sanity-helpers";
 
 // ============================================================================
 

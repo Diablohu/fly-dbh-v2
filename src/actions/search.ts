@@ -7,7 +7,7 @@ import { commonAircraftNameSuffix } from "@/global";
 
 import { fetch } from "@/services/sanity";
 import fetchAllTutorialVideosForSubject from "@/services/queries/fetch-all-tutorial-videos-for-subject";
-import { transformImagePath } from "@/utils/sanity-helpers";
+import { transformImagePath } from "@/services/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
 import { E50000 } from "@/constants/error-codes";

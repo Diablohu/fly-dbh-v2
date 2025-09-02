@@ -3,7 +3,7 @@ import { defineAction, ActionError } from "astro:actions";
 import { type VideoItemType } from "@/types";
 
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/utils/sanity-helpers";
+import { transformImagePath } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
 import { E40000 } from "@/constants/error-codes";
 

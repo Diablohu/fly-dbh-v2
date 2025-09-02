@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { fetch } from "@/services/sanity";
-import { stringReplaceImagePath } from "@/utils/sanity-helpers";
+import { stringReplaceImagePath } from "@/services/sanity-helpers";
 
 export const GET: APIRoute = async ({ params }) => {
     if (!params.keyword) {
