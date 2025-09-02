@@ -51,6 +51,7 @@ const HeaderOptions: FC<Pick<Props, "defaults" | "originPathname">> = ({
                 href="/search"
                 className={classNames([
                     styles["button"],
+                    styles["link"],
                     {
                         [styles["is-active"]]: isRouteActive(
                             "/search",
@@ -68,6 +69,7 @@ const HeaderOptions: FC<Pick<Props, "defaults" | "originPathname">> = ({
                 type="button"
                 className={classNames([
                     styles["button-options"],
+                    styles["link"],
                     {
                         [styles["is-active"]]: showMenu,
                     },
