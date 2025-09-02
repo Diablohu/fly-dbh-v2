@@ -8,18 +8,14 @@ interface Props extends astroHTML.JSX.HTMLAttributes {
 const { class: className, ...props } = Astro.props;
 
 const todo = [
+    ["`/appr`"],
     [
+        "Updates `/updates`",
         `New Tags
 * \`教程 / 流程演示\`
 * \`is-hot\``,
         `List Page \`/videos/:type\`
 * _HasTutorial_ For AircraftFamilies and OnboardDevices`,
-        `Watch Page \`/watch/:slug\`
-* Markdown style for Description area: https://fly-dbh.com/watch/xplane-vs-msfs-aerodynamics`,
-        "Updates `/updates`",
-    ],
-    ["`/appr`"],
-    [
         `Watch Page \`/watch/:slug\` More Infos
 * Related Tutorial and/or Latest Videos (?)`,
         "Custom 500 Page `/500`: Show Error",
@@ -51,10 +47,7 @@ const todo = [
         "Stream List Page `/stream/:type-:slug`",
         "VOD Watch Page `/vod/:slug`",
     ],
-    [
-        "Tools `/tools",
-        "Tool News-Bot `/tools/news`",
-    ],
+    ["Tools `/tools", "Tool News-Bot `/tools/news`"],
     [
         "Activities `/activities`",
         "Clips `/streams/clips`, `Clips on Home Page",

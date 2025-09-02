@@ -1,7 +1,6 @@
 ---
 import { actions, ActionError } from "astro:actions";
 import dayjs from "dayjs";
-import { marked } from "marked";
 
 import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
@@ -22,6 +21,7 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getVideoCategoryInfoFromRawTypeData, {
     type CategoryInfoType,
 } from "@/utils/get-video-category-info-from-raw-type-data";
+import parseMarkdown from "@/utils/parse-markdown";
 import { errorLog } from "@/utils/log";
 
 // ============================================================================
@@ -125,7 +125,10 @@ if (error) {
                 />
             </section>
 
-            <section class="description">{video.description}</section>
+            <section
+                class="description markdown-container"
+                set:html={parseMarkdown(video.description)}
+            />
 
             <section class="relations">
                 {
@@ -284,7 +287,10 @@ if (error) {
                     <section class="sources">
                         <dl>
                             <dt>参考资料</dt>
-                            <dd set:html={marked.parse(video.sources)} />
+                            <dd
+                                class="markdown-container"
+                                set:html={parseMarkdown(video.sources)}
+                            />
                         </dl>
                     </section>
                 )
@@ -373,6 +379,26 @@ if (error) {
             }
         }
 
+        .markdown-container {
+            :global(& > *) {
+                &:first-child {
+                    margin-top: 0;
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+            :global(li > p) {
+                &:first-child {
+                    margin-top: 0;
+                }
+                &:has(+ ul),
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
         & > .title {
             grid-area: title;
             padding: 0 0 0.75em 0;
@@ -391,6 +417,7 @@ if (error) {
         }
         & > .description {
             grid-area: description;
+            color: var(--text-color-primary);
         }
         & > .sources {
             grid-area: sources;
