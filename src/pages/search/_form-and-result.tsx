@@ -58,7 +58,11 @@ const SearchFormAndResult: FC<{
         // if (!action) return;
         // if (!method) return;
 
-        window.history.replaceState(null, "", `/search/${keyword}`);
+        window.history.replaceState(
+            window.history.state,
+            "",
+            `/search/${keyword}`
+        );
 
         setError("");
         setStatus("loading");
