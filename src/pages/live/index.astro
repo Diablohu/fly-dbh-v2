@@ -1,0 +1,37 @@
+---
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+import HeroImage from "@/components/hero-image";
+
+// ============================================================================
+
+/*
+
+/live/
+/live/vods/
+	/watch/[:_id]
+/live/clips/
+	/watch/[:_id]
+
+*/
+---
+
+<Layout title="直播" header footer>
+    <HeroImage
+        client:idle
+		title="直播"
+        sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
+    >
+    </HeroImage>
+    <Block class="video-infos">直播间</Block>
+    <Block class="video-infos">最新回放</Block>
+    <Block class="video-infos">最新切片</Block>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .player-container {
+        zoom: 1;
+    }
+</style>
