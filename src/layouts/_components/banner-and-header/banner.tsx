@@ -11,6 +11,7 @@ import classNames from "classnames";
 
 import { slogan } from "@/global";
 import useWindow from "@/react-hooks/use-window";
+import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/root-classnames";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
@@ -84,6 +85,9 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                             //     BannerRef.current,
                             //     BannerIntersectionRef.current
                             // );
+                            document.documentElement.classList.add(
+                                rootClassNameBannerVisible
+                            );
                             Banner.bannerInView = true;
                             BannerRef.current?.classList.remove(
                                 styles["mod-not-in-view"]
@@ -96,6 +100,9 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                             //     BannerRef.current,
                             //     BannerIntersectionRef.current
                             // );
+                            document.documentElement.classList.remove(
+                                rootClassNameBannerVisible
+                            );
                             Banner.bannerInView = false;
                             BannerRef.current?.classList.add(
                                 styles["mod-not-in-view"]

@@ -40,11 +40,13 @@ const { showMore = true } = Astro.props;
         </h3>
         {
             showMore && (
-                <a
-                    href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
-                >
-                    更多
-                </a>
+                <span class="link-more">
+                    <a
+                        href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
+                    >
+                        更多
+                    </a>
+                </span>
             )
         }
     </dt>
@@ -92,9 +94,11 @@ const { showMore = true } = Astro.props;
 
     .collection {
         --margin-bottom: 5em;
+        --title-link-more-opacity: unset;
 
         display: block;
         position: relative;
+        margin-top: 0;
         margin-bottom: var(--margin-bottom);
 
         &::after {
@@ -128,11 +132,15 @@ const { showMore = true } = Astro.props;
             a {
                 .link-with-arrow-styles();
             }
-            & > a {
-                white-space: nowrap;
-                color: var(--text-color-secondary);
-                &:hover {
-                    color: var(--text-color-primary);
+            & > .link-more {
+                transition: opacity var(--base-transition-duration);
+                opacity: var(--title-link-more-opacity);
+                a {
+                    white-space: nowrap;
+                    color: var(--text-color-secondary);
+                    &:hover {
+                        color: var(--text-color-primary);
+                    }
                 }
             }
         }
@@ -181,5 +189,10 @@ const { showMore = true } = Astro.props;
         .screen-lg-below({
             border-radius: 0;
         });
+    }
+
+    :global(:root.root-is-home-banner-visible)
+        .collection[data-collection="latest"] {
+        --title-link-more-opacity: 0;
     }
 </style>
