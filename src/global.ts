@@ -58,8 +58,8 @@ export const navLinks = [
     },
     import.meta.env.DEV
         ? {
-              key: "streams",
-              route: "/streams",
+              key: "live",
+              route: "/live",
               name: "直播",
               icon: "",
               extraChecks: [/^\/vod\//],
@@ -90,7 +90,7 @@ export const navLinks = [
           }
         : null,
 ].filter((v) => !!v) as {
-    key: "home" | "videos" | "streams" | "activities" | "challenges" | "donate";
+    key: "home" | "videos" | "live" | "activities" | "challenges" | "donate";
     route: string;
     name: string;
     icon: string;

@@ -5,6 +5,8 @@ import HomeHollow from "@/assets/svg-symbols/home-hollow.svg";
 import HomeFill from "@/assets/svg-symbols/home-fill.svg";
 import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg";
 import VideosFill from "@/assets/svg-symbols/videos-fill.svg";
+import LivestreamHollow from "@/assets/svg-symbols/livestream-hollow.svg";
+import LivestreamFill from "@/assets/svg-symbols/livestream-fill.svg";
 
 import isRouteActive from "@/utils/is-route-active";
 
@@ -45,6 +47,12 @@ type Props = {
                                     <VideosFill />
                                 ) : (
                                     <VideosHollow />
+                                )
+                            ) : key === "live" ? (
+                                isActive ? (
+                                    <LivestreamFill />
+                                ) : (
+                                    <LivestreamHollow />
                                 )
                             ) : null}
                         </span>

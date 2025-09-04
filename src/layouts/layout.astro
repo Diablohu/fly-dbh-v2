@@ -95,6 +95,8 @@ interface Props {
     coverImage?: string;
     coverImageWidth?: number;
     coverImageHeight?: number;
+
+    htmlClassList?: string[];
 }
 
 // ============================================================================
@@ -121,6 +123,7 @@ const {
 const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
 const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.value;
 const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER)?.value;
+const { htmlClassList = [] } = Astro.props;
 ---
 
 <!doctype html>
@@ -131,7 +134,8 @@ const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLAT
         forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : '',
         videoItemShowPlatformLinksOnHover === '1'
             ? 'option-video-item-show-platform-links-on-hover'
-            : ''
+            : '',
+        ...htmlClassList,
     ]}>
     <head>
         <meta charset="UTF-8" />

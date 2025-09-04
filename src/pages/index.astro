@@ -2,6 +2,7 @@
 import { actions } from "astro:actions";
 
 // import log from "@/page-templates/index/_log.ts";
+import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/root-classnames";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
@@ -70,7 +71,7 @@ const spotlightConfigString = collections?.config.find(
 )?.value;
 ---
 
-<Layout header banner footer>
+<Layout header banner footer htmlClassList={[rootClassNameBannerVisible]}>
     <Block class="home-page">
         <Collection
             name="latest"

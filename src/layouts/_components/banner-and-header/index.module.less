@@ -357,7 +357,6 @@
     --global-header-logo-extra-edge: 5px;
     --global-header-logo-color: inherit;
     --global-header-logo-shadow: none;
-    --global-header-options-color: var(--text-color-secondary);
     --global-header-button-height: calc(
         var(--global-header-logo-height) +
             var(--global-header-logo-extra-edge) * 2
@@ -406,18 +405,6 @@
         z-index: 5;
     }
 
-    .styles-link() {
-        text-decoration: none;
-        transition-property: color, transform, opacity, font-weight;
-        .styles-hover() {
-            color: var(--global-header-color-primary);
-        }
-        &.is-active {
-            .styles-hover();
-        }
-        .pointer-hover(.styles-hover());
-    }
-
     .aside {
         position: relative;
         flex: 0 0 110px;
@@ -460,12 +447,20 @@
         position: relative;
         z-index: 5;
         .link {
-            .styles-link();
             display: inline-block;
             position: relative;
             color: inherit;
             line-height: var(--global-header-button-height);
             padding: 0 var(--global-header-button-padding-x);
+            text-decoration: none;
+            transition-property: color, transform, opacity, font-weight;
+            .styles-hover() {
+                color: var(--global-header-color-primary);
+            }
+            &.is-active {
+                .styles-hover();
+            }
+            .pointer-hover(.styles-hover());
             & + .link {
                 margin-left: 1em;
             }
@@ -501,7 +496,6 @@
         transform: translateY(var(--global-header-options-offset-y));
         a.button,
         button[type="button"] {
-            .styles-link();
             display: inline-block;
             vertical-align: top;
             font-size: 1em;
@@ -509,9 +503,17 @@
             padding: 0 var(--global-header-button-padding-x);
             background: transparent;
             border: 0;
-            color: var(--global-header-options-color);
-            // transition-property: color, transform;
+            color: var(--text-color-secondary);
             cursor: pointer;
+            text-decoration: none;
+            transition-property: color, transform, opacity, font-weight;
+            .styles-hover() {
+                color: var(--text-color-primary);
+            }
+            &.is-active {
+                .styles-hover();
+            }
+            .pointer-hover(.styles-hover());
             svg {
                 display: block;
                 width: var(--global-header-button-icon-size);
