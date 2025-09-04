@@ -94,7 +94,8 @@ const { showMore = true } = Astro.props;
 
     .collection {
         --margin-bottom: 5em;
-        --title-link-more-opacity: unset;
+        // --title-link-more-opacity: unset;
+        --title-link-more-transform: unset;
 
         display: block;
         position: relative;
@@ -133,8 +134,10 @@ const { showMore = true } = Astro.props;
                 .link-with-arrow-styles();
             }
             & > .link-more {
-                transition: opacity var(--base-transition-duration);
-                opacity: var(--title-link-more-opacity);
+                // transition: opacity var(--base-transition-duration);
+                // opacity: var(--title-link-more-opacity);
+                transition: transform var(--base-transition-duration);
+                transform: var(--title-link-more-transform);
                 a {
                     white-space: nowrap;
                     color: var(--text-color-secondary);
@@ -193,6 +196,7 @@ const { showMore = true } = Astro.props;
 
     :global(:root.root-is-home-banner-visible)
         .collection[data-collection="latest"] {
-        --title-link-more-opacity: 0;
+        // --title-link-more-opacity: 0;
+        --title-link-more-transform: translateX(-6em);
     }
 </style>
