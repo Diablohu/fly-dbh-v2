@@ -1,18 +1,46 @@
 @import "@/utils/mixins.less";
 
 .hero {
+    --height: 300px;
+    --stiky-height: 5.5rem;
+    // .page-hero-styles();
+
     position: sticky;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
     z-index: var(--hero-image-z-index);
     margin-top: calc(var(--global-header-height) * -1);
-    height: 300px;
-    top: -100px;
+    height: var(--height);
+    top: calc(
+        var(--global-header-height) + var(--stiky-height) - var(--height)
+    );
     overflow: hidden;
     color: var(--dark-text-color-primary);
 
     & > .wrapper {
+        .block-wrapper();
+        display: flex;
+        flex-flow: row nowrap;
         position: relative;
         z-index: 100;
-        border-top: var(--global-header-height) solid transparent;
+        // border-top: var(--global-header-height) solid transparent;
+        height: var(--stiky-height);
+        flex-basis: var(--stiky-height);
+        align-items: center;
+        .title {
+            flex: 1;
+            color: var(--dark-text-color-primary);
+            text-align: left;
+            margin: 0;
+            font-weight: 900;
+            text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
+            letter-spacing: 0.15em;
+        }
+        .actions{
+            flex: 0;
+            white-space: nowrap;
+        }
     }
 
     & > .mask-overlay,
@@ -27,13 +55,13 @@
 
     & > .mask-overlay {
         z-index: 3;
-        background: #00000033;
+        // background: #00000033;
 
         &::before,
         &::after {
             content: "";
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
             height: 100%;
@@ -44,9 +72,17 @@
             z-index: 3;
             background: linear-gradient(
                 to top,
-                #00000080 calc(var(--global-header-height) * 1 / 3),
-                #00000020 calc(var(--global-header-height) * 4 / 3)
+                var(--dark-theme-color-p-60) calc(var(--stiky-height) * 1 / 3),
+                transparent calc(var(--stiky-height) * 5 / 3)
             );
+            // height: var(--stiky-height);
+            // background: linear-gradient(
+            //     to top,
+            //     #000000b3 var(--stiky-height),
+            //     #00000000 var(--stiky-height)
+            // );
+            // background: var(--theme-color-p-30);
+            // backdrop-filter: var(--backdrop-filter-glass);
         }
         // 点阵
         &::after {
@@ -63,7 +99,8 @@
 
     & > .image,
     & > .glossy-overlay {
-        background: no-repeat 50% calc(50% + var(--global-header-height) / 2) / cover;
+        background: no-repeat 50% calc(50% + var(--global-header-height) / 2) /
+            cover;
         transform: translateY(var(--hero-image-offset-y));
     }
     & > .image {
@@ -71,15 +108,18 @@
     }
     & > .glossy-overlay {
         z-index: 2;
-        opacity: var(--hero-image-glossy-opacity);
+        // opacity: var(--hero-image-glossy-opacity);
+        opacity: 0;
     }
 
     & > .intersection-probe {
         position: absolute;
         z-index: 1;
         top: 0;
-        bottom: var(--global-header-height);
+        bottom: var(--stiky-height);
         left: 0;
         width: 0;
+        // width: 100px;
+        // background: #800;
     }
 }

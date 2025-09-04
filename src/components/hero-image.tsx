@@ -1,4 +1,10 @@
-import { useRef, useEffect, type FC, type HTMLAttributes } from "react";
+import {
+    useRef,
+    useEffect,
+    type FC,
+    type HTMLAttributes,
+    type ReactNode,
+} from "react";
 
 import { urlPrefixSanityImageCdn } from "@/global";
 
@@ -13,21 +19,30 @@ import styles from "./hero-image.module.less";
 const HeroImage: FC<
     {
         title?: string;
+        actions?: ReactNode;
         sanityImageFilename: string;
     } & HTMLAttributes<HTMLDivElement>
 > & {
     observer?: IntersectionObserver;
     isInViewport?: boolean;
-} = ({ sanityImageFilename, children }) => {
+} = ({ title, actions, sanityImageFilename, children }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
     const ProbeRef = useRef<HTMLDivElement>(null);
 
     useWindow(
         (force?: boolean) => {
-            if (!force && !HeroImage.isInViewport) return;
-
-            if (ContainerRef.current) {
-                const targetHeight = ContainerRef.current.offsetHeight - 200;
+            if (!HeroImage.isInViewport) {
+                document.documentElement.style.setProperty(
+                    "--hero-image-glossy-opacity",
+                    `1`
+                );
+            } else if (ProbeRef.current) {
+                const targetHeight = ProbeRef.current.offsetHeight;
+                const headerHeight = parseInt(
+                    window
+                        .getComputedStyle(document.documentElement)
+                        .getPropertyValue("--global-header-height")
+                );
                 document.documentElement.style.setProperty(
                     "--hero-image-glossy-opacity",
                     `${
@@ -36,14 +51,16 @@ const HeroImage: FC<
                             1,
                             Math.max(
                                 0,
-                                (targetHeight - window.scrollY) / targetHeight
+                                (targetHeight - window.scrollY - headerHeight) /
+                                    targetHeight
                             )
                         )
                     }`
                 );
                 document.documentElement.style.setProperty(
                     "--hero-image-offset-y",
-                    `${Math.min(50, Math.max(window.scrollY, 0) / 2)}px`
+                    // `${Math.min(targetHeight - headerHeight, (Math.max(window.scrollY, 0) * 4) / 5)}px`
+                    `${(Math.min(window.scrollY, targetHeight - headerHeight) * 2) / 3}px`
                 );
             }
         },
@@ -111,7 +128,11 @@ const HeroImage: FC<
 
     return (
         <section className={styles["hero"]} ref={ContainerRef}>
-            <div className={styles["wrapper"]}>{children}</div>
+            <div className={styles["wrapper"]}>
+                {title && <h1 className={styles["title"]}>{title}</h1>}
+                {children}
+                {actions && <div className={styles["actions"]}>{actions}</div>}
+            </div>
             <div className={styles["mask-overlay"]} />
             <div
                 className={styles["glossy-overlay"]}
