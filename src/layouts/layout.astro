@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { Font } from 'astro:assets';
 
 import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
 import {
@@ -232,6 +233,7 @@ const { htmlClassList = [] } = Astro.props;
 }
 `}
         ></style>
+        <Font cssVariable='--font-helvetica-compressed' />
 
         <ClientRouter />
     </head>

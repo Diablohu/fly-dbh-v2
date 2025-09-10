@@ -8,6 +8,7 @@ import {
 } from "react";
 import classNames from "classnames";
 
+import { routeBase } from "@/global";
 import { type VideoTagType, type VideoItemType } from "@/types";
 
 import prettifyTitle from "@/utils/prettify-title";
@@ -60,7 +61,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
             <figure className={classNames([styles["video-item"], className])}>
                 <a
                     className={styles["body"]}
-                    href={`/watch/${slug || _id}`}
+                    href={`${routeBase.watch}/${slug || _id}`}
                     // href={searchString}
                     // onClick={onClick}
                     // data-astro-prefetch="false"

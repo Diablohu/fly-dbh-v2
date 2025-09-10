@@ -54,4 +54,20 @@ export default defineConfig({
                 : undefined,
         ],
     },
+
+    experimental: {
+        fonts: [
+            {
+                provider: "local",
+                name: "Helvetica Compressed",
+                cssVariable: "--font-helvetica-compressed",
+                fallbacks: ["sans-serif"],
+                variants: [
+                    {
+                        src: ["./src/assets/fonts/Helvetica-Compressed.otf"],
+                    },
+                ],
+            },
+        ],
+    },
 });

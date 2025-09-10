@@ -5,21 +5,6 @@
 :root {
     // ========================================================================
     //
-    // 字体
-    //
-    // ========================================================================
-
-    @font-face {
-        font-family: "Helvetica Compressed";
-        font-display: swap;
-        font-weight: 100;
-        src:
-            local(sans-serif),
-            url("/fonts/Helvetica-Compressed.otf") format("truetype");
-    }
-
-    // ========================================================================
-    //
     // CSS 变量
     //
     // ========================================================================
@@ -53,7 +38,8 @@
         Roboto, "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica",
         "Arial", "Microsoft YaHei UI", "Microsoft YaHei", "Hiragino Sans GB",
         sans-serif;
-    --font-family-logo: "Helvetica Compressed", var(--font-family-base);
+    --font-family-logo:
+        var(--font-helvetica-compressed), var(--font-family-base);
     --global-font-family: var(--font-family-base);
     --global-font-weight: 400;
 
@@ -63,6 +49,7 @@
     --hero-image-z-index: 9000;
     --hero-image-offset-y: 0;
     --hero-image-glossy-opacity: 0;
+    --hero-image-stiky-height: 5.5rem;
 
     --title-letter-spacing: -0.04em;
     --backdrop-filter-glass: saturate(180%) blur(20px);
@@ -250,19 +237,19 @@ h6 {
 }
 
 h1 {
-    font-size: unit((22px / @base-font-size-number), em);
+    font-size: unit((@base-font-size-number-h1 / @base-font-size-number), em);
 }
 h2 {
-    font-size: unit((20px / @base-font-size-number), em);
+    font-size: unit((@base-font-size-number-h2 / @base-font-size-number), em);
 }
 h3 {
-    font-size: unit((18px / @base-font-size-number), em);
+    font-size: unit((@base-font-size-number-h3 / @base-font-size-number), em);
 }
 h4 {
-    font-size: unit((16px / @base-font-size-number), em);
+    font-size: unit((@base-font-size-number-h4 / @base-font-size-number), em);
 }
 h5 {
-    font-size: unit((14px / @base-font-size-number), em);
+    font-size: unit((@base-font-size-number-h5 / @base-font-size-number), em);
 }
 
 hr {

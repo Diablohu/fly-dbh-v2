@@ -25,6 +25,11 @@
 // ============================================================================
 
 @base-font-size-number: 14;
+@base-font-size-number-h1: 22px;
+@base-font-size-number-h2: 20px;
+@base-font-size-number-h3: 18px;
+@base-font-size-number-h4: 16px;
+@base-font-size-number-h5: 14px;
 @base-transition-duration: 0.2s;
 
 // ============================================================================
@@ -71,11 +76,11 @@
 }
 
 .color-scheme-light(@rules) {
-    :root.force-color-scheme-light & {
+    :global(:root.force-color-scheme-light) & {
         @rules();
     }
     @media (prefers-color-scheme: light) {
-        :root:not(.force-color-scheme-dark) & {
+        :global(:root:not(.force-color-scheme-dark)) & {
             @rules();
         }
     }

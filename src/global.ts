@@ -42,10 +42,23 @@ export const level2TagsMap = Object.entries(level2Tags).reduce<{
     return map;
 }, {});
 
+// ============================================================================
+
+export const routeBase = {
+    home: "/",
+    videoList: "/videos",
+    watch: "/watch",
+    live: "/live",
+    challenges: "/challenges",
+    donate: "/donate",
+};
+
+// ============================================================================
+
 export const navLinks = [
     {
         key: "home",
-        route: "/",
+        route: routeBase.home,
         name: "首页",
         icon: "",
     },
@@ -59,7 +72,7 @@ export const navLinks = [
     import.meta.env.DEV
         ? {
               key: "live",
-              route: "/live",
+              route: routeBase.live,
               name: "直播",
               icon: "",
               extraChecks: [/^\/vod\//],
@@ -76,7 +89,7 @@ export const navLinks = [
     import.meta.env.DEV
         ? {
               key: "challenges",
-              route: "/appr",
+              route: routeBase.challenges,
               name: "挑战",
               icon: "",
           }
@@ -84,7 +97,7 @@ export const navLinks = [
     import.meta.env.DEV
         ? {
               key: "donate",
-              route: "/donate",
+              route: routeBase.donate,
               name: "资助",
               icon: "",
           }

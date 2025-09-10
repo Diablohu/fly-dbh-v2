@@ -6,12 +6,25 @@
 // };
 export type ValueOf<T> = T[keyof T];
 
+// ============================================================================
+
+export type SiteConfigsType = {
+    key: string;
+    value: string;
+}[];
+
 /** https://ogp.me/#types */
 export type ValidPageContentType = "video-player" | "article" | "profile";
 export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
 export type ValidColorSchemeType = "dark" | "light";
 export type ValidContentListAutoLoadMoreType = "0" | "1";
 export type ValidVideoItemShowPlatformLinksOnHoverType = "0" | "1";
+
+// ============================================================================
+
+export type AircraftCategoryType = "a" | "b" | "c" | "d";
+
+// ============================================================================
 
 export type VideoListPageTypeAircraftFamily = "aircraftFamily";
 export type VideoListPageTypeAircraftOnboardDevice = "aircraftOnboardDevice";
@@ -101,7 +114,21 @@ export type VideoItemType = {
     }[];
 };
 
-export type SiteConfigsType = {
-    key: string;
-    value: string;
-}[];
+// ============================================================================
+
+export type ChallengeDifficultyType = "rookie" | "challenge" | "extreme";
+export type ChallengeListItemType = {
+    _id: string;
+    slug: string;
+    aerodrome: {
+        _id: string;
+        slug: string;
+        name: string;
+        icao: string;
+        iata: string;
+        location: string;
+    };
+    name: string;
+    difficulty: ChallengeDifficultyType;
+    max_allowed_aircraft_category: AircraftCategoryType;
+};

@@ -1,16 +1,21 @@
 import { type VideoListPageTypesType } from "@/types";
+import { routeBase } from "@/global";
 
 const getVideoListPageLink = (type?: VideoListPageTypesType, slug?: string) => {
-    if (!type) return "/videos";
-    if (!slug) return "/videos";
-    return `/videos/${
-        type === "aircraftFamily"
-            ? "aircraftfamily"
-            : type === 'aircraftOnboardDevice'
-            ? 'aircraftonboarddevice' :type === "platformUpdate"
-              ? "platformupdate"
-              : type
-    }-${slug}`;
+    if (!type) return routeBase.videoList;
+    if (!slug) return routeBase.videoList;
+    return (
+        routeBase.videoList +
+        `/${
+            type === "aircraftFamily"
+                ? "aircraftfamily"
+                : type === "aircraftOnboardDevice"
+                  ? "aircraftonboarddevice"
+                  : type === "platformUpdate"
+                    ? "platformupdate"
+                    : type
+        }-${slug}`
+    );
 };
 
 export default getVideoListPageLink;
