@@ -161,9 +161,11 @@ type Props = {
                     <dl>
                         <dt>发布</dt>
                         <dd>
-                            {dayjs(Astro.props.info?.release).format(
-                                "YYYY 年 M 月 D 日"
-                            )}
+                            {Astro.props.info?.release
+                                ? dayjs(Astro.props.info?.release).format(
+                                      "YYYY 年 M 月 D 日"
+                                  )
+                                : "待定"}
                         </dd>
                     </dl>
                 ) : Astro.props.type === "event" ? (

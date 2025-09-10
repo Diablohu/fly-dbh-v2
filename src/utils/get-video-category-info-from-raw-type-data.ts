@@ -18,7 +18,7 @@ const getVideoCategoryInfoFromRawTypeData = (
             Awaited<ReturnType<typeof actions.videoListPage.fetchTags>>["data"],
             undefined
         >[0],
-        "_rev" | "_type" | "_createdAt" | "_updatedAt" | '_originalId'
+        "_rev" | "_type" | "_createdAt" | "_updatedAt" | "_originalId"
     >
 ): CategoryInfoType | undefined => {
     switch (type) {
@@ -72,7 +72,9 @@ const getVideoCategoryInfoFromRawTypeData = (
                     series: raw.series || "",
                     number: raw.number || "",
                 }),
-                suffix: dayjs(raw.release).format("YY年M月"),
+                suffix: raw.release
+                    ? dayjs(raw.release).format("YY年M月")
+                    : "待定",
                 route: getVideoListPageLink(
                     "platformUpdate",
                     raw.slug || raw._id
@@ -83,10 +85,7 @@ const getVideoCategoryInfoFromRawTypeData = (
             return {
                 name: raw.name,
                 suffix: dayjs(raw.start).format("YY年M月"),
-                route: getVideoListPageLink(
-                    "event",
-                    raw.slug || raw._id
-                ),
+                route: getVideoListPageLink("event", raw.slug || raw._id),
             };
     }
     return undefined;
