@@ -66,10 +66,7 @@ const ChallengeList: FC<{
                 {items.map((item) => (
                     <a
                         className={styles["challenge-item"]}
-                        href={getChallengePageLink(
-                            item.aerodrome.slug || item.aerodrome._id,
-                            item.slug || item._id
-                        )}
+                        href={getChallengePageLink(item.slug || item._id)}
                         key={item._id}
                         data-difficulty={item.difficulty}
                         // data-difficulty="rookie"
@@ -77,7 +74,7 @@ const ChallengeList: FC<{
                         <span className={styles["aerodrome-code"]}>
                             {[item.aerodrome.icao, item.aerodrome.iata]
                                 .filter(Boolean)
-                                .join(" / ")}
+                                .join("/")}
                         </span>
                         <strong className={styles["aerodrome-name"]}>
                             {item.aerodrome.name}

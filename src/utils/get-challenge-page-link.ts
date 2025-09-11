@@ -1,14 +1,11 @@
 import { routeBase } from "@/global";
 
-const getChallengePageLink = (aerodrome?: string, challenge?: string) => {
-    if (!aerodrome) return routeBase.challenges;
-    if (!challenge) return routeBase.challenges;
+const getChallengePageLink = (idOrSlug?: string) => {
+    if (!idOrSlug) return routeBase.challenges;
     return (
-        routeBase.challenges +
-        "/" +
-        aerodrome +
-        "/" +
-        challenge.replace(new RegExp(`^${aerodrome}-`), "")
+        routeBase.challenges + "/" + idOrSlug
+        // + "/" +
+        // challenge.replace(new RegExp(`^${aerodrome}-`), "")
     );
 };
 
