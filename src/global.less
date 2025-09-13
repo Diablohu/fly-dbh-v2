@@ -18,6 +18,7 @@
     --global-block-max-width: calc(
         1600px + var(--global-edge-safe-distance) * 2
     );
+    // --global-header-height: unit((60 / @base-font-size-number), rem);
     --global-header-height: 60px;
     --global-header-z-index: 9999;
     --global-header-nav-max-width: var(--global-block-max-width);
@@ -25,9 +26,10 @@
     --global-header-backdrop-filter: var(--backdrop-filter-glass);
     --global-announcement-height: 45px;
     --global-announcement-count: 0;
-    --global-navbar-height: 55px;
-    --global-navbar-bottom-edge: calc(var(--global-edge-safe-distance) * 2 / 3);
-    --global-navbar-background-color: var(--theme-color-p-60);
+    // --global-small-screen-navbar-height: unit((55 / @base-font-size-number), rem);
+    --global-small-screen-navbar-height: 55px;
+    --global-small-screen-navbar-bottom-edge: calc(var(--global-edge-safe-distance) * 2 / 3);
+    --global-small-screen-navbar-background-color: var(--theme-color-p-60);
     --global-sticky-top: calc(
         var(--global-header-height) + var(--global-announcement-height) *
             var(--global-announcement-count)
@@ -51,7 +53,7 @@
     --hero-image-z-index: 9000;
     --hero-image-offset-y: 0;
     --hero-image-glossy-opacity: 0;
-    --hero-image-stiky-height: 5.5rem;
+    --hero-image-stiky-height: var(--global-header-height);
 
     --title-letter-spacing: -0.04em;
     --backdrop-filter-glass: saturate(180%) blur(20px);

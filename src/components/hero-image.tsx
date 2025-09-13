@@ -134,12 +134,12 @@ const HeroImage: FC<
                 {actions && <div className={styles["actions"]}>{actions}</div>}
             </div>
             <div className={styles["mask-overlay"]} />
-            <div
+            {/* <div
                 className={styles["glossy-overlay"]}
                 style={{
                     backgroundImage: `url(${urlPrefixSanityImageCdn}/${sanityImageFilename}?auto=format&w=640&blur=100&q=60)`,
                 }}
-            />
+            /> */}
             <div
                 className={styles["image"]}
                 style={{
