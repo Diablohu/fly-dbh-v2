@@ -133,11 +133,12 @@ sub route
     <HeroImage
         client:idle
         title="着陆挑战名册"
-        actions={"过滤 | 抽选 | 提议"}
+        actions={"TODO: 过滤 | 抽选 | 提议"}
         sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
     />
 
     <Block class="list"><List list={list} client:idle /></Block>
+    <Block class="actions"> TODO: 抽选 | 提议 </Block>
 </Layout>
 
 <style lang="less">
@@ -145,6 +146,10 @@ sub route
 
     .list {
         margin-top: 2em;
+    }
+    .actions {
+        margin-top: 2em;
         margin-bottom: 4em;
+        text-align: center;
     }
 </style>

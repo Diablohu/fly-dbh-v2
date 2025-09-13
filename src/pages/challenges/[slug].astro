@@ -1,0 +1,34 @@
+---
+import { routeBase } from "@/global";
+
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+import HeroImage from "@/components/hero-image";
+---
+
+<Layout title={`TODO: 机场名 + 挑战名 ${Astro.params.slug}`} header footer>
+    <Block class="header">
+        <a href={routeBase.challenges}>着陆挑战名册</a>
+        <h1>
+            <strong>TODO: 机场名</strong>
+            <span>TODO: 挑战名</span>
+        </h1>
+    </Block>
+
+    <hr />
+
+    <Block>{Astro.params.slug}</Block>
+    <Block>TODO: Demo Video</Block>
+    <Block
+        >TODO: [Grid] Aerodrome Info | Runway Info (Auto Calculate Slope
+        percentage & degrees) | Hazards (Color Coded) | Demo Route</Block
+    >
+    <Block>TODO: Briefing</Block>
+    <Block>TODO: Recommended Scenery Add-on</Block>
+
+    <hr />
+
+    <Block>TODO: Other Challenges for this Aerodrome</Block>
+    <Block>TODO: Videos for this Aerodrome</Block>
+    <Block>TODO: Back to List</Block>
+</Layout>

@@ -10,7 +10,7 @@
     .category-title {
         position: sticky;
         top: calc(
-            var(--global-sticky-top) + var(--hero-image-stiky-height) + 1rem
+            var(--global-sticky-top) + var(--hero-image-stiky-height) + .5rem
         );
         z-index: 5;
         display: block;
@@ -26,8 +26,8 @@
             position: absolute;
             top: -1rem;
             bottom: 0;
-            left: 0;
-            right: 0;
+            left: calc(var(--global-edge-safe-distance) * -0.5);
+            right: calc(var(--global-edge-safe-distance) * -0.5);
             background: linear-gradient(
                 to top,
                 transparent,
@@ -83,7 +83,7 @@
         //     )
         // );
         grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-        gap: 2em 1em;
+        gap: 1em;
         margin: 0;
         padding: 0 0 1em 0;
 

@@ -84,6 +84,8 @@ if (error) {
     // Astro.response.statusText = (error.cause || error.message || "") as string;
     return Astro.rewrite("/500");
 }
+
+// TODO: Astro.props.type === 'aerodrome' > list available challenges
 ---
 
 <section class="video-list">
