@@ -121,10 +121,13 @@
 }
 
 .pointer-hover(@rules) {
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            @rules();
-        }
+    // @media (hover: hover) and (pointer: fine) {
+    //     &:hover {
+    //         @rules();
+    //     }
+    // }
+    :global(:root.root-is-pointer-hover) &:hover {
+        @rules();
     }
 }
 

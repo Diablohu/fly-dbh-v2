@@ -1,12 +1,24 @@
 import { memo, useEffect, type FC } from "react";
 
-import { type ValidVideoItemShowPlatformLinksOnHoverType } from "@/types";
-
 import hashHistory from "history/hash";
 import browserHistory from "history/browser";
 
+import { type ValidVideoItemShowPlatformLinksOnHoverType } from "@/types";
+import { pointerHovering } from "@/constants/root-classnames";
+
 import useWindow from "@/react-hooks/use-window";
 import useVideoItemShowPlatformLinksOnHover from "@/react-hooks/use-video-item-show-platform-links-on-hover";
+
+// ============================================================================
+
+function rootOnPointerEnter(evt: PointerEvent) {
+    if (evt.pointerType === "mouse" || evt.pointerType === "pen")
+        document.documentElement.classList.add(pointerHovering);
+    else document.documentElement.classList.remove(pointerHovering);
+}
+function rootOnPointerLeave(evt: PointerEvent) {
+    document.documentElement.classList.remove(pointerHovering);
+}
 
 // ============================================================================
 
@@ -45,6 +57,34 @@ const PrepareHistory: FC<{
         window._contentRoot = document.querySelector(
             "body > .root"
         ) as HTMLDivElement;
+
+        // 利用 pointer event 判断当前是否为 hover
+        if (window.PointerEvent) {
+            document.documentElement.classList.add(pointerHovering);
+            document.documentElement.addEventListener(
+                "pointerenter",
+                rootOnPointerEnter
+            );
+            document.documentElement.addEventListener(
+                "pointerleave",
+                rootOnPointerLeave
+            );
+        } else {
+            document.documentElement.classList.add(pointerHovering);
+        }
+
+        return () => {
+            if (window.PointerEvent) {
+                document.documentElement.removeEventListener(
+                    "pointerenter",
+                    rootOnPointerEnter
+                );
+                document.documentElement.addEventListener(
+                    "pointerleave",
+                    rootOnPointerLeave
+                );
+            }
+        };
     }, []);
 
     useEffect(() => {
