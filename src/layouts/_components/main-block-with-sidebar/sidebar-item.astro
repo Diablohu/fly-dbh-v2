@@ -30,6 +30,11 @@ const Element = Astro.props.route ? "a" : "button";
                         Astro.url.pathname.startsWith(Astro.props.route || ""),
                 },
             ]}
+            {...(Element === "button"
+                ? {
+                      type: "button",
+                  }
+                : {})}
         >
             <Fragment
                 set:html={

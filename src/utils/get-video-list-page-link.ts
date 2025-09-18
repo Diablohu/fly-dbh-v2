@@ -1,7 +1,7 @@
 import { type VideoListPageTypesType } from "@/types";
 import { routeBase } from "@/global";
 
-const getVideoListPageLink = (type?: VideoListPageTypesType, slug?: string) => {
+function getVideoListPageLink(type?: VideoListPageTypesType, slug?: string) {
     if (!type) return routeBase.videoList;
     if (!slug) return routeBase.videoList;
     return (
@@ -16,6 +16,6 @@ const getVideoListPageLink = (type?: VideoListPageTypesType, slug?: string) => {
                     : type
         }-${slug}`
     );
-};
+}
 
 export default getVideoListPageLink;
