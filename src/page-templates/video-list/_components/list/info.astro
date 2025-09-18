@@ -51,14 +51,33 @@ type Props = {
         Astro.props.isIndex || Astro.props.type === "tag" ? null : (
             <section class="info">
                 {Astro.props.type === "aerodrome" ? (
-                    <dl>
-                        <dt>代码</dt>
-                        <dd>
-                            {[Astro.props.info?.icao, Astro.props.info?.iata]
-                                .filter(Boolean)
-                                .join(" / ")}
-                        </dd>
-                    </dl>
+                    <>
+                        <dl>
+                            <dt>代码</dt>
+                            <dd>
+                                {[
+                                    Astro.props.info?.icao,
+                                    Astro.props.info?.iata,
+                                ]
+                                    .filter(Boolean)
+                                    .join(" / ")}
+                            </dd>
+                        </dl>
+                        {(Astro.props.info?.location_region ||
+                            Astro.props.info?.location_city) && (
+                            <dl>
+                                <dt>地区</dt>
+                                <dd>
+                                    {[
+                                        Astro.props.info?.location_region,
+                                        Astro.props.info?.location_city,
+                                    ]
+                                        .filter(Boolean)
+                                        .join(" ")}
+                                </dd>
+                            </dl>
+                        )}
+                    </>
                 ) : Astro.props.type === "aircraftFamily" &&
                   Array.isArray(Astro.props.info?.aircrafts) &&
                   Astro.props.info.aircrafts.length > 0 ? (

@@ -191,7 +191,9 @@ ${
           ? `
     name,
     icao,
-    iata
+    iata,
+    location_region,
+    location_city
 `
           : type === "aircraftFamily"
             ? `
@@ -283,8 +285,12 @@ ${
                     name_full?: string;
                     title?: string;
                     tag_type?: string;
+
                     icao?: string;
                     iata?: string;
+                    location_region?: string;
+                    location_city?: string;
+
                     maker?: string;
                     aircrafts?: {
                         icao_code: string;
