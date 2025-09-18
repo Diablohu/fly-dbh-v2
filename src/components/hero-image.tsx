@@ -2,6 +2,7 @@ import {
     useRef,
     useEffect,
     useCallback,
+    useMemo,
     type FC,
     type HTMLAttributes,
     type ReactNode,
@@ -20,16 +21,35 @@ import styles from "./hero-image.module.less";
 const HeroImage: FC<
     {
         title?: string;
+        subTitle?: string;
         actions?: ReactNode;
-        sanityImageFilename: string;
+        sanityImageFilename?: string;
+        sanityImageUri?: string;
+        expandedHeight?: number;
     } & HTMLAttributes<HTMLDivElement>
 > & {
     observer?: IntersectionObserver;
     isInViewport?: boolean;
-} = ({ title, actions, sanityImageFilename, children }) => {
+} = ({
+    title,
+    subTitle,
+    actions,
+    sanityImageFilename,
+    sanityImageUri,
+    expandedHeight,
+    children,
+}) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
     const WrapperRef = useRef<HTMLDivElement>(null);
     const ProbeRef = useRef<HTMLDivElement>(null);
+
+    const imageSrc = useMemo(() => {
+        const uri = sanityImageFilename
+            ? `${urlPrefixSanityImageCdn}/${sanityImageFilename}`
+            : sanityImageUri;
+        if (!uri) return "";
+        return `${uri}?auto=format&w=1280&q=60`;
+    }, [sanityImageFilename, sanityImageUri]);
 
     const resetCssVariables = useCallback(() => {
         document.documentElement.style.removeProperty("--hero-image-offset-y");
@@ -153,9 +173,24 @@ const HeroImage: FC<
     }, [resetCssVariables]);
 
     return (
-        <section className={styles["hero"]} ref={ContainerRef}>
+        <section
+            className={styles["hero"]}
+            ref={ContainerRef}
+            style={
+                {
+                    "--custom-expanded-height": expandedHeight
+                        ? `${expandedHeight}px`
+                        : undefined,
+                } as unknown as React.CSSProperties
+            }
+        >
             <div className={styles["wrapper"]} ref={WrapperRef}>
-                {title && <h1 className={styles["title"]}>{title}</h1>}
+                {title && (
+                    <h1 className={styles["title"]}>
+                        {title}
+                        {subTitle && <small>{subTitle}</small>}
+                    </h1>
+                )}
                 {children}
                 {actions && <div className={styles["actions"]}>{actions}</div>}
             </div>
@@ -169,7 +204,7 @@ const HeroImage: FC<
             <div
                 className={styles["image"]}
                 style={{
-                    backgroundImage: `url(${urlPrefixSanityImageCdn}/${sanityImageFilename}?auto=format&w=1280&q=60)`,
+                    backgroundImage: `url(${imageSrc})`,
                 }}
             />
             <div className={styles["intersection-probe"]} ref={ProbeRef} />

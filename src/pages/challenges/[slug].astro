@@ -60,23 +60,31 @@ if (error) {
 ---
 
 <Layout title={`${challenge.aerodrome.name} : ${challenge.name}`} header footer>
-    {
-        challenge.aerodrome.photo && (
-            <div class="photo">
-                <img
-                    src={`${challenge.aerodrome.photo}?auto=format&w=1280&q=60`}
-                    alt={challenge.aerodrome.name}
-                />
-            </div>
-        )
-    }
+    <HeroImage
+        client:idle
+        title={challenge.aerodrome.name}
+        subTitle={`挑战: ${challenge.name}`}
+        sanityImageUri={challenge.aerodrome.photo}
+        expandedHeight={challenge.aerodrome.photo ? 550 : 150}
+    />
 
     <Block class="header">
-        <a href={routeBase.challenges}>着陆挑战名册</a>
-        <h1>
-            <strong>{challenge.aerodrome.name}</strong>
-            <span>{challenge.name}</span>
-        </h1>
+        <a class="link-to-challenge-list" href={routeBase.challenges}
+            >着陆挑战名册</a
+        >
+        {
+            challenge.aerodrome.photo_credit_url && (
+                <span class="photo-credit">
+                    照片:{" "}
+                    <a
+                        href={challenge.aerodrome.photo_credit_url}
+                        target="_blank"
+                    >
+                        {challenge.aerodrome.photo_credit}
+                    </a>
+                </span>
+            )
+        }
     </Block>
 
     <hr />
