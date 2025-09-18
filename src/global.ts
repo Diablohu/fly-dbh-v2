@@ -1,8 +1,8 @@
 import {
     type ValidVideoSourceType,
     type ValidContentListAutoLoadMoreType,
+    type VideoListPageTypesType,
 } from "@/types";
-import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 export const themeColorLight = "#ffffff";
 export const themeColorDark = "#0f0f0f";
@@ -52,6 +52,22 @@ export const routeBase = {
     challenges: "/challenges",
     donate: "/donate",
 };
+export function getVideoListPageLink(type?: VideoListPageTypesType, slug?: string) {
+    if (!type) return routeBase.videoList;
+    if (!slug) return routeBase.videoList;
+    return (
+        routeBase.videoList +
+        `/${
+            type === "aircraftFamily"
+                ? "aircraftfamily"
+                : type === "aircraftOnboardDevice"
+                  ? "aircraftonboarddevice"
+                  : type === "platformUpdate"
+                    ? "platformupdate"
+                    : type
+        }-${slug}`
+    );
+}
 
 // ============================================================================
 
