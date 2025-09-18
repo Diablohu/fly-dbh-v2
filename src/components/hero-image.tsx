@@ -1,6 +1,7 @@
 import {
     useRef,
     useEffect,
+    useCallback,
     type FC,
     type HTMLAttributes,
     type ReactNode,
@@ -27,7 +28,18 @@ const HeroImage: FC<
     isInViewport?: boolean;
 } = ({ title, actions, sanityImageFilename, children }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
+    const WrapperRef = useRef<HTMLDivElement>(null);
     const ProbeRef = useRef<HTMLDivElement>(null);
+
+    const resetCssVariables = useCallback(() => {
+        document.documentElement.style.removeProperty("--hero-image-offset-y");
+        document.documentElement.style.removeProperty(
+            "--hero-image-glossy-opacity"
+        );
+        document.documentElement.style.removeProperty(
+            "--hero-image-stiky-height"
+        );
+    }, []);
 
     useWindow(
         (force?: boolean) => {
@@ -70,11 +82,30 @@ const HeroImage: FC<
         }
     );
 
+    // 将内容区高度映射为 `--hero-image-stiky-height`
+    useWindow(
+        (force?: boolean) => {
+            if (!HeroImage.isInViewport) {
+                document.documentElement.style.setProperty(
+                    "--hero-image-glossy-opacity",
+                    `1`
+                );
+            } else if (WrapperRef.current) {
+                // --hero-image-stiky-height
+                const targetHeight = WrapperRef.current.offsetHeight;
+                document.documentElement.style.setProperty(
+                    "--hero-image-stiky-height",
+                    `${targetHeight}px`
+                );
+            }
+        },
+        {
+            resize: true,
+        }
+    );
+
     useEffect(() => {
-        document.documentElement.style.removeProperty("--hero-image-offset-y");
-        document.documentElement.style.removeProperty(
-            "--hero-image-glossy-opacity"
-        );
+        resetCssVariables();
 
         if (!HeroImage.observer) {
             HeroImage.observer = new IntersectionObserver(
@@ -117,18 +148,13 @@ const HeroImage: FC<
             HeroImage.observer?.disconnect();
             HeroImage.observer = undefined;
 
-            document.documentElement.style.removeProperty(
-                "--hero-image-offset-y"
-            );
-            document.documentElement.style.removeProperty(
-                "--hero-image-glossy-opacity"
-            );
+            resetCssVariables();
         };
-    }, []);
+    }, [resetCssVariables]);
 
     return (
         <section className={styles["hero"]} ref={ContainerRef}>
-            <div className={styles["wrapper"]}>
+            <div className={styles["wrapper"]} ref={WrapperRef}>
                 {title && <h1 className={styles["title"]}>{title}</h1>}
                 {children}
                 {actions && <div className={styles["actions"]}>{actions}</div>}

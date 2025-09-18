@@ -107,14 +107,20 @@ const ChallengeList: FC<{
                         >
                             {item.name}
                         </span>
-                        {item.aerodrome.location && (
+                        {(item.aerodrome.location_region ||
+                            item.aerodrome.location_city) && (
                             <span
                                 className={classNames([
                                     styles["line"],
                                     styles["aerodrome-location"],
                                 ])}
                             >
-                                {item.aerodrome.location}
+                                {[
+                                    item.aerodrome.location_region,
+                                    item.aerodrome.location_city,
+                                ]
+                                    .filter(Boolean)
+                                    .join(" ")}
                             </span>
                         )}
                     </a>

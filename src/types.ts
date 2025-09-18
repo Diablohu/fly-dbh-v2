@@ -126,9 +126,45 @@ export type ChallengeListItemType = {
         name: string;
         icao: string;
         iata: string;
-        location: string;
+        location_region: string;
+        location_city: string;
     };
     name: string;
     difficulty: ChallengeDifficultyType;
     max_allowed_aircraft_category: AircraftCategoryType;
+};
+export type ChallengeItemType = {
+    _id: string;
+    name: string;
+    difficulty: ChallengeDifficultyType;
+    max_allowed_aircraft_category: AircraftCategoryType;
+    type: "vfr" | "ils" | "rnav" | "rnp-visual" | "ifr-circling";
+    typical_aircrafts: string;
+    hazards: {
+        name: string;
+        emoji: string;
+        difficulty: string;
+        comment?: string;
+        extra_comment?: string;
+    }[];
+    aerodrome: {
+        _id: string;
+        slug: string;
+        name: string;
+        icao: string;
+        iata: string;
+        location_region: string;
+        location_city: string;
+        runways: {
+            identifier: string;
+            bearing: string;
+            elevation: string;
+            length: string;
+            width: string;
+        }[];
+        photo?: string;
+        photo_credit?: string;
+        photo_credit_url?: string;
+    };
+    runways: string[];
 };

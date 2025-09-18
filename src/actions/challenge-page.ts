@@ -1,8 +1,11 @@
+import type { SanityDocument } from "@sanity/client";
+import { z } from "astro:schema";
 import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
+import { transformImagePath } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
-import { E60000 } from "@/constants/error-codes";
-import { type ChallengeListItemType } from "@/types";
+import { E60000, E60001 } from "@/constants/error-codes";
+import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
 
 const actions = {
     fetchList: defineAction({
@@ -17,7 +20,8 @@ const actions = {
     name,
     icao,
     iata,
-    location,
+    location_region,
+    location_city,
   },
   name,
   difficulty,
@@ -41,6 +45,80 @@ const actions = {
                 if (!res) {
                     const err = new ActionError({
                         message: E60000,
+                        code: "NOT_FOUND",
+                    });
+                    err.cause = { GROQ: queryString };
+                    throw err;
+                }
+                return res;
+            } catch (err) {
+                actionErrorHandler(err);
+            }
+        },
+    }),
+
+    fetchChallenge: defineAction({
+        input: z.string(),
+        handler: async (cmsIdOrSlug) => {
+            try {
+                const queryString = `*[_type == "approach_challenge" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] {
+  _id,
+  name,
+  type,
+  typical_aircrafts,
+  difficulty,
+  'hazards': hazards[]{
+    ...hazard->{
+      name,
+      emoji,
+      difficulty,
+      comment,
+    },
+    extra_comment,
+  },
+  max_allowed_aircraft_category,
+  'aerodrome': aerodrome->{
+    _id,
+    'slug': slug.current,
+    name,
+    icao,
+    iata,
+    location_region,
+    location_city,
+    'runways': runways[]{
+      identifier,
+      bearing,
+      elevation,
+      length,
+      width,
+    },
+    'photo': photo.asset->path,
+    photo_credit,
+    photo_credit_url,
+  },
+  runways[],
+} | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
+                const res = (await fetch<ChallengeItemType>(queryString, {
+                    transform: (res, queryString) => {
+                        if (!res[0]) {
+                            const err = new ActionError({
+                                message: E60000,
+                                code: "NOT_FOUND",
+                            });
+                            err.cause = { GROQ: queryString };
+                            throw err;
+                        }
+                        if (res[0].aerodrome.photo)
+                            res[0].aerodrome.photo = transformImagePath(
+                                res[0].aerodrome.photo
+                            );
+                        return res[0] as unknown as SanityDocument<ChallengeItemType>[];
+                    },
+                })) as unknown as ChallengeItemType;
+
+                if (!res) {
+                    const err = new ActionError({
+                        message: E60001,
                         code: "NOT_FOUND",
                     });
                     err.cause = { GROQ: queryString };

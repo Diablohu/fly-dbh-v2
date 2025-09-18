@@ -1,29 +1,92 @@
 ---
+import { actions, ActionError } from "astro:actions";
+
 import { routeBase } from "@/global";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import HeroImage from "@/components/hero-image";
+
+import { errorLog } from "@/utils/log";
+
+// ============================================================================
+
+if (!Astro.params.slug) return Astro.redirect(routeBase.challenges, 303);
+
+const { data: challenge, error } = await Astro.callAction(
+    actions.challengePage.fetchChallenge,
+    Astro.params.slug
+);
+if ((error && error.code === "NOT_FOUND") || !challenge) {
+    if (error)
+        errorLog(
+            [
+                `${Astro.originPathname} -> 404`,
+                error.code,
+                error.message,
+                (error.cause as any)?.GROQ
+                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                    : "",
+            ]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    else
+        errorLog(
+            [`${Astro.originPathname} -> 404`, "No challenge found"]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    return Astro.rewrite("/404");
+}
+if (error) {
+    const err = error as unknown as ActionError;
+    errorLog(
+        [
+            `${Astro.originPathname} -> 500`,
+            err.code,
+            err.message,
+            (err.cause as any)?.GROQ
+                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                : "",
+        ]
+            .filter(Boolean)
+            .join(" | ")
+    );
+    Astro.response.status = 500;
+    Astro.props.error = error;
+    return Astro.rewrite("/500");
+}
 ---
 
-<Layout title={`TODO: 机场名 + 挑战名 ${Astro.params.slug}`} header footer>
+<Layout title={`${challenge.aerodrome.name} : ${challenge.name}`} header footer>
+    {
+        challenge.aerodrome.photo && (
+            <div class="photo">
+                <img
+                    src={`${challenge.aerodrome.photo}?auto=format&w=1280&q=60`}
+                    alt={challenge.aerodrome.name}
+                />
+            </div>
+        )
+    }
+
     <Block class="header">
         <a href={routeBase.challenges}>着陆挑战名册</a>
         <h1>
-            <strong>TODO: 机场名</strong>
-            <span>TODO: 挑战名</span>
+            <strong>{challenge.aerodrome.name}</strong>
+            <span>{challenge.name}</span>
         </h1>
     </Block>
 
     <hr />
 
-    <Block>{Astro.params.slug}</Block>
     <Block>TODO: Demo Video</Block>
     <Block
         >TODO: [Grid] Aerodrome Info | Runway Info (Auto Calculate Slope
-        percentage & degrees) | Hazards (Color Coded) | Demo Route</Block
+        percentage & degrees) | Hazards (Color Coded)</Block
     >
-    <Block>TODO: Briefing</Block>
+    <Block>TODO: Demo Route | Briefing</Block>
     <Block>TODO: Recommended Scenery Add-on</Block>
 
     <hr />
@@ -31,4 +94,23 @@ import HeroImage from "@/components/hero-image";
     <Block>TODO: Other Challenges for this Aerodrome</Block>
     <Block>TODO: Videos for this Aerodrome</Block>
     <Block>TODO: Back to List</Block>
+
+    <hr />
+
+    <Block
+        ><textarea class="debug" readonly
+            >{JSON.stringify(challenge, undefined, 2)}</textarea
+        ></Block
+    >
 </Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .debug {
+        display: block;
+        width: 100%;
+        height: 20em;
+        font-family: monospace;
+    }
+</style>

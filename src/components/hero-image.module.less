@@ -2,6 +2,7 @@
 
 .hero {
     --height: 300px;
+    // --content-height: 60px;
     // .page-hero-styles();
 
     position: sticky;
@@ -25,8 +26,8 @@
         position: relative;
         z-index: 100;
         // border-top: var(--global-header-height) solid transparent;
-        height: var(--hero-image-stiky-height);
-        flex-basis: var(--hero-image-stiky-height);
+        // height: var(--hero-image-stiky-height);
+        // flex-basis: var(--hero-image-stiky-height);
         align-items: center;
         .title {
             flex: 1;
@@ -36,6 +37,8 @@
             font-weight: 900;
             text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
             letter-spacing: 0.15em;
+            line-height: 1.2em;
+            padding: calc((var(--global-header-height) - 1.2em) / 2) 0;
         }
         .actions {
             flex: 0;
