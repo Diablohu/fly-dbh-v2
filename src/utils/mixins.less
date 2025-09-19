@@ -120,13 +120,14 @@
     width: 100%;
 }
 
-.pointer-hover(@rules) {
+.pointer-hover(@rules, @extraRootSelector: '') {
     // @media (hover: hover) and (pointer: fine) {
     //     &:hover {
     //         @rules();
     //     }
     // }
-    :global(:root.root-is-pointer-hover) &:hover {
+    @root-selector: ~":root.root-is-pointer-hover@{extraRootSelector}";
+    :global(@{root-selector}) &:hover {
         @rules();
     }
 }
