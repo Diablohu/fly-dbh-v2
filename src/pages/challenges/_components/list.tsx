@@ -61,6 +61,9 @@ const ChallengeList: FC<{
                 <strong className={styles["typical-aircraft-types"]}>
                     {typicalAircraftTypes[category]}
                 </strong>
+                <span className={styles["category-opaque-layer"]}>
+                    CATEGORY {category.toUpperCase()}
+                </span>
             </dt>
             <dd className={styles["challenges-list"]}>
                 {items.map((item) => (

@@ -4,20 +4,24 @@
     --height: var(--custom-expanded-height, 300px);
     // .page-hero-styles();
 
-    position: sticky;
+    position: relative;
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-end;
     z-index: var(--hero-image-z-index);
     margin-top: calc(var(--global-header-height) * -1);
     height: var(--height);
-    top: calc(
-        var(--global-header-height) + var(--hero-image-stiky-height) -
-            var(--height)
-    );
     overflow: hidden;
     color: var(--dark-text-color-primary);
     background: var(--dark-theme-color);
+
+    &.is-sticky {
+        position: sticky;
+        top: calc(
+            var(--global-header-height) + var(--hero-image-stiky-height) -
+                var(--height)
+        );
+    }
 
     & > .wrapper {
         .block-wrapper();

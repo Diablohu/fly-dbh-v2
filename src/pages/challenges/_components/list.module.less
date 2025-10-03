@@ -10,7 +10,8 @@
     .category-title {
         position: sticky;
         top: calc(
-            var(--global-sticky-top) + var(--hero-image-stiky-height) + .5rem
+            var(--global-sticky-top) //  + var(--hero-image-stiky-height)
+            + var(--container-top-edge)
         );
         z-index: 5;
         display: block;
@@ -31,11 +32,14 @@
             background: linear-gradient(
                 to top,
                 transparent,
-                var(--theme-color) 1em
+                var(--theme-color-p-60) 1rem,
+                var(--theme-color-p-90)
             );
+            pointer-events: none;
             // backdrop-filter: var(--backdrop-filter-glass);
         }
-        .category-code {
+        .category-code,
+        .category-opaque-layer {
             position: absolute;
             top: 0;
             // left: calc(var(--global-edge-safe-distance) * -0.5);
@@ -49,6 +53,8 @@
             line-height: 1;
             transform: skew(-11deg);
             transform-origin: 0% 100%;
+        }
+        .category-code {
             background: linear-gradient(
                 to bottom,
                 var(--text-color-secondary),
@@ -65,6 +71,26 @@
             color: var(--text-color-primary);
             transform: skew(-11deg);
             transform-origin: 0% 100%;
+            text-shadow: 0 0.1em 0.15em var(--theme-color);
+        }
+        .category-opaque-layer {
+            // top: calc(var(--container-top-edge) * -1);
+            // left: calc(var(--global-edge-safe-distance) * -0.5);
+            // left: -0.4em;
+            z-index: -1;
+            color: var(--theme-color);
+            text-shadow:
+                0 0em 0.4em var(--theme-color),
+                0 0em 0.4em var(--theme-color),
+                0 0em 0.4em var(--theme-color);
+            // background: var(--theme-color);
+            // background: radial-gradient(
+            //     farthest-side,
+            //     var(--theme-color) calc(100% - 0.4em),
+            //     transparent
+            // );
+            // padding: var(--container-top-edge) 0.2em 0.5em 0.2em;
+            // border-radius: 100em;
         }
     }
 

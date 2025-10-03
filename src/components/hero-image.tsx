@@ -7,6 +7,7 @@ import {
     type HTMLAttributes,
     type ReactNode,
 } from "react";
+import classNames from "classnames";
 
 import { urlPrefixSanityImageCdn } from "@/global";
 
@@ -26,6 +27,7 @@ const HeroImage: FC<
         sanityImageFilename?: string;
         sanityImageUri?: string;
         expandedHeight?: number;
+        sticky?: boolean;
         parallax?: boolean;
     } & HTMLAttributes<HTMLDivElement>
 > & {
@@ -38,6 +40,7 @@ const HeroImage: FC<
     sanityImageFilename,
     sanityImageUri,
     expandedHeight,
+    sticky = false,
     parallax = false,
     children,
 }) => {
@@ -174,7 +177,12 @@ const HeroImage: FC<
 
     return (
         <section
-            className={styles["hero"]}
+            className={classNames([
+                styles["hero"],
+                {
+                    [styles["is-sticky"]]: sticky,
+                },
+            ])}
             ref={ContainerRef}
             style={
                 {

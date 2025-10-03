@@ -133,11 +133,19 @@ sub route
     <HeroImage
         client:idle
         title="着陆挑战名册"
-        actions={"TODO: 过滤 | 抽选 | 提议"}
         sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
+        sticky={false}
     />
 
-    <Block class="list"><List list={list} client:idle /></Block>
+    <Block class="list">
+        <section class="sticky-actions">
+            <!-- TODO: Actions -->
+            <button type="button">过滤</button>
+            <button type="button">抽选</button>
+            <button type="button">提议</button>
+        </section>
+        <List list={list} client:idle />
+    </Block>
     <Block class="actions"> TODO: 抽选 | 提议 </Block>
 </Layout>
 
@@ -145,8 +153,31 @@ sub route
     @import "@/utils/mixins.less";
 
     .list {
-        margin-top: 2em;
+        --container-top-edge: 0.5em;
+        margin-top: 1em;
     }
+
+    .sticky-actions {
+        position: sticky;
+        top: calc(
+            var(--global-sticky-top) //  + var(--hero-image-stiky-height)
+            + var(--container-top-edge) + 0.5em
+        );
+        left: 0;
+        z-index: calc(var(--hero-image-z-index) + 1);
+        margin-top: -4.2em;
+        margin-bottom: 4.2em;
+        height: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        button {
+            .tag-styles();
+            display: block;
+            height: 2em;
+        }
+    }
+
     .actions {
         margin-top: 2em;
         margin-bottom: 4em;
