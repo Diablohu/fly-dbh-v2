@@ -26,6 +26,7 @@ const HeroImage: FC<
         sanityImageFilename?: string;
         sanityImageUri?: string;
         expandedHeight?: number;
+        parallax?: boolean;
     } & HTMLAttributes<HTMLDivElement>
 > & {
     observer?: IntersectionObserver;
@@ -37,6 +38,7 @@ const HeroImage: FC<
     sanityImageFilename,
     sanityImageUri,
     expandedHeight,
+    parallax = false,
     children,
 }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
@@ -61,68 +63,66 @@ const HeroImage: FC<
         );
     }, []);
 
-    useWindow(
-        (force?: boolean) => {
-            if (!HeroImage.isInViewport) {
-                document.documentElement.style.setProperty(
-                    "--hero-image-glossy-opacity",
-                    `1`
-                );
-            } else if (ProbeRef.current) {
-                const targetHeight = ProbeRef.current.offsetHeight;
-                const headerHeight = parseInt(
-                    window
-                        .getComputedStyle(document.documentElement)
-                        .getPropertyValue("--global-header-height")
-                );
-                document.documentElement.style.setProperty(
-                    "--hero-image-glossy-opacity",
-                    `${
-                        1 -
-                        Math.min(
-                            1,
-                            Math.max(
-                                0,
-                                (targetHeight - window.scrollY - headerHeight) /
-                                    targetHeight
-                            )
+    /** 计算图片的视差滚动效果值 */
+    const useWindowParallax = useCallback(() => {
+        if (!parallax) return;
+        if (!HeroImage.isInViewport) {
+            document.documentElement.style.setProperty(
+                "--hero-image-glossy-opacity",
+                `1`
+            );
+        } else if (ProbeRef.current) {
+            const targetHeight = ProbeRef.current.offsetHeight;
+            const headerHeight = parseInt(
+                window
+                    .getComputedStyle(document.documentElement)
+                    .getPropertyValue("--global-header-height")
+            );
+            document.documentElement.style.setProperty(
+                "--hero-image-glossy-opacity",
+                `${
+                    1 -
+                    Math.min(
+                        1,
+                        Math.max(
+                            0,
+                            (targetHeight - window.scrollY - headerHeight) /
+                                targetHeight
                         )
-                    }`
-                );
-                document.documentElement.style.setProperty(
-                    "--hero-image-offset-y",
-                    // `${Math.min(targetHeight - headerHeight, (Math.max(window.scrollY, 0) * 4) / 5)}px`
-                    `${(Math.min(window.scrollY, targetHeight - headerHeight) * 2) / 3}px`
-                );
-            }
-        },
-        {
-            resize: true,
-            scroll: true,
+                    )
+                }`
+            );
+            document.documentElement.style.setProperty(
+                "--hero-image-offset-y",
+                // `${Math.min(targetHeight - headerHeight, (Math.max(window.scrollY, 0) * 4) / 5)}px`
+                `${(Math.min(window.scrollY, targetHeight - headerHeight) * 2) / 3}px`
+            );
         }
-    );
+    }, [parallax]);
+    useWindow(useWindowParallax, {
+        resize: true,
+        scroll: true,
+    });
 
-    // 将内容区高度映射为 `--hero-image-stiky-height`
-    useWindow(
-        (force?: boolean) => {
-            if (!HeroImage.isInViewport) {
-                document.documentElement.style.setProperty(
-                    "--hero-image-glossy-opacity",
-                    `1`
-                );
-            } else if (WrapperRef.current) {
-                // --hero-image-stiky-height
-                const targetHeight = WrapperRef.current.offsetHeight;
-                document.documentElement.style.setProperty(
-                    "--hero-image-stiky-height",
-                    `${targetHeight}px`
-                );
-            }
-        },
-        {
-            resize: true,
+    /** 将内容区高度映射为 `--hero-image-stiky-height` */
+    const useWindowStickyHeight = useCallback(() => {
+        if (!HeroImage.isInViewport) {
+            document.documentElement.style.setProperty(
+                "--hero-image-glossy-opacity",
+                `1`
+            );
+        } else if (WrapperRef.current) {
+            // --hero-image-stiky-height
+            const targetHeight = WrapperRef.current.offsetHeight;
+            document.documentElement.style.setProperty(
+                "--hero-image-stiky-height",
+                `${targetHeight}px`
+            );
         }
-    );
+    }, []);
+    useWindow(useWindowStickyHeight, {
+        resize: true,
+    });
 
     useEffect(() => {
         resetCssVariables();
