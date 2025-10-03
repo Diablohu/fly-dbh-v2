@@ -46,33 +46,32 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
         // }
     }, []);
 
-    useWindow(
-        (force?: boolean) => {
-            if (!force && !Banner.bannerInView) return;
+    /** 计算并设置视差滚动样式值 */
+    const setParallaxStyles = useCallback((force?: boolean) => {
+        if (!force && !Banner.bannerInView) return;
 
-            if (BannerRef.current) {
-                const wrapperHeight = BannerRef.current.offsetHeight;
-                BannerRef.current.style.setProperty(
-                    "--content-scale",
-                    `${Math.min(
-                        1,
-                        Math.max(
-                            0,
-                            (wrapperHeight - window.scrollY) / wrapperHeight
-                        )
-                    )}`
-                );
-                BannerRef.current.style.setProperty(
-                    "--video-offset-y",
-                    `${Math.max(window.scrollY, 0) / 2}px`
-                );
-            }
-        },
-        {
-            resize: true,
-            scroll: true,
+        if (BannerRef.current) {
+            const wrapperHeight = BannerRef.current.offsetHeight;
+            BannerRef.current.style.setProperty(
+                "--content-scale",
+                `${Math.min(
+                    1,
+                    Math.max(
+                        0,
+                        (wrapperHeight - window.scrollY) / wrapperHeight
+                    )
+                )}`
+            );
+            BannerRef.current.style.setProperty(
+                "--video-offset-y",
+                `${Math.max(window.scrollY, 0) / 2}px`
+            );
         }
-    );
+    }, []);
+    useWindow(setParallaxStyles, {
+        resize: true,
+        scroll: true,
+    });
 
     useEffect(() => {
         if (!Banner.observer) {

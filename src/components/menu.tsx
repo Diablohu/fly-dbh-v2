@@ -165,15 +165,10 @@ const Menu: FC<
         }
     }, [anchorPoint, grow]);
 
-    useWindow(
-        (force?: boolean) => {
-            repositionMenu();
-        },
-        {
-            resize: true,
-            scroll: true,
-        }
-    );
+    useWindow(repositionMenu, {
+        resize: true,
+        scroll: true,
+    });
 
     // 响应外部传入的显示/隐藏状态
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef, type FC } from "react";
+import { memo, useMemo, useRef, useCallback, type FC } from "react";
 import { type ValidVideoSourceType, type VideoItemType } from "@/types";
 
 import useWindow from "@/react-hooks/use-window";
@@ -23,20 +23,18 @@ const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
     const [$videoSource] = useVideoSource(defaultVideoSource);
 
-    useWindow(
-        (force?: boolean) => {
-            if (PlayerRef.current) {
-                PlayerRef.current.style.setProperty(
-                    "--player-height-shrink",
-                    `${window.scrollY}px`
-                );
-            }
-        },
-        {
-            resize: true,
-            scroll: true,
+    const setPlayerHeightShrink = useCallback(() => {
+        if (PlayerRef.current) {
+            PlayerRef.current.style.setProperty(
+                "--player-height-shrink",
+                `${window.scrollY}px`
+            );
         }
-    );
+    }, []);
+    useWindow(setPlayerHeightShrink, {
+        resize: true,
+        scroll: true,
+    });
 
     const url = useMemo(() => {
         if (!$videoSource) return "";
