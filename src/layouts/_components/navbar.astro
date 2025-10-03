@@ -19,47 +19,49 @@ type Props = {
 {
     Astro.props.header && (
         <section class="navbar">
-            {navLinks.map(({ key, route, name, extraChecks }) => {
-                const isActive = isRouteActive(
-                    route,
-                    Astro.originPathname,
-                    extraChecks
-                );
-                return (
-                    <a
-                        href={route}
-                        class:list={[
-                            "link",
-                            {
-                                "is-active": isActive,
-                            },
-                        ]}
-                    >
-                        <span class="icon">
-                            {key === "home" ? (
-                                isActive ? (
-                                    <HomeFill />
-                                ) : (
-                                    <HomeHollow />
-                                )
-                            ) : key === "videos" ? (
-                                isActive ? (
-                                    <VideosFill />
-                                ) : (
-                                    <VideosHollow />
-                                )
-                            ) : key === "live" ? (
-                                isActive ? (
-                                    <LivestreamFill />
-                                ) : (
-                                    <LivestreamHollow />
-                                )
-                            ) : null}
-                        </span>
-                        {name}
-                    </a>
-                );
-            })}
+            <div class="wrapper">
+                {navLinks.map(({ key, route, name, extraChecks }) => {
+                    const isActive = isRouteActive(
+                        route,
+                        Astro.originPathname,
+                        extraChecks
+                    );
+                    return (
+                        <a
+                            href={route}
+                            class:list={[
+                                "link",
+                                {
+                                    "is-active": isActive,
+                                },
+                            ]}
+                        >
+                            <span class="icon">
+                                {key === "home" ? (
+                                    isActive ? (
+                                        <HomeFill />
+                                    ) : (
+                                        <HomeHollow />
+                                    )
+                                ) : key === "videos" ? (
+                                    isActive ? (
+                                        <VideosFill />
+                                    ) : (
+                                        <VideosHollow />
+                                    )
+                                ) : key === "live" ? (
+                                    isActive ? (
+                                        <LivestreamFill />
+                                    ) : (
+                                        <LivestreamHollow />
+                                    )
+                                ) : null}
+                            </span>
+                            {name}
+                        </a>
+                    );
+                })}
+            </div>
         </section>
     )
 }
@@ -71,31 +73,47 @@ type Props = {
         --icon-size: 25px;
 
         position: fixed;
+        bottom: 0;
+        width: 100%;
         z-index: var(--global-header-z-index);
         flex: none;
         display: none;
-        flex-flow: row nowrap;
-        justify-content: space-around;
-        align-items: center;
-        height: var(--global-small-screen-navbar-height);
-        padding: 0 calc(var(--global-small-screen-navbar-height) * 0.25);
-        bottom: calc(
+        padding-top: var(--global-small-screen-navbar-bottom-edge);
+        padding-bottom: calc(
             var(--global-bottom-safe-distance) +
                 var(--global-small-screen-navbar-bottom-edge)
         );
-        left: calc(var(--global-edge-safe-distance) * 1.5);
-        right: calc(var(--global-edge-safe-distance) * 1.5);
-        text-align: center;
-        color: var(--text-color-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--global-small-screen-navbar-height);
-        background-color: var(--global-small-screen-navbar-background-color);
-        backdrop-filter: var(--global-header-backdrop-filter);
-        .font-size-clamp-with-line-height(unit((12 / 0.85), px), unit((1 * 12 / 0.85), px));
+        padding-left: calc(var(--global-edge-safe-distance) * 1.5);
+        padding-right: calc(var(--global-edge-safe-distance) * 1.5);
+        background: linear-gradient(
+            to top,
+            var(--theme-color-p-90),
+            var(--theme-color-p-60) 50%,
+            rgba(255, 255, 255, 0)
+        );
 
         .screen-sm({
-            display: flex;
+            display: block;
         });
+
+        & > .wrapper {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-around;
+            align-items: center;
+            height: var(--global-small-screen-navbar-height);
+            padding: 0 calc(var(--global-small-screen-navbar-height) * 0.25);
+            text-align: center;
+            color: var(--text-color-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--global-small-screen-navbar-height);
+            background-color: var(
+                --global-small-screen-navbar-background-color
+            );
+            backdrop-filter: var(--global-header-backdrop-filter);
+            box-shadow: var(--overlay-box-shadow);
+            .font-size-clamp-with-line-height(unit((12 / 0.85), px), unit((1 * 12 / 0.85), px));
+        }
 
         .link {
             display: block;
