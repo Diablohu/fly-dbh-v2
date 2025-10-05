@@ -26,6 +26,27 @@ export type AircraftCategoryType = "a" | "b" | "c" | "d";
 
 // ============================================================================
 
+export type AerodromeItemType = {
+    _id: string;
+    slug: string;
+    name: string;
+    icao: string;
+    iata: string;
+    location: string[];
+    runways: {
+        identifier: string;
+        bearing: string;
+        elevation: string;
+        length: string;
+        width: string;
+    }[];
+    photo?: string;
+    photo_credit?: string;
+    photo_credit_url?: string;
+};
+
+// ============================================================================
+
 export type VideoListPageTypeAircraftFamily = "aircraftFamily";
 export type VideoListPageTypeAircraftOnboardDevice = "aircraftOnboardDevice";
 export type VideoListPageTypesType =
@@ -80,13 +101,10 @@ export type VideoItemType = {
         maker: string;
         name: string;
     }[];
-    aerodromes: {
-        _id: string;
-        slug?: string;
-        icao: string;
-        iata: string;
-        name: string;
-    }[];
+    aerodromes: Pick<
+        AerodromeItemType,
+        "_id" | "slug" | "icao" | "iata" | "name"
+    >[];
     developers: {
         _id: string;
         slug?: string;
@@ -116,19 +134,14 @@ export type VideoItemType = {
 
 // ============================================================================
 
-export type ChallengeDifficultyType = "rookie" | "challenge" | "extreme";
+export type ChallengeDifficultyType = 1 | 3 | 5;
 export type ChallengeListItemType = {
     _id: string;
     slug: string;
-    aerodrome: {
-        _id: string;
-        slug: string;
-        name: string;
-        icao: string;
-        iata: string;
-        location_region: string;
-        location_city: string;
-    };
+    aerodrome: Pick<
+        AerodromeItemType,
+        "_id" | "slug" | "name" | "icao" | "iata" | "location"
+    >;
     name: string;
     difficulty: ChallengeDifficultyType;
     max_allowed_aircraft_category: AircraftCategoryType;
@@ -147,24 +160,18 @@ export type ChallengeItemType = {
         comment?: string;
         extra_comment?: string;
     }[];
-    aerodrome: {
-        _id: string;
-        slug: string;
-        name: string;
-        icao: string;
-        iata: string;
-        location_region: string;
-        location_city: string;
-        runways: {
-            identifier: string;
-            bearing: string;
-            elevation: string;
-            length: string;
-            width: string;
-        }[];
-        photo?: string;
-        photo_credit?: string;
-        photo_credit_url?: string;
-    };
+    aerodrome: Pick<
+        AerodromeItemType,
+        | "_id"
+        | "slug"
+        | "name"
+        | "icao"
+        | "iata"
+        | "location"
+        | "runways"
+        | "photo"
+        | "photo_credit"
+        | "photo_credit_url"
+    >;
     runways: string[];
 };

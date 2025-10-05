@@ -2,7 +2,11 @@ import { z } from "astro:schema";
 import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
 
-import { type VideoListPageTypesType, type VideoItemType } from "@/types";
+import {
+    type VideoListPageTypesType,
+    type VideoItemType,
+    type AerodromeItemType,
+} from "@/types";
 import { allLevel2Tags, defaultCacheTtl } from "@/global";
 
 import { fetch } from "@/services/sanity";
@@ -192,8 +196,7 @@ ${
     name,
     icao,
     iata,
-    location_region,
-    location_city
+    location
 `
           : type === "aircraftFamily"
             ? `
@@ -286,11 +289,6 @@ ${
                     title?: string;
                     tag_type?: string;
 
-                    icao?: string;
-                    iata?: string;
-                    location_region?: string;
-                    location_city?: string;
-
                     maker?: string;
                     aircrafts?: {
                         icao_code: string;
@@ -319,7 +317,9 @@ ${
                     start?: string;
                     end?: string;
                     type?: string;
-                };
+                } & Partial<
+                    Pick<AerodromeItemType, "icao" | "iata" | "location">
+                >;
             } catch (err) {
                 actionErrorHandler(err, context);
             }

@@ -20,13 +20,12 @@ const actions = {
     name,
     icao,
     iata,
-    location_region,
-    location_city,
+    location,
   },
   name,
   difficulty,
   max_allowed_aircraft_category
-} | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
+} | order( max_allowed_aircraft_category asc, difficulty asc, aerodrome.icao asc )`;
                 const res = await fetch<ChallengeListItemType>(queryString, {
                     transform: (res, queryString) => {
                         if (!res[0]) {
@@ -83,8 +82,7 @@ const actions = {
     name,
     icao,
     iata,
-    location_region,
-    location_city,
+    location,
     'runways': runways[]{
       identifier,
       bearing,

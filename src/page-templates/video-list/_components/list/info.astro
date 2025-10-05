@@ -63,20 +63,17 @@ type Props = {
                                     .join(" / ")}
                             </dd>
                         </dl>
-                        {(Astro.props.info?.location_region ||
-                            Astro.props.info?.location_city) && (
-                            <dl>
-                                <dt>地区</dt>
-                                <dd>
-                                    {[
-                                        Astro.props.info?.location_region,
-                                        Astro.props.info?.location_city,
-                                    ]
-                                        .filter(Boolean)
-                                        .join(" ")}
-                                </dd>
-                            </dl>
-                        )}
+                        {Array.isArray(Astro.props.info?.location) &&
+                            Astro.props.info.location.length > 0 && (
+                                <dl>
+                                    <dt>地区</dt>
+                                    <dd>
+                                        {Astro.props.info.location
+                                            .filter(Boolean)
+                                            .join(" ")}
+                                    </dd>
+                                </dl>
+                            )}
                     </>
                 ) : Astro.props.type === "aircraftFamily" &&
                   Array.isArray(Astro.props.info?.aircrafts) &&

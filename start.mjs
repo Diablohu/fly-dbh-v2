@@ -88,7 +88,10 @@ async function main() {
                 `YYYYMMDD`
             )}-${dayjs().format(`HHmmss`)}`;
             spawn(`git`, ["tag", tag], { stdio: "inherit" });
-            spawn(`git`, ["push", "origin", tag], { stdio: "inherit" });
+            // spawn(`git`, ["push", "origin", tag], { stdio: "inherit" });
+            spawn(`git`, ["push", "--tags", "--", '"origin" main:main'], {
+                stdio: "inherit",
+            });
             break;
     }
 }

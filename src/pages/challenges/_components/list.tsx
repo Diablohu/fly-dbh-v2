@@ -82,17 +82,17 @@ const ChallengeList: FC<{
                         <strong className={styles["aerodrome-name"]}>
                             {item.aerodrome.name}
                         </strong>
-                        {item.difficulty === "rookie" && (
+                        {item.difficulty === 3 && (
                             <span
                                 className={classNames([
                                     styles["line"],
                                     styles["challenge-difficulty"],
                                 ])}
                             >
-                                小有挑战
+                                相当挑战
                             </span>
                         )}
-                        {item.difficulty === "extreme" && (
+                        {item.difficulty === 5 && (
                             <span
                                 className={classNames([
                                     styles["line"],
@@ -110,22 +110,19 @@ const ChallengeList: FC<{
                         >
                             {item.name}
                         </span>
-                        {(item.aerodrome.location_region ||
-                            item.aerodrome.location_city) && (
-                            <span
-                                className={classNames([
-                                    styles["line"],
-                                    styles["aerodrome-location"],
-                                ])}
-                            >
-                                {[
-                                    item.aerodrome.location_region,
-                                    item.aerodrome.location_city,
-                                ]
-                                    .filter(Boolean)
-                                    .join(" ")}
-                            </span>
-                        )}
+                        {Array.isArray(item.aerodrome.location) &&
+                            item.aerodrome.location.length > 0 && (
+                                <span
+                                    className={classNames([
+                                        styles["line"],
+                                        styles["aerodrome-location"],
+                                    ])}
+                                >
+                                    {item.aerodrome.location
+                                        .filter(Boolean)
+                                        .join(" ")}
+                                </span>
+                            )}
                     </a>
                 ))}
             </dd>
