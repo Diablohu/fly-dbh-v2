@@ -70,6 +70,11 @@ if (error) {
         " | 模拟飞行挑战"}
     header
     footer
+    blurredBackgroundImage={challenge.aerodrome.photo
+        ? {
+              sanityImageUri: challenge.aerodrome.photo,
+          }
+        : undefined}
 >
     <Block class="title">
         <a class="link-to-challenge-list" href={routeBase.challenges}

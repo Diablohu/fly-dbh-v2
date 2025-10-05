@@ -26,10 +26,12 @@ import Footer from './_components/footer.astro';
 import MainBlockWithSidebar, {
     type Props as MainBlockWithSidebarProps
 } from "./_components/main-block-with-sidebar/index.astro";
+import BlurredBackgroundImage from "./_components/blurred-background-image";
 import GlobalSymbolDefinitionsRaw from '@/assets/symbol-defs.svg?raw';
 
 import { themeColorLight, themeColorDark, title } from "@/global";
 import "@/global.less";
+import type React from "react";
 
 export { type MainBlockWithSidebarProps };
 
@@ -98,6 +100,12 @@ interface Props {
     coverImageHeight?: number;
 
     htmlClassList?: string[];
+
+    /**
+     * 渲染模糊的背景图
+     *  - 需传入 Sanity CMS 图片文件名或 Sanity 图片链接
+     */
+    blurredBackgroundImage?: React.ComponentProps<typeof BlurredBackgroundImage>;
 }
 
 // ============================================================================
@@ -318,6 +326,12 @@ const { htmlClassList = [] } = Astro.props;
                 videoItemShowPlatformLinksOnHover: (videoItemShowPlatformLinksOnHover || '0') as ValidVideoItemShowPlatformLinksOnHoverType,
             }}
         />
+        {Astro.props.blurredBackgroundImage && (
+            <BlurredBackgroundImage
+                client:idle
+                {...Astro.props.blurredBackgroundImage}
+            />
+        )}
         <Fragment set:html={GlobalSymbolDefinitionsRaw} />
     </body>
 </html>
