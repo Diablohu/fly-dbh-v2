@@ -7,6 +7,8 @@ import VideosHollow from "@/assets/svg-symbols/videos-hollow.svg";
 import VideosFill from "@/assets/svg-symbols/videos-fill.svg";
 import LivestreamHollow from "@/assets/svg-symbols/livestream-hollow.svg";
 import LivestreamFill from "@/assets/svg-symbols/livestream-fill.svg";
+import ChallengesHollow from "@/assets/svg-symbols/challenges-hollow.svg";
+import ChallengesFill from "@/assets/svg-symbols/challenges-fill.svg";
 
 import isRouteActive from "@/utils/is-route-active";
 
@@ -54,6 +56,12 @@ type Props = {
                                         <LivestreamFill />
                                     ) : (
                                         <LivestreamHollow />
+                                    )
+                                ) : key === "challenges" ? (
+                                    isActive ? (
+                                        <ChallengesFill />
+                                    ) : (
+                                        <ChallengesHollow />
                                     )
                                 ) : null}
                             </span>
@@ -120,11 +128,12 @@ type Props = {
             position: relative;
             text-decoration: none;
             flex: 1;
+            line-height: 1.2;
             .icon {
                 display: block;
                 width: var(--icon-size);
                 height: var(--icon-size);
-                margin: 0 auto 0.4em auto;
+                margin: 0 auto 0.15em auto;
                 color: inherit;
                 transition: inherit;
                 transition-property: color, background-color;
