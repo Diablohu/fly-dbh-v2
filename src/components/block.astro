@@ -29,14 +29,10 @@ const {
     @import "@/utils/mixins.less";
 
     .block {
-        display: block;
-        position: relative;
-        width: 100%;
-        user-select: none;
+        .block-component-styles();
 
         & > .wrapper {
-            user-select: auto;
-            .block-wrapper();
+            .block-wrapper-component-styles();
         }
     }
 </style>

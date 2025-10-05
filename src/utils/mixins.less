@@ -119,8 +119,18 @@
     max-width: var(--global-block-max-width);
     width: 100%;
 }
+.block-component-styles() {
+    display: block;
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+.block-wrapper-component-styles() {
+    .block-wrapper();
+    user-select: auto;
+}
 
-.pointer-hover(@rules, @extraRootSelector: '') {
+.pointer-hover(@rules, @extraRootSelector: "") {
     // @media (hover: hover) and (pointer: fine) {
     //     &:hover {
     //         @rules();

@@ -10,24 +10,40 @@ type Props = {
 ---
 
 <section class="aerodrome-info">
-    {Astro.props.aerodrome.photo}
     {
-        Astro.props.aerodrome.photo_credit_url && (
-            <span class="photo-credit">
-                照片:{" "}
-                <a
-                    href={Astro.props.aerodrome.photo_credit_url}
-                    target="_blank"
-                >
-                    {Astro.props.aerodrome.photo_credit}
-                </a>
-            </span>
+        Astro.props.aerodrome.photo && (
+            <figure class="photo">
+                <img
+                    src={
+                        Astro.props.aerodrome.photo + "?auto=format&w=640&q=60"
+                    }
+                    alt={`${Astro.props.aerodrome.name}${
+                        Array.isArray(Astro.props.aerodrome.location) &&
+                        Astro.props.aerodrome.location.length > 0
+                            ? ` (${Astro.props.aerodrome.location.join(" ")})`
+                            : ""
+                    }`}
+                    loading="lazy"
+                />
+                {Astro.props.aerodrome.photo_credit_url && (
+                    <figcaption class="photo-credit">
+                        <a
+                            href={Astro.props.aerodrome.photo_credit_url}
+                            target="_blank"
+                        >
+                            {Astro.props.aerodrome.photo_credit}
+                        </a>
+                    </figcaption>
+                )}
+            </figure>
         )
     }
+
     <div class="codes">
         <span data-type="icao">{Astro.props.aerodrome.icao || "-"}</span>
         <span data-type="iata">{Astro.props.aerodrome.iata || "-"}</span>
     </div>
+
     {
         Array.isArray(Astro.props.aerodrome.location) &&
             Astro.props.aerodrome.location.length > 0 && (
@@ -39,6 +55,7 @@ type Props = {
                 </dl>
             )
     }
+
     {
         Array.isArray(Astro.props.aerodrome.runways) &&
             Astro.props.aerodrome.runways.length > 0 && (
@@ -141,5 +158,14 @@ type Props = {
 
     .aerodrome-info {
         position: relative;
+    }
+
+    figure.photo {
+        display: block;
+        margin: -1em -1em auto -1em;
+        & > img {
+            display: block;
+            width: 100%;
+        }
     }
 </style>

@@ -4,9 +4,9 @@ import { actions, ActionError } from "astro:actions";
 import { routeBase } from "@/global";
 
 import Layout from "@/layouts/layout.astro";
-import Block from "@/components/block.astro";
 
 import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
+import Card from "./_components-details-page/card.astro";
 
 import { errorLog } from "@/utils/log";
 
@@ -70,54 +70,178 @@ if (error) {
         " | 模拟飞行挑战"}
     header
     footer
-    blurredBackgroundImage={challenge.aerodrome.photo
-        ? {
-              sanityImageUri: challenge.aerodrome.photo,
-          }
-        : undefined}
 >
-    <Block class="title">
-        <a class="link-to-challenge-list" href={routeBase.challenges}
-            >着陆挑战名册</a
-        >
-        <h1>
-            {challenge.aerodrome.name}进近挑战
-            <small class="challenge-name">{challenge.name}</small>
-        </h1>
-    </Block>
+    <div class="challenge-details-page">
+        <div class="wrapper">
+            <section class="title-info">
+                <a class="link-to-challenge-list" href={routeBase.challenges}
+                    >着陆挑战名册</a
+                >
+                <h1>
+                    {challenge.aerodrome.name}进近挑战
+                    <small class="challenge-name">{challenge.name}</small>
+                </h1>
+            </section>
 
-    <AerodromeInfo
-        aerodrome={challenge.aerodrome}
-        targetRunways={challenge.runways}
-    />
+            <section class="aerodrome-info">
+                <div class="wrapper">
+                    <AerodromeInfo
+                        aerodrome={challenge.aerodrome}
+                        targetRunways={challenge.runways}
+                    />
+                </div>
+            </section>
 
-    <hr />
+            <section class="content">
+                <Card title="危险灾害">
+                    {
+                        challenge.hazards.map((hazard) => (
+                            <span class="hazard">
+                                <em class="icon" aria-hidden="true">
+                                    {hazard.emoji}
+                                </em>
+                                <strong class="name">
+                                    {[hazard.name, hazard.comment]
+                                        .filter(Boolean)
+                                        .join("：")}
+                                </strong>
+                                {hazard.extra_comment && (
+                                    <small class="extra-comment">
+                                        {hazard.extra_comment}
+                                    </small>
+                                )}
+                            </span>
+                        ))
+                    }
+                </Card>
+                <Card title="示例航线"> TODO: Demo Route </Card>
+                <Card title="进近说明"> TODO: Briefing </Card>
 
-    <Block>TODO: Demo Video</Block>
-    <Block
-        >TODO: [Grid] Aerodrome Info | Runway Info (Auto Calculate Slope
-        percentage & degrees) | Hazards (Color Coded)</Block
-    >
-    <Block>TODO: Demo Route | Briefing</Block>
-    <Block>TODO: Recommended Scenery Add-on</Block>
+                <hr />
 
-    <hr />
+                <section>TODO: Demo Video</section>
+                <section>TODO: Recommended Scenery Add-on</section>
 
-    <Block>TODO: Other Challenges for this Aerodrome</Block>
-    <Block>TODO: Videos for this Aerodrome</Block>
-    <Block>TODO: Back to List</Block>
+                <hr />
 
-    <hr />
+                <section>TODO: Other Challenges for this Aerodrome</section>
+                <section>TODO: Videos for this Aerodrome</section>
+                <section>TODO: Back to List</section>
 
-    <Block
-        ><textarea class="debug" readonly
-            >{JSON.stringify(challenge, undefined, 2)}</textarea
-        ></Block
-    >
+                <hr />
+
+                <section>
+                    <textarea class="debug" readonly
+                        >{JSON.stringify(challenge, undefined, 2)}</textarea
+                    >
+                </section>
+            </section>
+        </div>
+    </div>
 </Layout>
 
 <style lang="less">
     @import "@/utils/mixins.less";
+
+    .challenge-details-page {
+        --card-container-background-color: var(--theme-color-p-40);
+        --card-container-border-width: 1px;
+        --card-container-border-color: var(--border-color);
+        --card-container-border-radius: 0.8em;
+        --card-container-drop-shadow: 0 0.2em 1em #00000030;
+        --card-container-inset-shadow: "";
+        .color-scheme-light({
+            --card-container-border-color: var(--theme-color-p-30);
+            --card-container-drop-shadow: 0 0.2em 1em #0000001f;
+            --card-container-inset-shadow: 0 0 1em #0000000a;
+        });
+
+        .block-component-styles();
+        user-select: unset;
+        & > .wrapper {
+            .block-wrapper-component-styles();
+            display: grid;
+            grid-template-columns: calc(var(--global-sidebar-width) * 1.25) 1fr;
+            grid-template-rows: auto 1fr;
+            grid-template-areas:
+                "aerodrome-info title"
+                "aerodrome-info content";
+            gap: 0 var(--global-edge-safe-distance);
+        }
+    }
+
+    .title-info,
+    .aerodrome-info {
+        position: sticky;
+        align-self: start;
+        margin-top: 1em;
+    }
+
+    .title-info {
+        grid-area: title;
+        top: calc(var(--global-sticky-top) - 1.5em);
+        z-index: 10;
+        h1 {
+            text-shadow: 0 0.025em 0.15em var(--theme-color);
+        }
+        .challenge-name {
+            display: inline-block;
+        }
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: -1.5em;
+            bottom: -1em;
+            left: -50vw;
+            right: calc(var(--global-edge-safe-distance) * -1);
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(
+                to bottom,
+                var(--theme-color-p-90),
+                var(--theme-color-p-70) 66.6667%,
+                transparent
+            );
+        }
+    }
+
+    .aerodrome-info {
+        grid-area: aerodrome-info;
+        top: calc(var(--global-sticky-top) + 1em);
+        z-index: 15;
+        margin-bottom: 2em;
+        overflow: hidden;
+        overscroll-behavior: contain;
+        border-radius: var(--card-container-border-radius);
+        // box-shadow: var(--overlay-box-shadow);
+        // box-shadow: 0 2px 5px 0 #00000010;
+        box-shadow: var(--card-container-drop-shadow);
+        & > .wrapper {
+            position: relative;
+            z-index: 5;
+            height: 100%;
+            overflow: auto;
+            max-height: calc(100dvh - var(--global-sticky-top) - 2em);
+            padding: 1em;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            border: var(--card-container-border-width) solid
+                var(--card-container-border-color);
+            border-radius: inherit;
+            background: var(--card-container-background-color);
+            box-shadow: var(--card-container-inset-shadow);
+            // scrollbar-width: none;
+            // &:hover {
+            //     scrollbar-width: thin;
+            // }
+        }
+    }
+
+    .content {
+        grid-area: content;
+        z-index: 1;
+    }
 
     .debug {
         display: block;
@@ -125,4 +249,39 @@ if (error) {
         height: 20em;
         font-family: monospace;
     }
+
+    .styles-screen-lg() {
+        .challenge-details-page {
+            .title-info {
+                .challenge-name {
+                    display: block;
+                }
+            }
+        }
+    }
+    .screen-lg({
+        .styles-screen-lg();
+    });
+
+    .styles-screen-sm() {
+        .challenge-details-page {
+            & > .wrapper {
+                display: block;
+            }
+            .aerodrome-info {
+                position: relative;
+                z-index: 1;
+                top: 0;
+                margin-top: 2em;
+            }
+            .title-info {
+                .challenge-name {
+                    display: block;
+                }
+            }
+        }
+    }
+    .screen-sm({
+        .styles-screen-sm();
+    });
 </style>

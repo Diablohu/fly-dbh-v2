@@ -34,7 +34,7 @@ export type Props = {
 };
 ---
 
-<Block class="main-block-with-sidebar">
+<div class="main-block-with-sidebar">
     <section class="main-block-with-sidebar-container">
         <section class="main"><slot /></section>
         <aside class="sidebar">
@@ -61,18 +61,20 @@ export type Props = {
             >
         </aside>
     </section>
-</Block>
+</div>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    // .main-block-with-sidebar {
-    // }
-    .main-block-with-sidebar-container {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: flex-start;
-        gap: var(--global-edge-safe-distance);
+    .main-block-with-sidebar {
+        .block-component-styles();
+        & > .main-block-with-sidebar-container {
+            .block-wrapper-component-styles();
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: flex-start;
+            gap: var(--global-edge-safe-distance);
+        }
     }
 
     .main {
@@ -107,8 +109,6 @@ export type Props = {
             }
         }
 
-        --sidebar-width: 11em;
-
         --item-min-height: 2.5em;
         --item-line-height: 1.1em;
         --item-gap: 0.25em;
@@ -132,7 +132,7 @@ export type Props = {
 
         position: sticky;
         top: calc(var(--global-sticky-top) + 1em);
-        flex: 0 0 var(--sidebar-width);
+        flex: 0 0 var(--global-sidebar-width);
         margin: 1em 0 4em 0;
         // border-radius: 10px;
         overflow: hidden;
@@ -526,7 +526,7 @@ export type Props = {
                 &::after {
                     display: none;
                 }
-                min-width: var(--sidebar-width);
+                min-width: var(--global-sidebar-width);
                 width: 50vw;
                 width: 50dvw;
                 padding-top: calc(var(--global-edge-safe-distance) / 2);
