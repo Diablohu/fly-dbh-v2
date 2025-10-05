@@ -28,7 +28,9 @@
     --global-announcement-count: 0;
     // --global-small-screen-navbar-height: unit((55 / @base-font-size-number), rem);
     --global-small-screen-navbar-height: 55px;
-    --global-small-screen-navbar-bottom-edge: calc(var(--global-edge-safe-distance) * 2 / 3);
+    --global-small-screen-navbar-bottom-edge: calc(
+        var(--global-edge-safe-distance) * 2 / 3
+    );
     --global-small-screen-navbar-background-color: var(--theme-color-p-20);
     --global-sticky-top: calc(
         var(--global-header-height) + var(--global-announcement-height) *
@@ -107,6 +109,10 @@
     --theme-color-invert-p-80: var(--light-theme-color-p-80);
     --theme-color-invert-p-90: var(--light-theme-color-p-90);
 
+    --difficulty-color-1: #1eff00;
+    --difficulty-color-3: #0070dd;
+    --difficulty-color-5: #ff8000;
+
     --text-color-primary: var(--dark-text-color-primary);
     --text-color-secondary: var(--dark-text-color-secondary);
     --text-color-invert: #606060;
@@ -154,6 +160,10 @@
         --theme-color-invert-p-70: var(--dark-theme-color-p-70);
         --theme-color-invert-p-80: var(--dark-theme-color-p-80);
         --theme-color-invert-p-90: var(--dark-theme-color-p-90);
+
+        --difficulty-color-1: #15b000;
+        // --difficulty-color-3: #0070dd;
+        --difficulty-color-5: #ce6700;
 
         --text-color-primary: #0f0f0f;
         --text-color-secondary: #606060;

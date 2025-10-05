@@ -5,7 +5,8 @@ import { routeBase } from "@/global";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
-import HeroImage from "@/components/hero-image";
+
+import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
 
 import { errorLog } from "@/utils/log";
 
@@ -59,33 +60,31 @@ if (error) {
 }
 ---
 
-<Layout title={`${challenge.aerodrome.name} : ${challenge.name}`} header footer>
-    <HeroImage
-        client:idle
-        title={challenge.aerodrome.name}
-        subTitle={`挑战: ${challenge.name}`}
-        sanityImageUri={challenge.aerodrome.photo}
-        expandedHeight={challenge.aerodrome.photo ? 550 : 150}
-    />
-
-    <Block class="header">
+<Layout
+    title={challenge.aerodrome.name +
+        (Array.isArray(challenge.aerodrome.location) &&
+        challenge.aerodrome.location.length > 0
+            ? ` (${challenge.aerodrome.location.join(" ")}) `
+            : "") +
+        `进近挑战 : ${challenge.name}` +
+        " | 模拟飞行挑战"}
+    header
+    footer
+>
+    <Block class="title">
         <a class="link-to-challenge-list" href={routeBase.challenges}
             >着陆挑战名册</a
         >
-        {
-            challenge.aerodrome.photo_credit_url && (
-                <span class="photo-credit">
-                    照片:{" "}
-                    <a
-                        href={challenge.aerodrome.photo_credit_url}
-                        target="_blank"
-                    >
-                        {challenge.aerodrome.photo_credit}
-                    </a>
-                </span>
-            )
-        }
+        <h1>
+            {challenge.aerodrome.name}进近挑战
+            <small class="challenge-name">{challenge.name}</small>
+        </h1>
     </Block>
+
+    <AerodromeInfo
+        aerodrome={challenge.aerodrome}
+        targetRunways={challenge.runways}
+    />
 
     <hr />
 

@@ -1,0 +1,145 @@
+---
+import { type ChallengeItemType } from "@/types";
+
+import calculateRunwaySlope from "@/utils/calculate-runway-slope";
+
+type Props = {
+    aerodrome: ChallengeItemType["aerodrome"];
+    targetRunways: ChallengeItemType["runways"];
+};
+---
+
+<section class="aerodrome-info">
+    {Astro.props.aerodrome.photo}
+    {
+        Astro.props.aerodrome.photo_credit_url && (
+            <span class="photo-credit">
+                照片:{" "}
+                <a
+                    href={Astro.props.aerodrome.photo_credit_url}
+                    target="_blank"
+                >
+                    {Astro.props.aerodrome.photo_credit}
+                </a>
+            </span>
+        )
+    }
+    <div class="codes">
+        <span data-type="icao">{Astro.props.aerodrome.icao || "-"}</span>
+        <span data-type="iata">{Astro.props.aerodrome.iata || "-"}</span>
+    </div>
+    {
+        Array.isArray(Astro.props.aerodrome.location) &&
+            Astro.props.aerodrome.location.length > 0 && (
+                <dl>
+                    <>
+                        <dt>地区</dt>
+                        <dd>{Astro.props.aerodrome.location.join(" ")}</dd>
+                    </>
+                </dl>
+            )
+    }
+    {
+        Array.isArray(Astro.props.aerodrome.runways) &&
+            Astro.props.aerodrome.runways.length > 0 && (
+                <dl>
+                    <>
+                        <dt>跑道</dt>
+                        {Astro.props.aerodrome.runways.map((runway) => {
+                            const elevations = (
+                                runway.elevation.includes("/")
+                                    ? runway.elevation.split("/")
+                                    : [runway.elevation, runway.elevation]
+                            ).map((v) => parseInt(v.trim()));
+                            const length = parseInt(runway.length);
+                            const width = parseInt(runway.width);
+
+                            return (
+                                <dd
+                                    class:list={[
+                                        "runway",
+                                        {
+                                            "is-current":
+                                                !Array.isArray(
+                                                    Astro.props.targetRunways
+                                                ) ||
+                                                Astro.props.targetRunways.some(
+                                                    (challengeRunway) =>
+                                                        runway.identifier.includes(
+                                                            challengeRunway
+                                                        )
+                                                ),
+                                        },
+                                    ]}
+                                >
+                                    {[
+                                        [
+                                            "IDENTIFIER",
+                                            ...runway.identifier
+                                                .split("/")
+                                                .map((identifier) =>
+                                                    identifier.trim()
+                                                ),
+                                        ],
+                                        ["长宽", `${length}m x ${width}m`],
+                                        [
+                                            "",
+                                            `${Math.round(length * 3.281)}ft x ${Math.round(width * 3.281)}ft`,
+                                        ],
+                                        [
+                                            "磁航向",
+                                            ...runway.bearing
+                                                .split("/")
+                                                .map(
+                                                    (bearing) =>
+                                                        bearing.trim() + "°"
+                                                ),
+                                        ],
+                                        [
+                                            "标高",
+                                            elevations.map(
+                                                (elevation) => elevation + "ft"
+                                            ),
+                                        ],
+                                        [
+                                            "坡度",
+                                            ...(elevations[0] === elevations[1]
+                                                ? ["--"]
+                                                : [
+                                                      calculateRunwaySlope(
+                                                          elevations[0],
+                                                          elevations[1],
+                                                          length,
+                                                          "text"
+                                                      ),
+                                                      calculateRunwaySlope(
+                                                          elevations[1],
+                                                          elevations[0],
+                                                          length,
+                                                          "text"
+                                                      ),
+                                                  ]),
+                                        ],
+                                    ].map(([label, value1, value2]) => (
+                                        <span class="detail">
+                                            <strong>{label}</strong>
+                                            <em>{value1}</em>
+                                            {value2 && <em>{value2}</em>}
+                                        </span>
+                                    ))}
+                                </dd>
+                            );
+                        })}
+                    </>
+                </dl>
+            )
+    }
+</section>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .aerodrome-info {
+        position: relative;
+    }
+</style>

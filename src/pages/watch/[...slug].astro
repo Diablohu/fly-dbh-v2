@@ -1,6 +1,7 @@
 ---
 import { actions, ActionError } from "astro:actions";
 import dayjs from "dayjs";
+import DOMPurify from "isomorphic-dompurify";
 
 import { VIDEO_SOURCE } from "@/constants/cookies";
 import { type ValidVideoSourceType } from "@/types";
@@ -77,7 +78,8 @@ if (error) {
 ---
 
 <Layout
-    title={prettifyTitle(video.title)}
+    title={prettifyTitle(video.title) + " | 模拟飞行视频"}
+    description={DOMPurify.sanitize(video.description)}
     contentType="video-player"
     coverImage={video.cover}
     coverImageWidth={video.cover_dimensions?.width}
