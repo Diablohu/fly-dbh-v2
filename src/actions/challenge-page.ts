@@ -106,10 +106,15 @@ const actions = {
                             err.cause = { GROQ: queryString };
                             throw err;
                         }
+                        // 处理图片路径
                         if (res[0].aerodrome.photo)
                             res[0].aerodrome.photo = transformImagePath(
                                 res[0].aerodrome.photo
                             );
+                        // 按难度排序难点灾害，由难到易
+                        res[0].hazards.sort(
+                            (a, b) => b.difficulty - a.difficulty
+                        );
                         return res[0] as unknown as SanityDocument<ChallengeItemType>[];
                     },
                 })) as unknown as ChallengeItemType;

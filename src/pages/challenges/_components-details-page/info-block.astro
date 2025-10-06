@@ -1,0 +1,37 @@
+---
+type Props = {
+    title: string;
+} & astroHTML.JSX.HTMLAttributes;
+
+const { title, ...props } = Astro.props;
+---
+
+<section class="info-block" {...props}>
+    <h3 class="title">{title}</h3>
+    <section class="body">
+        <slot />
+    </section>
+</section>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .info-block {
+        position: relative;
+        margin: 1em 0 2em 0;
+
+        .title {
+            display: block;
+            font-size: 1em;
+            font-weight: normal;
+            color: var(--text-color-secondary);
+            // opacity: 0.75;
+            margin: 0 0 0.5em 0;
+            user-select: none;
+        }
+        .body {
+            // margin-top: 0.5em;
+            // user-select: all;
+        }
+    }
+</style>

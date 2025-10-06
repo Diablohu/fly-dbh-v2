@@ -156,7 +156,7 @@ export type ChallengeItemType = {
     hazards: {
         name: string;
         emoji: string;
-        difficulty: string;
+        difficulty: ChallengeDifficultyType;
         comment?: string;
         extra_comment?: string;
     }[];

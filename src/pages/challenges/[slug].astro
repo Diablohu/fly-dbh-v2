@@ -1,13 +1,15 @@
 ---
 import { actions, ActionError } from "astro:actions";
+import { type RunwayType } from "./_types";
 
 import { routeBase } from "@/global";
 
 import Layout from "@/layouts/layout.astro";
 
 import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
-import Card from "./_components-details-page/card.astro";
+import InfoBlock from "./_components-details-page/info-block.astro";
 
+import calculateRunwaySlope from "@/utils/calculate-runway-slope";
 import { errorLog } from "@/utils/log";
 
 // ============================================================================
@@ -58,6 +60,68 @@ if (error) {
     Astro.props.error = error;
     return Astro.rewrite("/500");
 }
+
+// ============================================================================
+
+/**
+ * 计算后的跑道信息，额外包含：
+ *  - 标记是否为挑战目标跑道
+ *  - 长度（ft）
+ *  - 坡度（%）
+ *  - 坡度（°）
+ */
+const runwayPairs: [RunwayType, RunwayType][] =
+    challenge.aerodrome.runways?.map((runway) => {
+        const identifiers = runway.identifier.split("/").map((id) => id.trim());
+        const bearings = runway.bearing
+            .split("/")
+            .map((bearing) => bearing.trim());
+        const elevationsInFeet = (
+            runway.elevation.includes("/")
+                ? runway.elevation.split("/")
+                : [runway.elevation, runway.elevation]
+        ).map((v) => parseInt(v.trim()));
+
+        const lengthInFeet = parseInt(runway.length);
+        const widthInFeet = parseInt(runway.width);
+
+        const isChallengePair =
+            !Array.isArray(challenge.runways) ||
+            challenge.runways.some((challengeRunway) =>
+                runway.identifier.includes(challengeRunway)
+            );
+
+        return [0, 1].map((index) => {
+            const slopeInfo = calculateRunwaySlope(
+                elevationsInFeet[index],
+                elevationsInFeet[index === 0 ? 1 : 0],
+                lengthInFeet
+            );
+            return {
+                identifier: identifiers[index],
+                isChallengePair,
+                isChallengeRunway:
+                    isChallengePair &&
+                    (!Array.isArray(challenge.runways) ||
+                        challenge.runways.includes(identifiers[index])),
+                bearing: bearings[index],
+                lengthInFeet,
+                lengthInMeters: lengthInFeet * 0.3048,
+                widthInFeet,
+                widthInMeters: widthInFeet * 0.3048,
+                elevationInFeet: elevationsInFeet[index],
+                slopepercentage: slopeInfo.percentage,
+                slopeDegrees: slopeInfo.degrees,
+            };
+        }) as [RunwayType, RunwayType];
+    });
+
+/** 当前挑战的跑道信息 */
+const challengeRunways = runwayPairs
+    ?.flat()
+    .filter((runway) => runway.isChallengeRunway);
+
+// console.log(challengeRunways);
 ---
 
 <Layout
@@ -88,34 +152,69 @@ if (error) {
                     <AerodromeInfo
                         aerodrome={challenge.aerodrome}
                         targetRunways={challenge.runways}
+                        runwayPairs={runwayPairs}
                     />
                 </div>
             </section>
 
             <section class="content">
-                <Card title="危险灾害">
+                <InfoBlock title="难点灾害" data-info="hazards">
                     {
                         challenge.hazards.map((hazard) => (
-                            <span class="hazard">
+                            <span
+                                class="hazard"
+                                data-difficulty={hazard.difficulty}
+                            >
                                 <em class="icon" aria-hidden="true">
                                     {hazard.emoji}
                                 </em>
                                 <strong class="name">
-                                    {[hazard.name, hazard.comment]
+                                    {[
+                                        hazard.name,
+                                        hazard.comment,
+                                        hazard.extra_comment
+                                            ? hazard.extra_comment
+                                            : !Array.isArray(challengeRunways)
+                                              ? null
+                                              : hazard.name.includes("大坡度")
+                                                ? // 如果挑战跑道有多个，这里显示的坡度取绝对值
+                                                  challengeRunways.length > 0
+                                                    ? `${Math.abs(
+                                                          challengeRunways[0]
+                                                              .slopepercentage
+                                                      ).toFixed(
+                                                          2
+                                                      )}% / ${Math.abs(
+                                                          challengeRunways[0]
+                                                              .slopeDegrees
+                                                      ).toFixed(2)}°`
+                                                    : `${challengeRunways[0].slopepercentage.toFixed(
+                                                          2
+                                                      )}% / ${challengeRunways[0].slopeDegrees.toFixed(
+                                                          2
+                                                      )}°`
+                                                : null,
+                                    ]
                                         .filter(Boolean)
                                         .join("：")}
                                 </strong>
-                                {hazard.extra_comment && (
+                                {/* {hazard.extra_comment ? (
                                     <small class="extra-comment">
                                         {hazard.extra_comment}
                                     </small>
-                                )}
+                                ) : hazard.name.includes("大坡度") ? (
+                                    <small class="extra-comment">111</small>
+                                ) : null} */}
                             </span>
                         ))
                     }
-                </Card>
-                <Card title="示例航线"> TODO: Demo Route </Card>
-                <Card title="进近说明"> TODO: Briefing </Card>
+                </InfoBlock>
+                <InfoBlock title="示例航线" data-info="route">
+                    TODO: Demo Route
+                </InfoBlock>
+                <InfoBlock title="进近说明" data-info="briefing">
+                    TODO: Briefing
+                </InfoBlock>
 
                 <hr />
 
@@ -191,9 +290,9 @@ if (error) {
             content: "";
             display: block;
             position: absolute;
-            top: -1.5em;
-            bottom: -1em;
-            left: -50vw;
+            top: -1.1em;
+            bottom: -0.5em;
+            left: calc(var(--global-edge-safe-distance) * -1);
             right: calc(var(--global-edge-safe-distance) * -1);
             z-index: -1;
             pointer-events: none;
@@ -241,6 +340,39 @@ if (error) {
     .content {
         grid-area: content;
         z-index: 1;
+        [data-info="hazards"] {
+            .hazard {
+                display: block;
+                padding-left: 1.5em;
+                position: relative;
+                .icon {
+                    display: inline-block;
+                    font-style: normal;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+                .name {
+                    color: var(--text-color-primary);
+                    color: var(--difficulty-color);
+                    font-weight: normal;
+                }
+                .extra-comment {
+                    display: block;
+                    margin-top: -0.5em;
+                    color: var(--text-color-primary);
+                }
+                &[data-difficulty="1"] {
+                    --difficulty-color: var(--difficulty-color-1);
+                }
+                &[data-difficulty="3"] {
+                    --difficulty-color: var(--difficulty-color-3);
+                }
+                &[data-difficulty="5"] {
+                    --difficulty-color: var(--difficulty-color-5);
+                }
+            }
+        }
     }
 
     .debug {
@@ -249,6 +381,8 @@ if (error) {
         height: 20em;
         font-family: monospace;
     }
+
+    //
 
     .styles-screen-lg() {
         .challenge-details-page {
