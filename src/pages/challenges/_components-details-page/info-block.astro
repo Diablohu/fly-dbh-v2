@@ -1,13 +1,16 @@
 ---
 type Props = {
     title: string;
+    emoji?: string;
 } & astroHTML.JSX.HTMLAttributes;
 
-const { title, ...props } = Astro.props;
+const { title, emoji, ...props } = Astro.props;
 ---
 
 <section class="info-block" {...props}>
-    <h3 class="title">{title}</h3>
+    <h3 class="title">
+        {emoji && <span class="emoji">{emoji}</span>}{title}
+    </h3>
     <section class="body">
         <slot />
     </section>
@@ -18,7 +21,6 @@ const { title, ...props } = Astro.props;
 
     .info-block {
         position: relative;
-        margin: 1em 0 2em 0;
 
         .title {
             display: block;
@@ -26,10 +28,13 @@ const { title, ...props } = Astro.props;
             font-weight: normal;
             color: var(--text-color-secondary);
             // opacity: 0.75;
-            margin: 0 0 0.5em 0;
+            padding: 0 0.3333em 0.5em 0.3333em;
+            border-bottom: 1px solid var(--border-color);
+            margin: 0 -0.3333em 0.5em -0.3333em;
             user-select: none;
         }
         .body {
+            color: var(--text-color-primary);
             // margin-top: 0.5em;
             // user-select: all;
         }

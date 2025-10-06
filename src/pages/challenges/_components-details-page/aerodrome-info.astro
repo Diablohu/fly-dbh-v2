@@ -3,6 +3,7 @@ import { type ChallengeItemType } from "@/types";
 import { type RunwayType } from "../_types";
 
 import calculateRunwaySlope from "@/utils/calculate-runway-slope";
+import { array } from "astro:schema";
 
 type Props = {
     aerodrome: ChallengeItemType["aerodrome"];
@@ -15,20 +16,23 @@ type Props = {
     {
         Astro.props.aerodrome.photo && (
             <figure class="photo">
-                <img
-                    src={
-                        Astro.props.aerodrome.photo + "?auto=format&w=640&q=60"
-                    }
-                    alt={`${Astro.props.aerodrome.name}${
-                        Array.isArray(Astro.props.aerodrome.location) &&
-                        Astro.props.aerodrome.location.length > 0
-                            ? ` (${Astro.props.aerodrome.location.join(" ")})`
-                            : ""
-                    }`}
-                    loading="lazy"
-                />
+                <span class="aspect-ratio-box">
+                    <img
+                        src={
+                            Astro.props.aerodrome.photo +
+                            "?auto=format&w=640&q=60"
+                        }
+                        alt={`${Astro.props.aerodrome.name}${
+                            Array.isArray(Astro.props.aerodrome.location) &&
+                            Astro.props.aerodrome.location.length > 0
+                                ? ` (${Astro.props.aerodrome.location.join(" ")})`
+                                : ""
+                        }`}
+                        loading="lazy"
+                    />
+                </span>
                 {Astro.props.aerodrome.photo_credit_url && (
-                    <figcaption class="photo-credit">
+                    <figcaption class="credit">
                         <a
                             href={Astro.props.aerodrome.photo_credit_url}
                             target="_blank"
@@ -41,19 +45,24 @@ type Props = {
         )
     }
 
-    <div class="codes">
-        <span data-type="icao">{Astro.props.aerodrome.icao || "-"}</span>
-        <span data-type="iata">{Astro.props.aerodrome.iata || "-"}</span>
-    </div>
+    <dl data-info="codes">
+        <dt>代码</dt>
+        <dd>
+            <span data-org="ICAO">{Astro.props.aerodrome.icao || "-"}</span>
+            <span data-org="IATA">{Astro.props.aerodrome.iata || "-"}</span>
+        </dd>
+    </dl>
 
     {
         Array.isArray(Astro.props.aerodrome.location) &&
             Astro.props.aerodrome.location.length > 0 && (
-                <dl>
-                    <>
-                        <dt>地区</dt>
-                        <dd>{Astro.props.aerodrome.location.join(" ")}</dd>
-                    </>
+                <dl data-info="location">
+                    <dt>地区</dt>
+                    <dd>
+                        {Astro.props.aerodrome.location.map((str) => (
+                            <span>{str}</span>
+                        ))}
+                    </dd>
                 </dl>
             )
     }
@@ -61,81 +70,104 @@ type Props = {
     {
         Array.isArray(Astro.props.runwayPairs) &&
             Astro.props.runwayPairs.length > 0 && (
-                <dl>
-                    <>
-                        <dt>跑道</dt>
-                        {Astro.props.runwayPairs.map((runwayPair) => (
-                            <dd
-                                class:list={[
-                                    "runway",
-                                    {
-                                        "is-current":
-                                            runwayPair[0].isChallengePair,
-                                    },
-                                ]}
-                            >
-                                {[
-                                    [
-                                        "IDENTIFIER",
-                                        ...runwayPair.map(
-                                            (runway) => runway.identifier
-                                        ),
-                                    ],
-                                    [
-                                        "长宽",
-                                        `${Math.round(runwayPair[0].lengthInMeters)} m x ${Math.round(runwayPair[0].widthInMeters)} m`,
-                                    ],
-                                    [
-                                        "",
-                                        `${Math.round(runwayPair[0].lengthInFeet)} ft x ${Math.round(runwayPair[0].widthInFeet)} ft`,
-                                    ],
-                                    [
-                                        "磁航向",
-                                        ...runwayPair.map(
-                                            (runway) => runway.bearing + "°"
-                                        ),
-                                    ],
-                                    [
-                                        "标高",
-                                        ...runwayPair.map(
-                                            (runway) =>
-                                                runway.elevationInFeet + " ft"
-                                        ),
-                                    ],
-                                    [
-                                        "坡度",
-                                        ...(runwayPair[0].elevationInFeet ===
-                                        runwayPair[1].elevationInFeet
-                                            ? ["--"]
-                                            : runwayPair.map(
-                                                  (runway) =>
-                                                      runway.slopepercentage.toFixed(
-                                                          2
-                                                      ) + "%"
-                                              )),
-                                    ],
-                                    [
-                                        "",
-                                        ...(runwayPair[0].elevationInFeet ===
-                                        runwayPair[1].elevationInFeet
-                                            ? ["--"]
-                                            : runwayPair.map(
-                                                  (runway) =>
-                                                      runway.slopeDegrees.toFixed(
-                                                          2
-                                                      ) + "°"
-                                              )),
-                                    ],
-                                ].map(([label, value1, value2]) => (
+                <dl data-info="runways">
+                    <dt>跑道</dt>
+                    {Astro.props.runwayPairs.map((runwayPair) => (
+                        <dd
+                            class:list={[
+                                {
+                                    "is-current": runwayPair[0].isChallengePair,
+                                },
+                            ]}
+                        >
+                            {[
+                                [
+                                    "",
+                                    ...runwayPair.map(
+                                        (runway) => runway.identifier
+                                    ),
+                                ],
+                                [
+                                    "长宽",
+                                    `${Math.round(runwayPair[0].lengthInMeters)} m × ${Math.round(runwayPair[0].widthInMeters)} m`,
+                                ],
+                                [
+                                    "",
+                                    `${Math.round(runwayPair[0].lengthInFeet)} ft × ${Math.round(runwayPair[0].widthInFeet)} ft`,
+                                ],
+                                [
+                                    "磁航向",
+                                    ...runwayPair.map(
+                                        (runway) => runway.bearing + "°"
+                                    ),
+                                ],
+                                [
+                                    "标高",
+                                    ...runwayPair.map(
+                                        (runway) =>
+                                            runway.elevationInFeet + " ft"
+                                    ),
+                                ],
+                                [
+                                    "坡度",
+                                    ...(runwayPair[0].elevationInFeet ===
+                                    runwayPair[1].elevationInFeet
+                                        ? ["--"]
+                                        : runwayPair.map(
+                                              (runway) =>
+                                                  runway.slopepercentage.toFixed(
+                                                      2
+                                                  ) + "%"
+                                          )),
+                                ],
+                                runwayPair[0].elevationInFeet !==
+                                runwayPair[1].elevationInFeet
+                                    ? [
+                                          "",
+                                          ...runwayPair.map(
+                                              (runway) =>
+                                                  runway.slopeDegrees.toFixed(
+                                                      2
+                                                  ) + "°"
+                                          ),
+                                      ]
+                                    : [],
+                            ]
+                                .filter((arr) => arr.length > 0)
+                                .map(([label, value1, value2]) => (
                                     <span class="detail">
                                         <strong>{label}</strong>
-                                        <em>{value1}</em>
-                                        {value2 && <em>{value2}</em>}
+                                        <em
+                                            class:list={[
+                                                {
+                                                    "is-current-runway":
+                                                        (!value2 &&
+                                                            runwayPair[0]
+                                                                .isChallengePair) ||
+                                                        runwayPair[0]
+                                                            .isChallengeRunway,
+                                                },
+                                            ]}
+                                        >
+                                            {value1}
+                                        </em>
+                                        {value2 && (
+                                            <em
+                                                class:list={[
+                                                    {
+                                                        "is-current-runway":
+                                                            runwayPair[1]
+                                                                .isChallengeRunway,
+                                                    },
+                                                ]}
+                                            >
+                                                {value2}
+                                            </em>
+                                        )}
                                     </span>
                                 ))}
-                            </dd>
-                        ))}
-                    </>
+                        </dd>
+                    ))}
                 </dl>
             )
     }
@@ -150,10 +182,180 @@ type Props = {
 
     figure.photo {
         display: block;
-        margin: -1em -1em auto -1em;
-        & > img {
+        margin: calc(var(--card-container-padding) * -1)
+            calc(var(--card-container-padding) * -1)
+            var(--card-container-padding)
+            calc(var(--card-container-padding) * -1);
+        position: relative;
+        & > .aspect-ratio-box {
             display: block;
             width: 100%;
+            position: relative;
+            padding-top: percentage((2/3));
+            overflow: hidden;
+            & > img {
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+        }
+        & > .credit {
+            display: block;
+            font-size: smaller;
+            text-align: center;
+            line-height: 1.2em;
+            padding: 0.3333em 0.3333em;
+            background-color: var(--border-color);
+            transition: background-color var(--base-transition-duration);
+            &:has(a:hover) {
+                background-color: var(--menu-background-color-highlight);
+            }
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+
+    dl {
+        display: block;
+        margin: 1em 0 0 0;
+        font-size: 0.9em;
+        line-height: 1.5em;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        dt {
+            padding: 0 0.3333em 0.15em 0.3333em;
+            margin: 0 -0.3333em 0.25em -0.3333em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        dd {
+            display: block;
+            margin: 0;
+            color: var(--text-color-primary);
+            position: relative;
+
+            &.codes {
+                font-family: var(--font-family-monospace);
+                & > span {
+                    display: inline-block;
+                    position: relative;
+                    padding-left: 2.75em;
+                    &::before {
+                        content: attr(data-org);
+                        position: absolute;
+                        top: 50%;
+                        left: 0;
+                        margin-top: -0.7em;
+                        display: inline-block;
+                        font-size: 0.8em;
+                        padding: 0 0.3333em;
+                        line-height: 1.4em;
+                        background: var(--border-color);
+                        color: var(--text-color-secondary);
+                        vertical-align: text-top;
+                        border-radius: 0.25em;
+                    }
+                }
+            }
+        }
+    }
+
+    dl[data-info="codes"] dd {
+        font-family: var(--font-family-monospace);
+        & > span {
+            display: inline-block;
+            position: relative;
+            padding-left: 2.75em;
+            &::before {
+                content: attr(data-org);
+                position: absolute;
+                top: 50%;
+                left: 0;
+                margin-top: -0.7em;
+                display: inline-block;
+                font-size: 0.8em;
+                padding: 0 0.3333em;
+                line-height: 1.4em;
+                background: var(--border-color);
+                color: var(--text-color-secondary);
+                vertical-align: text-top;
+                border-radius: 0.25em;
+            }
+        }
+    }
+
+    dl[data-info="location"] dd {
+        & > span {
+            display: inline-block;
+            margin-right: 0.5em;
+        }
+    }
+
+    dl[data-info="runways"] {
+        display: grid;
+        grid-template-columns: repeat(
+            auto-fill,
+            minmax(calc(var(--global-sidebar-width) * 4 / 5), 1fr)
+        );
+        gap: 1em 2em;
+
+        dt {
+            margin-bottom: -0.5em;
+            grid-column-start: 1;
+            grid-column-end: -1;
+        }
+
+        dd {
+            color: var(--text-color-secondary);
+            &.is-current:has(+ dd) {
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: -0.15em;
+                    left: -0.5em;
+                    right: -0.5em;
+                    bottom: -0.25em;
+                    background: var(--tag-background-color);
+                    z-index: -1;
+                    border-radius: 0.5em;
+                }
+            }
+        }
+
+        dd span {
+            display: flex;
+            & > strong {
+                flex: 0 0 4em;
+                font-weight: normal;
+                color: var(--text-color-secondary);
+                font-size: 0.8em;
+                line-height: 1.5;
+            }
+            & > em {
+                flex: 1;
+                font-style: normal;
+                // font-family: var(--font-family-monospace);
+                font-size: 0.9em;
+                font-weight: 400;
+                line-height: 1.5;
+                white-space: nowrap;
+                &.is-current-runway {
+                    color: var(--text-color-primary);
+                    font-weight: 900;
+                    // font-style: italic;
+                }
+            }
+            &:first-child > em {
+                font-size: 1.1em;
+                line-height: 1.5;
+            }
         }
     }
 </style>
