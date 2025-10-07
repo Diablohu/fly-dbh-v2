@@ -6,6 +6,7 @@ import { routeBase } from "@/global";
 
 import Layout from "@/layouts/layout.astro";
 
+import TitleBlock from "./_components-details-page/title-block";
 import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
 import InfoBlock from "./_components-details-page/info-block.astro";
 
@@ -148,15 +149,11 @@ const challengeRunways = runwayPairs
 >
     <div class="challenge-details-page">
         <div class="wrapper">
-            <section class="title-info">
-                <a class="link-to-challenge-list" href={routeBase.challenges}
-                    ><LeftArrowSVG />着陆挑战名册</a
-                >
-                <h1>
-                    {challenge.aerodrome.name}进近挑战
-                    <small class="challenge-name">{challenge.name}</small>
-                </h1>
-            </section>
+            <TitleBlock
+                client:idle
+                aerodromeName={challenge.aerodrome.name}
+                challengeName={challenge.name}
+            />
 
             <section class="aerodrome-info">
                 <div class="wrapper">
@@ -252,6 +249,7 @@ const challengeRunways = runwayPairs
     @import "@/utils/mixins.less";
 
     .challenge-details-page {
+        --title-block-z-index: 10;
         --card-container-padding: 1em;
         --card-container-background-color: var(--theme-color-p-40);
         --card-container-border-width: 1px;
@@ -276,69 +274,13 @@ const challengeRunways = runwayPairs
                 "aerodrome-info title"
                 "aerodrome-info content";
             gap: 0 var(--global-edge-safe-distance);
+            padding-top: 1em;
         }
     }
 
-    .title-info,
     .aerodrome-info {
         position: sticky;
         align-self: start;
-        margin-top: 1em;
-    }
-
-    .title-info {
-        grid-area: title;
-        top: calc(var(--global-sticky-top) - 1.25em);
-        z-index: 10;
-        .link-to-challenge-list {
-            display: inline-block;
-            text-decoration: none;
-            font-size: unit(
-                (@base-font-size-number-h1 / @base-font-size-number * 2 / 3),
-                em
-            );
-            line-height: 1;
-            letter-spacing: 0.025em;
-            // margin-bottom: 0.3333em;
-            position: relative;
-            padding-left: 1em;
-            & > svg {
-                position: absolute;
-                top: 50%;
-                left: 0;
-                width: 0.8em;
-                height: 0.8em;
-                margin-top: -0.4em;
-            }
-        }
-        h1 {
-            margin-top: 0.25em;
-            margin-bottom: 1em;
-            text-shadow: 0 0.025em 0.15em var(--theme-color);
-        }
-        .challenge-name {
-            display: inline-block;
-        }
-        &::after {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 1.2em;
-            bottom: -0.5em;
-            left: calc(var(--global-edge-safe-distance) * -1);
-            right: calc(var(--global-edge-safe-distance) * -1);
-            z-index: -1;
-            pointer-events: none;
-            background: linear-gradient(
-                to bottom,
-                var(--theme-color-p-90),
-                var(--theme-color-p-70) 50%,
-                transparent
-            );
-        }
-    }
-
-    .aerodrome-info {
         grid-area: aerodrome-info;
         top: calc(var(--global-sticky-top) + 1em);
         z-index: 15;
@@ -439,19 +381,6 @@ const challengeRunways = runwayPairs
 
     //
 
-    .styles-screen-lg() {
-        .challenge-details-page {
-            .title-info {
-                .challenge-name {
-                    display: block;
-                }
-            }
-        }
-    }
-    .screen-lg({
-        .styles-screen-lg();
-    });
-
     .styles-screen-sm() {
         .challenge-details-page {
             & > .wrapper {
@@ -462,11 +391,6 @@ const challengeRunways = runwayPairs
                 z-index: 1;
                 top: 0;
                 margin-top: 2em;
-            }
-            .title-info {
-                .challenge-name {
-                    display: block;
-                }
             }
         }
     }

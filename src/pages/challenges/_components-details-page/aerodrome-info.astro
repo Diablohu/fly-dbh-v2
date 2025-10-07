@@ -28,7 +28,7 @@ type Props = {
                                 ? ` (${Astro.props.aerodrome.location.join(" ")})`
                                 : ""
                         }`}
-                        loading="lazy"
+                        // loading="lazy"
                     />
                 </span>
                 {Astro.props.aerodrome.photo_credit_url && (
@@ -200,6 +200,7 @@ type Props = {
                 height: 100%;
                 top: 0;
                 left: 0;
+                object-fit: cover;
             }
         }
         & > .credit {

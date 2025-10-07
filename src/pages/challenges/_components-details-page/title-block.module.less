@@ -1,0 +1,106 @@
+@import "@/utils/mixins.less";
+
+.title-block {
+    position: sticky;
+    align-self: start;
+    grid-area: title;
+    top: calc(var(--global-sticky-top) - 1em);
+    z-index: var(--title-block-z-index);
+    // z-index: 10000000000000000000000000000;
+
+    .link-to-challenge-list {
+        display: inline-block;
+        text-decoration: none;
+        font-size: unit(
+            (@base-font-size-number-h1 / @base-font-size-number * 2 / 3),
+            em
+        );
+        line-height: 1;
+        letter-spacing: 0.025em;
+        // margin-bottom: 0.3333em;
+        position: relative;
+        padding-left: 1em;
+        transition-property: opacity, transform, color;
+        & > svg {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0.8em;
+            height: 0.8em;
+            margin-top: -0.4em;
+        }
+    }
+
+    h1 {
+        margin-top: 0.25em;
+        margin-bottom: 1em;
+        text-shadow: 0 0.025em 0.15em var(--theme-color);
+    }
+
+    .aerodrome-name {
+        display: inline-block;
+        margin-right: 0.5em;
+    }
+    .challenge-name {
+        display: inline-block;
+    }
+
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0.95em;
+        bottom: -0.5em;
+        left: calc(var(--global-edge-safe-distance) * -1);
+        right: calc(var(--global-edge-safe-distance) * -1);
+        z-index: -1;
+        pointer-events: none;
+        background: linear-gradient(
+            to bottom,
+            var(--theme-color-p-90),
+            var(--theme-color-p-70) 60%,
+            transparent
+        );
+    }
+
+    .intersection-probe {
+        position: absolute;
+        top: calc(var(--global-sticky-top) * -1);
+        left: 0;
+        height: 0.5em;
+        width: 0;
+        // width: 2em;
+        // background: #800;
+    }
+
+    //
+
+    &.is-sticky {
+        .link-to-challenge-list {
+            opacity: 0;
+            z-index: -1;
+        }
+    }
+
+    //
+
+    .styles-screen-lg() {
+        .challenge-name {
+            display: block;
+        }
+    }
+    .screen-lg({
+        .styles-screen-lg();
+    });
+
+    .styles-screen-sm() {
+        .challenge-details-page {
+            .challenge-name {
+                display: block;
+            }
+        }
+    }
+    .screen-sm({
+        .styles-screen-sm();
+    });
+}
