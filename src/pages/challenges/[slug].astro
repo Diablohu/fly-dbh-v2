@@ -11,6 +11,7 @@ import Title from "./_components-details-page/title";
 import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
 import Hazards from "./_components-details-page/hazards.astro";
 import Route from "./_components-details-page/route.astro";
+import Briefing from "./_components-details-page/briefing.astro";
 
 import LeftArrowSVG from "@/assets/arrow/left3.svg";
 
@@ -181,13 +182,10 @@ const challengeRunways = runwayPairs
                     emoji="🛩️"
                     set:html={parseMarkdown(challenge.typical_aircrafts)}
                 />
-                <InfoBlock
-                    title="进近说明 & 航图"
+                <Briefing
+                    briefing={challenge.briefing}
+                    type={challenge.type}
                     data-info="briefing"
-                    emoji="🗺️"
-                    isTodo={!challenge.briefing}
-                    set:html={challenge.briefing &&
-                        parseMarkdown(challenge.briefing)}
                 />
 
                 <hr />

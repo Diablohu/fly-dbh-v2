@@ -1,0 +1,75 @@
+---
+import { type ChallengeItemType } from "@/types";
+import parseMarkdown from "@/utils/parse-markdown";
+
+import InfoBlock from "./_info-block.astro";
+
+type Props = Pick<ChallengeItemType, "briefing" | "type"> &
+    astroHTML.JSX.HTMLAttributes;
+
+const { briefing, type, ...props } = Astro.props;
+---
+
+<InfoBlock {...props} title="进近说明 & 航图" emoji="🗺️" isTodo={!briefing}>
+    {
+        type === "vfr" ? (
+            <Fragment
+                set:html={
+                    briefing &&
+                    parseMarkdown(`#### 纯目视进近
+* 在飞行电脑中无法选择对应程序；
+* 遵循 VFR 目视飞行规则，没有决断高度概念。`)
+                }
+            />
+        ) : type === "rnp-visual" ? (
+            <Fragment
+                set:html={
+                    briefing &&
+                    parseMarkdown(`#### RNP 目视进近
+* 飞行电脑内可选择对应的 RNAV 进近程序；
+* 虽然该进近类型的导航精度很高，但所选择的这个进近方式并没有对准跑道，故最终进近阶段需要目视手操；
+* 该进近方式仅用于定位机场。`)
+                }
+            />
+        ) : (
+            ""
+        )
+    }
+    <section
+        class="briefing-markdown"
+        set:html={briefing && parseMarkdown(briefing)}
+    />
+</InfoBlock>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .briefing-markdown {
+        :global(img) {
+            display: block;
+            max-width: 75%;
+            max-height: calc(100vh - var(--global-sticky-top) - 15rem);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        :global(code) {
+            font-family: var(--font-family-monospace);
+            position: relative;
+            display: inline-block;
+            padding: 0 0.5em;
+            margin-left: 0.13333em;
+            margin-right: 0.13333em;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0.1em;
+                bottom: 0.1em;
+                left: -0.1em;
+                right: -0.1em;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                background: var(--tag-background-color);
+            }
+        }
+    }
+</style>

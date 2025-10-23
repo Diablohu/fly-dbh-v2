@@ -52,6 +52,7 @@ const SearchFormAndResult: FC<{
     );
 
     useEffect(() => {
+        // console.log(123, keyword)
         if (!keyword) return;
         // const action = evt.currentTarget.getAttribute("action");
         // const method = evt.currentTarget.getAttribute("method");

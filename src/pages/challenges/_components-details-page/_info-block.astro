@@ -55,6 +55,36 @@ const { title, emoji, isTodo = false, ...props } = Astro.props;
             & > :global(p:first-child) {
                 margin-top: 0;
             }
+
+            dl {
+                display: block;
+                margin: 0;
+                position: relative;
+                padding-left: 2.75em;
+                color: var(--text-color-secondary);
+                dt {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+                dd {
+                    margin: 0;
+                    &.code {
+                        display: block;
+                        font-family: var(--font-family-monospace);
+                        color: var(--text-color-primary);
+                        margin: 0;
+                        text-align: left;
+                        & > span {
+                            display: inline-block;
+                            white-space: nowrap;
+                            &.dct {
+                                color: var(--theme-color-invert-p-40);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 </style>

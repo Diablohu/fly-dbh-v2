@@ -200,7 +200,6 @@ const actions = {
                                 err.cause = { GROQ: queryString };
                                 throw err;
                             }
-
                             // console.log(queryString)
 
                             (res as unknown as ResultType).list.forEach(

@@ -2,7 +2,10 @@ import type { SanityDocument } from "@sanity/client";
 import { z } from "astro:schema";
 import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/services/sanity-helpers";
+import {
+    transformImagePath,
+    stringReplaceImagePath,
+} from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
 import { E60000, E60001 } from "@/constants/error-codes";
 import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
@@ -125,6 +128,10 @@ const actions = {
                         if (res[0].aerodrome.photo)
                             res[0].aerodrome.photo = transformImagePath(
                                 res[0].aerodrome.photo
+                            );
+                        if (res[0].briefing)
+                            res[0].briefing = stringReplaceImagePath(
+                                res[0].briefing
                             );
                         // 按难度排序难点灾害，由难到易
                         res[0].hazards.sort(
