@@ -6,13 +6,16 @@ import { routeBase } from "@/global";
 
 import Layout from "@/layouts/layout.astro";
 
-import TitleBlock from "./_components-details-page/title-block";
+import InfoBlock from "./_components-details-page/_info-block.astro";
+import Title from "./_components-details-page/title";
 import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
-import InfoBlock from "./_components-details-page/info-block.astro";
+import Hazards from "./_components-details-page/hazards.astro";
+import Route from "./_components-details-page/route.astro";
 
 import LeftArrowSVG from "@/assets/arrow/left3.svg";
 
 import calculateRunwaySlope from "@/utils/calculate-runway-slope";
+import parseMarkdown from "@/utils/parse-markdown";
 import { errorLog } from "@/utils/log";
 
 // ============================================================================
@@ -149,7 +152,7 @@ const challengeRunways = runwayPairs
 >
     <div class="challenge-details-page">
         <div class="wrapper">
-            <TitleBlock
+            <Title
                 client:idle
                 aerodromeName={challenge.aerodrome.name}
                 challengeName={challenge.name}
@@ -166,61 +169,26 @@ const challengeRunways = runwayPairs
             </section>
 
             <section class="content">
-                <InfoBlock title="难点灾害" data-info="hazards">
-                    {
-                        challenge.hazards.map((hazard) => (
-                            <span
-                                class="hazard"
-                                data-difficulty={hazard.difficulty}
-                            >
-                                <em class="icon" aria-hidden="true">
-                                    {hazard.emoji}
-                                </em>
-                                {[
-                                    hazard.name,
-                                    hazard.comment,
-                                    hazard.extra_comment
-                                        ? hazard.extra_comment
-                                        : !Array.isArray(challengeRunways)
-                                          ? null
-                                          : hazard.name.includes("大坡度")
-                                            ? // 如果挑战跑道有多个，这里显示的坡度取绝对值
-                                              challengeRunways.length > 0
-                                                ? `${Math.abs(
-                                                      challengeRunways[0]
-                                                          .slopepercentage
-                                                  ).toFixed(2)}% / ${Math.abs(
-                                                      challengeRunways[0]
-                                                          .slopeDegrees
-                                                  ).toFixed(2)}°`
-                                                : `${challengeRunways[0].slopepercentage.toFixed(
-                                                      2
-                                                  )}% / ${challengeRunways[0].slopeDegrees.toFixed(
-                                                      2
-                                                  )}°`
-                                            : null,
-                                ]
-                                    .filter(Boolean)
-                                    .map((text) => (
-                                        <span class="fragment">{text}</span>
-                                    ))}
-                                {/* {hazard.extra_comment ? (
-                                    <small class="extra-comment">
-                                        {hazard.extra_comment}
-                                    </small>
-                                ) : hazard.name.includes("大坡度") ? (
-                                    <small class="extra-comment">111</small>
-                                ) : null} */}
-                            </span>
-                        ))
-                    }
-                </InfoBlock>
-                <InfoBlock title="示例航线" data-info="route">
-                    TODO: Demo Route
-                </InfoBlock>
-                <InfoBlock title="进近说明 & 航图" data-info="briefing">
-                    TODO: Briefing
-                </InfoBlock>
+                <Hazards
+                    hazards={challenge.hazards}
+                    challengeRunways={challengeRunways}
+                    data-info="hazards"
+                />
+                <Route route={challenge.route} data-info="route" />
+                <InfoBlock
+                    title="当地常客"
+                    data-info="typical"
+                    emoji="🛩️"
+                    set:html={parseMarkdown(challenge.typical_aircrafts)}
+                />
+                <InfoBlock
+                    title="进近说明 & 航图"
+                    data-info="briefing"
+                    emoji="🗺️"
+                    isTodo={!challenge.briefing}
+                    set:html={challenge.briefing &&
+                        parseMarkdown(challenge.briefing)}
+                />
 
                 <hr />
 
@@ -320,54 +288,18 @@ const challengeRunways = runwayPairs
         z-index: 1;
         display: flex;
         flex-flow: row wrap;
-        gap: 2em;
+        gap: 3em 2em;
         & > * {
             flex: 1 1 100%;
         }
         & > [data-info="hazards"],
-        & > [data-info="route"] {
+        & > [data-info="route"],
+        & > [data-info="typical"] {
             flex-basis: var(--body-safe-min-width);
         }
-        & > [data-info="hazards"] {
-            .hazard {
-                display: block;
-                padding-left: 1.5em;
-                position: relative;
-                color: var(--difficulty-color);
-                .icon {
-                    display: inline-block;
-                    font-style: normal;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                }
-                // .name {
-                //     color: var(--text-color-primary);
-                //     font-weight: normal;
-                // }
-                .fragment {
-                    font-weight: normal;
-                    display: inline-block;
-                    &:has(+ .fragment) {
-                        &::after {
-                            content: "：";
-                        }
-                    }
-                }
-                // .extra-comment {
-                //     display: block;
-                //     margin-top: -0.5em;
-                //     color: var(--text-color-primary);
-                // }
-                &[data-difficulty="1"] {
-                    --difficulty-color: var(--difficulty-color-1);
-                }
-                &[data-difficulty="3"] {
-                    --difficulty-color: var(--difficulty-color-3);
-                }
-                &[data-difficulty="5"] {
-                    --difficulty-color: var(--difficulty-color-5);
-                }
+        & > [data-info="typical"] {
+            :global(p, ul) {
+                margin: 0;
             }
         }
     }
@@ -391,6 +323,7 @@ const challengeRunways = runwayPairs
                 z-index: 1;
                 top: 0;
                 margin-top: 2em;
+                margin-bottom: 3em;
             }
         }
     }

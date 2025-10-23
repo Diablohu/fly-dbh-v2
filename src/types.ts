@@ -174,4 +174,21 @@ export type ChallengeItemType = {
         | "photo_credit_url"
     >;
     runways: string[];
+    route: {
+        origin?: Pick<
+            AerodromeItemType,
+            "_id" | "slug" | "name" | "icao" | "iata"
+        >;
+        sid?: string;
+        enroute?: string;
+        destination?: Pick<
+            AerodromeItemType,
+            "_id" | "slug" | "name" | "icao" | "iata"
+        >;
+        star?: string;
+        app?: string;
+        distance?: number;
+        cruise?: string;
+    };
+    briefing?: string;
 };

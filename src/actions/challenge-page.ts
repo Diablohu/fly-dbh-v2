@@ -95,6 +95,21 @@ const actions = {
     photo_credit_url,
   },
   runways[],
+  'route': {
+    'origin': routeOrigin->{
+      _id, 'slug': slug.current, name,icao,iata,
+    },
+    'sid': routeSID,
+    'enroute': routeEnroute,
+    'destination': routeDestination->{
+      _id, 'slug': slug.current, name,icao,iata,
+    },
+    'star': routeSTAR,
+    'app': routeAPP,
+    'distance': routeDistance,
+    'cruise': routeCruise,
+  },
+  briefing,
 } | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
                 const res = (await fetch<ChallengeItemType>(queryString, {
                     transform: (res, queryString) => {

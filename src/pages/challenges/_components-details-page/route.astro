@@ -1,0 +1,110 @@
+---
+import { type ChallengeItemType } from "@/types";
+import { type RunwayType } from "../_types";
+
+import InfoBlock from "./_info-block.astro";
+
+type Props = {
+    route: ChallengeItemType["route"];
+} & astroHTML.JSX.HTMLAttributes;
+
+const { route, ...props } = Astro.props;
+---
+
+<InfoBlock
+    {...props}
+    title="示例航线"
+    emoji="🌏"
+    isTodo={!route.origin?.icao && !route.origin?.iata}
+>
+    <dl>
+        <dt>起飞</dt>
+        <dd class="code">
+            {
+                [route.origin?.icao, route.origin?.iata]
+                    .filter(Boolean)
+                    .join(" / ")
+            }
+        </dd>
+    </dl>
+    <dl>
+        <dt>离场</dt>
+        {route.sid ? <dd class="code">{route.sid}</dd> : <dd>无程序</dd>}
+    </dl>
+    <dl>
+        <dt>线路</dt>
+        {
+            route.enroute ? (
+                <dd class="code">
+                    {route.enroute.split(" ").map((part) => (
+                        <span class={part === "DCT" ? "dct" : null}>
+                            {part}&nbsp;
+                        </span>
+                    ))}
+                </dd>
+            ) : (
+                <dd>直飞</dd>
+            )
+        }
+    </dl>
+    <dl>
+        <dt>目的</dt>
+        <dd class="code">
+            {
+                [route.destination?.icao, route.destination?.iata]
+                    .filter(Boolean)
+                    .join(" / ")
+            }
+        </dd>
+    </dl>
+    <dl>
+        <dt>进场</dt>
+        {route.star ? <dd class="code">{route.star}</dd> : <dd>无程序</dd>}
+    </dl>
+    <dl>
+        <dt>进近</dt>
+        {route.app ? <dd class="code">{route.app}</dd> : <dd>无程序</dd>}
+    </dl>
+    <dl>
+        <dt>长度</dt>
+        {route.distance ? <dd>约 {route.distance} 海里</dd> : <dd>未知</dd>}
+    </dl>
+    <dl>
+        <dt>巡航</dt>
+        {route.cruise ? <dd>{route.cruise}</dd> : <dd>未知</dd>}
+    </dl>
+</InfoBlock>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    dl {
+        display: block;
+        margin: 0;
+        position: relative;
+        padding-left: 2.75em;
+        color: var(--text-color-secondary);
+        dt {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        dd {
+            margin: 0;
+            &.code {
+                display: block;
+                font-family: var(--font-family-monospace);
+                color: var(--text-color-primary);
+                margin: 0;
+                text-align: left;
+                & > span {
+                    display: inline-block;
+                    white-space: nowrap;
+                    &.dct {
+                        color: var(--theme-color-invert-p-40);
+                    }
+                }
+            }
+        }
+    }
+</style>

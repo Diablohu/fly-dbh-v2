@@ -1,0 +1,96 @@
+---
+import { type ChallengeItemType } from "@/types";
+import { type RunwayType } from "../_types";
+
+import InfoBlock from "./_info-block.astro";
+
+type Props = {
+    hazards: ChallengeItemType["hazards"];
+    challengeRunways: RunwayType[];
+} & astroHTML.JSX.HTMLAttributes;
+
+const { hazards, challengeRunways, ...props } = Astro.props;
+---
+
+<InfoBlock {...props} title="难点灾害" emoji="🥵">
+    {
+        hazards.map((hazard) => (
+            <span class="hazard" data-difficulty={hazard.difficulty}>
+                <em class="icon" aria-hidden="true">
+                    {hazard.emoji}
+                </em>
+                {[
+                    hazard.name,
+                    hazard.comment,
+                    hazard.extra_comment
+                        ? hazard.extra_comment
+                        : !Array.isArray(challengeRunways)
+                          ? null
+                          : hazard.name.includes("大坡度")
+                            ? // 如果挑战跑道有多个，这里显示的坡度取绝对值
+                              challengeRunways.length > 0
+                                ? `${Math.abs(
+                                      challengeRunways[0].slopepercentage
+                                  ).toFixed(2)}% / ${Math.abs(
+                                      challengeRunways[0].slopeDegrees
+                                  ).toFixed(2)}°`
+                                : `${challengeRunways[0].slopepercentage.toFixed(
+                                      2
+                                  )}% / ${challengeRunways[0].slopeDegrees.toFixed(
+                                      2
+                                  )}°`
+                            : null,
+                ]
+                    .filter(Boolean)
+                    .map((text) => (
+                        <span class="fragment">{text}</span>
+                    ))}
+            </span>
+        ))
+    }
+</InfoBlock>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .hazard {
+        display: block;
+        padding-left: 1.5em;
+        position: relative;
+        color: var(--difficulty-color);
+        .icon {
+            display: inline-block;
+            font-style: normal;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        // .name {
+        //     color: var(--text-color-primary);
+        //     font-weight: normal;
+        // }
+        .fragment {
+            font-weight: normal;
+            display: inline-block;
+            &:has(+ .fragment) {
+                &::after {
+                    content: "：";
+                }
+            }
+        }
+        // .extra-comment {
+        //     display: block;
+        //     margin-top: -0.5em;
+        //     color: var(--text-color-primary);
+        // }
+        &[data-difficulty="1"] {
+            --difficulty-color: var(--difficulty-color-1);
+        }
+        &[data-difficulty="3"] {
+            --difficulty-color: var(--difficulty-color-3);
+        }
+        &[data-difficulty="5"] {
+            --difficulty-color: var(--difficulty-color-5);
+        }
+    }
+</style>

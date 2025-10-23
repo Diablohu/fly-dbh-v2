@@ -2,9 +2,6 @@
 import { type ChallengeItemType } from "@/types";
 import { type RunwayType } from "../_types";
 
-import calculateRunwaySlope from "@/utils/calculate-runway-slope";
-import { array } from "astro:schema";
-
 type Props = {
     aerodrome: ChallengeItemType["aerodrome"];
     targetRunways: ChallengeItemType["runways"];
@@ -315,7 +312,7 @@ type Props = {
 
         dd {
             color: var(--text-color-secondary);
-            &.is-current:has(+ dd) {
+            &.is-current:has(+ dd:not(.is-current)) {
                 &::after {
                     content: "";
                     position: absolute;
