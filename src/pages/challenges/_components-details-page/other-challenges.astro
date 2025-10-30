@@ -1,0 +1,32 @@
+---
+import { type ChallengeItemType } from "@/types";
+
+import InfoBlock from "./_info-block.astro";
+import ChallengeListItem from "../_components/list-item";
+
+type Props = {
+    list: ChallengeItemType["other_challenges_this_aerodrome"];
+} & astroHTML.JSX.HTMLAttributes;
+
+const { list, ...props } = Astro.props;
+---
+
+{
+    Array.isArray(list) && list.length > 0 && (
+        <InfoBlock {...props} title="本机场的其他挑战">
+            <div class="list">
+                {list.map((item) => (
+                    <ChallengeListItem item={item} />
+                ))}
+            </div>
+        </InfoBlock>
+    )
+}
+
+<style lang="less">
+    @import "../_mixins.less";
+
+    .list {
+        .list-styles();
+    }
+</style>

@@ -25,7 +25,7 @@ type Props = {
                                 ? ` (${Astro.props.aerodrome.location.join(" ")})`
                                 : ""
                         }`}
-                        // loading="lazy"
+                        loading="lazy"
                     />
                 </span>
                 {Astro.props.aerodrome.photo_credit_url && (
@@ -43,10 +43,17 @@ type Props = {
     }
 
     <dl data-info="codes">
-        <dt>代码</dt>
+        <dt>机场代码</dt>
         <dd>
             <span data-org="ICAO">{Astro.props.aerodrome.icao || "-"}</span>
             <span data-org="IATA">{Astro.props.aerodrome.iata || "-"}</span>
+            {
+                !Astro.props.aerodrome.icao && Astro.props.aerodrome.faa && (
+                    <span data-org="FAA">
+                        {Astro.props.aerodrome.faa || "-"}
+                    </span>
+                )
+            }
         </dd>
     </dl>
 
@@ -54,7 +61,7 @@ type Props = {
         Array.isArray(Astro.props.aerodrome.location) &&
             Astro.props.aerodrome.location.length > 0 && (
                 <dl data-info="location">
-                    <dt>地区</dt>
+                    <dt>服务地区</dt>
                     <dd>
                         {Astro.props.aerodrome.location.map((str) => (
                             <span>{str}</span>
@@ -68,7 +75,7 @@ type Props = {
         Array.isArray(Astro.props.runwayPairs) &&
             Astro.props.runwayPairs.length > 0 && (
                 <dl data-info="runways">
-                    <dt>跑道</dt>
+                    <dt>跑道信息</dt>
                     {Astro.props.runwayPairs.map((runwayPair) => (
                         <dd
                             class:list={[
@@ -112,7 +119,7 @@ type Props = {
                                         ? ["--"]
                                         : runwayPair.map(
                                               (runway) =>
-                                                  runway.slopepercentage.toFixed(
+                                                  runway.slopePercentage.toFixed(
                                                       2
                                                   ) + "%"
                                           )),

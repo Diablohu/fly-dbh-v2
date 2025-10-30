@@ -23,6 +23,7 @@ const actions = {
     name,
     icao,
     iata,
+    faa,
     location,
   },
   name,
@@ -85,6 +86,7 @@ const actions = {
     name,
     icao,
     iata,
+    faa,
     location,
     'runways': runways[]{
       identifier,
@@ -92,6 +94,7 @@ const actions = {
       elevation,
       length,
       width,
+      slope,
     },
     'photo': photo.asset->path,
     photo_credit,
@@ -113,6 +116,28 @@ const actions = {
     'cruise': routeCruise,
   },
   briefing,
+  'other_challenges_this_aerodrome': *[_type == "approach_challenge" && references(^.aerodrome->_id) && _id != ^._id]{
+      _id,
+      'slug': slug.current,
+      name,
+      difficulty,
+      max_allowed_aircraft_category,
+  },
+  'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{
+      _id,
+      'slug': slug.current,
+      title,
+      release,
+      duration,
+      'cover': cover.asset->path,
+      'tags': tags[]->{
+          _id,
+          'slug': slug.current,
+          "value": name,
+          "name": title
+      },
+      links,
+  },
 } | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
                 const res = (await fetch<ChallengeItemType>(queryString, {
                     transform: (res, queryString) => {
@@ -137,6 +162,11 @@ const actions = {
                         res[0].hazards.sort(
                             (a, b) => b.difficulty - a.difficulty
                         );
+                        // 处理机场相关视频的图片路径
+                        if (Array.isArray(res[0].videos_this_aerodrome))
+                            res[0].videos_this_aerodrome.forEach((post) => {
+                                post.cover = transformImagePath(post.cover);
+                            });
                         return res[0] as unknown as SanityDocument<ChallengeItemType>[];
                     },
                 })) as unknown as ChallengeItemType;

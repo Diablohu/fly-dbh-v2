@@ -4,6 +4,10 @@ import type { SanityDocument } from "@sanity/client";
 import classNames from "classnames";
 
 import { type ChallengeListItemType, type AircraftCategoryType } from "@/types";
+import {
+    challengeDifficultyString,
+    aircraftCategoryTypeString,
+} from "@/global";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 
 import {
@@ -11,16 +15,9 @@ import {
     selectedMaxAllowedAircraftCategories,
 } from "../_store";
 
+import ListItem from "./list-item";
+
 import styles from "./list.module.less";
-
-// ============================================================================
-
-const typicalAircraftTypes: Record<AircraftCategoryType, string> = {
-    a: "轻型飞机 & 单发小型机",
-    b: "支线客机 & 多发小型机",
-    c: "干线客机 & 商务喷气机",
-    d: "重型喷气机",
-};
 
 // ============================================================================
 
@@ -59,7 +56,7 @@ const ChallengeList: FC<{
                     CATEGORY {category.toUpperCase()}
                 </span>
                 <strong className={styles["typical-aircraft-types"]}>
-                    {typicalAircraftTypes[category]}
+                    {aircraftCategoryTypeString[category]}
                 </strong>
                 <span className={styles["category-opaque-layer"]}>
                     CATEGORY {category.toUpperCase()}
@@ -67,63 +64,7 @@ const ChallengeList: FC<{
             </dt>
             <dd className={styles["challenges-list"]}>
                 {items.map((item) => (
-                    <a
-                        className={styles["challenge-item"]}
-                        href={getChallengePageLink(item.slug || item._id)}
-                        key={item._id}
-                        data-difficulty={item.difficulty}
-                        // data-difficulty="rookie"
-                    >
-                        <span className={styles["aerodrome-code"]}>
-                            {[item.aerodrome.icao, item.aerodrome.iata]
-                                .filter(Boolean)
-                                .join("/")}
-                        </span>
-                        <strong className={styles["aerodrome-name"]}>
-                            {item.aerodrome.name}
-                        </strong>
-                        {item.difficulty === 3 && (
-                            <span
-                                className={classNames([
-                                    styles["line"],
-                                    styles["challenge-difficulty"],
-                                ])}
-                            >
-                                相当挑战
-                            </span>
-                        )}
-                        {item.difficulty === 5 && (
-                            <span
-                                className={classNames([
-                                    styles["line"],
-                                    styles["challenge-difficulty"],
-                                ])}
-                            >
-                                极限挑战
-                            </span>
-                        )}
-                        <span
-                            className={classNames([
-                                styles["line"],
-                                styles["challenge-name"],
-                            ])}
-                        >
-                            {item.name}
-                        </span>
-                        {Array.isArray(item.aerodrome.location) &&
-                            item.aerodrome.location.length > 0 && (
-                                <span
-                                    className={classNames([
-                                        styles["line"],
-                                        styles["aerodrome-location"],
-                                    ])}
-                                >
-                                    {item.aerodrome.location
-                                        .filter(Boolean)
-                                        .join(" ")}
-                                </span>
-                            )}
-                    </a>
+                    <ListItem item={item} key={item._id} />
                 ))}
             </dd>
         </dl>

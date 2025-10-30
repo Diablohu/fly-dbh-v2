@@ -2,22 +2,22 @@
 import { actions, ActionError } from "astro:actions";
 import { type RunwayType } from "./_types";
 
-import { routeBase } from "@/global";
-
 import Layout from "@/layouts/layout.astro";
 
-import InfoBlock from "./_components-details-page/_info-block.astro";
 import Title from "./_components-details-page/title";
 import AerodromeInfo from "./_components-details-page/aerodrome-info.astro";
+import Facts from "./_components-details-page/facts.astro";
 import Hazards from "./_components-details-page/hazards.astro";
 import Route from "./_components-details-page/route.astro";
 import Briefing from "./_components-details-page/briefing.astro";
+import OtherChallenges from "./_components-details-page/other-challenges.astro";
+import Videos from "./_components-details-page/videos.astro";
 
-import LeftArrowSVG from "@/assets/arrow/left3.svg";
-
-import calculateRunwaySlope from "@/utils/calculate-runway-slope";
-import parseMarkdown from "@/utils/parse-markdown";
+import calculateRunwaySlope, {
+    transformSlopePercentageToDegrees,
+} from "@/utils/calculate-runway-slope";
 import { errorLog } from "@/utils/log";
+import { undefined } from "astro:schema";
 
 // ============================================================================
 
@@ -92,6 +92,10 @@ const runwayPairs: [RunwayType, RunwayType][] = challenge.aerodrome.runways
         const lengthInFeet = parseInt(runway.length);
         const widthInFeet = parseInt(runway.width);
 
+        const slopPercentageOverride = runway.slope
+            ? runway.slope.split("/").map((bearing) => Number(bearing.trim()))
+            : undefined;
+
         const isChallengePair =
             !Array.isArray(challenge.runways) ||
             challenge.runways.some((challengeRunway) =>
@@ -99,11 +103,18 @@ const runwayPairs: [RunwayType, RunwayType][] = challenge.aerodrome.runways
             );
 
         return [0, 1].map((index) => {
-            const slopeInfo = calculateRunwaySlope(
-                elevationsInFeet[index],
-                elevationsInFeet[index === 0 ? 1 : 0],
-                lengthInFeet
-            );
+            const slopeInfo = Array.isArray(slopPercentageOverride)
+                ? {
+                      percentage: slopPercentageOverride[index],
+                      degrees: transformSlopePercentageToDegrees(
+                          slopPercentageOverride[index]
+                      ),
+                  }
+                : calculateRunwaySlope(
+                      elevationsInFeet[index],
+                      elevationsInFeet[index === 0 ? 1 : 0],
+                      lengthInFeet
+                  );
             return {
                 identifier: identifiers[index],
                 isChallengePair,
@@ -117,7 +128,7 @@ const runwayPairs: [RunwayType, RunwayType][] = challenge.aerodrome.runways
                 widthInFeet,
                 widthInMeters: widthInFeet * 0.3048,
                 elevationInFeet: elevationsInFeet[index],
-                slopepercentage: slopeInfo.percentage,
+                slopePercentage: slopeInfo.percentage,
                 slopeDegrees: slopeInfo.degrees,
             };
         }) as [RunwayType, RunwayType];
@@ -170,42 +181,37 @@ const challengeRunways = runwayPairs
             </section>
 
             <section class="content">
+                <Facts
+                    difficulty={challenge.difficulty}
+                    maxCategory={challenge.max_allowed_aircraft_category}
+                    typicalAircrafts={challenge.typical_aircrafts}
+                    data-info="facts"
+                />
                 <Hazards
                     hazards={challenge.hazards}
                     challengeRunways={challengeRunways}
                     data-info="hazards"
                 />
                 <Route route={challenge.route} data-info="route" />
-                <InfoBlock
-                    title="当地常客"
-                    data-info="typical"
-                    emoji="🛩️"
-                    set:html={parseMarkdown(challenge.typical_aircrafts)}
-                />
                 <Briefing
                     briefing={challenge.briefing}
                     type={challenge.type}
                     data-info="briefing"
+                />
+                <OtherChallenges
+                    list={challenge.other_challenges_this_aerodrome}
+                    data-info="other-challenges"
+                />
+                <Videos
+                    list={challenge.videos_this_aerodrome}
+                    data-info="videos"
                 />
 
                 <hr />
 
                 <section>TODO: Demo Video</section>
                 <section>TODO: Recommended Scenery Add-on</section>
-
-                <hr />
-
-                <section>TODO: Other Challenges for this Aerodrome</section>
-                <section>TODO: Videos for this Aerodrome</section>
                 <section>TODO: Back to List</section>
-
-                <hr />
-
-                <section>
-                    <textarea class="debug" readonly
-                        >{JSON.stringify(challenge, undefined, 2)}</textarea
-                    >
-                </section>
             </section>
         </div>
     </div>
@@ -230,9 +236,11 @@ const challengeRunways = runwayPairs
         });
 
         .block-component-styles();
+        position: static;
         user-select: unset;
         & > .wrapper {
             .block-wrapper-component-styles();
+            position: static;
             display: grid;
             grid-template-columns: calc(var(--global-sidebar-width) * 1.25) 1fr;
             grid-template-rows: auto 1fr;
@@ -241,6 +249,7 @@ const challengeRunways = runwayPairs
                 "aerodrome-info content";
             gap: 0 var(--global-edge-safe-distance);
             padding-top: 1em;
+            padding-bottom: 4em;
         }
     }
 
@@ -249,7 +258,7 @@ const challengeRunways = runwayPairs
         align-self: start;
         grid-area: aerodrome-info;
         top: calc(var(--global-sticky-top) + 1em);
-        z-index: 15;
+        z-index: calc(var(--global-header-z-index) + 1);
         margin-bottom: 2em;
         overflow: hidden;
         overscroll-behavior: contain;
@@ -263,7 +272,7 @@ const challengeRunways = runwayPairs
             height: 100%;
             overflow: auto;
             max-height: calc(100dvh - var(--global-sticky-top) - 2em);
-            padding: 1em;
+            padding: 1em 1em 0.8em 1em;
             overscroll-behavior: contain;
             scrollbar-width: thin;
             border: var(--card-container-border-width) solid
@@ -290,15 +299,10 @@ const challengeRunways = runwayPairs
         & > * {
             flex: 1 1 100%;
         }
+        & > [data-info="facts"],
         & > [data-info="hazards"],
-        & > [data-info="route"],
-        & > [data-info="typical"] {
+        & > [data-info="route"] {
             flex-basis: var(--body-safe-min-width);
-        }
-        & > [data-info="typical"] {
-            :global(p, ul) {
-                margin: 0;
-            }
         }
     }
 

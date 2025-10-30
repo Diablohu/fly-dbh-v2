@@ -53,3 +53,6 @@ function calculateRunwaySlope(
 }
 
 export default calculateRunwaySlope;
+
+export const transformSlopePercentageToDegrees = (percentage: number) =>
+    Math.atan(percentage / 100) * (180 / Math.PI);

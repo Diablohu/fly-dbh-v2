@@ -30,11 +30,11 @@ const { hazards, challengeRunways, ...props } = Astro.props;
                             ? // 如果挑战跑道有多个，这里显示的坡度取绝对值
                               challengeRunways.length > 0
                                 ? `${Math.abs(
-                                      challengeRunways[0].slopepercentage
+                                      challengeRunways[0].slopePercentage
                                   ).toFixed(2)}% / ${Math.abs(
                                       challengeRunways[0].slopeDegrees
                                   ).toFixed(2)}°`
-                                : `${challengeRunways[0].slopepercentage.toFixed(
+                                : `${challengeRunways[0].slopePercentage.toFixed(
                                       2
                                   )}% / ${challengeRunways[0].slopeDegrees.toFixed(
                                       2

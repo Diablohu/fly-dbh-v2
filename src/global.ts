@@ -2,6 +2,8 @@ import {
     type ValidVideoSourceType,
     type ValidContentListAutoLoadMoreType,
     type VideoListPageTypesType,
+    type ChallengeDifficultyType,
+    type AircraftCategoryType,
 } from "@/types";
 
 export const themeColorLight = "#ffffff";
@@ -52,7 +54,10 @@ export const routeBase = {
     challenges: "/challenges",
     donate: "/donate",
 };
-export function getVideoListPageLink(type?: VideoListPageTypesType, slug?: string) {
+export function getVideoListPageLink(
+    type?: VideoListPageTypesType,
+    slug?: string
+) {
     if (!type) return routeBase.videoList;
     if (!slug) return routeBase.videoList;
     return (
@@ -145,3 +150,25 @@ export const defaultCacheRefreshThreshold =
     (import.meta.env.DEV
         ? 5_000 // elapsed: 5 seconds
         : 5 * 60_000); // elapsed: 5 minutes
+
+// ============================================================================
+//
+// 着陆挑战相关
+//
+// ============================================================================
+
+export const challengeDifficultyString: Record<
+    ChallengeDifficultyType,
+    string
+> = {
+    1: "小有挑战",
+    3: "相当挑战",
+    5: "极限挑战",
+};
+
+export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> = {
+    a: "轻型飞机 & 单发小型机",
+    b: "支线客机 & 多发小型机",
+    c: "干线客机 & 商务喷气机",
+    d: "重型喷气机",
+};

@@ -32,6 +32,7 @@ export type AerodromeItemType = {
     name: string;
     icao: string;
     iata: string;
+    faa: string;
     location: string[];
     runways: {
         identifier: string;
@@ -39,6 +40,8 @@ export type AerodromeItemType = {
         elevation: string;
         length: string;
         width: string;
+        /** 覆盖跑道坡度数据，存在时优先使用，不按高度和长度进行计算 */
+        slope: string;
     }[];
     photo?: string;
     photo_credit?: string;
@@ -103,7 +106,7 @@ export type VideoItemType = {
     }[];
     aerodromes: Pick<
         AerodromeItemType,
-        "_id" | "slug" | "icao" | "iata" | "name"
+        "_id" | "slug" | "icao" | "iata" | "faa" | "name"
     >[];
     developers: {
         _id: string;
@@ -140,7 +143,7 @@ export type ChallengeListItemType = {
     slug: string;
     aerodrome: Pick<
         AerodromeItemType,
-        "_id" | "slug" | "name" | "icao" | "iata" | "location"
+        "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "location"
     >;
     name: string;
     difficulty: ChallengeDifficultyType;
@@ -167,6 +170,7 @@ export type ChallengeItemType = {
         | "name"
         | "icao"
         | "iata"
+        | "faa"
         | "location"
         | "runways"
         | "photo"
@@ -191,4 +195,23 @@ export type ChallengeItemType = {
         cruise?: string;
     };
     briefing?: string;
+    other_challenges_this_aerodrome: Array<
+        Pick<
+            ChallengeItemType,
+            "_id" | "name" | "difficulty" | "max_allowed_aircraft_category"
+        > & {
+            slug: string;
+        }
+    >;
+    videos_this_aerodrome: Pick<
+        VideoItemType,
+        | "_id"
+        | "slug"
+        | "title"
+        | "release"
+        | "duration"
+        | "cover"
+        | "tags"
+        | "links"
+    >;
 };

@@ -18,7 +18,7 @@ export type RunwayType = {
     /** 跑道海拔（英尺） */
     elevationInFeet: number;
     /** 坡度（%） */
-    slopepercentage: number;
+    slopePercentage: number;
     /** 坡度（°） */
     slopeDegrees: number;
 };

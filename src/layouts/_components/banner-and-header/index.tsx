@@ -68,3 +68,9 @@ const BannerAndHeader: FC<Props> = ({
 };
 
 export default memo(BannerAndHeader);
+
+/*
+TODO: Header Mask
+	mask for bottom gradient
+	extend via css variables
+*/

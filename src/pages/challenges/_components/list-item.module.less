@@ -1,0 +1,113 @@
+@import "@/utils/mixins.less";
+
+.challenge-list-item {
+    .tag-styles();
+    position: relative;
+    display: block;
+    // border-color: var(--difficulty-color, var(--tag-background-color));
+    padding: 0.75em 1.25em 1em 1.25em;
+    border-radius: 0.5em;
+    // background-color: transparent;
+    // background-image: linear-gradient(
+    //     to right,
+    //     var(--difficulty-color),
+    //     transparent 8em
+    // );
+    // &[data-difficulty="rookie"] {
+    //     --difficulty-color: var(--difficulty-color-1);
+    //     --difficulty-icon: var(--difficulty-emoji-1);
+    // }
+    &[data-difficulty="3"] {
+        --difficulty-color: var(--difficulty-color-3);
+        --difficulty-icon: var(--difficulty-emoji-3);
+    }
+    &[data-difficulty="5"] {
+        --difficulty-color: var(--difficulty-color-5);
+        --difficulty-icon: var(--difficulty-emoji-5);
+    }
+    .aerodrome-code {
+        position: relative;
+        z-index: 10;
+        display: block;
+        font-family: var(--font-family-monospace);
+        font-size: 1.6667em;
+        font-weight: 500;
+        // letter-spacing: 0.05em;
+        line-height: 1;
+        background: linear-gradient(
+            to bottom,
+            var(--text-color-primary),
+            var(--theme-color-invert-p-30) 75%
+        );
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .aerodrome-name {
+        font-size: unit(
+            (@base-font-size-number-h3 / @base-font-size-number),
+            em
+        );
+        position: relative;
+        z-index: 10;
+        line-height: 1.2;
+        display: block;
+        padding-top: 0.13333em;
+    }
+    // .aerodrome-name + .line {
+    //     margin-top: 0.4em;
+    // }
+    .line {
+        position: relative;
+        z-index: 10;
+        display: block;
+        line-height: 1.2;
+        margin-top: 0.3em;
+    }
+    .challenge-difficulty {
+        color: var(--difficulty-color);
+    }
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        // pointer-events: none;
+        // border: inherit;
+        border-radius: inherit;
+        background: linear-gradient(
+            145deg,
+            var(--difficulty-color),
+            transparent 12em
+        );
+        opacity: 0.3333;
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        left: -1px;
+        right: -1px;
+        z-index: 2;
+        // pointer-events: none;
+        border: inherit;
+        border-radius: inherit;
+        // border-width: 2px;
+        border-color: var(--difficulty-color, var(--tag-background-color));
+        opacity: 0.3333;
+        // box-shadow: inset 0 0 1em var(--theme-color);
+    }
+    // &::after {
+    //     content: var(--difficulty-icon);
+    //     position: absolute;
+    //     top: 0.5em;
+    //     left: 0.25em;
+    //     z-index: 10;
+    //     font-size: 2.5em;
+    //     line-height: 1;
+    //     opacity: 0.5;
+    // }
+}

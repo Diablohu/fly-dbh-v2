@@ -3,9 +3,10 @@ type Props = {
     title: string;
     emoji?: string;
     isTodo?: boolean;
+    bodyClass?: string;
 } & astroHTML.JSX.HTMLAttributes;
 
-const { title, emoji, isTodo = false, ...props } = Astro.props;
+const { title, emoji, isTodo = false, bodyClass, ...props } = Astro.props;
 ---
 
 <section class="info-block" {...props}>
@@ -15,6 +16,7 @@ const { title, emoji, isTodo = false, ...props } = Astro.props;
     <section
         class:list={[
             "body",
+            bodyClass,
             {
                 "is-todo": isTodo,
             },
