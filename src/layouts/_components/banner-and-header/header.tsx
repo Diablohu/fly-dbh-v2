@@ -15,55 +15,70 @@ const Header: FC<
 > = ({ header, logo, originPathname, defaults }) => {
     if (!header) return null;
     return (
-        <header
-            className={classNames([
-                styles["header"],
-                {
-                    [styles["mod-hidden"]]: !header,
-                    [styles[`mod-mode-${import.meta.env.MODE}`]]:
-                        import.meta.env.MODE !== "production",
-                },
-            ])}
-        >
-            <section className={styles["wrapper"]}>
-                <section
-                    className={classNames([styles["aside"], styles["logo"]])}
-                >
-                    <a href="/" aria-label="FLY-DBH.com">
-                        {logo}
-                    </a>
-                </section>
-                <nav className={styles["nav"]}>
-                    {navLinks.map(({ route, name, extraChecks }) => (
-                        <a
-                            key={route}
-                            href={route}
-                            className={classNames([
-                                styles["link"],
-                                {
-                                    [styles["is-active"]]: isRouteActive(
-                                        route,
-                                        originPathname,
-                                        extraChecks
-                                    ),
-                                },
-                            ])}
-                        >
-                            {name}
+        <>
+            <header
+                className={classNames([
+                    styles["header"],
+                    {
+                        [styles["mod-hidden"]]: !header,
+                        [styles[`mod-mode-${import.meta.env.MODE}`]]:
+                            import.meta.env.MODE !== "production",
+                    },
+                ])}
+            >
+                <section className={styles["wrapper"]}>
+                    <section
+                        className={classNames([
+                            styles["aside"],
+                            styles["logo"],
+                        ])}
+                    >
+                        <a href="/" aria-label="FLY-DBH.com">
+                            {logo}
                         </a>
-                    ))}
-                </nav>
-                <section
-                    className={classNames([styles["aside"], styles["right"]])}
-                >
-                    <HeaderOptions
-                        defaults={defaults}
-                        originPathname={originPathname}
-                    />
+                    </section>
+                    <nav className={styles["nav"]}>
+                        {navLinks.map(({ route, name, extraChecks }) => (
+                            <a
+                                key={route}
+                                href={route}
+                                className={classNames([
+                                    styles["link"],
+                                    {
+                                        [styles["is-active"]]: isRouteActive(
+                                            route,
+                                            originPathname,
+                                            extraChecks
+                                        ),
+                                    },
+                                ])}
+                            >
+                                {name}
+                            </a>
+                        ))}
+                    </nav>
+                    <section
+                        className={classNames([
+                            styles["aside"],
+                            styles["right"],
+                        ])}
+                    >
+                        <HeaderOptions
+                            defaults={defaults}
+                            originPathname={originPathname}
+                        />
+                    </section>
                 </section>
-            </section>
-        </header>
+            </header>
+            {/* <div className={styles["header-glossy-mask"]} /> */}
+        </>
     );
 };
 
 export default memo(Header);
+
+/*
+TODO: Header Mask
+	mask for bottom gradient
+	extend via css variables
+*/

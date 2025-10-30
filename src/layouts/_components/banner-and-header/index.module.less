@@ -1,7 +1,8 @@
 @import "@/utils/mixins.less";
 
 .banner,
-.header {
+.header,
+.header-glossy-mask {
     transition-property: none;
     transition-duration: var(--base-transition-duration);
     transition-timing-function: ease-in-out;
@@ -320,8 +321,6 @@
     --global-header-color-base: var(--dark-text-color-secondary);
     --global-header-color-primary: var(--dark-text-color-primary);
     --global-header-border-color: var(--dark-tag-background-color);
-    --global-header-background-color: transparent;
-    --global-header-backdrop-filter: none;
 
     --global-header-logo-z-index: -1;
     --global-header-logo-opacity: 0;
@@ -336,13 +335,16 @@
     --global-header-options-offset-y: calc(
         var(--global-header-height) / 2 + 2rem + 1.25rem * 1.2 / 2
     );
+
+    // & + .header-glossy-mask {
+    --global-header-background-color: transparent;
+    --global-header-backdrop-filter: none;
+    // }
 }
 .styles-header-isolated() {
     --global-header-color-base: var(--text-color-secondary);
     --global-header-color-primary: var(--text-color-primary);
     --global-header-link-active-border-color: currentColor;
-    --global-header-background-color: revert;
-    --global-header-backdrop-filter: revert;
 
     --global-header-logo-z-index: 1;
     --global-header-logo-opacity: 1;
@@ -351,11 +353,23 @@
     --global-header-border-color: var(--tag-background-color);
 
     --global-header-options-offset-y: 0;
+
+    // & + .header-glossy-mask {
+    --global-header-background-color: revert;
+    --global-header-backdrop-filter: revert;
+    // }
 }
 
+.header,
+.header-glossy-mask {
+    position: var(--global-header-position);
+    flex: 0 0 var(--global-header-height);
+    height: var(--global-header-height);
+    top: 0;
+    left: 0;
+    width: 100%;
+}
 .header {
-    --global-header-position: sticky;
-    --global-header-offset-y: 0;
     --global-header-logo-height: calc(var(--global-header-height) - 30px);
     --global-header-logo-extra-edge: 5px;
     --global-header-logo-color: inherit;
@@ -368,22 +382,18 @@
     // --global-header-button-icon-size: calc(var(--global-header-height) - 42px);
     --global-header-button-icon-size: 1.09em;
 
-    position: var(--global-header-position);
     z-index: var(--global-header-z-index);
-    flex: 0 0 var(--global-header-height);
-    height: var(--global-header-height);
-    top: 0;
-    left: 0;
-    width: 100%;
     text-align: center;
     margin-top: var(--global-header-offset-y);
     color: var(--global-header-color-base);
     background-color: var(--global-header-background-color);
     backdrop-filter: var(--global-header-backdrop-filter);
     // .font-size-clamp(20px, 28px);
-    will-change: background-color, border-color, color, backdrop-filter, height;
+    will-change: background-color, backdrop-filter, border-color, color, height;
     transition-property:
-        background-color, border-color, color, backdrop-filter, height;
+        background-color, backdrop-filter, border-color, color, height;
+    // will-change: border-color, color, height;
+    // transition-property: border-color, color, height;
     .styles-header-isolated();
 
     // bottom border
@@ -582,6 +592,31 @@
     //     }
     // }
 }
+/*
+.header-glossy-mask {
+    z-index: calc(var(--global-header-z-index) - 1);
+    margin-top: calc(var(--global-header-height) * -1);
+    background-color: var(--global-header-background-color);
+    backdrop-filter: var(--global-header-backdrop-filter);
+    will-change: background-color, backdrop-filter, height;
+    transition-property: background-color, backdrop-filter, height;
+    @supports (mask-image: linear-gradient(black, transparent)) {
+        mask-image: linear-gradient(
+            black var(--global-header-height),
+            transparent
+        );
+        flex-basis: calc(
+            var(--global-header-height) +
+                var(--global-header-glossy-extra-height)
+        );
+        height: calc(
+            var(--global-header-height) +
+                var(--global-header-glossy-extra-height)
+        );
+        margin-bottom: calc(var(--global-header-glossy-extra-height) * -1);
+    }
+}
+*/
 
 .banner + .header {
     .styles-header-over-banner();

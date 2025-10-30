@@ -161,6 +161,7 @@ const challengeRunways = runwayPairs
         " | 模拟飞行挑战"}
     header
     footer
+    htmlClassList={["page-challenge-details"]}
 >
     <div class="challenge-details-page">
         <div class="wrapper">
@@ -207,11 +208,9 @@ const challengeRunways = runwayPairs
                     data-info="videos"
                 />
 
-                <hr />
-
-                <section>TODO: Demo Video</section>
-                <section>TODO: Recommended Scenery Add-on</section>
-                <section>TODO: Back to List</section>
+                <!-- <section>TODO: Demo Video</section> -->
+                <!-- <section>TODO: Recommended Scenery Add-on</section> -->
+                <!-- <section>TODO: Back to List</section> -->
             </section>
         </div>
     </div>
@@ -220,7 +219,12 @@ const challengeRunways = runwayPairs
 <style lang="less">
     @import "@/utils/mixins.less";
 
+    // :global(:root.page-challenge-details) {
+    //     --global-header-glossy-extra-height: 4rem;
+    // }
+
     .challenge-details-page {
+        // --title-block-z-index: calc(var(--global-header-z-index) + 1);
         --title-block-z-index: 10;
         --card-container-padding: 1em;
         --card-container-background-color: var(--theme-color-p-40);
@@ -236,11 +240,11 @@ const challengeRunways = runwayPairs
         });
 
         .block-component-styles();
-        position: static;
+        // position: static;
         user-select: unset;
         & > .wrapper {
             .block-wrapper-component-styles();
-            position: static;
+            // position: static;
             display: grid;
             grid-template-columns: calc(var(--global-sidebar-width) * 1.25) 1fr;
             grid-template-rows: auto 1fr;
@@ -258,7 +262,8 @@ const challengeRunways = runwayPairs
         align-self: start;
         grid-area: aerodrome-info;
         top: calc(var(--global-sticky-top) + 1em);
-        z-index: calc(var(--global-header-z-index) + 1);
+        // z-index: calc(var(--global-header-z-index) + 1);
+        z-index: 10;
         margin-bottom: 2em;
         overflow: hidden;
         overscroll-behavior: contain;
