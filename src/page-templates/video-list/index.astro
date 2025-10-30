@@ -24,6 +24,15 @@ type Props = {
         | "aircraftonboarddevice"
         | "platformupdate";
     slug?: string;
+    // TODO: multiple filters
+    filters?: {
+        type:
+            | VideoListPageTypesType
+            | "aircraftfamily"
+            | "aircraftonboarddevice"
+            | "platformupdate";
+        slug: string;
+    }[];
 };
 
 const isIndex = !Astro.props.type;
