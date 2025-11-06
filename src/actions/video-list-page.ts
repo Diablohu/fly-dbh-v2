@@ -151,7 +151,7 @@ const actions = {
                                     ")"
                           }`
                         : ""
-                }] ${Array.isArray(filters) && filters.length && getProjections(filters[0].type, filters[0].slug)} | order( release desc )`;
+                }] ${getProjections(filters?.[0].type, filters?.[0].slug)} | order( release desc )`;
                 // console.log({ query });
                 return (await fetch(
                     `{
