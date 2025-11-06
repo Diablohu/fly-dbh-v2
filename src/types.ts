@@ -183,13 +183,19 @@ export type ChallengeItemType = {
             AerodromeItemType,
             "_id" | "slug" | "name" | "icao" | "iata"
         >;
-        sid?: string;
+        sid?: {
+            rwy: string;
+            sid: string;
+        }[];
         enroute?: string;
         destination?: Pick<
             AerodromeItemType,
             "_id" | "slug" | "name" | "icao" | "iata"
         >;
-        star?: string;
+        star?: {
+            rwy: string;
+            star: string;
+        }[];
         app?: string;
         distance?: number;
         cruise?: string;

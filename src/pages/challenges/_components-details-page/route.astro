@@ -8,6 +8,13 @@ type Props = {
 } & astroHTML.JSX.HTMLAttributes;
 
 const { route, ...props } = Astro.props;
+
+function parseArrStr(string: string) {
+    return string
+        .split("/")
+        .map((part) => part.trim())
+        .join(" / ");
+}
 ---
 
 <InfoBlock
@@ -28,7 +35,24 @@ const { route, ...props } = Astro.props;
     </dl>
     <dl>
         <dt>离场</dt>
-        {route.sid ? <dd class="code">{route.sid}</dd> : <dd>无程序</dd>}
+        {
+            Array.isArray(route.sid) ? (
+                <dd class="procedures">
+                    {route.sid.map(({ rwy, sid }) => (
+                        <span>
+                            {rwy && (
+                                <>
+                                    <em>{parseArrStr(rwy)}</em> 跑道 ＞
+                                </>
+                            )}
+                            <em>{parseArrStr(sid)}</em>
+                        </span>
+                    ))}
+                </dd>
+            ) : (
+                <dd>无程序</dd>
+            )
+        }
     </dl>
     <dl>
         <dt>线路</dt>
@@ -58,7 +82,24 @@ const { route, ...props } = Astro.props;
     </dl>
     <dl>
         <dt>进场</dt>
-        {route.star ? <dd class="code">{route.star}</dd> : <dd>无程序</dd>}
+        {
+            Array.isArray(route.star) ? (
+                <dd class="procedures">
+                    {route.star.map(({ rwy, star }) => (
+                        <span>
+                            <em>{parseArrStr(star)}</em>
+                            {rwy && (
+                                <>
+                                    ＞ <em>{parseArrStr(rwy)}</em> 跑道
+                                </>
+                            )}
+                        </span>
+                    ))}
+                </dd>
+            ) : (
+                <dd>无程序</dd>
+            )
+        }
     </dl>
     <dl>
         <dt>进近</dt>
@@ -101,6 +142,16 @@ const { route, ...props } = Astro.props;
                     white-space: nowrap;
                     &.dct {
                         color: var(--theme-color-invert-p-40);
+                    }
+                }
+            }
+            &.procedures {
+                & > span {
+                    display: block;
+                    & > em {
+                        font-family: var(--font-family-monospace);
+                        font-style: normal;
+                        color: var(--text-color-primary);
                     }
                 }
             }

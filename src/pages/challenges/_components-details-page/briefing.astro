@@ -11,40 +11,49 @@ const { briefing, type, ...props } = Astro.props;
 ---
 
 <InfoBlock {...props} title="进近说明 & 航图" emoji="🗺️" isTodo={!briefing}>
-    {
-        type === "vfr" ? (
-            <Fragment
-                set:html={
-                    briefing &&
-                    parseMarkdown(`#### 纯目视进近
+    <section class="briefing">
+        {
+            type === "vfr" ? (
+                <Fragment
+                    set:html={
+                        briefing &&
+                        parseMarkdown(`#### 纯目视进近
 * 在飞行电脑中无法选择对应程序；
 * 遵循 VFR 目视飞行规则，没有决断高度概念。`)
-                }
-            />
-        ) : type === "rnp-visual" ? (
-            <Fragment
-                set:html={
-                    briefing &&
-                    parseMarkdown(`#### RNP 目视进近
+                    }
+                />
+            ) : type === "rnp-visual" ? (
+                <Fragment
+                    set:html={
+                        briefing &&
+                        parseMarkdown(`#### RNP 目视进近
 * 飞行电脑内可选择对应的 RNAV 进近程序；
 * 虽然该进近类型的导航精度很高，但所选择的这个进近方式并没有对准跑道，故最终进近阶段需要目视手操；
 * 该进近方式仅用于定位机场。`)
-                }
-            />
-        ) : (
-            ""
-        )
-    }
-    <section
-        class="briefing-markdown"
-        set:html={briefing && parseMarkdown(briefing)}
-    />
+                    }
+                />
+            ) : (
+                ""
+            )
+        }
+        <Fragment set:html={briefing && parseMarkdown(briefing)} />
+    </section>
 </InfoBlock>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .briefing-markdown {
+    .briefing {
+        :global(h4) {
+            // margin-top: 1.5em;
+            margin-bottom: 0.6667em;
+            & ~ :global(h4) {
+                margin-top: 1.6667em;
+            }
+        }
+        :global(ul) {
+            padding-left: 2em;
+        }
         :global(img) {
             display: block;
             max-width: 75%;
@@ -60,12 +69,12 @@ const { briefing, type, ...props } = Astro.props;
             margin-left: 0.3333em;
             margin-right: 0.3333em;
             font-size: 0.9em;
-            vertical-align: text-top;
+            vertical-align: baseline;
             &::after {
                 content: "";
                 position: absolute;
-                top: -0.06667em;
-                bottom: 0em;
+                top: -0.03333em;
+                bottom: 0.15em;
                 left: -0.15em;
                 right: -0.15em;
                 border: 1px solid var(--border-color);

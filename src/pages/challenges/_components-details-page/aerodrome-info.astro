@@ -319,7 +319,7 @@ type Props = {
 
         dd {
             color: var(--text-color-secondary);
-            &.is-current:has(+ dd:not(.is-current)) {
+            &.is-current:has(~ dd:not(.is-current)) {
                 &::after {
                     content: "";
                     position: absolute;

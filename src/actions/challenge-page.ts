@@ -105,12 +105,18 @@ const actions = {
     'origin': routeOrigin->{
       _id, 'slug': slug.current, name,icao,iata,
     },
-    'sid': routeSID,
+    'sid': routeSID[]{
+      rwy,
+      sid,
+    },
     'enroute': routeEnroute,
     'destination': routeDestination->{
       _id, 'slug': slug.current, name,icao,iata,
     },
-    'star': routeSTAR,
+    'star': routeSTAR[]{
+      rwy,
+      star,
+    },
     'app': routeAPP,
     'distance': routeDistance,
     'cruise': routeCruise,
