@@ -1,4 +1,15 @@
 ---
+/**
+ * 视频列表页
+ * 
+ * 根据 URL 中的过滤器参数，解析出视频列表页所需的类型和过滤条件，并传递给 VideoListPage 组件进行渲染。
+ * 
+ *  * 支持多个过滤器。
+ *  * URL 的每一级参数为一个过滤器
+ *  * 页面类型由第一个过滤器决定，后续过滤器作为额外过滤条件传递。
+ *      * 页面类型影响：页面标题、标题区域内容渲染、侧边栏高亮
+ */
+
 import { type VideoListPageTypesType } from "@/types";
 import VideoListPage, {
     type FilterType,

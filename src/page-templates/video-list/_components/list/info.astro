@@ -2,8 +2,9 @@
 import { actions } from "astro:actions";
 import dayjs from "dayjs";
 import { type VideoListPageTypesType } from "@/types";
-import { level2TagsMap } from "@/global";
+import { level2TagsMap, routeBase } from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
+import TagButton from "@/components/tag-button.astro";
 
 type Props = {
     category?: string;
@@ -48,7 +49,42 @@ type Props = {
     </h1>
 
     {
-        Astro.props.isIndex || Astro.props.type === "tag" ? null : (
+        Astro.props.isIndex ? null : Astro.props.type === "tag" ? (
+            Astro.props.slug === "game-guide" ? (
+                <section class="info">
+                    <dl>
+                        <dt>平台</dt>
+                        <dd class="filters">
+                            {[
+                                ["全部", ""],
+                                ["仅微软 2020", "platform-msfs2020"],
+                                ["仅微软 2024", "platform-msfs2024"],
+                            ].map(([label, slug]) => (
+                                <TagButton
+                                    href={[
+                                        routeBase.videoList,
+                                        "tag-game-guide",
+                                        slug,
+                                    ]
+                                        .filter(Boolean)
+                                        .join("/")}
+                                    class:list={[
+                                        "filter-button",
+                                        {
+                                            "is-active": new RegExp(
+                                                (slug || "tag-game-guide") + "$"
+                                            ).test(Astro.request.url),
+                                        },
+                                    ]}
+                                >
+                                    {label}
+                                </TagButton>
+                            ))}
+                        </dd>
+                    </dl>
+                </section>
+            ) : null
+        ) : (
             <section class="info">
                 {Astro.props.type === "aerodrome" ? (
                     <>
@@ -354,6 +390,19 @@ type Props = {
                     display: inline-block;
                     vertical-align: top;
                     margin-right: 0.75em;
+                }
+                &.filters {
+                    gap: 1em;
+                    .filter-button {
+                        flex-basis: auto;
+                        &.is-active {
+                            background-color: var(
+                                --tag-background-color-invert
+                            );
+                            color: var(--text-color-primary-invert);
+                            pointer-events: none;
+                        }
+                    }
                 }
             }
             &:has(dd:empty) {
