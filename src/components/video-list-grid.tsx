@@ -147,8 +147,15 @@ const VideoListGrid: FC<Props> = ({
                   length,
               })
             : actions.videoListPage.fetchList({
-                  type,
-                  slug,
+                  filters:
+                      type && slug
+                          ? [
+                                {
+                                    type,
+                                    slug,
+                                },
+                            ]
+                          : undefined,
                   from: CurrentIndexRef.current,
                   length,
               })

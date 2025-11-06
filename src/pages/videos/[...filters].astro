@@ -1,0 +1,18 @@
+---
+import { type VideoListPageTypesType } from "@/types";
+import VideoListPage, {
+    type FilterType,
+} from "@/page-templates/video-list/index.astro";
+
+const filters: FilterType[] =
+    Astro.params.filters?.split("/").map((str) => {
+        const [type, ...slug] = str.split("-");
+        return { type: type as FilterType["type"], slug: slug.join("-") };
+    }) || [];
+---
+
+<VideoListPage
+    type={filters[0].type as VideoListPageTypesType}
+    slug={filters[0].slug}
+    extraFilters={filters.slice(1)}
+/>

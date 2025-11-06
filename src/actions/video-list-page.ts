@@ -21,28 +21,28 @@ const getFilter = (type?: VideoListPageTypesType, slug?: string) => {
     if (!type) return "";
     switch (type) {
         case "tag": {
-            return ` && ("${slug}" in tags[]->slug.current || "${slug}" in tags[]->_id)`;
+            return `("${slug}" in tags[]->slug.current || "${slug}" in tags[]->_id)`;
         }
         case "aerodrome": {
-            return ` && ("${slug}" in aerodromes[]->slug.current || "${slug}" in aerodromes[]->_id)`;
+            return `("${slug}" in aerodromes[]->slug.current || "${slug}" in aerodromes[]->_id)`;
         }
         case "aircraftFamily": {
-            return ` && ("${slug}" in aircraft_families[]->slug.current || "${slug}" in aircraft_families[]->_id)`;
+            return `("${slug}" in aircraft_families[]->slug.current || "${slug}" in aircraft_families[]->_id)`;
         }
         case "aircraftOnboardDevice": {
-            return ` && ("${slug}" in aircraft_onboard_devices[]->slug.current || "${slug}" in aircraft_onboard_devices[]->_id)`;
+            return `("${slug}" in aircraft_onboard_devices[]->slug.current || "${slug}" in aircraft_onboard_devices[]->_id)`;
         }
         case "developer": {
-            return ` && ("${slug}" in developers[]->slug.current || "${slug}" in developers[]->_id)`;
+            return `("${slug}" in developers[]->slug.current || "${slug}" in developers[]->_id)`;
         }
         case "platform": {
-            return ` && ("${slug}" in games[]->slug.current || "${slug}" in games[]->_id)`;
+            return `("${slug}" in games[]->slug.current || "${slug}" in games[]->_id)`;
         }
         case "platformUpdate": {
-            return ` && ("${slug}" in msfs_updates[]->slug.current || "${slug}" in msfs_updates[]->_id)`;
+            return `("${slug}" in msfs_updates[]->slug.current || "${slug}" in msfs_updates[]->_id)`;
         }
         case "event": {
-            return ` && ("${slug}" in events[]->slug.current || "${slug}" in events[]->_id)`;
+            return `("${slug}" in events[]->slug.current || "${slug}" in events[]->_id)`;
         }
         default: {
         }
@@ -101,8 +101,14 @@ export type ResponseDataType = {
 const actions = {
     fetchList: defineAction({
         input: z.object({
-            type: z.string().optional(),
-            slug: z.string().optional(),
+            filters: z
+                .array(
+                    z.object({
+                        type: z.string(),
+                        slug: z.string(),
+                    })
+                )
+                .optional(),
             from: z.number().optional(),
             length: z.number().optional(),
             extra: z
@@ -114,8 +120,10 @@ const actions = {
                 )
                 .optional(),
         }) as z.ZodType<{
-            type?: VideoListPageTypesType;
-            slug?: string;
+            filters?: {
+                type: VideoListPageTypesType;
+                slug: string;
+            }[];
             from?: number;
             length?: number;
             extra?: {
@@ -123,19 +131,31 @@ const actions = {
                 query: string;
             }[];
         }>,
-        handler: async ({
-            type,
-            slug: cmsIdOrSlug,
-            from = 0,
-            length = 20,
-            extra = [],
-        }) => {
+        handler: async ({ filters, from = 0, length = 20, extra = [] }) => {
             try {
-                const query = `*[_type == "video"${getFilter(type, cmsIdOrSlug)}] ${getProjections(type, cmsIdOrSlug)} | order( release desc )`;
+                const query = `*[_type == "video"${
+                    Array.isArray(filters)
+                        ? ` && ${
+                              filters.length === 1
+                                  ? getFilter(filters[0].type, filters[0].slug)
+                                  : "(" +
+                                    filters
+                                        ?.filter(
+                                            (filter) =>
+                                                filter.type && filter.slug
+                                        )
+                                        ?.map((filter) =>
+                                            getFilter(filter.type, filter.slug)
+                                        )
+                                        .join(" && ") +
+                                    ")"
+                          }`
+                        : ""
+                }] ${Array.isArray(filters) && filters.length && getProjections(filters[0].type, filters[0].slug)} | order( release desc )`;
                 // console.log({ query });
                 return (await fetch(
                     `{
-'list' : ${query}${type === "aircraftFamily" ? "" : `[${from}...${from + length}]`},
+'list' : ${query}${filters?.some((filter) => filter.type === "aircraftFamily") ? "" : `[${from}...${from + length}]`},
 'total' : count(${query}),
 ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
 }`,

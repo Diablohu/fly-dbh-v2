@@ -9,11 +9,14 @@ import { extraAviationKnowledgeTitle } from "@/global";
 
 import VideoListGrid from "@/components/video-list-grid";
 
-type Props = {
+type FilterType = {
     type?: VideoListPageTypesType;
     slug?: string;
+};
+type Props = FilterType & {
     isIndex: boolean;
     info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
+    extraFilters?: FilterType[];
 };
 const length = 20;
 const extra: Parameters<typeof actions.videoListPage.fetchList>[0]["extra"] =
@@ -65,11 +68,32 @@ if (
     }
 }
 
+let requestFilters =
+    Astro.props.type && Astro.props.slug
+        ? [
+              {
+                  type: Astro.props.type,
+                  slug: Astro.props.slug,
+              },
+          ]
+        : undefined;
+if (
+    Array.isArray(requestFilters) &&
+    Array.isArray(Astro.props.extraFilters) &&
+    Astro.props.extraFilters.length
+) {
+    requestFilters = [
+        ...requestFilters,
+        ...Astro.props.extraFilters.map((filter) => ({
+            type: filter.type!,
+            slug: filter.slug!,
+        })),
+    ];
+}
 const { data, error: error } = await Astro.callAction(
     actions.videoListPage.fetchList,
     {
-        type: Astro.props.type,
-        slug: Astro.props.slug,
+        filters: requestFilters,
         from: 0,
         length,
         extra: extra.length > 0 ? extra : undefined,

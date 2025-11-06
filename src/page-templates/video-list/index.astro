@@ -17,33 +17,34 @@ import VideoListInfo from "./_components/list/info.astro";
 import VideoList from "./_components/list/list.astro";
 import VideoCategories from "./_components/categories/index.astro";
 
-type Props = {
+export type FilterType = {
     type?:
         | VideoListPageTypesType
         | "aircraftfamily"
         | "aircraftonboarddevice"
         | "platformupdate";
     slug?: string;
-    // TODO: multiple filters
-    filters?: {
-        type:
-            | VideoListPageTypesType
-            | "aircraftfamily"
-            | "aircraftonboarddevice"
-            | "platformupdate";
-        slug: string;
-    }[];
+};
+type Props = FilterType & {
+    extraFilters?: FilterType[];
 };
 
-const isIndex = !Astro.props.type;
-const type: VideoListPageTypesType | undefined =
-    Astro.props.type === "aircraftfamily"
+function transformTypeName(
+    type: FilterType["type"]
+): VideoListPageTypesType | undefined {
+    return type === "aircraftfamily"
         ? "aircraftFamily"
-        : Astro.props.type === "aircraftonboarddevice"
+        : type === "aircraftonboarddevice"
           ? "aircraftOnboardDevice"
-          : Astro.props.type === "platformupdate"
+          : type === "platformupdate"
             ? "platformUpdate"
-            : Astro.props.type;
+            : type;
+}
+
+const isIndex = !Astro.props.type;
+const type: VideoListPageTypesType | undefined = transformTypeName(
+    Astro.props.type
+);
 
 const { data: currentCategoryInfo, error } = isIndex
     ? {}
@@ -150,6 +151,10 @@ const title = {
                     slug={Astro.props.slug}
                     isIndex={isIndex}
                     info={currentCategoryInfo}
+                    extraFilters={Astro.props.extraFilters?.map((filter) => ({
+                        type: transformTypeName(filter.type),
+                        slug: filter.slug,
+                    }))}
                 />
             </section>
             <VideoCategories
