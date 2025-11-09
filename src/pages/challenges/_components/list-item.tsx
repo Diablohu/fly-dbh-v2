@@ -1,19 +1,9 @@
-import { memo, useMemo, type FC } from "react";
-import { useStore } from "@nanostores/react";
-import type { SanityDocument } from "@sanity/client";
+import { memo, type FC } from "react";
 import classNames from "classnames";
 
-import { type ChallengeListItemType, type AircraftCategoryType } from "@/types";
-import {
-    challengeDifficultyString,
-    aircraftCategoryTypeString,
-} from "@/global";
+import { type ChallengeListItemType } from "@/types";
+import { challengeDifficultyString } from "@/global";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
-
-import {
-    selectedDifficulties,
-    selectedMaxAllowedAircraftCategories,
-} from "../_store";
 
 import styles from "./list-item.module.less";
 
@@ -47,16 +37,19 @@ const ListItem: FC<{
                     {item.aerodrome.name}
                 </strong>
             )}
-            {[3, 5].includes(item.difficulty) && (
-                <span
-                    className={classNames([
-                        styles["line"],
-                        styles["challenge-difficulty"],
-                    ])}
-                >
-                    {challengeDifficultyString[item.difficulty]}
-                </span>
-            )}
+            {
+                // [1, 3, 5].includes(item.difficulty)
+                item.difficulty && (
+                    <span
+                        className={classNames([
+                            styles["line"],
+                            styles["challenge-difficulty"],
+                        ])}
+                    >
+                        {challengeDifficultyString[item.difficulty]}
+                    </span>
+                )
+            }
             <span
                 className={classNames([
                     styles["line"],

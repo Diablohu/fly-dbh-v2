@@ -17,6 +17,13 @@ type Props = {
 } & astroHTML.JSX.HTMLAttributes;
 
 const { difficulty, maxCategory, typicalAircrafts, ...props } = Astro.props;
+/*
+A：＜ 91
+B：91 ~ 120
+C：121 ~ 140
+D：141 ~ 165
+E：166 ~ 210
+*/
 ---
 
 <InfoBlock {...props} title="挑战信息" emoji="🛩️">

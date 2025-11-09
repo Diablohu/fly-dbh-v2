@@ -1,14 +1,9 @@
 import { memo, useMemo, type FC } from "react";
 import { useStore } from "@nanostores/react";
 import type { SanityDocument } from "@sanity/client";
-import classNames from "classnames";
 
 import { type ChallengeListItemType, type AircraftCategoryType } from "@/types";
-import {
-    challengeDifficultyString,
-    aircraftCategoryTypeString,
-} from "@/global";
-import getChallengePageLink from "@/utils/get-challenge-page-link";
+import { aircraftCategoryTypeString } from "@/global";
 
 import {
     selectedDifficulties,

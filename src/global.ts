@@ -167,8 +167,8 @@ export const challengeDifficultyString: Record<
 };
 
 export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> = {
-    a: "轻型飞机 & 单发小型机",
-    b: "支线客机 & 多发小型机",
+    a: "轻型、小型飞机",
+    b: "支线客机 & 高档私人机",
     c: "干线客机 & 商务喷气机",
     d: "重型喷气机",
 };
