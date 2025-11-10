@@ -2,6 +2,7 @@
 import { actions } from "astro:actions";
 
 // import log from "@/page-templates/index/_log.ts";
+import { routeBase } from "@/global";
 import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/root-classnames";
 
 import Layout from "@/layouts/layout.astro";
@@ -108,7 +109,7 @@ const spotlightConfigString = collections?.config.find(
         <section class="check-more">
             <TagButton href={getVideoListPageLink()}>分类浏览更多视频</TagButton
             >
-            <TagButton href="/search">搜索视频</TagButton>
+            <TagButton href={routeBase.search}>搜索视频</TagButton>
         </section>
     </Block>
 </Layout>

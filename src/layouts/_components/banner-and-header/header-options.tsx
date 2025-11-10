@@ -19,6 +19,7 @@ import Menu, {
     MenuSwitchItem,
 } from "@/components/menu";
 
+import { routeBase } from "@/global";
 import useColorScheme from "@/react-hooks/use-color-scheme";
 import useVideoSource from "@/react-hooks/use-video-source";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
@@ -47,16 +48,36 @@ const HeaderOptions: FC<Pick<Props, "defaults" | "originPathname">> = ({
 
     return (
         <>
+            {import.meta.env.DEV && (
+                <a
+                    href={routeBase.donate}
+                    className={classNames([
+                        styles["button"],
+                        styles["link"],
+                        {
+                            [styles["is-active"]]: isRouteActive(
+                                routeBase.donate,
+                                originPathname,
+                                [/^\/donate\//]
+                            ),
+                        },
+                    ])}
+                    dangerouslySetInnerHTML={{
+                        __html: "￥",
+                    }}
+                    aria-label="资助"
+                />
+            )}
             <a
-                href="/search"
+                href={routeBase.search}
                 className={classNames([
                     styles["button"],
                     styles["link"],
                     {
                         [styles["is-active"]]: isRouteActive(
-                            "/search",
+                            routeBase.search,
                             originPathname,
-                            [/^\/search\//]
+                            [new RegExp(`^${routeBase.search}/`)]
                         ),
                     },
                 ])}

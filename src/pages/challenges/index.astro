@@ -132,7 +132,7 @@ sub route
 <Layout title="着陆挑战名册" header footer>
     <HeroImage
         client:idle
-        title="着陆挑战名册"
+        title="着陆挑战名册（开发中）"
         sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
         sticky={false}
     />
@@ -146,7 +146,8 @@ sub route
         </section>
         <List list={list} client:idle />
     </Block>
-    <Block class="actions"> TODO: 抽选 | 提议 </Block>
+    <!-- <Block class="actions"> TODO: 抽选 | 提议 </Block> -->
+    <Block class="actions">🚧 开发中……</Block>
 </Layout>
 
 <style lang="less">
@@ -171,6 +172,7 @@ sub route
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-end;
+        display: none;
         button {
             .tag-styles();
             display: block;

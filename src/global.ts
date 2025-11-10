@@ -52,7 +52,9 @@ export const routeBase = {
     watch: "/watch",
     live: "/live",
     challenges: "/challenges",
+    flightseeing: "/flightseeing",
     donate: "/donate",
+    search: "/search",
 };
 export function getVideoListPageLink(
     type?: VideoListPageTypesType,
@@ -99,6 +101,12 @@ export const navLinks = [
               extraChecks: [/^\/vod\//],
           }
         : null,
+    {
+        key: "challenges",
+        route: routeBase.challenges,
+        name: import.meta.env.DEV ? "挑战" : "着陆挑战",
+        icon: "",
+    },
     // import.meta.env.DEV
     //     ? {
     //           key: "activities",
@@ -109,20 +117,20 @@ export const navLinks = [
     //     : null,
     import.meta.env.DEV
         ? {
-              key: "challenges",
-              route: routeBase.challenges,
-              name: "挑战",
+              key: "flightseeing",
+              route: routeBase.flightseeing,
+              name: "云旅游",
               icon: "",
           }
         : null,
-    import.meta.env.DEV
-        ? {
-              key: "donate",
-              route: routeBase.donate,
-              name: "资助",
-              icon: "",
-          }
-        : null,
+    // import.meta.env.DEV
+    //     ? {
+    //           key: "donate",
+    //           route: routeBase.donate,
+    //           name: "资助",
+    //           icon: "",
+    //       }
+    //     : null,
 ].filter((v) => !!v) as {
     key: "home" | "videos" | "live" | "activities" | "challenges" | "donate";
     route: string;
@@ -166,9 +174,10 @@ export const challengeDifficultyString: Record<
     5: "极限挑战",
 };
 
-export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> = {
-    a: "轻型、小型飞机",
-    b: "支线客机 & 高档私人机",
-    c: "干线客机 & 商务喷气机",
-    d: "重型喷气机",
-};
+export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> =
+    {
+        a: "轻小型飞机 & 短距起降",
+        b: "支线客机 & 高档私人机",
+        c: "干线客机 & 商务喷气机",
+        d: "重型喷气机",
+    };

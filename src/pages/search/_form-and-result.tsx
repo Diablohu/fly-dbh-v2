@@ -10,6 +10,7 @@ import {
 import { actions } from "astro:actions";
 import classNames from "classnames";
 
+import { routeBase } from "@/global";
 import { type ValidContentListAutoLoadMoreType } from "@/types";
 
 import { search as logSearch } from "@/utils/log";
@@ -62,7 +63,7 @@ const SearchFormAndResult: FC<{
         window.history.replaceState(
             window.history.state,
             "",
-            `/search/${keyword}`
+            `${routeBase.search}/${keyword}`
         );
 
         setError("");
