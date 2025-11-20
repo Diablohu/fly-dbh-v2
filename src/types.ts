@@ -154,7 +154,13 @@ export type ChallengeItemType = {
     name: string;
     difficulty: ChallengeDifficultyType;
     max_allowed_aircraft_category: AircraftCategoryType;
-    type: "vfr" | "ils" | "rnav" | "rnp-visual" | "ifr-circling";
+    type:
+        | "vfr"
+        | "ils"
+        | "rnav"
+        | "rnp-visual"
+        | "circling"
+        | "circling-designated";
     typical_aircrafts: string;
     hazards: {
         name: string;

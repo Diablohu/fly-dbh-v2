@@ -9,6 +9,7 @@ const names = {
     SEARCH: "Search",
     VIDEO_LIST_GRID: "Video List Grid",
     VIDEO_LIST_PAGE_CATEGORIES: "Video List Page: Categories",
+    CHALLENGE: "Challenge",
 };
 
 // ============================================================================
@@ -36,6 +37,9 @@ videoListGrid.namespace = names.VIDEO_LIST_GRID;
 export const videoListPageCategories = dbg(names.VIDEO_LIST_PAGE_CATEGORIES);
 videoListPageCategories.namespace = names.VIDEO_LIST_PAGE_CATEGORIES;
 
+export const challenge = dbg(names.CHALLENGE);
+challenge.namespace = names.CHALLENGE;
+
 // ============================================================================
 
 if (import.meta.env.DEV || import.meta.env.MODE === "test") {
@@ -44,6 +48,7 @@ if (import.meta.env.DEV || import.meta.env.MODE === "test") {
     search.enabled = true;
     videoListGrid.enabled = true;
     videoListPageCategories.enabled = true;
+    challenge.enabled = true;
 }
 
 errorLog.enabled = true;
