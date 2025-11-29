@@ -42,7 +42,8 @@ function parseArrStr(string: string) {
                         <span>
                             {rwy && (
                                 <>
-                                    <em>{parseArrStr(rwy)}</em> 跑道 ＞
+                                    <em>{parseArrStr(rwy)}</em>{" "}
+                                    <span class="rwy">跑道</span> ＞
                                 </>
                             )}
                             <em>{parseArrStr(sid)}</em>
@@ -90,7 +91,8 @@ function parseArrStr(string: string) {
                             <em>{parseArrStr(star)}</em>
                             {rwy && (
                                 <>
-                                    ＞ <em>{parseArrStr(rwy)}</em> 跑道
+                                    ＞ <em>{parseArrStr(rwy)}</em>{" "}
+                                    <span class="rwy">跑道</span>
                                 </>
                             )}
                         </span>
@@ -103,7 +105,19 @@ function parseArrStr(string: string) {
     </dl>
     <dl>
         <dt>进近</dt>
-        {route.app ? <dd class="code">{route.app}</dd> : <dd>无程序</dd>}
+        {
+            route.app ? (
+                <dd class="code">
+                    {route.app.split(" ").map((part) => (
+                        <span class={part === "via" ? "via" : null}>
+                            {part}&nbsp;
+                        </span>
+                    ))}
+                </dd>
+            ) : (
+                <dd>无程序</dd>
+            )
+        }
     </dl>
     <dl>
         <dt>长度</dt>
@@ -111,7 +125,7 @@ function parseArrStr(string: string) {
     </dl>
     <dl>
         <dt>巡航</dt>
-        {route.cruise ? <dd>{route.cruise}</dd> : <dd>未知</dd>}
+        {route.cruise ? <dd>{route.cruise}</dd> : <dd>无（保持 VFR）</dd>}
     </dl>
 </InfoBlock>
 
@@ -140,9 +154,6 @@ function parseArrStr(string: string) {
                 & > span {
                     display: inline-block;
                     white-space: nowrap;
-                    &.dct {
-                        color: var(--theme-color-invert-p-40);
-                    }
                 }
             }
             &.procedures {
@@ -154,6 +165,12 @@ function parseArrStr(string: string) {
                         color: var(--text-color-primary);
                     }
                 }
+            }
+            .rwy,
+            .dct,
+            .via {
+                // color: var(--theme-color-invert-p-40);
+                color: var(--text-color-secondary);
             }
         }
     }

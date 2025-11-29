@@ -23,6 +23,16 @@ const { briefing, type, ...props } = Astro.props;
 * 遵循 VFR 目视飞行规则，没有决断高度概念。`)
                     }
                 />
+            ) : type === "rnp-ar" ? (
+                <Fragment
+                    set:html={
+                        briefing &&
+                        parseMarkdown(`#### RNP (AR) 进近 *RNP (AR) Approach*
+* 飞行电脑内可选择对应的 RNAV 进近程序；
+* 虽然该进近类型的导航精度极高；
+* 现实运作中，需要飞机与机组都有对应资质，同时要求在进近时飞机的导航精度满足指定程序需要。`)
+                    }
+                />
             ) : type === "rnp-visual" ? (
                 <Fragment
                     set:html={

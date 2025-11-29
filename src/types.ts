@@ -159,6 +159,7 @@ export type ChallengeItemType = {
         | "ils"
         | "rnav"
         | "rnp-visual"
+        | "rnp-ar"
         | "circling"
         | "circling-designated";
     typical_aircrafts: string;
