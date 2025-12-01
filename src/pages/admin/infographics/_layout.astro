@@ -1,0 +1,31 @@
+---
+import AdminPage from "@/page-templates/admin/index.astro";
+
+import Controls from "./_controls";
+---
+
+<AdminPage
+    title="📊"
+    showTitle={false}
+    layout={{
+        header: false,
+        footer: false,
+        sideBar: false,
+    }}
+>
+    <Controls client:only />
+    <article class="content"><slot /></article>
+</AdminPage>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .content {
+        position: fixed;
+        z-index: 5;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>

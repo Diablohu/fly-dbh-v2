@@ -1,4 +1,5 @@
 ---
+import type { ComponentProps } from "astro/types";
 import { actions } from "astro:actions";
 import Layout from "@/layouts/layout.astro";
 
@@ -6,17 +7,21 @@ import LoginForm from "./login-form";
 import ReGenCode from "./re-gen-code";
 
 type Props = {
-    title: string;
+    title?: string;
+    showTitle?: boolean;
+    layout?: ComponentProps<typeof Layout>;
 };
 
 const { data: isLoginValid } = await Astro.callAction(
     actions.admin.isLoginValid,
     undefined
 );
+
+const { showTitle = true } = Astro.props;
 ---
 
 <Layout
-    title="🤫"
+    title={Astro.props.title ?? "🤫"}
     header
     footer
     sideBar={isLoginValid
@@ -45,11 +50,12 @@ const { data: isLoginValid } = await Astro.callAction(
               },
           ]
         : undefined}
+    {...Astro.props.layout}
 >
     {
         isLoginValid ? (
             <section class="main">
-                <h1>{Astro.props.title}</h1>
+                {showTitle && <h1>{Astro.props.title}</h1>}
                 <slot />
             </section>
         ) : (

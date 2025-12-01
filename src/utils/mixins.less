@@ -154,9 +154,14 @@
     background: var(--tag-background-color);
     border: 1px solid var(--tag-background-color);
     border-radius: var(--border-radius);
-    transition: none var(--base-transition-duration);
-    transition-property:
-        color, background-color, border-color, border-width, transform, opacity;
+    &,
+    &[type="button"],
+    &[type="submit"] {
+        transition: none var(--base-transition-duration);
+        transition-property:
+            color, background-color, border-color, border-width, transform,
+            opacity;
+    }
     &:hover {
         background-color: var(--menu-background-color-highlight);
     }

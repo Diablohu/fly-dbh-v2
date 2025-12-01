@@ -14,3 +14,8 @@ export const stringReplaceImagePath = (str: string) =>
         ),
         `$1${urlPrefixSanityImageCdn}/`
     );
+
+export const generateLocalImagePath = (filename: string) => {
+    filename = filename.replace(/^\//, "");
+    return `${urlPrefixSanityImageCdn}/${filename}`;
+};
