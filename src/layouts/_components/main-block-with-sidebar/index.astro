@@ -4,7 +4,6 @@ import { MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN } from "@/constants/el
 import ArrowLeftSvg from "@/assets/arrow/left3.svg";
 import ArrowRightSvg from "@/assets/arrow/right3.svg";
 
-import Block from "@/components/block.astro";
 import ClientInit from "./client-init";
 import Item from "./sidebar-item.astro";
 
@@ -47,7 +46,8 @@ export type Props = {
                     for={MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN}
                     class="screen-sm-button-collapse-categories"
                     ><ArrowLeftSvg />收起分类</label
-                >{Astro.props.items?.map((item) => <Item {...item} />)}
+                >
+                {Astro.props.items?.map((item) => <Item {...item} />)}
                 <slot name="sidebar-extra-items" />
                 <ClientInit client:load />
             </section>
@@ -131,9 +131,10 @@ export type Props = {
         --link-item-no-icon-dot-border-width: 2px;
 
         position: sticky;
-        top: calc(var(--global-sticky-top) + 1em);
+        top: calc(var(--global-sticky-top) + 0.5em);
+        // top: var(--global-sticky-top);
         flex: 0 0 var(--global-sidebar-width);
-        margin: 1em 0 4em 0;
+        margin: 0.5em 0 4em 0;
         // border-radius: 10px;
         overflow: hidden;
         z-index: calc(var(--global-footer-z-index) + 1);
@@ -144,10 +145,11 @@ export type Props = {
             z-index: 5;
             height: 100%;
             overflow: auto;
-            max-height: calc(100dvh - var(--global-sticky-top) - 2em);
-            padding: 0em 1em 1em 0;
+            max-height: calc(100dvh - var(--global-sticky-top) - 1em);
+            padding: 0 1em 0 0;
             overscroll-behavior: contain;
             scrollbar-width: thin;
+            // background: #800;
             // scrollbar-width: none;
             // &:hover {
             //     scrollbar-width: thin;
@@ -161,11 +163,11 @@ export type Props = {
                 z-index: 5;
                 left: 0;
                 width: 100%;
-                height: var(--item-gap);
+                height: calc(var(--item-gap) * 2);
             }
             &::before {
                 top: 0;
-                margin-bottom: calc(var(--item-gap) * -1);
+                // margin-bottom: calc(var(--item-gap) * 2);
                 background: linear-gradient(
                     to bottom,
                     var(--theme-color) 0%,
@@ -173,8 +175,8 @@ export type Props = {
                 );
             }
             &::after {
-                bottom: -1em;
-                margin-top: calc(var(--item-gap) * -1);
+                bottom: 0;
+                margin-top: calc(var(--item-gap) * 2);
                 background: linear-gradient(
                     to top,
                     var(--theme-color) 0%,
