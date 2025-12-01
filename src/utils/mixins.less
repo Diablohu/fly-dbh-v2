@@ -234,3 +234,22 @@
         }
     }
 }
+
+.difficulty-variables() {
+    &[data-difficulty="1"] {
+        --difficulty-color: var(--difficulty-color-1);
+        --difficulty-icon: var(--difficulty-emoji-1);
+    }
+    &[data-difficulty="3"] {
+        --difficulty-color: var(--difficulty-color-3);
+        --difficulty-icon: var(--difficulty-emoji-3);
+    }
+    &[data-difficulty="5"] {
+        --difficulty-color: var(--difficulty-color-5);
+        --difficulty-icon: var(--difficulty-emoji-5);
+    }
+    &[data-difficulty="7"] {
+        --difficulty-color: var(--difficulty-color-7);
+        --difficulty-icon: var(--difficulty-emoji-7);
+    }
+}

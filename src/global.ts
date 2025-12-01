@@ -172,6 +172,7 @@ export const challengeDifficultyString: Record<
     1: "小有挑战",
     3: "相当挑战",
     5: "极限挑战",
+    7: "R.I.P.",
 };
 
 export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> =

@@ -62,6 +62,7 @@ E：166 ~ 210
             color: var(--text-color-secondary);
         }
         dd {
+            .difficulty-variables();
             margin: 0;
             :global(p, ul) {
                 margin: 0;
@@ -74,25 +75,13 @@ E：166 ~ 210
                 padding-left: 1.5em;
                 position: relative;
                 &::before {
-                    content: var(--difficulty-emoji);
+                    content: var(--difficulty-icon);
                     display: inline-block;
                     font-style: normal;
                     position: absolute;
                     top: 0;
                     left: 0;
                 }
-            }
-            &[data-difficulty="1"] {
-                --difficulty-color: var(--difficulty-color-1);
-                --difficulty-emoji: var(--difficulty-emoji-1);
-            }
-            &[data-difficulty="3"] {
-                --difficulty-color: var(--difficulty-color-3);
-                --difficulty-emoji: var(--difficulty-emoji-3);
-            }
-            &[data-difficulty="5"] {
-                --difficulty-color: var(--difficulty-color-5);
-                --difficulty-emoji: var(--difficulty-emoji-5);
             }
         }
     }

@@ -6,7 +6,7 @@ import {
 
 // ============================================================================
 
-export const selectedDifficulties = atom<ChallengeDifficultyType[]>([1, 3, 5]);
+export const selectedDifficulties = atom<ChallengeDifficultyType[]>([1, 3, 5, 7]);
 export const selectedMaxAllowedAircraftCategories = atom<
     AircraftCategoryType[]
 >(["a", "b", "c", "d"]);

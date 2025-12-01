@@ -137,7 +137,7 @@ export type VideoItemType = {
 
 // ============================================================================
 
-export type ChallengeDifficultyType = 1 | 3 | 5;
+export type ChallengeDifficultyType = 1 | 3 | 5 | 7;
 export type ChallengeListItemType = {
     _id: string;
     slug: string;
