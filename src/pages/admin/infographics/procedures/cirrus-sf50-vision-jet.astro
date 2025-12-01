@@ -1,0 +1,84 @@
+---
+import Layout from "../_layout.astro";
+import Procedures from "./_procedures.tsx";
+---
+
+<Layout>
+    <Procedures
+        client:idle
+        title="CIRRUS SF50 Vision Jet"
+        procedures={[
+            {
+                step: "启动发动机前",
+                list: [
+                    ["前序检查", "完成"],
+                    [{ ident: 2 }, "发动机罩", "卸下"],
+                    [{ ident: 2 }, "空速管罩", "卸下"],
+                    [{ ident: 2 }, "轮挡", "撤除"],
+                    "",
+                    ["舱门", "关闭"],
+                    ["驻机刹车", "按需"],
+                    ["BAT", "电瓶 1 & 2", "ON"],
+                    ["GEN", "发电机 1 & 2", "ON"],
+                    ["GPU", "外部电源", "按需"],
+                    ["FADEC", "验证"],
+                    [
+                        { ident: 2 },
+                        [
+                            "・MFD 左上【 % Thrust 】下方",
+                            "　出现【 FADEC CH * 】",
+                        ],
+                    ],
+                ],
+            },
+            {
+                step: "启动发动机 1/2",
+                list: [
+                    "收到 ATC 发车许可",
+                    "",
+                    ["Strobe", "频闪灯", "ON"],
+                    ["CAS", "警告信息", "检查"],
+                    ["油门杆", "慢车"],
+                    ["刹车", "踩住"],
+                    ["Engine Knob", "引擎旋钮", "RUN"],
+                    ["Fule Pump", "油泵", "检查"],
+                    [
+                        { ident: 2 },
+                        [
+                            "a. 验证 CAS 警告信息存在",
+                            "　【 FUEL PUMP ON 】",
+                            "b. 确认听到油泵工作的声音",
+                        ],
+                    ],
+                    "",
+                    ["CAS", "警告信息", "验证不存在"],
+                    [undefined, ["ENGINE START BAT TEMP"]],
+                    [undefined, ["ENGINE START VOLTS"]],
+                    "",
+                    ["引擎按钮", "按下"],
+                    ["引擎参数", "监视"],
+                    [
+                        { ident: 2 },
+                        [
+                            "N2 达 25% 时，确保 N1 正增长",
+                            "当以下任意情况发生时，终止：",
+                            "・ITT 超限（红线）",
+                            "・N2 达 25% 时没有 N1 读数",
+                            "・8 秒内无熄灯迹象",
+                            "・启动后滑油压力低",
+                            "　（Oil Pressure）",
+                        ],
+                    ],
+                ],
+            },
+        ]}
+    />
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    h2 {
+        zoom: 1;
+    }
+</style>

@@ -1,7 +1,8 @@
-import { useCallback, useState, type FC } from "react";
+import { useCallback, useState, useEffect, Fragment, type FC } from "react";
 import classNames from "classnames";
 
 import { generateLocalImagePath } from "@/services/sanity-helpers";
+import updateRootCssVariable from "@/utils/update-root-css-variable";
 
 import useViewType from "./_use-view-type";
 import TagButton from "@/components/tag-button";
@@ -25,6 +26,7 @@ const InfographicsControls: FC = () => {
     const [backgroundImageFilename, setBackgroundImageFilename] =
         useState<string>(backgroundImages[0]);
     const [viewType, setViewType] = useViewType();
+
     const onClick = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
             const t = e.currentTarget.getAttribute("data-view-type");
@@ -40,6 +42,14 @@ const InfographicsControls: FC = () => {
         },
         []
     );
+
+    useEffect(() => {
+        updateRootCssVariable("--theme-color", "#000");
+        return () => {
+            updateRootCssVariable("--theme-color", false);
+        };
+    }, []);
+
     return (
         <>
             <section
@@ -57,9 +67,8 @@ const InfographicsControls: FC = () => {
                     "backdrop-mask",
                     "watermark",
                 ].map((t) => (
-                    <>
+                    <Fragment key={t}>
                         <TagButton
-                            key={t}
                             data-view-type={t}
                             onClick={onClick}
                             className={classNames([
@@ -70,7 +79,7 @@ const InfographicsControls: FC = () => {
                             {t.toUpperCase()}
                         </TagButton>
                         {t === "default" ? <Divider /> : null}
-                    </>
+                    </Fragment>
                 ))}
                 <Divider />
                 <label className={styles["background-selector"]}>

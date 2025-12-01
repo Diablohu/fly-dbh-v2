@@ -21,11 +21,20 @@ import Controls from "./_controls";
     @import "@/utils/mixins.less";
 
     .content {
+        --text-color-primary: var(--dark-text-color-primary);
+        --text-color-secondary: var(--dark-text-color-secondary);
+
         position: fixed;
         z-index: 5;
         top: 0;
         right: 0;
         width: 100%;
         height: 100%;
+        font-family:
+            Roboto, "SF Pro Display", "SF Pro Icons", "Helvetica Neue",
+            Helvetica, Arial, "Sarasa Gothic SC", "更纱黑体",
+            "Microsoft YaHei UI", "Microsoft YaHei", "Hiragino Sans GB",
+            sans-serif;
+        color: #fff;
     }
 </style>

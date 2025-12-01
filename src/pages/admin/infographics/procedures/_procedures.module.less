@@ -1,0 +1,240 @@
+@import "@/utils/mixins.less";
+
+.procedures {
+    position: relative;
+    padding: 1em 3em 2em 3em;
+    width: auto;
+    display: inline-block;
+    background: var(--global-header-background-color);
+    backdrop-filter: var(--backdrop-filter-glass);
+    border: 0 solid var(--tag-background-color);
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-bottom-right-radius: 0.6667em;
+    &:first-child {
+        margin-top: 0;
+    }
+    &:empty {
+        display: none;
+    }
+
+    .list {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 0.5em;
+        .item {
+            display: block;
+            &.is-active {
+                // --text-color-primary: var(--text-color-primary);
+                pointer-events: none;
+                --tag-background-color: var(--accent-color);
+            }
+        }
+    }
+}
+
+.current-procedure {
+    --background-color: rgba(0, 0, 0, 0.5);
+    --accent-color: var(--accent-color-purple);
+    --accent-opacity: 0.75;
+    --accent-color-with-opacity: color-mix(
+        in srgb,
+        var(--accent-color) calc(var(--accent-opacity) * 100%),
+        transparent
+    );
+    --border-color: var(--accent-color-with-opacity);
+    --shadow-color: #361668;
+    --shadow-opacity: 0.75;
+    --shadow-color-with-opacity: color-mix(
+        in srgb,
+        var(--shadow-color) calc(var(--shadow-opacity) * 100%),
+        transparent
+    );
+    --frame-box-shadow:
+        inset 0 0 2px 2px var(--shadow-color-with-opacity),
+        0 0 5px 5px color-mix(in srgb, var(--shadow-color) 35%, transparent);
+    --title-background-color: var(--accent-color-with-opacity);
+    --body-shadow-color: var(--shadow-color-with-opacity);
+    --body-text-shadow-color: #000;
+
+    --position-top: 100px;
+    --position-right: 40px;
+    --font-size: 16px;
+    --width: 300px;
+    --border-width: 6px;
+    --gap: calc(var(--font-size) * 0.5);
+
+    --dashed-opacity: 0.5;
+    --boeing-fmc-success-color: green;
+
+    &.is-view-output {
+        --dashed-opacity: 1;
+    }
+    &.is-view-mask {
+        --background-color: rgba(255, 255, 255, 0.5);
+        --border-color: color-mix(
+            in srgb,
+            #fff calc(var(--accent-opacity) * 100%),
+            transparent
+        );
+        --frame-box-shadow:
+            inset 0 0 2px 2px
+                color-mix(
+                    in srgb,
+                    #fff calc(var(--shadow-opacity) * 100%),
+                    transparent
+                ),
+            0 0 5px 5px color-mix(in srgb, #fff 35%, transparent);
+        --title-background-color: color-mix(
+            in srgb,
+            #fff calc(var(--accent-opacity) * 100%),
+            transparent
+        );
+        --body-shadow-color: color-mix(
+            in srgb,
+            #fff calc(var(--shadow-opacity) * 100%),
+            transparent
+        );
+        --body-text-shadow-color: #fff;
+        --boeing-fmc-success-color: #fff;
+    }
+
+    position: fixed;
+    top: var(--position-top);
+    right: var(--position-right);
+    font-size: var(--font-size);
+    line-height: calc(4px + 2ex);
+    width: var(--width);
+    background: var(--background-color);
+    // color: var(--text-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 7px;
+    font-weight: 500;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: calc(1px - 1px - var(--border-width));
+        left: calc(1px - 1px - var(--border-width));
+        width: calc(100% + var(--border-width) * 2);
+        height: calc(100% + var(--border-width) * 2);
+        box-shadow: var(--frame-box-shadow);
+        border-radius: inherit;
+    }
+
+    .dashed() {
+        border-bottom: 1px dashed;
+        opacity: var(--dashed-opacity);
+        line-height: 0;
+        height: 0;
+    }
+
+    & > strong {
+        display: block;
+        background: var(--title-background-color);
+        padding: 0.4em 0 0.7em 0;
+        line-height: 1em;
+        font-size: 1.25em;
+        letter-spacing: 0.25em;
+        margin: 0;
+        text-align: center;
+        // text-shadow: 0 1px 5px @shadow-color;
+        // color: @shadow-color;
+    }
+
+    .body {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: calc(var(--font-size) * 1 / 3);
+        padding: 0.75em;
+        box-shadow: 0 0 2px 2px var(--body-shadow-color);
+        text-shadow: 0 1px 2px var(--body-text-shadow-color);
+
+        & > .spacer {
+            &:not(:first-child) {
+                margin-top: 0.75em;
+            }
+            display: block;
+            font-style: italic;
+            font-weight: 900;
+        }
+
+        & > .subtitle {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
+            gap: calc(var(--font-size) * 0.5);
+            &:not(:first-child) {
+                margin-top: 0.75em;
+            }
+            &::before,
+            &::after {
+                content: "";
+                flex: 1;
+                .dashed();
+            }
+            &.is-empty {
+                gap: calc(var(--font-size) * 0.15);
+                margin: 0;
+            }
+            .boeing-fmc-success {
+                color: #fff;
+                background: var(--boeing-fmc-success-color);
+                font-size: 13px;
+                line-height: inherit;
+                padding: 0 0.5em;
+                letter-spacing: 0.1em;
+                border-radius: 1em;
+                font-weight: normal;
+            }
+        }
+
+        & > .item {
+            position: relative;
+            display: flex;
+            flex-flow: row nowrap;
+            width: 100%;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: var(--gap);
+            &,
+            dt,
+            dd {
+                margin: 0;
+                font-size: inherit;
+                line-height: inherit;
+            }
+            dt,
+            dd {
+                white-space: nowrap;
+            }
+            dt {
+                flex: 0;
+                order: 1;
+            }
+            dd {
+                flex: 0;
+                order: 3;
+            }
+            p {
+                margin: 0;
+            }
+            &::after {
+                content: "";
+                flex: 1;
+                order: 2;
+                .dashed();
+            }
+            &.mod-no-left::after {
+                content: unset;
+            }
+            &.mod-no-dots::after {
+                content: unset;
+            }
+            &.mod-level-2 {
+                padding-left: 2em;
+            }
+        }
+    }
+}
