@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect, Fragment, type FC } from "react";
 import classNames from "classnames";
 
 import { generateLocalImagePath } from "@/services/sanity-helpers";
-import updateRootCssVariable from "@/utils/update-root-css-variable";
+// import updateRootCssVariable from "@/utils/update-root-css-variable";
 
 import useViewType from "./_use-view-type";
 import TagButton from "@/components/tag-button";
@@ -43,12 +43,12 @@ const InfographicsControls: FC = () => {
         []
     );
 
-    useEffect(() => {
-        updateRootCssVariable("--theme-color", "#000");
-        return () => {
-            updateRootCssVariable("--theme-color", false);
-        };
-    }, []);
+    // useEffect(() => {
+    //     updateRootCssVariable("--theme-color", "#000");
+    //     return () => {
+    //         updateRootCssVariable("--theme-color", false);
+    //     };
+    // }, []);
 
     return (
         <>
@@ -111,6 +111,9 @@ const InfographicsControls: FC = () => {
                     )}?auto=format)`,
                 }}
             ></section>
+            {viewType === "watermark" && (
+                <section className={styles["watermark-overlay"]} />
+            )}
         </>
     );
 };

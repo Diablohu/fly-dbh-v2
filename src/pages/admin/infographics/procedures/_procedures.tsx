@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, Fragment, type FC } from "react";
+import { useState, useMemo, useCallback, useEffect, type FC } from "react";
 import classNames from "classnames";
 
 import useViewType from "../_use-view-type";
@@ -21,6 +21,8 @@ export type ProcedureItemType =
     | [{ ident: number }, string, string]
     | [{ ident: number }, string, string, string];
 
+const searchParamIndex = "step";
+
 // ============================================================================
 
 const Procedures: FC<{
@@ -29,9 +31,28 @@ const Procedures: FC<{
         step: string;
         list: ProcedureItemType[];
     }[];
-}> = ({ title, procedures }) => {
+
+    /**
+     * 初始显示的步骤
+     * - 优先级高于 `initialUrl`
+     */
+    initialIndex?: number;
+    /**
+     * 用以计算初始显示的步骤的初始 URL
+     * - 如果存在 `initialIndex`，则忽视该属性
+     */
+    initialUrl?: string;
+}> = ({ title, procedures, initialIndex, initialUrl }) => {
     const [viewType] = useViewType();
-    const [currentStepIndex, setCurrentStepIndex] = useState(0);
+    const [currentStepIndex, setCurrentStepIndex] = useState(
+        (typeof initialIndex === "number"
+            ? initialIndex
+            : typeof initialUrl === "string"
+              ? Number(
+                    new URL(initialUrl).searchParams.get(searchParamIndex)
+                ) || 0
+              : 0) || 0
+    );
     const currentProcedure = useMemo(() => {
         return procedures[currentStepIndex];
     }, [currentStepIndex, procedures]);
@@ -43,6 +64,20 @@ const Procedures: FC<{
         },
         []
     );
+
+    // 当 `currentStepIndex` 变化时，改写当前 URL
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        if (
+            (Number(url.searchParams.get(searchParamIndex)) || 0) !==
+            currentStepIndex
+        ) {
+            if (currentStepIndex === 0)
+                url.searchParams.delete(searchParamIndex);
+            else url.searchParams.set(searchParamIndex, `${currentStepIndex}`);
+            window.history.replaceState(window.history.state, "", url.href);
+        }
+    }, [currentStepIndex]);
 
     return (
         <>

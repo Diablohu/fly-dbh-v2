@@ -1,10 +1,17 @@
 @import "@/utils/mixins.less";
 
 .controls,
-.background {
+.background,
+.watermark-overlay {
     position: fixed;
     top: 0;
     right: 0;
+}
+.background,
+.watermark-overlay {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .controls {
@@ -118,11 +125,27 @@
 
 .background {
     z-index: 1;
-    width: 100%;
-    height: 100%;
     background: no-repeat center/cover;
 
     &:not(.is-view-default, .is-view-watermark) {
         background-size: 0 0;
+    }
+}
+
+.watermark-overlay {
+    z-index: 100;
+    &::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 99999999;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='150px' width='250px'><text transform='translate(20, 150) rotate(-30)' fill='rgb(255,255,255)' font-size='40'>fly-dbh.com</text></svg>");
+        pointer-events: none;
+        opacity: 0.1;
+        mix-blend-mode: lighten;
     }
 }
