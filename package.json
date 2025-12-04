@@ -24,7 +24,7 @@
         "@oslojs/otp": "^1.1.0",
         "@react-oauth/google": "^0.12.2",
         "@sanity/client": "^7.13.1",
-        "astro": "^5.16.3",
+        "astro": "^5.16.4",
         "astro-portabletext": "^0.12.0",
         "axios": "^1.13.2",
         "cache-manager": "^7.2.5",
@@ -43,12 +43,12 @@
         "normalize.css": "^8.0.1",
         "numeral": "^2.0.6",
         "qrcode": "^1.5.4",
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0",
+        "react": "^19.2.1",
+        "react-dom": "^19.2.1",
         "react-dropzone": "^14.3.8",
         "react-inlinesvg": "^4.2.0",
-        "react-is": "^19.2.0",
-        "sanity": "^4.19.0",
+        "react-is": "^19.2.1",
+        "sanity": "^4.20.3",
         "styled-components": "^6.1.19",
         "toastify-js": "^1.12.0",
         "winston": "^3.18.3",
@@ -56,8 +56,8 @@
     },
     "devDependencies": {
         "@astrojs/check": "^0.9.6",
-        "@inquirer/prompts": "^8.0.1",
-        "@types/express": "^5.0.5",
+        "@inquirer/prompts": "^8.0.2",
+        "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
         "@types/md5": "^2.3.6",
         "@types/node": "^22.15.29",
@@ -70,6 +70,6 @@
         "npm-run-script": "^0.0.4",
         "rollup-plugin-visualizer": "^6.0.5",
         "typescript": "^5.9.3",
-        "vitest": "^4.0.14"
+        "vitest": "^4.0.15"
     }
 }
