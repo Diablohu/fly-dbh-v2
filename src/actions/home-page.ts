@@ -45,6 +45,12 @@ type CollectionsType = {
 } & {
     [collection: string]: DocumentType[];
 };
+type FilterType = "first-tag" | "contain";
+
+const getFilterTag = (tagSlug: string, type: FilterType) =>
+    type === "first-tag"
+        ? `"${tagSlug}" == tags[0]->slug.current`
+        : `"${tagSlug}" in tags[]->slug.current`;
 
 const actions = {
     fetch: defineAction({
@@ -61,18 +67,37 @@ ${(
         ["reviews", "review"],
         ["preview", "preview"],
         ["world", "world"],
-    ] as [string, string | string[]][]
+    ] as Array<
+        | [string, string | string[]]
+        | [
+              string,
+              string | string[],
+              {
+                  count?: number;
+                  filterType?: FilterType;
+              },
+          ]
+    >
 )
-    .map(
-        ([name, tagSlug, count = 10]) =>
-            `'${name}': *[_type == "video"${
-                Array.isArray(tagSlug)
-                    ? ` && (${tagSlug.map((s) => `"${s}" in tags[]->slug.current`).join(" || ")})`
-                    : tagSlug
-                      ? ` && "${tagSlug}" in tags[]->slug.current`
-                      : ""
-            }] ${fetchSorting} ${getProjections(name)} [0...${count}]`
-    )
+    .map(([name, tagSlug, options]) => {
+        const count = options?.count ?? 10;
+        const filterType = options?.filterType ?? "first-tag";
+        /*
+            ONLY FIRST TAG
+                "${s}" == tags[0]->slug.current
+            CONTAIN ONE TAG
+                "${s}" in tags[]->slug.current
+        */
+        return `'${name}': *[_type == "video"${
+            Array.isArray(tagSlug)
+                ? ` && (${tagSlug
+                      .map((s) => getFilterTag(s, filterType))
+                      .join(" || ")})`
+                : tagSlug
+                  ? ` && ${getFilterTag(tagSlug, filterType)}`
+                  : ""
+        }] ${fetchSorting} ${getProjections(name)} [0...${count}]`;
+    })
     .join(",")},
 'config': *[_id == 'db0caed0-d756-4162-953b-f96a65a731e9']{config[]{key,'value':value.code}},
 }`,
