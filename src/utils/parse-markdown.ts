@@ -12,6 +12,15 @@ function parseMarkdown(src: string) {
                     image(token) {
                         // 为 `.png` 格式的图片强制使用 WebP 格式以节省流量
                         const url = new URL(token.href, "https://fly-dbh.com");
+                        // const m =
+                        //     /[-]*(?<width>\d*)[x]*(?<height>\d*)[\.]*(?<ext>\w+)$/.exec(
+                        //         url.pathname
+                        //     );
+                        // const aspectRatio =
+                        //     m?.groups?.width && m?.groups?.height
+                        //         ? Number(m.groups.width) /
+                        //           Number(m.groups.height)
+                        //         : null;
                         if (
                             /\.png$/.test(url.pathname) &&
                             url.searchParams.get("auto") === "format"
@@ -24,7 +33,7 @@ function parseMarkdown(src: string) {
                         /*
                         TODO: Image Viewer
                         */
-                        return `<img src="${url.pathname + url.search}" alt="${token.text}" />`;
+                        return `<img src="${url.pathname + url.search}" alt="${token.text}" loading="lazy" />`;
                     },
                 },
             })
