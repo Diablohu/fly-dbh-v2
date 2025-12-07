@@ -10,6 +10,7 @@ function parseMarkdown(src: string) {
             .use({
                 renderer: {
                     image(token) {
+                        // 为 `.png` 格式的图片强制使用 WebP 格式以节省流量
                         const url = new URL(token.href, "https://fly-dbh.com");
                         if (
                             /\.png$/.test(url.pathname) &&

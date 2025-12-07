@@ -64,6 +64,12 @@ const { briefing, type, ...props } = Astro.props;
     @import "@/utils/mixins.less";
 
     .briefing {
+        --img-max-width: 75%;
+
+        .screen-lg-below({
+            --img-max-width: calc(100% - var(--global-edge-safe-distance) * 2);
+        });
+
         :global(h4) {
             // margin-top: 1.5em;
             margin-bottom: 0.6667em;
@@ -76,7 +82,7 @@ const { briefing, type, ...props } = Astro.props;
         }
         :global(img) {
             display: block;
-            max-width: 75%;
+            max-width: var(--img-max-width);
             max-height: calc(100vh - var(--global-sticky-top) - 15rem);
             margin-left: auto;
             margin-right: auto;
