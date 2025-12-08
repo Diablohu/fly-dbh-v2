@@ -11,7 +11,12 @@ function parseMarkdown(src: string) {
                 renderer: {
                     image(token) {
                         // 为 `.png` 格式的图片强制使用 WebP 格式以节省流量
-                        const url = new URL(token.href, "https://fly-dbh.com");
+                        const url = new URL(
+                            token.href,
+                            /$.+:\/\//.test(token.href)
+                                ? undefined
+                                : "https://fly-dbh.com"
+                        );
                         // const m =
                         //     /[-]*(?<width>\d*)[x]*(?<height>\d*)[\.]*(?<ext>\w+)$/.exec(
                         //         url.pathname
@@ -30,10 +35,11 @@ function parseMarkdown(src: string) {
                             url.searchParams.set("q", "80");
                         }
                         // console.log(token, url.pathname + url.search);
+                        // console.log(token.href, url);
                         /*
                         TODO: Image Viewer
                         */
-                        return `<img src="${url.pathname + url.search}" alt="${token.text}" loading="lazy" />`;
+                        return `<img src="${url.href}" alt="${token.text}" loading="lazy" />`;
                     },
                 },
             })
