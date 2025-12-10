@@ -220,7 +220,7 @@ ${
     icao,
     iata,
     location,
-    'challenges': *[_type == "approach_challenge" && references(^._id)]{
+    'challenges': *[_type == "approach_challenge" && aerodrome->_id == ^._id]{
         _id,
         'slug': slug.current,
         name,

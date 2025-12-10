@@ -4,6 +4,7 @@ import hashHistory from "history/hash";
 import browserHistory from "history/browser";
 
 import { type ValidVideoItemShowPlatformLinksOnHoverType } from "@/types";
+import { htmlAttributeImageViewer } from "@/global";
 import { pointerHovering } from "@/constants/root-classnames";
 
 import useWindow from "@/react-hooks/use-window";
@@ -18,6 +19,33 @@ function rootOnPointerEnter(evt: PointerEvent) {
 }
 function rootOnPointerLeave(evt: PointerEvent) {
     document.documentElement.classList.remove(pointerHovering);
+}
+function bodyDelegateClick(evt: MouseEvent) {
+    // 站外链接兜底为新窗口打开
+    if (
+        evt.target instanceof HTMLElement &&
+        evt.target.tagName === "A" &&
+        !evt.target.getAttribute("target")
+    ) {
+        const href = evt.target.getAttribute("href") || "";
+        if (href[0] === "/") return;
+        if (href[0] === "#") return;
+        if (/^(javascript|mailto|tel):/.test(href)) return;
+        if (new RegExp(`^${location.origin}`).test(href)) return;
+        evt.preventDefault();
+        window.open(href, "_blank");
+    }
+    /*
+    TODO: Image Viewer
+    */
+    // 图片查看器
+    if (
+        evt.target instanceof HTMLElement &&
+        evt.target.tagName === "IMG" &&
+        typeof evt.target.getAttribute(htmlAttributeImageViewer) === "string"
+    ) {
+        console.log(evt.target.getAttribute("src"));
+    }
 }
 
 // ============================================================================
@@ -76,6 +104,8 @@ const PrepareClient: FC<{
             document.documentElement.classList.add(pointerHovering);
         }
 
+        document.body.addEventListener("click", bodyDelegateClick);
+
         return () => {
             if (window.PointerEvent) {
                 document.documentElement.removeEventListener(
@@ -87,6 +117,7 @@ const PrepareClient: FC<{
                     rootOnPointerLeave
                 );
             }
+            document.body.removeEventListener("click", bodyDelegateClick);
         };
     }, []);
 

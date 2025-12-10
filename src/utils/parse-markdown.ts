@@ -1,5 +1,6 @@
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
+import { htmlAttributeImageViewer } from "@/global";
 
 // ============================================================================
 
@@ -36,10 +37,7 @@ function parseMarkdown(src: string) {
                         }
                         // console.log(token, url.pathname + url.search);
                         // console.log(token.href, url);
-                        /*
-                        TODO: Image Viewer
-                        */
-                        return `<img src="${url.href}" alt="${token.text}" loading="lazy" data-image-viewer />`;
+                        return `<img src="${url.href}" alt="${token.text}" loading="lazy" ${htmlAttributeImageViewer} />`;
                     },
                 },
             })

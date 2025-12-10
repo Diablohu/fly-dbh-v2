@@ -44,6 +44,8 @@ export const level2TagsMap = Object.entries(level2Tags).reduce<{
     return map;
 }, {});
 
+export const htmlAttributeImageViewer = "data-image-viewer";
+
 // ============================================================================
 
 export const routeBase = {

@@ -367,23 +367,4 @@ const { htmlClassList = [] } = Astro.props;
 
 <script is:inline defer>
     document.documentElement.setAttribute("javascript-enabled", "");
-
-    if (globalThis.window) {
-        // 站外链接兜底为新窗口打开
-        document.body.addEventListener("click", (evt) => {
-            if (
-                evt.target instanceof HTMLElement &&
-                evt.target.tagName === "A" &&
-                !evt.target.getAttribute("target")
-            ) {
-                const href = evt.target.getAttribute("href");
-                if (href[0] === "/") return;
-                if (href[0] === "#") return;
-                if (/^(javascript|mailto|tel):/.test(href)) return;
-                if (new RegExp(`^${location.origin}`).test(href)) return;
-                evt.preventDefault();
-                window.open(href, "_blank");
-            }
-        });
-    }
 </script>
