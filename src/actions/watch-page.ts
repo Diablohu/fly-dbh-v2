@@ -6,6 +6,8 @@ import { type VideoItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 import { E30000 } from "@/constants/error-codes";
 
+import { orderList } from "./challenge-page";
+
 const fetchProjections = `{
     _id,
     'slug': slug.current,
@@ -42,7 +44,14 @@ const fetchProjections = `{
         'slug': slug.current,
         name,
         icao,
-        iata
+        iata,
+        'challenges': *[_type == "approach_challenge" && references(^._id)]{
+            _id,
+            'slug': slug.current,
+            name,
+            difficulty,
+            max_allowed_aircraft_category,
+        } | order(${orderList}),
     },
     'developers': developers[]->{
         _id,

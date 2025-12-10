@@ -104,10 +104,14 @@ export type VideoItemType = {
         maker: string;
         name: string;
     }[];
-    aerodromes: Pick<
-        AerodromeItemType,
-        "_id" | "slug" | "icao" | "iata" | "faa" | "name"
-    >[];
+    aerodromes: Array<
+        Pick<
+            AerodromeItemType,
+            "_id" | "slug" | "icao" | "iata" | "faa" | "name"
+        > & {
+            challenges?: ChallengeItemType["other_challenges_this_aerodrome"];
+        }
+    >;
     developers: {
         _id: string;
         slug?: string;

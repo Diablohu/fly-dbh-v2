@@ -13,6 +13,7 @@ import iconKook from "@/assets/icon-kook.svg?raw";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import TagButton from "@/components/tag-button.astro";
+import ChallengeItem from "@/components/challenge-item.tsx";
 import Player from "./_components/player";
 import SelectPlatform from "./_components/select-platform";
 
@@ -75,6 +76,18 @@ if (error) {
 }
 
 // console.log(video);
+
+const relatedChallenges = video.aerodromes
+    .flatMap((aerodrome) =>
+        aerodrome.challenges?.map((challenge) => ({
+            aerodrome,
+            ...challenge,
+        }))
+    )
+    .filter(Boolean)
+    .sort(
+        (a, b) => (b?.difficulty || 0) - (a?.difficulty || 0)
+    ) as unknown as Array<React.ComponentProps<typeof ChallengeItem>["item"]>;
 ---
 
 <Layout
@@ -297,6 +310,22 @@ if (error) {
                     </section>
                 )
             }
+
+            <section class="more-contents">
+                {
+                    Array.isArray(relatedChallenges) &&
+                        relatedChallenges.length > 0 && (
+                            <dl class="challenges">
+                                <dt>相关着陆挑战</dt>
+                                <dd class="list">
+                                    {relatedChallenges.map((item) => (
+                                        <ChallengeItem item={item} />
+                                    ))}
+                                </dd>
+                            </dl>
+                        )
+                }
+            </section>
         </section>
     </Block>
 </Layout>
@@ -351,7 +380,8 @@ if (error) {
             "title title"
             "description relations"
             "links relations"
-            "sources relations";
+            "sources relations"
+            "more more";
 
         .tags {
             font-weight: normal;
@@ -435,10 +465,10 @@ if (error) {
             & > dl {
                 flex: 1 1 600px;
             }
-            &::after {
-                content: "";
-                height: 100%;
-            }
+            // &::after {
+            //     content: "";
+            //     height: 100%;
+            // }
         }
         & > .relations {
             grid-area: relations;
@@ -478,6 +508,29 @@ if (error) {
                 }
             }
         }
+        & > .more-contents {
+            grid-area: more;
+            position: relative;
+            margin-top: 4em;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.5em;
+            &::before {
+                content: "更多内容";
+                position: absolute;
+                top: -2em;
+                color: var(--text-color-primary);
+                font-weight: bolder;
+                font-size: large;
+            }
+            .challenges {
+                .list {
+                    .challenge-list-styles();
+                }
+            }
+            &:empty {
+                display: none;
+            }
+        }
 
         .screen-md({
             grid-template-columns: 5fr 3fr;
@@ -489,8 +542,9 @@ if (error) {
                 "title"
                 "description"
                 "links"
+                "sources"
                 "relations"
-                "sources";
+                "more";
         });
     }
 </style>
