@@ -8,6 +8,12 @@
     z-index: var(--title-block-z-index);
     // z-index: 10000000000000000000000000000;
 
+    .link-to-challenge-list,
+    .airac-cycle {
+        transition: var(--base-transition-duration);
+        transition-property: opacity, transform, color;
+    }
+
     .link-to-challenge-list {
         display: inline-block;
         text-decoration: none;
@@ -20,7 +26,6 @@
         // margin-bottom: 0.3333em;
         position: relative;
         padding-left: 1em;
-        transition-property: opacity, transform, color;
         & > svg {
             position: absolute;
             top: 50%;
@@ -29,6 +34,19 @@
             height: 0.8em;
             margin-top: -0.4em;
         }
+    }
+
+    .airac-cycle {
+        // .tag-styles-base();
+        position: absolute;
+        top: 0;
+        right: 0;
+        text-align: right;
+        // color: var(--text-color-secondary);
+        // line-height: 1.25em;
+        // padding-top: 0.2em;
+        // padding-bottom: 0.2em;
+        cursor: default;
     }
 
     h1 {
@@ -76,7 +94,8 @@
     //
 
     &.is-sticky {
-        .link-to-challenge-list {
+        .link-to-challenge-list,
+        .airac-cycle {
             opacity: 0;
             z-index: -1;
         }

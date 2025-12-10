@@ -168,6 +168,7 @@ const challengeRunways = runwayPairs
                 client:idle
                 aerodromeName={challenge.aerodrome.name}
                 challengeName={challenge.name}
+                airacCycle={challenge.airac_cyle}
             />
 
             <section class="aerodrome-info">
@@ -196,6 +197,7 @@ const challengeRunways = runwayPairs
                 <Briefing
                     briefing={challenge.briefing}
                     type={challenge.type}
+                    urlBriefing={challenge.video_url_briefing}
                     data-info="briefing"
                 />
                 <OtherChallenges

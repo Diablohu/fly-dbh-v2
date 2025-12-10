@@ -152,8 +152,6 @@ export type ChallengeListItemType = {
 export type ChallengeItemType = {
     _id: string;
     name: string;
-    difficulty: ChallengeDifficultyType;
-    max_allowed_aircraft_category: AircraftCategoryType;
     type:
         | "vfr"
         | "ils"
@@ -162,6 +160,9 @@ export type ChallengeItemType = {
         | "rnp-ar"
         | "circling"
         | "circling-designated";
+    airac_cyle: string;
+    difficulty: ChallengeDifficultyType;
+    max_allowed_aircraft_category: AircraftCategoryType;
     typical_aircrafts: string;
     hazards: {
         name: string;
@@ -216,6 +217,7 @@ export type ChallengeItemType = {
             slug: string;
         }
     >;
+    video_url_briefing: string;
     videos_this_aerodrome: Pick<
         VideoItemType,
         | "_id"

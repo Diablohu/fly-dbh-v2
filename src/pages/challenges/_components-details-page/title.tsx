@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, type FC } from "react";
 import classNames from "classnames";
 
+import { type ChallengeItemType } from "@/types";
 import { routeBase } from "@/global";
 import leftArrow from "@/assets/arrow/left3.svg?raw";
 
@@ -11,7 +12,8 @@ import styles from "./title.module.less";
 const TitleBlock: FC<{
     aerodromeName: string;
     challengeName: string;
-}> = ({ aerodromeName, challengeName }) => {
+    airacCycle?: ChallengeItemType["airac_cyle"];
+}> = ({ aerodromeName, challengeName, airacCycle }) => {
     const ProbeRef = useRef<HTMLSpanElement>(null);
     const ProbeObserverRef = useRef<IntersectionObserver>(null);
     const [isSticky, setSticky] = useState(false);
@@ -69,6 +71,11 @@ const TitleBlock: FC<{
                 </small>
             </h1>
             <em className={styles["intersection-probe"]} ref={ProbeRef} />
+            {airacCycle && (
+                <span className={styles["airac-cycle"]}>
+                    本文基于 AIRAC CYCLE <strong>{airacCycle}</strong>
+                </span>
+            )}
         </section>
     );
 };

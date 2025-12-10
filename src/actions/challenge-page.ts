@@ -68,6 +68,7 @@ const actions = {
   _id,
   name,
   type,
+  airac_cyle,
   typical_aircrafts,
   difficulty,
   'hazards': hazards[]{
@@ -129,6 +130,7 @@ const actions = {
       difficulty,
       max_allowed_aircraft_category,
   },
+  video_url_briefing,
   'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{
       _id,
       'slug': slug.current,

@@ -4,8 +4,9 @@ import parseMarkdown from "@/utils/parse-markdown";
 
 import InfoBlock from "./_info-block.astro";
 
-type Props = Pick<ChallengeItemType, "briefing" | "type"> &
-    astroHTML.JSX.HTMLAttributes;
+type Props = Pick<ChallengeItemType, "briefing" | "type"> & {
+    urlBriefing?: ChallengeItemType["video_url_briefing"];
+} & astroHTML.JSX.HTMLAttributes;
 
 const { briefing, type, ...props } = Astro.props;
 // ifr-circling
@@ -66,8 +67,11 @@ const { briefing, type, ...props } = Astro.props;
     .briefing {
         --img-max-width: 75%;
 
-        .screen-lg-below({
+        .screen-lg({
             --img-max-width: calc(100% - var(--global-edge-safe-distance) * 2);
+        });
+        .screen-md-below({
+            --img-max-width: 100%;
         });
 
         :global(h4) {
@@ -76,6 +80,14 @@ const { briefing, type, ...props } = Astro.props;
             & ~ :global(h4) {
                 margin-top: 1.6667em;
             }
+        }
+        & > :global(h1),
+        & > :global(h2),
+        & > :global(h3),
+        & > :global(h4),
+        & > :global(h5),
+        & > :global(h6) {
+            margin-top: 1em;
         }
         :global(ul) {
             padding-left: 2em;
