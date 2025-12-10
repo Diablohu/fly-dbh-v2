@@ -78,7 +78,7 @@ if (error) {
 // console.log(video);
 
 const relatedChallenges = video.aerodromes
-    .flatMap((aerodrome) =>
+    ?.flatMap((aerodrome) =>
         aerodrome.challenges?.map((challenge) => ({
             aerodrome,
             ...challenge,
@@ -111,7 +111,7 @@ const relatedChallenges = video.aerodromes
         />
     </section>
     <Block class="video-infos">
-        <section class="infos-container">
+        <section class="infos infos-container">
             <section class="title">
                 <section class="tags">
                     {
@@ -310,23 +310,26 @@ const relatedChallenges = video.aerodromes
                     </section>
                 )
             }
-
-            <section class="more-contents">
-                {
-                    Array.isArray(relatedChallenges) &&
-                        relatedChallenges.length > 0 && (
-                            <dl class="challenges">
-                                <dt>相关着陆挑战</dt>
-                                <dd class="list">
-                                    {relatedChallenges.map((item) => (
-                                        <ChallengeItem item={item} />
-                                    ))}
-                                </dd>
-                            </dl>
-                        )
-                }
-            </section>
         </section>
+
+        {
+            Array.isArray(relatedChallenges) &&
+                relatedChallenges.length > 0 && (
+                    <section class="infos more-contents">
+                        {Array.isArray(relatedChallenges) &&
+                            relatedChallenges.length > 0 && (
+                                <dl class="challenges">
+                                    <dt>相关着陆挑战</dt>
+                                    <dd class="list">
+                                        {relatedChallenges.map((item) => (
+                                            <ChallengeItem item={item} />
+                                        ))}
+                                    </dd>
+                                </dl>
+                            )}
+                    </section>
+                )
+        }
     </Block>
 </Layout>
 
@@ -369,33 +372,10 @@ const relatedChallenges = video.aerodromes
         user-select: unset;
     }
 
-    .infos-container {
-        user-select: auto;
-        padding: 1em 0 4em 0;
-        gap: 2em;
-        display: grid;
-        grid-template-columns: 7fr 3fr;
-        grid-template-rows: auto auto 1fr;
-        grid-template-areas:
-            "title title"
-            "description relations"
-            "links relations"
-            "sources relations"
-            "more more";
-
-        .tags {
-            font-weight: normal;
-            display: flex;
-            flex-flow: row wrap;
-            gap: 0.5em 0.5em;
-            &:empty {
-                display: none;
-            }
-            a {
-                font-size: unit((13px / @base-font-size-number), em);
-            }
+    .infos {
+        &:last-child {
+            margin-bottom: 4em;
         }
-
         dl {
             margin: 0;
             padding: 0;
@@ -408,6 +388,33 @@ const relatedChallenges = video.aerodromes
             & > dd {
                 margin: 0;
                 padding: 0;
+            }
+        }
+    }
+
+    .infos-container {
+        user-select: auto;
+        padding: 1em 0 0 0;
+        gap: 2em;
+        display: grid;
+        grid-template-columns: 7fr 3fr;
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas:
+            "title title"
+            "description relations"
+            "links relations"
+            "sources relations";
+
+        .tags {
+            font-weight: normal;
+            display: flex;
+            flex-flow: row wrap;
+            gap: 0.5em 0.5em;
+            &:empty {
+                display: none;
+            }
+            a {
+                font-size: unit((13px / @base-font-size-number), em);
             }
         }
 
@@ -465,13 +472,15 @@ const relatedChallenges = video.aerodromes
             & > dl {
                 flex: 1 1 600px;
             }
-            // &::after {
-            //     content: "";
-            //     height: 100%;
-            // }
+            &::after {
+                content: "";
+                height: 100%;
+            }
         }
         & > .relations {
             grid-area: relations;
+            align-items: flex-start;
+            justify-content: flex-start;
         }
         & > .links {
             grid-area: links;
@@ -508,29 +517,6 @@ const relatedChallenges = video.aerodromes
                 }
             }
         }
-        & > .more-contents {
-            grid-area: more;
-            position: relative;
-            margin-top: 4em;
-            border-top: 1px solid var(--border-color);
-            padding-top: 0.5em;
-            &::before {
-                content: "更多内容";
-                position: absolute;
-                top: -2em;
-                color: var(--text-color-primary);
-                font-weight: bolder;
-                font-size: large;
-            }
-            .challenges {
-                .list {
-                    .challenge-list-styles();
-                }
-            }
-            &:empty {
-                display: none;
-            }
-        }
 
         .screen-md({
             grid-template-columns: 5fr 3fr;
@@ -543,8 +529,31 @@ const relatedChallenges = video.aerodromes
                 "description"
                 "links"
                 "sources"
-                "relations"
-                "more";
+                "relations";
         });
+    }
+
+    .more-contents {
+        grid-area: more;
+        position: relative;
+        margin-top: 6em;
+        border-top: 1px solid var(--border-color);
+        padding-top: 0.5em;
+        &::before {
+            content: "更多内容";
+            position: absolute;
+            top: -2em;
+            color: var(--text-color-primary);
+            font-weight: bolder;
+            font-size: large;
+        }
+        .challenges {
+            .list {
+                .challenge-list-styles();
+            }
+        }
+        &:empty {
+            display: none;
+        }
     }
 </style>

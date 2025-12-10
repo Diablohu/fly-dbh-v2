@@ -24,10 +24,11 @@ function rootOnPointerLeave(evt: PointerEvent) {
 
 /**
  * `仅客户端环境`
- * - 为 `window` 挂载 `hashHistory` 和 `browserHistory`
- * - 监听 `window` 更改尺寸，实时更新滚动条宽度 CSS 变量 `--body-scrollbar-width`
+ * - 为 `<window>` 挂载 `hashHistory` 和 `browserHistory`
+ * - 监听 `<window>` 更改尺寸，实时更新滚动条宽度 CSS 变量 `--body-scrollbar-width`
+ * - 监听 `<body>` **Click** 事件，delegate 方式打开图片查看器
  */
-const PrepareHistory: FC<{
+const PrepareClient: FC<{
     defaults: {
         videoItemShowPlatformLinksOnHover?: ValidVideoItemShowPlatformLinksOnHoverType;
     };
@@ -51,13 +52,16 @@ const PrepareHistory: FC<{
     });
 
     useEffect(() => {
+        // 挂载 history 对象
         if (!window._browserHistory) window._browserHistory = browserHistory;
         if (!window._hashHistory) window._hashHistory = hashHistory;
+
+        // 设置全局根节点属性
         window._contentRoot = document.querySelector(
             "body > .root"
         ) as HTMLDivElement;
 
-        // 利用 pointer event 判断当前是否为 hover
+        // 利用 pointer event 判断当前交互是否为 pointer hover
         if (window.PointerEvent) {
             document.documentElement.classList.add(pointerHovering);
             document.documentElement.addEventListener(
@@ -86,6 +90,7 @@ const PrepareHistory: FC<{
         };
     }, []);
 
+    // 根据用户选项，在 `<window>` 添加全局 classname
     useEffect(() => {
         if (videoItemShowPlatformLinksOnHover === "1") {
             document.documentElement.classList.add(
@@ -101,4 +106,4 @@ const PrepareHistory: FC<{
     return null;
 };
 
-export default memo(PrepareHistory);
+export default memo(PrepareClient);

@@ -39,7 +39,7 @@ function parseMarkdown(src: string) {
                         /*
                         TODO: Image Viewer
                         */
-                        return `<img src="${url.href}" alt="${token.text}" loading="lazy" />`;
+                        return `<img src="${url.href}" alt="${token.text}" loading="lazy" data-image-viewer />`;
                     },
                 },
             })
