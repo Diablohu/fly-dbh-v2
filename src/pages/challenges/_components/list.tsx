@@ -10,7 +10,7 @@ import {
     selectedMaxAllowedAircraftCategories,
 } from "../_store";
 
-import ListItem from "./list-item";
+import ChallengeItem from "@/components/challenge-item";
 
 import styles from "./list.module.less";
 
@@ -59,7 +59,7 @@ const ChallengeList: FC<{
             </dt>
             <dd className={styles["challenges-list"]}>
                 {items.map((item) => (
-                    <ListItem item={item} key={item._id} />
+                    <ChallengeItem item={item} key={item._id} />
                 ))}
             </dd>
         </dl>

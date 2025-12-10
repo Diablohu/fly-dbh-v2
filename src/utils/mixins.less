@@ -256,3 +256,24 @@
         --difficulty-icon: var(--difficulty-emoji-7);
     }
 }
+
+.challenge-list-styles() {
+    display: grid;
+    // grid-template-columns: repeat(
+    //     auto-fill,
+    //     minmax(
+    //         calc(
+    //             var(--body-safe-min-width) -
+    //                 var(--global-edge-safe-distance) * 2
+    //         ),
+    //         1fr
+    //     )
+    // );
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(var(--challenge-list-item-min-width), 1fr)
+    );
+    gap: 1em;
+    margin: 0;
+    padding: 0 0 1em 0;
+}

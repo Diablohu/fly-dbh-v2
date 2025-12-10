@@ -10,6 +10,8 @@ import actionErrorHandler from "./_error-handler";
 import { E60000, E60001 } from "@/constants/error-codes";
 import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
 
+export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc`;
+
 const actions = {
     fetchList: defineAction({
         handler: async () => {
@@ -29,7 +31,7 @@ const actions = {
   name,
   difficulty,
   max_allowed_aircraft_category
-} | order( max_allowed_aircraft_category asc, difficulty asc, aerodrome.icao asc )`;
+} | order(${orderList})`;
                 const res = await fetch<ChallengeListItemType>(queryString, {
                     transform: (res, queryString) => {
                         if (!res[0]) {
@@ -129,7 +131,7 @@ const actions = {
       name,
       difficulty,
       max_allowed_aircraft_category,
-  },
+  } | order(${orderList}),
   video_url_briefing,
   'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{
       _id,

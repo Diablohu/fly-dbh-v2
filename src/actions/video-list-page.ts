@@ -6,6 +6,7 @@ import {
     type VideoListPageTypesType,
     type VideoItemType,
     type AerodromeItemType,
+    type ChallengeItemType,
 } from "@/types";
 import { allLevel2Tags, defaultCacheTtl } from "@/global";
 
@@ -14,6 +15,8 @@ import { transformImagePath } from "@/services/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
 import { E20000, E20001 } from "@/constants/error-codes";
+
+import { orderList } from "./challenge-page";
 
 // ============================================================================
 
@@ -216,7 +219,14 @@ ${
     name,
     icao,
     iata,
-    location
+    location,
+    'challenges': *[_type == "approach_challenge" && references(^._id)]{
+        _id,
+        'slug': slug.current,
+        name,
+        difficulty,
+        max_allowed_aircraft_category,
+    } | order(${orderList}),
 `
           : type === "aircraftFamily"
             ? `
@@ -337,6 +347,8 @@ ${
                     start?: string;
                     end?: string;
                     type?: string;
+
+                    challenges?: ChallengeItemType["other_challenges_this_aerodrome"];
                 } & Partial<
                     Pick<AerodromeItemType, "icao" | "iata" | "location">
                 >;

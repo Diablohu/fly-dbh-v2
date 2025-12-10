@@ -5,17 +5,17 @@ import { type ChallengeListItemType } from "@/types";
 import { challengeDifficultyString } from "@/global";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 
-import styles from "./list-item.module.less";
+import styles from "./challenge-item.module.less";
 
 // ============================================================================
 
-const ListItem: FC<{
+const ChallengeItem: FC<{
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty">;
 }> = ({ item }) => {
     return (
         <a
-            className={styles["challenge-list-item"]}
+            className={styles["challenge-item"]}
             href={getChallengePageLink(item.slug || item._id)}
             key={item._id}
             data-difficulty={item.difficulty}
@@ -73,4 +73,4 @@ const ListItem: FC<{
     );
 };
 
-export default memo(ListItem);
+export default memo(ChallengeItem);

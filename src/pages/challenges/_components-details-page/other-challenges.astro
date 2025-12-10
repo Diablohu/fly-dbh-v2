@@ -2,7 +2,7 @@
 import { type ChallengeItemType } from "@/types";
 
 import InfoBlock from "./_info-block.astro";
-import ChallengeListItem from "../_components/list-item";
+import ChallengeItem from "@/components/challenge-item";
 
 type Props = {
     list: ChallengeItemType["other_challenges_this_aerodrome"];
@@ -16,7 +16,7 @@ const { list, ...props } = Astro.props;
         <InfoBlock {...props} title="本机场的其他挑战">
             <div class="list">
                 {list.map((item) => (
-                    <ChallengeListItem item={item} />
+                    <ChallengeItem item={item} />
                 ))}
             </div>
         </InfoBlock>
@@ -27,6 +27,6 @@ const { list, ...props } = Astro.props;
     @import "../_mixins.less";
 
     .list {
-        .list-styles();
+        .challenge-list-styles();
     }
 </style>
