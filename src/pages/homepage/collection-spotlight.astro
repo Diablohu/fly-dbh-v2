@@ -42,7 +42,15 @@ try {
             href: href
                 ? getVideoListPageLink(
                       href[0] as unknown as VideoListPageTypesType,
-                      href[1]
+                      href[1],
+                      href[2] && href[3]
+                          ? [
+                                {
+                                    type: href[2] as unknown as VideoListPageTypesType,
+                                    slug: href[3],
+                                },
+                            ]
+                          : undefined
                   )
                 : undefined,
             ...l,

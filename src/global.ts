@@ -60,21 +60,30 @@ export const routeBase = {
 };
 export function getVideoListPageLink(
     type?: VideoListPageTypesType,
-    slug?: string
+    slug?: string,
+    extra?: {
+        type: VideoListPageTypesType;
+        slug: string;
+    }[]
 ) {
     if (!type) return routeBase.videoList;
     if (!slug) return routeBase.videoList;
+    const getTypeString = (type: VideoListPageTypesType) =>
+        type === "aircraftFamily"
+            ? "aircraftfamily"
+            : type === "aircraftOnboardDevice"
+              ? "aircraftonboarddevice"
+              : type === "platformUpdate"
+                ? "platformupdate"
+                : type;
     return (
         routeBase.videoList +
-        `/${
-            type === "aircraftFamily"
-                ? "aircraftfamily"
-                : type === "aircraftOnboardDevice"
-                  ? "aircraftonboarddevice"
-                  : type === "platformUpdate"
-                    ? "platformupdate"
-                    : type
-        }-${slug}`
+        `/${getTypeString(type)}-${slug}` +
+        (Array.isArray(extra)
+            ? extra
+                  .map(({ type, slug }) => `/${getTypeString(type)}-${slug}`)
+                  .join("")
+            : "")
     );
 }
 
