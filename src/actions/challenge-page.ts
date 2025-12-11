@@ -125,7 +125,7 @@ const actions = {
     'cruise': routeCruise,
   },
   briefing,
-  'other_challenges_this_aerodrome': *[_type == "approach_challenge" && references(^.aerodrome->_id) && _id != ^._id]{
+  'other_challenges_this_aerodrome': *[_type == "approach_challenge" && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
       _id,
       'slug': slug.current,
       name,

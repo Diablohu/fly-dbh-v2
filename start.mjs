@@ -31,6 +31,12 @@ async function main() {
                 value: "npm:up",
                 description: "更新 NPM 依赖 Packages\n",
             },
+            {
+                name: "开启单元测试",
+                short: "\n🚧 开启单元测试 (Vitest 监视模式)",
+                value: "npm:test",
+                description: "npm 命令: test\n",
+            },
             new Separator(" "),
             new Separator("── 🚀 线上发布 ──────────"),
             {
