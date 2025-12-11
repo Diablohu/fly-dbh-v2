@@ -51,6 +51,7 @@
         "sanity": "^4.21.1",
         "styled-components": "^6.1.19",
         "toastify-js": "^1.12.0",
+        "viewerjs": "^1.11.7",
         "winston": "^3.19.0",
         "winston-daily-rotate-file": "^5.0.0"
     },
@@ -59,6 +60,7 @@
         "@inquirer/prompts": "^8.0.2",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
+        "@types/less": "^3.0.8",
         "@types/md5": "^2.3.6",
         "@types/node": "^22.15.29",
         "@types/numeral": "^2.0.5",
@@ -70,6 +72,7 @@
         "npm-run-script": "^0.0.4",
         "rollup-plugin-visualizer": "^6.0.5",
         "typescript": "^5.9.3",
+        "vite-plugin-static-copy": "^3.1.4",
         "vitest": "^4.0.15"
     }
 }

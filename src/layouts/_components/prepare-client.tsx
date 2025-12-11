@@ -6,6 +6,7 @@ import browserHistory from "history/browser";
 import { type ValidVideoItemShowPlatformLinksOnHoverType } from "@/types";
 import { htmlAttributeImageViewer } from "@/global";
 import { pointerHovering } from "@/constants/root-classnames";
+import { openImageViewer } from "@/utils/image-viewer";
 
 import useWindow from "@/react-hooks/use-window";
 import useVideoItemShowPlatformLinksOnHover from "@/react-hooks/use-video-item-show-platform-links-on-hover";
@@ -35,16 +36,16 @@ function bodyDelegateClick(evt: MouseEvent) {
         evt.preventDefault();
         window.open(href, "_blank");
     }
-    /*
-    TODO: Image Viewer
-    */
     // 图片查看器
     if (
-        evt.target instanceof HTMLElement &&
-        evt.target.tagName === "IMG" &&
+        evt.target instanceof HTMLImageElement &&
         typeof evt.target.getAttribute(htmlAttributeImageViewer) === "string"
     ) {
-        console.log(evt.target.getAttribute("src"));
+        evt.preventDefault();
+        openImageViewer(
+            evt.target,
+            evt.target.getAttribute(htmlAttributeImageViewer) as string
+        );
     }
 }
 

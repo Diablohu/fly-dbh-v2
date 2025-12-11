@@ -1,6 +1,7 @@
 ---
 import { type ChallengeItemType } from "@/types";
 import { type RunwayType } from "../_types";
+import { generateHtmlImageViewer } from "@/utils/image-viewer";
 
 type Props = {
     aerodrome: ChallengeItemType["aerodrome"];
@@ -13,21 +14,22 @@ type Props = {
     {
         Astro.props.aerodrome.photo && (
             <figure class="photo">
-                <span class="aspect-ratio-box">
-                    <img
-                        src={
+                <Fragment
+                    set:html={generateHtmlImageViewer({
+                        containerClass: "aspect-ratio-box",
+                        src:
                             Astro.props.aerodrome.photo +
-                            "?auto=format&w=640&q=60"
-                        }
-                        alt={`${Astro.props.aerodrome.name}${
+                            "?auto=format&w=640&q=60",
+                        srcOriginal:
+                            Astro.props.aerodrome.photo + "?auto=format",
+                        alt: `${Astro.props.aerodrome.name}${
                             Array.isArray(Astro.props.aerodrome.location) &&
                             Astro.props.aerodrome.location.length > 0
                                 ? ` (${Astro.props.aerodrome.location.join(" ")})`
                                 : ""
-                        }`}
-                        loading="lazy"
-                    />
-                </span>
+                        }`,
+                    })}
+                />
                 {Astro.props.aerodrome.photo_credit_url && (
                     <figcaption class="credit">
                         <a
@@ -191,13 +193,14 @@ type Props = {
             var(--card-container-padding)
             calc(var(--card-container-padding) * -1);
         position: relative;
-        & > .aspect-ratio-box {
+        & > :global(.aspect-ratio-box) {
+            --hover-scale: 1.05;
             display: block;
             width: 100%;
             position: relative;
             padding-top: percentage((2/3));
             overflow: hidden;
-            & > img {
+            & > :global(img) {
                 display: block;
                 position: absolute;
                 width: 100%;

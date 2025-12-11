@@ -1,5 +1,6 @@
 import { ActionError } from "astro:actions";
 import { type BrowserHistory, type HashHistory } from "history";
+import { type default as Viewer } from "viewerjs";
 import { type ValidVideoSourceType } from "@/types";
 
 declare namespace App {
@@ -16,6 +17,7 @@ declare global {
         _browserHistory?: BrowserHistory;
         _hashHistory?: HashHistory;
         _contentRoot: HTMLDivElement;
+        Viewer?: typeof Viewer;
     }
 }
 

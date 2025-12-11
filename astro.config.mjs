@@ -1,8 +1,12 @@
 // @ts-check
+import path from "node:path";
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
+import { normalizePath } from "vite";
 import { visualizer } from "rollup-plugin-visualizer";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import compileStandAloneLessFilesPlugin from "./config/vite-plugins/compile-stand-alone-less-files";
 
 import "dotenv/config";
 
@@ -15,8 +19,7 @@ const isAnalyze = FLYDBH_BUILD_MODE === "analyze";
 /** 模式：next.fly-dbh.com */
 const isNext = FLYDBH_BUILD_MODE === "next";
 
-// ============================================================================
-
+// #region Astro Config
 // https://astro.build/config
 export default defineConfig({
     integrations: [react()],
@@ -52,6 +55,17 @@ export default defineConfig({
                       brotliSize: true,
                   })
                 : undefined,
+            viteStaticCopy({
+                targets: [
+                    {
+                        src: normalizePath(
+                            path.resolve("node_modules/viewerjs/dist/**/*")
+                        ),
+                        dest: "libs/viewerjs",
+                    },
+                ],
+            }),
+            compileStandAloneLessFilesPlugin(),
         ],
     },
 
@@ -71,3 +85,4 @@ export default defineConfig({
         ],
     },
 });
+// #endregion Astro Config

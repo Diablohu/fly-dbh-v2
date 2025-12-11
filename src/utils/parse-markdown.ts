@@ -1,6 +1,7 @@
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
 import { htmlAttributeImageViewer } from "@/global";
+import { generateHtmlImageViewer } from "@/utils/image-viewer";
 
 // ============================================================================
 
@@ -10,6 +11,10 @@ function parseMarkdown(src: string) {
         marked
             .use({
                 renderer: {
+                    // paragraph(token) {
+                    //     console.log(token);
+                    //     return "";
+                    // },
                     image(token) {
                         // 为 `.png` 格式的图片强制使用 WebP 格式以节省流量
                         const url = new URL(
@@ -37,7 +42,12 @@ function parseMarkdown(src: string) {
                         }
                         // console.log(token, url.pathname + url.search);
                         // console.log(token.href, url);
-                        return `<img src="${url.href}" alt="${token.text}" loading="lazy" ${htmlAttributeImageViewer} />`;
+                        return generateHtmlImageViewer({
+                            class: "markdown-image",
+                            src: url.href,
+                            srcOriginal: token.href,
+                            alt: token.text,
+                        });
                     },
                 },
             })
