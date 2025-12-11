@@ -18,10 +18,10 @@
     );
 
     .screen-sm({
-        --footer-x-align: center;
+        --footer-x-align: left;
         --title-display: none;
         --toolbar-align: center;
-        --toolbar-padding-left: calc(var(--button-size) + var(--button-gap));
+        --toolbar-padding-left: 0;
         --toolbar-width: auto;
     });
     .color-scheme-light-no-global({
@@ -63,6 +63,10 @@
             font-size: 1rem;
             opacity: 1;
             display: var(--title-display);
+            text-align: left;
+            white-space: unset;
+            line-height: 1.2;
+            max-height: 2.4em;
         }
 
         .viewer-toolbar {
