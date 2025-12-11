@@ -2,8 +2,9 @@
 import { actions } from "astro:actions";
 import dayjs from "dayjs";
 import { type VideoListPageTypesType } from "@/types";
-import { level2TagsMap, routeBase } from "@/global";
+import { level2TagsMap, routeBase, challengeDifficultyString } from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
+import getChallengePageLink from "@/utils/get-challenge-page-link";
 import TagButton from "@/components/tag-button.astro";
 import ChallengeItem from "@/components/challenge-item.tsx";
 
@@ -118,7 +119,27 @@ type Props = {
                                     <dd class="challenges">
                                         {Astro.props.info.challenges.map(
                                             (item) => (
-                                                <ChallengeItem item={item} />
+                                                <TagButton
+                                                    class="item"
+                                                    href={getChallengePageLink(
+                                                        item.slug || item._id
+                                                    )}
+                                                    difficultyColor={
+                                                        item.difficulty
+                                                    }
+                                                    prefix={
+                                                        item.difficulty &&
+                                                        challengeDifficultyString[
+                                                            item.difficulty
+                                                        ]
+                                                    }
+                                                >
+                                                    {/* {item.max_allowed_aircraft_category
+                                                        ? `最大${item.max_allowed_aircraft_category.toUpperCase()}类：`
+                                                        : ""} */}
+                                                    {item.name}
+                                                </TagButton>
+                                                // <ChallengeItem item={item} />
                                             )
                                         )}
                                     </dd>
@@ -419,10 +440,16 @@ type Props = {
                     }
                 }
                 &.challenges {
-                    .challenge-list-styles();
-                    flex: 1;
-                    padding-top: 0.3333em;
-                    padding-bottom: 0.3333em;
+                    margin-top: 0.25em;
+                    gap: 0.5em;
+                    // display: block;
+                    .item {
+                        flex: 0 0 auto;
+                    }
+                    // .challenge-list-styles();
+                    // flex: 1;
+                    // padding-top: 0.3333em;
+                    // padding-bottom: 0.3333em;
                 }
             }
             &:has(dd:empty) {

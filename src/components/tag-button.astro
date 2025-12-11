@@ -1,10 +1,19 @@
 ---
+import { type ChallengeDifficultyType } from "@/types";
+
 type Props = {
     href?: string;
     prefix?: string;
+    difficultyColor?: ChallengeDifficultyType;
 } & astroHTML.JSX.HTMLAttributes;
 
-const { class: className, href, prefix, ...props } = Astro.props;
+const {
+    class: className,
+    href,
+    prefix,
+    difficultyColor,
+    ...props
+} = Astro.props;
 
 const Element = Astro.props.href ? "a" : "button";
 ---
@@ -13,6 +22,7 @@ const Element = Astro.props.href ? "a" : "button";
     class:list={["tag", className]}
     href={Element === "a" ? href : null}
     type={Element === "button" ? "button" : null}
+    data-difficulty={difficultyColor || null}
     {...props}
 >
     {prefix && <span class="prefix">{prefix}</span>}

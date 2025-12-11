@@ -2,6 +2,7 @@
 
 .tag {
     .tag-styles();
+    .difficulty-variables();
     font-size: inherit;
     display: inline-flex;
     vertical-align: top;
@@ -9,12 +10,23 @@
     gap: 0 0.5em;
     overflow: hidden;
     .prefix {
-        background: var(--tag-background-color);
+        background: var(--tag-border-color);
         display: inline-block;
         margin-left: -0.5em;
         padding: 0 0.5em;
         // border-radius: calc(var(--border-radius) * 0.75);
         border-radius: 0;
         white-space: nowrap;
+    }
+    &[data-difficulty] {
+        --tag-border-color: color-mix(
+            in srgb,
+            var(--difficulty-color),
+            transparent 50%
+        );
+        // color: var(--text-color-secondary);
+        // .prefix {
+        //     background: var(--tag-border-color);
+        // }
     }
 }
