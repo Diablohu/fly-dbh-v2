@@ -2,6 +2,8 @@ import { spawn, execSync } from "node:child_process";
 import dayjs from "dayjs";
 import { select, Separator } from "@inquirer/prompts";
 import npmRunScript from "npm-run-script";
+import { startVitest } from "vitest/node";
+
 import p from "./package.json" with { type: "json" };
 
 async function main() {
@@ -79,6 +81,24 @@ async function main() {
             }
             break;
         case "publish":
+            const test = await startVitest(
+                "test",
+                [], // CLI filters
+                {
+                    run: true,
+                }, // override test config
+                {}, // override Vite config
+                {} // custom Vitest options
+            );
+            if (
+                !test.state
+                    .getTestModules()
+                    .every((testModule) => testModule.ok())
+            ) {
+                console.error("⛔ 测试未通过！");
+                return;
+            }
+
             const status = execSync("git status --porcelain").toString().trim();
             if (status) {
                 console.error("⛔ 请先提交本地的改动！");
