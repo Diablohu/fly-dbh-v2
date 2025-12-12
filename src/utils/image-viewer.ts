@@ -22,10 +22,8 @@ export function generateHtmlImageViewer({
 } & astroHTML.JSX.ImgHTMLAttributes): string {
     return `<a href="${srcOriginal ?? src}" class="${[
         containerClass,
-        "image-container",
-    ].join(
-        " "
-    )}" ${htmlAttributeImageViewer}="${srcOriginal ?? src}"><img src="${
+        "image-viewer-container",
+    ].join(" ")}"><img src="${
         src
     }" alt="${alt}" loading="${loading}" ${Object.entries(attributes)
         .map(([key, value]) => `${key}="${value}"`)

@@ -39,6 +39,14 @@
     .viewer-canvas {
         padding-top: var(--global-header-height);
         padding-bottom: calc(var(--global-header-height) / 2);
+        &.viewer-loading {
+            & > img {
+                opacity: 0;
+            }
+            &::after {
+                .spinner-styles();
+            }
+        }
     }
     .viewer-footer {
         position: fixed;

@@ -320,11 +320,18 @@ select {
 //         content: "";
 //     }
 // }
-a.image-container {
+a.image-viewer-container:has(img[data-image-viewer]) {
     --hover-scale: 1.01;
     --active-transform: scale(1) transformY(0px);
     display: block;
     position: relative;
+    cursor: zoom-in;
+    .pointer-hover-no-global({
+        // opacity: 0.9;
+        img[data-image-viewer]{
+            transform: scale(var(--hover-scale));
+        }
+    });
     img[data-image-viewer] {
         cursor: zoom-in;
         transition: var(--base-transition-duration);

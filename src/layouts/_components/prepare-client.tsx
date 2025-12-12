@@ -24,6 +24,20 @@ function rootOnPointerLeave(evt: PointerEvent) {
 function bodyDelegateClick(evt: MouseEvent) {
     // 图片查看器
     if (
+        evt.target instanceof HTMLAnchorElement &&
+        evt.target.classList.contains("image-viewer-container")
+    ) {
+        const elImg = evt.target.querySelector(`[${htmlAttributeImageViewer}]`);
+        if (elImg instanceof HTMLElement) {
+            evt.preventDefault();
+            openImageViewer(
+                elImg,
+                elImg.getAttribute(htmlAttributeImageViewer) as string
+            );
+            return;
+        }
+    }
+    if (
         evt.target instanceof HTMLElement &&
         typeof evt.target.getAttribute(htmlAttributeImageViewer) === "string"
     ) {
@@ -32,6 +46,7 @@ function bodyDelegateClick(evt: MouseEvent) {
             evt.target,
             evt.target.getAttribute(htmlAttributeImageViewer) as string
         );
+        return;
     }
 
     // 站外链接兜底为新窗口打开
@@ -46,6 +61,7 @@ function bodyDelegateClick(evt: MouseEvent) {
         if (new RegExp(`^${location.origin}`).test(href)) return;
         evt.preventDefault();
         window.open(href, "_blank");
+        return;
     }
 }
 
