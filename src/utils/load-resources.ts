@@ -1,13 +1,20 @@
+import { GLOBAL_PERSIST_RESOURCES_CONTAINER } from "@/constants/element-ids";
+
+let elPersistContainer: HTMLDivElement | null = null;
+
 export async function loadResource(
     type: "script" | "style",
     src: string,
     id?: string,
-    check?: () => boolean
+    options: {
+        persist?: boolean | string;
+        checkExist?: () => boolean;
+    } = {}
 ): Promise<void> {
     return new Promise((resolve, reject) => {
         if (id && document.querySelector(`#${id}`) instanceof Element)
             return resolve();
-        if (check?.()) return resolve();
+        if (options.checkExist?.()) return resolve();
 
         let element: HTMLScriptElement | HTMLLinkElement;
         if (type === "script") {
@@ -23,7 +30,15 @@ export async function loadResource(
         element.onload = () => resolve();
         element.onerror = () =>
             reject(new Error(`Failed to load resource: ${src}`));
-        document.head.appendChild(element);
+        if (options.persist) {
+            if (!elPersistContainer)
+                elPersistContainer = document.querySelector(
+                    `#${GLOBAL_PERSIST_RESOURCES_CONTAINER}`
+                );
+            if (elPersistContainer) elPersistContainer.appendChild(element);
+        } else {
+            document.head.appendChild(element);
+        }
     });
 }
 
@@ -32,7 +47,7 @@ async function loadResources(
         type: Parameters<typeof loadResource>[0];
         src: Parameters<typeof loadResource>[1];
         id?: Parameters<typeof loadResource>[2];
-        check?: Parameters<typeof loadResource>[3];
+        options?: Parameters<typeof loadResource>[3];
     }[]
 ): Promise<void> {
     return Promise.allSettled(
@@ -41,7 +56,7 @@ async function loadResources(
                 resource.type,
                 resource.src,
                 resource.id,
-                resource.check
+                resource.options
             )
         )
     )

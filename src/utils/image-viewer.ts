@@ -38,18 +38,22 @@ export async function openImageViewer(opener: HTMLImageElement, src: string) {
             type: "style",
             src: "/libs/viewerjs/viewer.min.css",
             id: "i" + md5("styleTagIdViewerCss"),
+            options: { persist: true },
         },
         {
             type: "style",
             src: "/styles/override-viewer.css",
             id: "i" + md5("idStyleOverrideCss"),
+            options: { persist: true },
         },
         {
             type: "script",
             src: "/libs/viewerjs/viewer.min.js",
             // id: md5("scriptTagIdViewer"),
-            check: () => {
-                return typeof window.Viewer !== "undefined";
+            options: {
+                checkExist: () => {
+                    return typeof window.Viewer !== "undefined";
+                },
             },
         },
     ]);
