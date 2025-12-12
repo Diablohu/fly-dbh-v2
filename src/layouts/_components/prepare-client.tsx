@@ -22,10 +22,21 @@ function rootOnPointerLeave(evt: PointerEvent) {
     document.documentElement.classList.remove(pointerHovering);
 }
 function bodyDelegateClick(evt: MouseEvent) {
-    // 站外链接兜底为新窗口打开
+    // 图片查看器
     if (
         evt.target instanceof HTMLElement &&
-        evt.target.tagName === "A" &&
+        typeof evt.target.getAttribute(htmlAttributeImageViewer) === "string"
+    ) {
+        evt.preventDefault();
+        openImageViewer(
+            evt.target,
+            evt.target.getAttribute(htmlAttributeImageViewer) as string
+        );
+    }
+
+    // 站外链接兜底为新窗口打开
+    if (
+        evt.target instanceof HTMLAnchorElement &&
         !evt.target.getAttribute("target")
     ) {
         const href = evt.target.getAttribute("href") || "";
@@ -35,17 +46,6 @@ function bodyDelegateClick(evt: MouseEvent) {
         if (new RegExp(`^${location.origin}`).test(href)) return;
         evt.preventDefault();
         window.open(href, "_blank");
-    }
-    // 图片查看器
-    if (
-        evt.target instanceof HTMLImageElement &&
-        typeof evt.target.getAttribute(htmlAttributeImageViewer) === "string"
-    ) {
-        evt.preventDefault();
-        openImageViewer(
-            evt.target,
-            evt.target.getAttribute(htmlAttributeImageViewer) as string
-        );
     }
 }
 

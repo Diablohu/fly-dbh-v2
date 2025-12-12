@@ -23,14 +23,16 @@ export function generateHtmlImageViewer({
     return `<a href="${srcOriginal ?? src}" class="${[
         containerClass,
         "image-container",
-    ].join(" ")}"><img src="${
+    ].join(
+        " "
+    )}" ${htmlAttributeImageViewer}="${srcOriginal ?? src}"><img src="${
         src
     }" alt="${alt}" loading="${loading}" ${Object.entries(attributes)
         .map(([key, value]) => `${key}="${value}"`)
         .join(" ")} ${htmlAttributeImageViewer}="${srcOriginal ?? src}" /></a>`;
 }
 
-export async function openImageViewer(opener: HTMLImageElement, src: string) {
+export async function openImageViewer(opener: HTMLElement, src: string) {
     if (!globalThis.window) return;
     opener.classList.add(classNameLoading);
     await loadResources([
