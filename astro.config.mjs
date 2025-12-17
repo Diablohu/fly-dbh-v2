@@ -29,7 +29,13 @@ export default defineConfig({
         sitemap({
             filter: (page) =>
                 new RegExp(
-                    `^${site}($|/)((?!(${["admin", "api"].join("|")})/).)*$`
+                    `^${site}($|/)((?!(${[
+                        "admin",
+                        "api",
+                        "homepage",
+                        "live", // TODO: unlock
+                        "tools", // TODO: unlock
+                    ].join("|")})($|/)).)*$`
                 ).test(page),
         }),
     ],
