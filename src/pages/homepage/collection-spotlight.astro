@@ -62,7 +62,7 @@ try {
     // 如果处理报错，兜底数据
     spotlights = [
         {
-            name: "大型民航机教学",
+            name: "大型民航机教学123",
             area: "tutorial-airliner",
             href: getVideoListPageLink("aircraftFamily", "airbus-a350-xwb"),
             tags: [
@@ -295,6 +295,10 @@ try {
             margin: 0 0 0.6667em 0;
             a {
                 .link-with-arrow-styles();
+                &::before,
+                &::after {
+                    margin-top: -0.2em;
+                }
             }
         }
 

@@ -1,21 +1,28 @@
 ---
 import { type ChallengeItemType } from "@/types";
 
+import { getVideoListPageLink } from "@/global";
+
 import InfoBlock from "./_info-block.astro";
 import VideoListGrid from "@/components/video-list-grid";
 
 type Props = {
     list: ChallengeItemType["videos_this_aerodrome"];
+    aerodromeSlug: ChallengeItemType["aerodrome"]["slug"];
 } & astroHTML.JSX.HTMLAttributes;
 
-const { list, ...props } = Astro.props;
+const { list, aerodromeSlug, ...props } = Astro.props;
 // TODO: change to horizontal list
 // TODO: more videos link on title
 ---
 
 {
     Array.isArray(list) && list.length > 0 && (
-        <InfoBlock {...props} title="本机场的相关视频">
+        <InfoBlock
+            {...props}
+            title="本机场的相关视频"
+            titleLink={getVideoListPageLink("aerodrome", aerodromeSlug)}
+        >
             <VideoListGrid
                 type="search"
                 isIndex

@@ -77,8 +77,7 @@ const Header: FC<
 
 export default memo(Header);
 
-/*
-TODO: Header Mask
+/* TODO: Header Mask
 	mask for bottom gradient
 	extend via css variables
 */

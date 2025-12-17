@@ -1,17 +1,29 @@
 ---
 type Props = {
     title: string;
+    titleLink?: string;
     emoji?: string;
     isTodo?: boolean;
     bodyClass?: string;
 } & astroHTML.JSX.HTMLAttributes;
 
-const { title, emoji, isTodo = false, bodyClass, ...props } = Astro.props;
+const {
+    title,
+    titleLink,
+    emoji,
+    isTodo = false,
+    bodyClass,
+    ...props
+} = Astro.props;
+
+const TitleChild = titleLink ? "a" : Fragment;
 ---
 
 <section class="info-block" {...props}>
     <h3 class="title">
-        {emoji && <span class="emoji">{emoji}</span>}{title}
+        <TitleChild href={titleLink}>
+            {emoji && <span class="emoji">{emoji}</span>}{title}</TitleChild
+        >
     </h3>
     <section
         class:list={[
@@ -49,6 +61,13 @@ const { title, emoji, isTodo = false, bodyClass, ...props } = Astro.props;
             .emoji {
                 display: inline-block;
                 width: 1.5em;
+            }
+            & > a {
+                .link-with-arrow-styles();
+                &::before,
+                &::after {
+                    margin-top: -0.1em;
+                }
             }
         }
         .body {

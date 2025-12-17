@@ -26,10 +26,12 @@ const Element = Astro.props.href ? "a" : "button";
     data-difficulty={difficultyColor || null}
     {...props}
     >{
-        Astro.slots.has("prefix") && (
+        Astro.slots.has("prefix") ? (
             <span class="prefix">
                 <slot name="prefix" />
             </span>
+        ) : (
+            prefix && <span class="prefix">{prefix}</span>
         )
     }<slot /></Element
 >

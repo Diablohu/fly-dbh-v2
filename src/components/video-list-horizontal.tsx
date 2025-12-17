@@ -22,6 +22,7 @@ import styles from "./video-list-horizontal.module.less";
 
 const VideoListHorizontal: FC<{
     videos: VideoItemProps[];
+    showMore?: boolean;
 }> = ({ videos }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
     const IntersectionProbeBegin = useRef<HTMLDivElement>(null);
