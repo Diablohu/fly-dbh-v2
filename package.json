@@ -20,6 +20,7 @@
         "@astrojs/node": "^9.5.1",
         "@astrojs/react": "^4.4.2",
         "@astrojs/rss": "^4.0.14",
+        "@astrojs/sitemap": "^3.6.0",
         "@microsoft/fetch-event-source": "^2.0.1",
         "@nanostores/react": "^1.0.0",
         "@oslojs/otp": "^1.1.0",

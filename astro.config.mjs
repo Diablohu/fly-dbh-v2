@@ -3,6 +3,7 @@ import path from "node:path";
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
+import sitemap from "@astrojs/sitemap";
 import { normalizePath } from "vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -18,19 +19,27 @@ const isDev = process.env.NODE_ENV === "development";
 const isAnalyze = FLYDBH_BUILD_MODE === "analyze";
 /** 模式：next.fly-dbh.com */
 const isNext = FLYDBH_BUILD_MODE === "next";
+const site = isNext ? "https://next.fly-dbh.com" : "https://fly-dbh.com";
 
 // #region Astro Config
 // https://astro.build/config
 export default defineConfig({
-    integrations: [react()],
+    integrations: [
+        react(),
+        sitemap({
+            filter: (page) =>
+                new RegExp(
+                    `^${site}($|/)((?!(${["admin", "api"].join("|")})/).)*$`
+                ).test(page),
+        }),
+    ],
     adapter: node({
         mode: "standalone",
     }),
 
     output: "server",
     server: ({ command }) => ({ port: command === "dev" ? 8088 : 8080 }),
-    // @ts-ignore
-    site: isNext ? "https://next.fly-dbh.com" : "https://fly-dbh.com",
+    site,
 
     // 多语言设置
     // i18n: {},
