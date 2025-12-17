@@ -6,6 +6,9 @@ import parseMarkdown from "@/utils/parse-markdown";
 import InfoBlock from "./_info-block.astro";
 import TagButton from "@/components/tag-button.astro";
 
+import MovieSVG from "@/assets/svg-symbols/movie.svg";
+import MonitorPlaySVG from "@/assets/svg-symbols/monitor-play.svg";
+
 type Props = Pick<ChallengeItemType, "briefing" | "type"> & {
     urlBriefing?: ChallengeItemType["video_url_briefing"];
     videoExtremeAirport?: ChallengeItemType["video_this_aerodrome_extreme_airport"];
@@ -25,6 +28,7 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
                         target="_blank"
                         rel="nofollow noopener noreferrer external"
                     >
+                        <MonitorPlaySVG slot="prefix" />
                         <strong>
                             {["观看简令视频", name].filter(Boolean).join(" : ")}
                         </strong>
@@ -40,9 +44,8 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
                         )}
                         class="is-extreme-airport"
                     >
-                        <strong>
-                            {["观看极限机场"].filter(Boolean).join(" : ")}
-                        </strong>
+                        <MovieSVG slot="prefix" />
+                        <strong>观看极限机场</strong>
                         <em>专题报道视频</em>
                     </TagButton>
                 )}
@@ -160,6 +163,7 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
         --container-margin-left: 0;
         --container-text-align: unset;
         --item-margin-right: 0;
+        --text-color: var(--text-color-secondary);
 
         display: var(--container-display);
         flex-flow: column nowrap;
@@ -183,26 +187,36 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             flex: 1;
         }
         & > a {
-            --icon-emoji: "▶️";
             flex: none;
             font-size: 14px;
             display: inline-block;
             position: relative;
-            padding: 0.5em 1em 0.5em 3.6667em;
+            padding: 0.5em 1em 0.5em 4em;
             margin-bottom: 0.5em;
             margin-right: var(--item-margin-right);
             text-align: left;
+            color: var(--text-color);
             // border: 1px solid var(--text-color-secondary);
-            &::before {
-                content: var(--icon-emoji);
+            & > :global(.prefix) {
+                --size: 2.25em;
                 position: absolute;
-                font-size: 2.6em;
-                top: 0.66em;
-                left: 0em;
-                display: block;
-                width: 0;
-                height: 0;
-                line-height: 0;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: calc(var(--size) * 1.6667);
+                & > svg {
+                    position: absolute;
+                    top: 50%;
+                    left: 1em;
+                    margin-top: calc(var(--size) / -2);
+                    display: block;
+                    width: var(--size);
+                    height: var(--size);
+                    line-height: 0;
+                    color: currentColor;
+                    transition: var(--base-transition-duration);
+                    transition-property: fill, color;
+                }
             }
             small,
             strong,
@@ -212,16 +226,18 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             strong {
                 font-size: 1.2em;
                 line-height: 1;
+                color: var(--text-color-primary);
             }
             em {
                 font-size: 1em;
                 line-height: 1;
                 margin-top: 0.3333em;
-                color: var(--text-color-secondary);
                 font-style: normal;
             }
-            &.is-extreme-airport {
-                --icon-emoji: "🚩";
+            // &.is-extreme-airport {
+            // }
+            &:hover {
+                --text-color: var(--text-color-primary);
             }
         }
     }

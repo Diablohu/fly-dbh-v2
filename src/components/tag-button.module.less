@@ -17,6 +17,10 @@
         // border-radius: calc(var(--border-radius) * 0.75);
         border-radius: 0;
         white-space: nowrap;
+        &:empty {
+            flex: none;
+            display: none;
+        }
     }
     &[data-difficulty] {
         --tag-border-color: color-mix(

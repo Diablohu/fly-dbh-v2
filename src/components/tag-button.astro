@@ -25,10 +25,14 @@ const Element = Astro.props.href ? "a" : "button";
     type={Element === "button" ? "button" : null}
     data-difficulty={difficultyColor || null}
     {...props}
+    >{
+        Astro.slots.has("prefix") && (
+            <span class="prefix">
+                <slot name="prefix" />
+            </span>
+        )
+    }<slot /></Element
 >
-    {prefix && <span class="prefix">{prefix}</span>}
-    <slot />
-</Element>
 
 <style lang="less">
     @import "./tag-button.module.less";
