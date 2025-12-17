@@ -33,7 +33,7 @@ const { showTitle = true } = Astro.props;
                   isActive: Astro.url.pathname === "/admin",
               },
               { type: "divider" },
-            //   { type: "subtitle", text: "管理后台" },
+              //   { type: "subtitle", text: "管理后台" },
               {
                   type: "link",
                   text: "日志",
@@ -50,11 +50,18 @@ const { showTitle = true } = Astro.props;
                   route: "/admin/cache-images",
               },
               { type: "divider" },
-            //   { type: "subtitle", text: "信息图表" },
+              //   { type: "subtitle", text: "信息图表" },
               {
                   type: "link",
                   text: "信息图表",
                   route: "/admin/infographics",
+              },
+              { type: "divider" },
+              { type: "subtitle", text: "全列表" },
+              {
+                  type: "link",
+                  text: "挑战灾害",
+                  route: "/admin/list-challenge-hazards",
               },
           ]
         : undefined}

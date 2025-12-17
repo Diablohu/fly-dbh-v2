@@ -8,7 +8,11 @@ import {
 } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
 import { E60000, E60001 } from "@/constants/error-codes";
-import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
+import {
+    type ChallengeListItemType,
+    type ChallengeItemType,
+    type ChallengeDifficultyType,
+} from "@/types";
 
 export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc`;
 
@@ -241,6 +245,30 @@ const actions = {
                     err.cause = { GROQ: queryString };
                     throw err;
                 }
+                return res;
+            } catch (err) {
+                actionErrorHandler(err);
+            }
+        },
+    }),
+
+    fetchHazards: defineAction({
+        handler: async () => {
+            try {
+                const queryString = `*[_type == "approach_challenge_hazard"] {
+  _id,
+  name,
+  difficulty,
+  comment,
+  emoji
+} | order(difficulty desc, name asc)`;
+                const res = await fetch<{
+                    _id: string;
+                    name: string;
+                    difficulty: ChallengeDifficultyType;
+                    comment: string;
+                    emoji: string;
+                }>(queryString);
                 return res;
             } catch (err) {
                 actionErrorHandler(err);

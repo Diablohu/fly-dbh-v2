@@ -1,0 +1,74 @@
+---
+import { actions } from "astro:actions";
+import AdminPage from "@/page-templates/admin/index.astro";
+
+const { data: list, error } = await Astro.callAction(
+    actions.challengePage.fetchHazards,
+    undefined
+);
+
+if (error) return Astro.rewrite("/500");
+---
+
+<AdminPage title="全列表：挑战灾害">
+    {
+        list?.map((item, index, arr) => (
+            <span
+                class:list={[
+                    "hazard",
+                    {
+                        "is-gutter":
+                            arr[index - 1] &&
+                            item.difficulty !== arr[index - 1]?.difficulty,
+                    },
+                ]}
+                data-difficulty={item.difficulty}
+                data-emoji={item.emoji}
+            >
+                {[item.name, item.comment].filter(Boolean).join("：")}
+            </span>
+        ))
+    }
+</AdminPage>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .hazard {
+        .difficulty-variables();
+
+        --diffictulty-border-width: 4px;
+        --emoji-size: 2em;
+
+        display: block;
+        color: var(--text-color-primary);
+        position: relative;
+        padding-left: calc(var(--diffictulty-border-width) + var(--emoji-size));
+        line-height: 1.75;
+        user-select: text;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: var(--diffictulty-border-width);
+            background: var(--difficulty-color);
+        }
+
+        &::after {
+            content: attr(data-emoji);
+            position: absolute;
+            top: 0;
+            left: var(--diffictulty-border-width);
+            display: block;
+            width: var(--emoji-size);
+            text-align: center;
+        }
+
+        &.is-gutter {
+            margin-top: 1em;
+        }
+    }
+</style>
