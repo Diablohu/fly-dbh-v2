@@ -93,7 +93,7 @@ function generateList(list: typeof freeAddons) {
             };
         })
         .map((item, index, list) => {
-            if (item.margeIntoIndex !== false) {
+            if (item.margeIntoIndex !== false && item.margeIntoIndex > 0) {
                 list[item.margeIntoIndex].markdown += "\n" + item.markdown;
                 return false;
             }
