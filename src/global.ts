@@ -15,7 +15,9 @@ export const slogan = "假飞机驾驶员";
 export const isUnderConstruction = false;
 
 export const urlPrefixSanityImageCdn = import.meta.env.DEV
-    ? `/sanity-images`
+    ? process?.env?.FLYDBH_ASSETS_SERVER === "local"
+        ? "http://127.0.0.1:8081/images"
+        : `/sanity-images`
     : "https://assets.fly-dbh.com/images";
 // export const urlPrefixSanityImageCdn = `https://assets.fly-dbh.com/images`;
 // export const urlPrefixSanityImageCdn = `http://127.0.0.1:8081/images`;

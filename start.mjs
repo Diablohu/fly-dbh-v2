@@ -16,25 +16,31 @@ async function main() {
             {
                 name: "开启开发环境",
                 short: "\n🚧 开启本地开发环境",
-                value: "npm:dev",
+                value: "npm:::dev",
                 description: "npm 命令: dev\n",
+            },
+            {
+                name: "开启开发环境 (本地素材服务器)",
+                short: "\n🚧 开启本地开发环境 (本地素材服务器)",
+                value: "npm:::dev:local-assets-server",
+                description: "npm 命令: dev:local-assets-server\n",
             },
             {
                 name: "分析打包文件尺寸",
                 short: "\n🚧 执行打包，并自动生成分析报告",
-                value: "npm:analyze",
+                value: "npm:::analyze",
                 description: "执行打包，并自动生成分析报告\n",
             },
             {
                 name: "更新 NPM 依赖",
                 short: "\n🚧 更新 NPM 依赖 Packages",
-                value: "npm:up",
+                value: "npm:::up",
                 description: "更新 NPM 依赖 Packages\n",
             },
             {
                 name: "开启单元测试",
                 short: "\n🚧 开启单元测试 (Vitest 监视模式)",
-                value: "npm:test",
+                value: "npm:::test",
                 description: "npm 命令: test\n",
             },
             new Separator(" "),
@@ -42,13 +48,13 @@ async function main() {
             {
                 name: "正式",
                 short: "\n🚀 线上发布：正式",
-                value: "publish:release",
+                value: "publish:::release",
                 description: "触发线上发布流程\n",
             },
             {
                 name: "预览",
                 short: "\n🚀 线上发布：预览",
-                value: "publish:preview",
+                value: "publish:::preview",
                 description: "触发线上发布流程\n",
             },
             new Separator(" "),
@@ -65,7 +71,7 @@ async function main() {
 
     console.log(" ");
 
-    const [type, command] = answer.split(":");
+    const [type, command] = answer.split(":::");
 
     switch (type) {
         case "npm":
