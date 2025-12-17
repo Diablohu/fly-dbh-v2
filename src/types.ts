@@ -46,6 +46,17 @@ export type AerodromeItemType = {
     photo?: string;
     photo_credit?: string;
     photo_credit_url?: string;
+    free_addons?: {
+        platform: string;
+        type: "first-party" | "third-party";
+        msfs_package:
+            | "deluxe"
+            | "premium-deluxe"
+            | "update";
+        url: string;
+        extra: string;
+    }[];
+    free_addons_scenery?: AerodromeItemType["free_addons"];
 };
 
 // ============================================================================
@@ -190,6 +201,8 @@ export type ChallengeItemType = {
         | "photo"
         | "photo_credit"
         | "photo_credit_url"
+        | "free_addons"
+        | "free_addons_scenery"
     >;
     runways: string[];
     route: {

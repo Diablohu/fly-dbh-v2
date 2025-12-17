@@ -107,6 +107,20 @@ const actions = {
     'photo': photo.asset->path,
     photo_credit,
     photo_credit_url,
+    'free_addons': free_addons[]{
+      'platform': platform->name,
+      type,
+      msfs_package,
+      url,
+      extra,
+    },
+    'free_addons_scenery': free_addons_scenery[]{
+      'platform': platform->name,
+      type,
+      msfs_package,
+      url,
+      extra,
+    },
   },
   runways[],
   'route': {

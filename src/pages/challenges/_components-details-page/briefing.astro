@@ -13,11 +13,9 @@ type Props = Pick<ChallengeItemType, "briefing" | "type"> & {
 
 const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
     Astro.props;
-// ifr-circling
 ---
 
 <InfoBlock {...props} title="进近说明 & 航图" emoji="🗺️" isTodo={!briefing}>
-    <!-- urlBriefing -->
     {
         (Array.isArray(urlBriefing) || videoExtremeAirport?._id) && (
             <section class="brefing-video">
@@ -36,8 +34,8 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
                 {videoExtremeAirport?._id && (
                     <TagButton
                         href={getVideoPageLink(
-                            videoExtremeAirport?._id ||
-                                videoExtremeAirport?.slug ||
+                            videoExtremeAirport?.slug ||
+                                videoExtremeAirport?._id ||
                                 ""
                         )}
                         class="is-extreme-airport"
@@ -122,21 +120,6 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             --img-max-width: 100%;
         });
 
-        :global(h4) {
-            // margin-top: 1.5em;
-            margin-bottom: 0.6667em;
-            & ~ :global(h4) {
-                margin-top: 1.6667em;
-            }
-        }
-        & > :global(h1),
-        & > :global(h2),
-        & > :global(h3),
-        & > :global(h4),
-        & > :global(h5),
-        & > :global(h6) {
-            margin-top: 1em;
-        }
         :global(ul) {
             padding-left: 2em;
         }

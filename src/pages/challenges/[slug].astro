@@ -12,6 +12,7 @@ import Route from "./_components-details-page/route.astro";
 import Briefing from "./_components-details-page/briefing.astro";
 import OtherChallenges from "./_components-details-page/other-challenges.astro";
 import Videos from "./_components-details-page/videos.astro";
+import FreeAddons from "./_components-details-page/free-addons.astro";
 
 import calculateRunwaySlope, {
     transformSlopePercentageToDegrees,
@@ -201,6 +202,11 @@ const challengeRunways = runwayPairs
                     videoExtremeAirport={challenge.video_this_aerodrome_extreme_airport}
                     data-info="briefing"
                 />
+                <FreeAddons
+                    freeAddons={challenge.aerodrome.free_addons}
+                    freeSceneryAddons={challenge.aerodrome.free_addons_scenery}
+                    data-info="free-addons"
+                />
                 <OtherChallenges
                     list={challenge.other_challenges_this_aerodrome}
                     data-info="other-challenges"
@@ -210,8 +216,6 @@ const challengeRunways = runwayPairs
                     data-info="videos"
                 />
 
-                <!-- <section>TODO: Demo Video</section> -->
-                <!-- <section>TODO: Recommended Scenery Add-on</section> -->
                 <!-- <section>TODO: Back to List</section> -->
             </section>
         </div>
@@ -313,8 +317,24 @@ const challengeRunways = runwayPairs
         }
         & > [data-info="facts"],
         & > [data-info="hazards"],
-        & > [data-info="route"] {
+        & > [data-info="route"],
+        & > [data-info="free-addons"] {
             flex-basis: var(--body-safe-min-width);
+        }
+        :global(h4) {
+            // margin-top: 1.5em;
+            margin-bottom: 0.6667em;
+            & ~ :global(h4) {
+                margin-top: 1.6667em;
+            }
+        }
+        & > :global(h1),
+        & > :global(h2),
+        & > :global(h3),
+        & > :global(h4),
+        & > :global(h5),
+        & > :global(h6) {
+            margin-top: 1em;
         }
     }
 

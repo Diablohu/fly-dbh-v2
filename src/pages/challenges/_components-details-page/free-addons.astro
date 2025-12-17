@@ -1,0 +1,159 @@
+---
+import { type ChallengeItemType } from "@/types";
+import { getVideoPageLink } from "@/global";
+import parseMarkdown from "@/utils/parse-markdown";
+
+import InfoBlock from "./_info-block.astro";
+import TagButton from "@/components/tag-button.astro";
+
+type Props = {
+    freeAddons?: ChallengeItemType["aerodrome"]["free_addons"];
+    freeSceneryAddons?: ChallengeItemType["aerodrome"]["free_addons_scenery"];
+} & astroHTML.JSX.HTMLAttributes;
+
+const { freeAddons, freeSceneryAddons, ...props } = Astro.props;
+
+function generateList(list: typeof freeAddons) {
+    return list
+        ?.map((item, index, list) => {
+            const indexSamePlatformFirstParty =
+                item.type === "third-party" &&
+                list.findIndex(
+                    (i) =>
+                        i.type === "first-party" && i.platform === item.platform
+                );
+
+            const markdown = [
+                item.type === "first-party"
+                    ? [
+                          "第一方推出的免费插件",
+                          item.msfs_package === "deluxe"
+                              ? "需要**豪华版（Deluxe）**"
+                              : item.msfs_package === "premium-deluxe"
+                                ? "需要**高级豪华版（Premium Deluxe）**"
+                                : item.msfs_package === "update"
+                                  ? item.url
+                                        .split(",")
+                                        .map((n) => {
+                                            const m =
+                                                /(?<update>[a-zA-Z]+)(?<number>\d+)/.exec(
+                                                    n
+                                                );
+                                            const isWorldUpdate =
+                                                m?.groups?.update.toLowerCase() ===
+                                                "wu";
+                                            const isCityUpdate =
+                                                m?.groups?.update.toLowerCase() ===
+                                                "cu";
+                                            const name = isWorldUpdate
+                                                ? "世界更新"
+                                                : isCityUpdate
+                                                  ? "城市更新"
+                                                  : "";
+                                            const number = Number(
+                                                m?.groups?.number
+                                            );
+                                            const noAction =
+                                                typeof m?.groups?.number ===
+                                                    "string" &&
+                                                /2024/.test(item.platform) &&
+                                                number <
+                                                    (isWorldUpdate
+                                                        ? 19
+                                                        : isCityUpdate
+                                                          ? 10
+                                                          : 0);
+
+                                            return (
+                                                `\n**${name}#${number}**` +
+                                                (noAction
+                                                    ? "（游戏本体已自带，无需额外操作）"
+                                                    : /2024/.test(item.platform)
+                                                      ? "（需要在市场内免费获取）"
+                                                      : "（需要在市场内免费下载）")
+                                            );
+                                        })
+                                        .join("")
+                                  : "本体自带",
+                      ].join("：")
+                    : item.type === "third-party"
+                      ? (typeof indexSamePlatformFirstParty === "number"
+                            ? `有第三方插件强化上述第一方地景`
+                            : `第三方推出的精品免费插件`) +
+                        `，推荐下载：\n${item.url}`
+                      : "",
+
+                item.extra,
+            ].join("\n");
+
+            return {
+                title: item.platform,
+                margeIntoIndex: indexSamePlatformFirstParty,
+                markdown,
+            };
+        })
+        .map((item, index, list) => {
+            if (item.margeIntoIndex !== false) {
+                list[item.margeIntoIndex].markdown += "\n" + item.markdown;
+                return false;
+            }
+            if (
+                list.slice(index + 1).some((i) => {
+                    if (i.markdown === item.markdown) {
+                        i.title = item.title + " & " + i.title;
+                        return true;
+                    }
+                    return false;
+                })
+            ) {
+                return false;
+            }
+            return item;
+        });
+}
+
+const aerodromeAddons = generateList(freeAddons);
+const sceneryAddons = generateList(freeSceneryAddons);
+---
+
+{
+    Array.isArray(aerodromeAddons) && aerodromeAddons.length > 0 && (
+        <InfoBlock {...props} title="本机场的免费景观插件" emoji="🧩">
+            {aerodromeAddons?.map(
+                (item) =>
+                    item !== false && (
+                        <Fragment
+                            set:html={parseMarkdown(
+                                "#### " + item.title + "\n" + item.markdown
+                            )}
+                        />
+                    )
+            )}
+        </InfoBlock>
+    )
+}
+{
+    Array.isArray(sceneryAddons) && sceneryAddons.length > 0 && (
+        <InfoBlock {...props} title="本机场周边的免费景观插件" emoji="🧩">
+            <p>以下免费插件可以强化机场周边的景观：</p>
+            {sceneryAddons?.map(
+                (item) =>
+                    item !== false && (
+                        <Fragment
+                            set:html={parseMarkdown(
+                                "#### " + item.title + "\n" + item.markdown
+                            )}
+                        />
+                    )
+            )}
+        </InfoBlock>
+    )
+}
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .free-addons {
+        zoom: 1;
+    }
+</style>

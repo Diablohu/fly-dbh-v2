@@ -5,7 +5,8 @@ type Props = {
     href?: string;
     prefix?: string;
     difficultyColor?: ChallengeDifficultyType;
-} & astroHTML.JSX.HTMLAttributes;
+} & astroHTML.JSX.AnchorHTMLAttributes &
+    astroHTML.JSX.ButtonHTMLAttributes;
 
 const {
     class: className,
