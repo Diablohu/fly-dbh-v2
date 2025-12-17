@@ -30,6 +30,8 @@ const { title, emoji, isTodo = false, bodyClass, ...props } = Astro.props;
     @import "@/utils/mixins.less";
 
     .info-block {
+        --title-border-x-offset: -0.3333em;
+
         position: relative;
 
         .title {
@@ -38,9 +40,11 @@ const { title, emoji, isTodo = false, bodyClass, ...props } = Astro.props;
             font-weight: normal;
             color: var(--text-color-secondary);
             // opacity: 0.75;
-            padding: 0 0.3333em 0.5em 0.3333em;
+            padding: 0 calc(var(--title-border-x-offset) * -1) 0.5em
+                calc(var(--title-border-x-offset) * -1);
             border-bottom: 1px solid var(--border-color);
-            margin: 0 -0.3333em 0.5em -0.3333em;
+            margin: 0 var(--title-border-x-offset) 0.5em
+                var(--title-border-x-offset);
             user-select: none;
             .emoji {
                 display: inline-block;

@@ -8,6 +8,7 @@ import {
 } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
 import { E60000, E60001 } from "@/constants/error-codes";
+import { EXTREME_AIRPORT } from "@/constants/video-tags";
 import {
     type ChallengeListItemType,
     type ChallengeItemType,
@@ -179,6 +180,19 @@ const actions = {
                         // 处理机场相关视频的图片路径
                         if (Array.isArray(res[0].videos_this_aerodrome))
                             res[0].videos_this_aerodrome.forEach((post) => {
+                                if (
+                                    !res[0]
+                                        .video_this_aerodrome_extreme_airport &&
+                                    post.tags.some(
+                                        ({ slug }) => slug === EXTREME_AIRPORT
+                                    )
+                                ) {
+                                    res[0].video_this_aerodrome_extreme_airport =
+                                        {
+                                            _id: post._id,
+                                            slug: post.slug,
+                                        };
+                                }
                                 post.cover = transformImagePath(post.cover);
                             });
                         return res[0] as unknown as SanityDocument<ChallengeItemType>[];

@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { actions } from "astro:actions";
 import rss from "@astrojs/rss";
 
-import { title, slogan, routeBase } from "@/global";
+import { title, slogan, getVideoPageLink } from "@/global";
 
 const cdata = (str: string) => `<![CDATA[${str}]]>`;
 
@@ -24,7 +24,7 @@ export const GET: APIRoute = async (context) => {
             ).data?.map((post) => {
                 return {
                     title: post.title,
-                    link: `${routeBase.watch}/${post.slug || post._id}`,
+                    link: getVideoPageLink(post.slug || post._id),
                     pubDate: new Date(post.release),
                     description: cdata(post.description),
                     categories: post.tags.map((tag) => cdata(tag.name)),

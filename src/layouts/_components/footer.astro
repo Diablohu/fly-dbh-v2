@@ -79,6 +79,7 @@ const contact: InfoGridType = {
                             class="with-icon"
                             href={href}
                             target="_blank"
+                            rel="nofollow noopener noreferrer external"
                             data-platform={platform}
                             set:html={`${iconHtml}${title}`}
                         />
@@ -95,6 +96,7 @@ const contact: InfoGridType = {
                             class="with-icon"
                             href={href}
                             target="_blank"
+                            rel="nofollow noopener noreferrer external"
                             data-platform={platform}
                             set:html={`${iconHtml}${title}`}
                         />
@@ -104,7 +106,11 @@ const contact: InfoGridType = {
         </dl>
         <section data-grid="kook">
             <span class="qrcode"><QrcodeKookSvg /></span>
-            <a href="https://qun.fly-dbh.com" target="_blank">扫码入群</a>
+            <a
+                href="https://qun.fly-dbh.com"
+                target="_blank"
+                rel="nofollow noopener noreferrer external">扫码入群</a
+            >
         </section>
         <section data-grid="infos">
             <p class="line-copyright">
@@ -112,9 +118,15 @@ const contact: InfoGridType = {
                 <a href="/">FLY-DBH.com</a>
             </p>
             <p>
-                Powered by <a href="https://astro.build/" target="_blank"
-                    >Astro</a
-                > & <a href="https://www.sanity.io/" target="_blank">Sanity</a>
+                Powered by <a
+                    href="https://astro.build/"
+                    target="_blank"
+                    rel="nofollow noopener noreferrer external">Astro</a
+                > & <a
+                    href="https://www.sanity.io/"
+                    target="_blank"
+                    rel="nofollow noopener noreferrer external">Sanity</a
+                >
             </p>
             <p>
                 <a class="with-icon" href="/feed.xml" target="_blank"
@@ -122,7 +134,9 @@ const contact: InfoGridType = {
                 ><span class="divider"></span><a
                     class="with-icon"
                     href="https://github.com/Diablohu/fly-dbh-v2"
-                    target="_blank"><IconGitHubSvg />开源</a
+                    target="_blank"
+                    rel="nofollow noopener noreferrer external"
+                    ><IconGitHubSvg />开源</a
                 >
             </p>
         </section>

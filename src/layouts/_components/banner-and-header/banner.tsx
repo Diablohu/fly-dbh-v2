@@ -180,7 +180,7 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                                 key={name}
                                 href={href}
                                 target="_blank"
-                                rel="noopener noreferrer"
+                                rel="nofollow noopener noreferrer external"
                                 className={classNames([
                                     styles["link"],
                                     styles[`link-${name}`],

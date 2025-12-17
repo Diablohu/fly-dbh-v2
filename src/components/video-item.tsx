@@ -8,7 +8,7 @@ import {
 } from "react";
 import classNames from "classnames";
 
-import { routeBase } from "@/global";
+import { getVideoPageLink } from "@/global";
 import { type VideoTagType, type VideoItemType } from "@/types";
 
 import prettifyTitle from "@/utils/prettify-title";
@@ -61,7 +61,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
             <figure className={classNames([styles["video-item"], className])}>
                 <a
                     className={styles["body"]}
-                    href={`${routeBase.watch}/${slug || _id}`}
+                    href={getVideoPageLink(slug || _id)}
                     // href={searchString}
                     // onClick={onClick}
                     // data-astro-prefetch="false"
@@ -168,6 +168,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                                 className={styles["platform"]}
                                 href={url}
                                 target="_blank"
+                                rel="nofollow noopener noreferrer external"
                                 data-platform={platform}
                                 key={platform}
                             >

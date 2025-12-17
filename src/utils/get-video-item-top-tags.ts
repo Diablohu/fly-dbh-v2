@@ -1,5 +1,6 @@
 import { type VideoItemType, type VideoTagType } from "@/types";
 import { level2Tags } from "@/global";
+import { EXTREME_AIRPORT } from "@/constants/video-tags";
 
 const getVideoItemTopTags = (
     post: Partial<VideoItemType>,
@@ -109,7 +110,7 @@ const getVideoItemTopTags = (
 
         case "world": {
             const thisTag = post.tags?.filter((tag) =>
-                ["extreme-airport"].includes(tag.slug || "")
+                [EXTREME_AIRPORT].includes(tag.slug || "")
             )[0];
             return thisTag
                 ? [

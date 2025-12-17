@@ -1,18 +1,56 @@
 ---
 import { type ChallengeItemType } from "@/types";
+import { getVideoPageLink } from "@/global";
 import parseMarkdown from "@/utils/parse-markdown";
 
 import InfoBlock from "./_info-block.astro";
+import TagButton from "@/components/tag-button.astro";
 
 type Props = Pick<ChallengeItemType, "briefing" | "type"> & {
     urlBriefing?: ChallengeItemType["video_url_briefing"];
+    videoExtremeAirport?: ChallengeItemType["video_this_aerodrome_extreme_airport"];
 } & astroHTML.JSX.HTMLAttributes;
 
-const { briefing, type, ...props } = Astro.props;
+const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
+    Astro.props;
 // ifr-circling
 ---
 
 <InfoBlock {...props} title="进近说明 & 航图" emoji="🗺️" isTodo={!briefing}>
+    <!-- urlBriefing -->
+    {
+        (Array.isArray(urlBriefing) || videoExtremeAirport?._id) && (
+            <section class="brefing-video">
+                {urlBriefing?.map(({ name, url }) => (
+                    <TagButton
+                        href={url}
+                        target="_blank"
+                        rel="nofollow noopener noreferrer external"
+                    >
+                        <strong>
+                            {["观看简令视频", name].filter(Boolean).join(" : ")}
+                        </strong>
+                        <em>@ 哔哩哔哩</em>
+                    </TagButton>
+                ))}
+                {videoExtremeAirport?._id && (
+                    <TagButton
+                        href={getVideoPageLink(
+                            videoExtremeAirport?._id ||
+                                videoExtremeAirport?.slug ||
+                                ""
+                        )}
+                        class="is-extreme-airport"
+                    >
+                        <strong>
+                            {["观看极限机场"].filter(Boolean).join(" : ")}
+                        </strong>
+                        <em>专题报道视频</em>
+                    </TagButton>
+                )}
+            </section>
+        )
+    }
     <section class="briefing">
         {
             type === "vfr" ? (
@@ -51,6 +89,16 @@ const { briefing, type, ...props } = Astro.props;
                         parseMarkdown(`#### 目视盘旋进近 *Circling Approach*
 * 按选定的仪表进近程序飞行，直至目视盘旋最低下降高度，即航图上的 \`CIRCLING MDA(H)\` (LIDO) 或 \`CIRCLE-TO-LAND MDA(H)\` (杰普逊)；
 * 之后转为目视进近，自行目视手操降落到目标跑道。`)
+                    }
+                />
+            ) : type === "ils" ? (
+                <Fragment
+                    set:html={
+                        briefing &&
+                        parseMarkdown(`#### ILS 进近 *Instrument Landing System Approach*
+* “盲降”进近；
+* 根据航图，在飞行电脑中输入/确认 \`ILS 频率\`，部分机型还需要在自动驾驶面板手动调节航迹 \`Course\`；
+* 确保飞机自动驾驶系统先后截获 \`航向道 LOC (Localizer)\` 和 \`下滑道 G/S (Glide Slope)\`。`)
                     }
                 />
             ) : (
@@ -118,6 +166,79 @@ const { briefing, type, ...props } = Astro.props;
                 border: 1px solid var(--border-color);
                 border-radius: 8px;
                 background: var(--tag-background-color);
+            }
+        }
+    }
+
+    .brefing-video {
+        --container-display: flex;
+        --container-float: right;
+        --container-margin-top: -0.5em;
+        --container-margin-left: 0;
+        --container-text-align: unset;
+        --item-margin-right: 0;
+
+        display: var(--container-display);
+        flex-flow: column nowrap;
+        gap: 0;
+        float: var(--container-float);
+        margin-top: var(--container-margin-top);
+        margin-left: var(--container-margin-left);
+        margin-right: var(--title-border-x-offset);
+        text-align: var(--container-text-align);
+        .screen-md-below({
+            --container-display: block;
+            --container-float: none;
+            --container-margin-top: 1em;
+            --container-margin-left: auto;
+            --item-margin-right: calc(var(--title-border-x-offset) * -1);
+            --container-text-align: center;
+        });
+        &::before,
+        &::after {
+            content: "";
+            flex: 1;
+        }
+        & > a {
+            --icon-emoji: "▶️";
+            flex: none;
+            font-size: 14px;
+            display: inline-block;
+            position: relative;
+            padding: 0.5em 1em 0.5em 3.6667em;
+            margin-bottom: 0.5em;
+            margin-right: var(--item-margin-right);
+            text-align: left;
+            // border: 1px solid var(--text-color-secondary);
+            &::before {
+                content: var(--icon-emoji);
+                position: absolute;
+                font-size: 2.6em;
+                top: 0.66em;
+                left: 0em;
+                display: block;
+                width: 0;
+                height: 0;
+                line-height: 0;
+            }
+            small,
+            strong,
+            em {
+                display: block;
+            }
+            strong {
+                font-size: 1.2em;
+                line-height: 1;
+            }
+            em {
+                font-size: 1em;
+                line-height: 1;
+                margin-top: 0.3333em;
+                color: var(--text-color-secondary);
+                font-style: normal;
+            }
+            &.is-extreme-airport {
+                --icon-emoji: "🚩";
             }
         }
     }

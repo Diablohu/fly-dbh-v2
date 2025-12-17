@@ -159,6 +159,8 @@ export type ChallengeItemType = {
     type:
         | "vfr"
         | "ils"
+        | "lda"
+        | "igs"
         | "rnav"
         | "rnp-visual"
         | "rnp-ar"
@@ -221,7 +223,6 @@ export type ChallengeItemType = {
             slug: string;
         }
     >;
-    video_url_briefing: string;
     videos_this_aerodrome: Pick<
         VideoItemType,
         | "_id"
@@ -232,5 +233,7 @@ export type ChallengeItemType = {
         | "cover"
         | "tags"
         | "links"
-    >;
+    >[];
+    video_url_briefing: { name: string; url: string }[];
+    video_this_aerodrome_extreme_airport: Pick<VideoItemType, "_id" | "slug">;
 };

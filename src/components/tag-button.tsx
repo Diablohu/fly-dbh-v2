@@ -13,7 +13,10 @@ type Props = {
 // ============================================================================
 
 const TagButton: FC<
-    Props & HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>
+    Props &
+        HTMLAttributes<HTMLAnchorElement | HTMLButtonElement> & {
+            target?: string;
+        }
 > = ({ className, href, prefix, children, ...props }) => {
     const Element = href ? "a" : "button";
     return (

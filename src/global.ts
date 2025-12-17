@@ -89,6 +89,9 @@ export function getVideoListPageLink(
             : "")
     );
 }
+export function getVideoPageLink(slug: string) {
+    return `${routeBase.watch}/${slug}`;
+}
 
 // ============================================================================
 
