@@ -17,11 +17,13 @@ function generateList(list: typeof freeAddons) {
     return list
         ?.map((item, index, list) => {
             const indexSamePlatformFirstParty =
-                item.type === "third-party" &&
-                list.findIndex(
-                    (i) =>
-                        i.type === "first-party" && i.platform === item.platform
-                );
+                item.type === "third-party"
+                    ? list.findIndex(
+                          (i) =>
+                              i.type === "first-party" &&
+                              i.platform === item.platform
+                      )
+                    : -1;
 
             const markdown = [
                 item.type === "first-party"
@@ -77,7 +79,7 @@ function generateList(list: typeof freeAddons) {
                                   : "本体自带",
                       ].join("：")
                     : item.type === "third-party"
-                      ? (typeof indexSamePlatformFirstParty === "number"
+                      ? (indexSamePlatformFirstParty > 0
                             ? `有第三方插件强化上述第一方地景`
                             : `第三方推出的精品免费插件`) +
                         `，推荐下载：\n${item.url}`
@@ -93,7 +95,7 @@ function generateList(list: typeof freeAddons) {
             };
         })
         .map((item, index, list) => {
-            if (item.margeIntoIndex !== false && item.margeIntoIndex > 0) {
+            if (item.margeIntoIndex > 0) {
                 list[item.margeIntoIndex].markdown += "\n" + item.markdown;
                 return false;
             }
