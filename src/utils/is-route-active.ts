@@ -6,6 +6,7 @@ const isRouteActive = (
     (route === "/" && currentPathname === route) ||
     (route !== "/" &&
         (new RegExp(`^${route}(\/|$)`).test(currentPathname) ||
-            extraChecks?.some((regex) => regex.test(currentPathname))));
+            extraChecks?.some((regex) => regex.test(currentPathname)) ||
+            false));
 
 export default isRouteActive;
