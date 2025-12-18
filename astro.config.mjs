@@ -19,7 +19,11 @@ const isDev = process.env.NODE_ENV === "development";
 const isAnalyze = FLYDBH_BUILD_MODE === "analyze";
 /** 模式：next.fly-dbh.com */
 const isNext = FLYDBH_BUILD_MODE === "next";
-const site = isNext ? "https://next.fly-dbh.com" : "https://fly-dbh.com";
+const site = isDev
+    ? "http://localhost:8088"
+    : isNext
+      ? "https://next.fly-dbh.com"
+      : "https://fly-dbh.com";
 
 // #region Astro Config
 // https://astro.build/config
@@ -37,6 +41,7 @@ export default defineConfig({
                         "tools", // TODO: unlock
                     ].join("|")})($|/)).)*$`
                 ).test(page),
+            customSitemaps: [`${site}/sitemap-videos.xml`],
         }),
     ],
     adapter: node({
