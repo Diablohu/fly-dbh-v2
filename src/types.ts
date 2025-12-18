@@ -165,6 +165,7 @@ export type ChallengeListItemType = Pick<
 };
 export type ChallengeItemType = {
     _id: string;
+    slug: string;
     name: string;
     type:
         | "vfr"

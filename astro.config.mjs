@@ -41,7 +41,10 @@ export default defineConfig({
                         "tools", // TODO: unlock
                     ].join("|")})($|/)).)*$`
                 ).test(page),
-            customSitemaps: [`${site}/sitemap-videos.xml`],
+            customSitemaps: [
+                `${site}/sitemap-videos.xml`,
+                `${site}/sitemap-challenges.xml`,
+            ],
         }),
     ],
     adapter: node({

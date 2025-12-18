@@ -1,20 +1,17 @@
-import type { SanityDocument } from "@sanity/client";
 import { defineAction } from "astro:actions";
 import { fetch } from "@/services/sanity";
-import { type VideoItemType } from "@/types";
+import { type VideoItemType, type ChallengeItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 
-export type VideoDocumentType = SanityDocument<
-    Pick<VideoItemType, "_id" | "slug"> & {
-        _updatedAt: string;
-    }
->;
 const cacheOptions = {
     ttl: 1 * 24 * 60 * 60_000, // 1 day
     refreshThreshold: 1 * 24 * 60 * 60_000 - 30 * 60_000, // elapsed: 30 min
 };
 
 const actions = {
+    /** 
+     // #region 全列表：视频
+     */
     fetchVideos: defineAction({
         handler: async () => {
             try {
@@ -29,6 +26,36 @@ const actions = {
                 return await fetch<
                     Pick<VideoItemType, "_id" | "slug"> & {
                         _updatedAt: string;
+                    }
+                >(queryString, { ...cacheOptions });
+            } catch (err) {
+                actionErrorHandler(err);
+            }
+        },
+    }),
+
+    /** 
+     // #region 全列表：挑战
+     */
+    fetchChallenges: defineAction({
+        handler: async () => {
+            try {
+                const queryString = `\
+*[_type == "approach_challenge"] {
+    _id,
+    'slug': slug.current,
+    _updatedAt,
+    'aerodrome': aerodrome->{
+        _updatedAt
+    }
+} | order( aerodrome._updatedAt desc, _updatedAt desc ) [0...1000]
+`;
+                return await fetch<
+                    Pick<ChallengeItemType, "_id" | "slug"> & {
+                        _updatedAt: string;
+                        aerodrome: {
+                            _updatedAt: string;
+                        };
                     }
                 >(queryString, { ...cacheOptions });
             } catch (err) {

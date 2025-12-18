@@ -164,7 +164,7 @@ export const commonAircraftNameSuffix = ["ceo", "neo", "max", "ng"];
 
 // ============================================================================
 //
-// 缓存相关
+// #region 缓存相关
 // 详见 `@/src/services/_cache.ts`
 //
 // ============================================================================
@@ -176,10 +176,11 @@ export const defaultCacheRefreshThreshold =
         ? 5_000 // elapsed: 5 seconds
         : 5 * 60_000); // elapsed: 5 minutes
 
+// #endregion
 // ============================================================================
-//
-// 着陆挑战相关
-//
+// 
+// #region 着陆挑战相关
+// 
 // ============================================================================
 
 export const challengeDifficultyString: Record<
@@ -199,3 +200,5 @@ export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> =
         c: "干线客机 & 商务喷气机",
         d: "重型喷气机",
     };
+
+// #endregion
