@@ -1,3 +1,5 @@
+import type { SanityDocument } from "@sanity/client";
+
 // export type LocaleType = "en" | "ja" | "zh";
 
 // export type ReactComponentPropsWitchLocale<L = Record<string, string>> = {
@@ -49,10 +51,7 @@ export type AerodromeItemType = {
     free_addons?: {
         platform: string;
         type: "first-party" | "third-party";
-        msfs_package:
-            | "deluxe"
-            | "premium-deluxe"
-            | "update";
+        msfs_package: "deluxe" | "premium-deluxe" | "update";
         url: string;
         extra: string;
     }[];
@@ -151,18 +150,18 @@ export type VideoItemType = {
 };
 
 // ============================================================================
+// #region Challenges
 
 export type ChallengeDifficultyType = 1 | 3 | 5 | 7;
-export type ChallengeListItemType = {
-    _id: string;
+export type ChallengeListItemType = Pick<
+    ChallengeItemType,
+    "_id" | "name" | "difficulty" | "max_allowed_aircraft_category"
+> & {
     slug: string;
     aerodrome: Pick<
         AerodromeItemType,
         "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "location"
     >;
-    name: string;
-    difficulty: ChallengeDifficultyType;
-    max_allowed_aircraft_category: AircraftCategoryType;
 };
 export type ChallengeItemType = {
     _id: string;
@@ -250,3 +249,19 @@ export type ChallengeItemType = {
     video_url_briefing: { name: string; url: string }[];
     video_this_aerodrome_extreme_airport: Pick<VideoItemType, "_id" | "slug">;
 };
+
+// #endregion
+// ============================================================================
+// #region Home Page
+export type HomeVideoDocumentType = SanityDocument<
+    Partial<VideoItemType> &
+        Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">
+>;
+export type HomeCollectionsType = {
+    config: SiteConfigsType;
+    challenges: ChallengeListItemType[];
+} & {
+    [collection: string]: HomeVideoDocumentType[];
+};
+// #endregion
+// ============================================================================

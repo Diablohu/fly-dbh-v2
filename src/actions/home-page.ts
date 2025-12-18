@@ -1,8 +1,7 @@
-import type { SanityDocument } from "@sanity/client";
 import { defineAction } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/services/sanity-helpers";
-import { type VideoItemType, type SiteConfigsType } from "@/types";
+import { type HomeVideoDocumentType, type HomeCollectionsType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 
 const fetchSorting = ` | order( release desc )`;
@@ -36,15 +35,6 @@ const getProjections = (collection: string) => `{
 }`;
 // links
 
-type DocumentType = SanityDocument<
-    Partial<VideoItemType> &
-        Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">
->;
-type CollectionsType = {
-    config: SiteConfigsType;
-} & {
-    [collection: string]: DocumentType[];
-};
 type FilterType = "first-tag" | "contain";
 
 const getFilterTag = (tagSlug: string, type: FilterType) =>
@@ -99,13 +89,30 @@ ${(
         }] ${fetchSorting} ${getProjections(name)} [0...${count}]`;
     })
     .join(",")},
-'config': *[_id == 'db0caed0-d756-4162-953b-f96a65a731e9']{config[]{key,'value':value.code}},
+    'config': *[_id == 'db0caed0-d756-4162-953b-f96a65a731e9']{config[]{key,'value':value.code}},
+    'challenges': *[_type == "approach_challenge"] {
+        _id,
+        _createdAt,
+        'slug': slug.current,
+        'aerodrome': aerodrome->{
+            _id,
+            'slug': slug.current,
+            name,
+            icao,
+            iata,
+            faa,
+            location,
+        },
+        name,
+        difficulty,
+        max_allowed_aircraft_category
+    } | order(_createdAt desc) [0...10]
 }`,
                     {
                         transform: (res) => {
                             return Object.entries(
-                                res as unknown as CollectionsType
-                            ).reduce<CollectionsType>(
+                                res as unknown as HomeCollectionsType
+                            ).reduce<HomeCollectionsType>(
                                 (collections, [collection, posts]) => {
                                     switch (collection) {
                                         case "config": {
@@ -116,9 +123,14 @@ ${(
                                             ).config;
                                             break;
                                         }
+                                        case "challenges": {
+                                            collections.challenges =
+                                                posts as HomeCollectionsType["challenges"];
+                                            break;
+                                        }
                                         default: {
                                             collections[collection] = (
-                                                posts as DocumentType[]
+                                                posts as HomeVideoDocumentType[]
                                             ).map(({ cover, ...post }) => ({
                                                 cover: transformImagePath(
                                                     cover
@@ -129,11 +141,11 @@ ${(
                                     }
                                     return collections;
                                 },
-                                { config: [] }
-                            ) as unknown as DocumentType[];
+                                { config: [], challenges: [] }
+                            ) as unknown as HomeVideoDocumentType[];
                         },
                     }
-                )) as unknown as CollectionsType;
+                )) as unknown as HomeCollectionsType;
             } catch (err) {
                 actionErrorHandler(err);
             }

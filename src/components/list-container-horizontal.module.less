@@ -1,6 +1,7 @@
 @import "@/utils/mixins.less";
 
 .video-list-horizontal {
+    @scroll-container-z-index: 5;
     @edge-gradient-layer-z-index: 10;
     @arrow-container-z-index: 20;
 
@@ -25,6 +26,7 @@
 
     & > .scroll-container {
         position: relative;
+        z-index: @scroll-container-z-index;
         display: flex;
         gap: 1em;
         flex-flow: row nowrap;
@@ -39,7 +41,7 @@
         scroll-snap-type: x mandatory;
         scroll-padding: var(--scroll-container-scroll-padding);
 
-        .item {
+        & > .item {
             scroll-snap-align: var(--item-scroll-snap-align);
             flex: 1 0 var(--item-width);
         }

@@ -10,12 +10,13 @@ import styles from "./challenge-item.module.less";
 // ============================================================================
 
 const ChallengeItem: FC<{
+    className?: string;
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty">;
-}> = ({ item }) => {
+}> = ({ item, className }) => {
     return (
         <a
-            className={styles["challenge-item"]}
+            className={classNames(styles["challenge-item"], className)}
             href={getChallengePageLink(item.slug || item._id)}
             key={item._id}
             data-difficulty={item.difficulty}

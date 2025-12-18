@@ -1,0 +1,45 @@
+---
+import { type HomeCollectionsType } from "@/types";
+
+import Collection from "./collection.astro";
+import ChallengeItem from "@/components/challenge-item";
+import ChallengeListHorizontal from "@/components/challenge-list-horizontal";
+
+import { routeBase } from "@/global";
+
+type Props = {
+    list: HomeCollectionsType["challenges"];
+};
+---
+
+<Collection
+    name="latest-challenges"
+    title="着陆挑战"
+    route={routeBase.challenges}
+    showMore
+>
+    <ChallengeListHorizontal client:idle challenges={Astro.props.list} />
+    <!-- <section class="challenges">
+        {Astro.props.list.map((item) => <ChallengeItem item={item} />)}
+    </section> -->
+</Collection>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .challenges {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 1em;
+        margin: 0;
+        padding: 0 0 1em 0;
+        overflow: hidden;
+        overflow-x: auto;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+        & > :global(*) {
+            flex: 1 0 var(--challenge-list-item-min-width);
+            scroll-snap-align: start;
+        }
+    }
+</style>

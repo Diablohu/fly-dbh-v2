@@ -1,8 +1,7 @@
 import { memo, type FC } from "react";
+import { type ChallengeListItemType } from "@/types";
 
-import VideoItem, {
-    type Props as VideoItemProps,
-} from "@/components/video-item";
+import ChallengeItem from "@/components/challenge-item";
 
 import ListContainerHorizontal, {
     classNameItem,
@@ -11,12 +10,12 @@ import ListContainerHorizontal, {
 // ============================================================================
 
 const VideoListHorizontal: FC<{
-    videos: VideoItemProps[];
+    challenges: ChallengeListItemType[];
     showMore?: boolean;
-}> = ({ videos, showMore }) => (
+}> = ({ challenges, showMore }) => (
     <ListContainerHorizontal showMore={showMore}>
-        {videos.map((v) => (
-            <VideoItem key={v._id} className={classNameItem} {...v} />
+        {challenges.map((v) => (
+            <ChallengeItem key={v._id} className={classNameItem} item={v} />
         ))}
     </ListContainerHorizontal>
 );

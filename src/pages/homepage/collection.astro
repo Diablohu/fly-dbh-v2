@@ -8,6 +8,7 @@ import getVideoListPageLink from "@/utils/get-video-list-page-link";
 type Props = {
     name: string;
     route?: string;
+    link?: string;
     title: string;
     videos?: ValueOf<
         Exclude<
@@ -19,6 +20,9 @@ type Props = {
     highlighted?: boolean;
 };
 const { showMore = true } = Astro.props;
+const moreLink =
+    Astro.props.link ??
+    `${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`;
 ---
 
 <dl
@@ -32,20 +36,14 @@ const { showMore = true } = Astro.props;
 >
     <dt class="collection-title">
         <h3>
-            <a
-                href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
-            >
+            <a href={moreLink}>
                 {Astro.props.title}
             </a>
         </h3>
         {
             showMore && (
                 <span class="link-more">
-                    <a
-                        href={`${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`}
-                    >
-                        更多
-                    </a>
+                    <a href={moreLink}>更多</a>
                 </span>
             )
         }

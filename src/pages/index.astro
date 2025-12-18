@@ -13,6 +13,7 @@ import getVideoListPageLink from "@/utils/get-video-list-page-link";
 
 import Collection from "./homepage/collection.astro";
 import CollectionSpotlight from "./homepage/collection-spotlight.astro";
+import CollectionChallenges from "./homepage/collection-challenges.astro";
 
 // ============================================================================
 //
@@ -85,6 +86,11 @@ const spotlightConfigString = collections?.config.find(
                 <CollectionSpotlight configString={spotlightConfigString} />
             )
         }
+        {
+            Array.isArray(collections?.challenges) && (
+                <CollectionChallenges list={collections.challenges} />
+            )
+        }
 
         {
             [
@@ -108,8 +114,7 @@ const spotlightConfigString = collections?.config.find(
 
         <section class="check-more">
             <TagButton href={getVideoListPageLink()}>分类浏览更多视频</TagButton
-            >
-            <TagButton href={routeBase.search}>搜索视频</TagButton>
+            ><TagButton href={routeBase.search}>搜索视频</TagButton>
         </section>
     </Block>
 </Layout>
