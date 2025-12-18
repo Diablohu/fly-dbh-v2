@@ -113,59 +113,12 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .briefing {
-        --img-max-width: 75%;
-        --img-max-height: calc(100vh - var(--global-sticky-top) - 10rem);
-
-        .screen-lg({
-            --img-max-width: calc(100% - var(--global-edge-safe-distance) * 2);
-        });
-        .screen-md-below({
-            --img-max-width: 100%;
-            --img-max-height: calc(100vh - var(--global-sticky-top) - 15rem);
-        });
-
-        :global(ul) {
-            padding-left: 2em;
-        }
-        :global(img) {
-            display: block;
-            width: 100%;
-            height: 100%;
-            max-width: var(--img-max-width);
-            max-height: var(--img-max-height);
-            margin-left: auto;
-            margin-right: auto;
-            object-fit: contain;
-        }
-        :global(code) {
-            font-family: var(--font-family-monospace);
-            position: relative;
-            display: inline-block;
-            padding: 0 0.33333em;
-            margin-left: 0.3333em;
-            margin-right: 0.3333em;
-            font-size: 0.9em;
-            vertical-align: baseline;
-            &::after {
-                content: "";
-                position: absolute;
-                top: -0.03333em;
-                bottom: 0.15em;
-                left: -0.15em;
-                right: -0.15em;
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                background: var(--tag-background-color);
-            }
-        }
-    }
-
     .brefing-video {
         --container-display: flex;
         --container-float: right;
-        --container-margin-top: -0.5em;
-        --container-margin-left: 0;
+        --container-margin-top: -0.25em;
+        --container-margin-bottom: 0;
+        --container-margin-left: 1em;
         --container-text-align: unset;
         --item-margin-right: 0;
         --text-color: var(--text-color-secondary);
@@ -175,6 +128,7 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
         gap: 0;
         float: var(--container-float);
         margin-top: var(--container-margin-top);
+        margin-bottom: var(--container-margin-bottom);
         margin-left: var(--container-margin-left);
         margin-right: var(--title-border-x-offset);
         text-align: var(--container-text-align);
@@ -182,6 +136,7 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             --container-display: block;
             --container-float: none;
             --container-margin-top: 1em;
+            --container-margin-bottom: -0.25em;
             --container-margin-left: auto;
             --item-margin-right: calc(var(--title-border-x-offset) * -1);
             --container-text-align: center;
@@ -243,6 +198,54 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             // }
             &:hover {
                 --text-color: var(--text-color-primary);
+            }
+        }
+    }
+
+    .briefing {
+        --img-max-width: 75%;
+        --img-max-height: calc(100vh - var(--global-sticky-top) - 10rem);
+
+        .screen-lg({
+            --img-max-width: calc(100% - var(--global-edge-safe-distance) * 2);
+        });
+        .screen-md-below({
+            --img-max-width: 100%;
+            --img-max-height: calc(100vh - var(--global-sticky-top) - 15rem);
+        });
+
+        :global(ul) {
+            padding-left: 2em;
+        }
+        :global(img) {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-width: var(--img-max-width);
+            max-height: var(--img-max-height);
+            margin-left: auto;
+            margin-right: auto;
+            object-fit: contain;
+        }
+        :global(code) {
+            font-family: var(--font-family-monospace);
+            position: relative;
+            display: inline-block;
+            padding: 0 0.33333em;
+            margin-left: 0.3333em;
+            margin-right: 0.3333em;
+            font-size: 0.9em;
+            vertical-align: baseline;
+            &::after {
+                content: "";
+                position: absolute;
+                top: -0.03333em;
+                bottom: 0.15em;
+                left: -0.15em;
+                right: -0.15em;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                background: var(--tag-background-color);
             }
         }
     }

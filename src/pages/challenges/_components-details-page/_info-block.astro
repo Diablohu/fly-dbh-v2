@@ -43,6 +43,7 @@ const TitleChild = titleLink ? "a" : Fragment;
 
     .info-block {
         --title-border-x-offset: -0.3333em;
+        --body-first-paragraph-margin-top: 0.75em;
 
         position: relative;
 
@@ -77,8 +78,28 @@ const TitleChild = titleLink ? "a" : Fragment;
             &.is-todo {
                 color: var(--text-color-secondary);
             }
-            & > :global(p:first-child) {
-                margin-top: 0;
+            :global(p:first-child) {
+                margin-top: var(--body-first-paragraph-margin-top);
+            }
+            :global(h4) {
+                // margin-top: 1.5em;
+                margin-bottom: 0.6667em;
+                & ~ :global(h4) {
+                    margin-top: 1.6667em;
+                }
+            }
+            :global(h1),
+            :global(h2),
+            :global(h3),
+            :global(h4),
+            :global(h5),
+            :global(h6),
+            :global(ul),
+            :global(p) {
+                &:first-child {
+                    margin-top: var(--body-first-paragraph-margin-top);
+                }
+                margin-top: 1.25em;
             }
 
             dl {
