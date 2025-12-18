@@ -317,21 +317,17 @@ const relatedChallenges = video.aerodromes
         {
             Array.isArray(relatedChallenges) &&
                 relatedChallenges.length > 0 && (
-                    <section class="infos more-contents">
-                        {Array.isArray(relatedChallenges) &&
-                            relatedChallenges.length > 0 && (
-                                <dl class="challenges">
-                                    <dt>相关着陆挑战</dt>
-                                    <dd class="list">
-                                        {relatedChallenges.map((item) => (
-                                            <ChallengeItem item={item} />
-                                        ))}
-                                    </dd>
-                                </dl>
-                            )}
-                    </section>
+                    <dl class="infos more-contents">
+                        <dt>相关机场的着陆挑战</dt>
+                        <dd class="challenges">
+                            {relatedChallenges.map((item) => (
+                                <ChallengeItem item={item} />
+                            ))}
+                        </dd>
+                    </dl>
                 )
         }
+        <!-- TODO: More Videos (latest or related?) -->
     </Block>
 </Layout>
 
@@ -535,24 +531,21 @@ const relatedChallenges = video.aerodromes
         });
     }
 
-    .more-contents {
+    .infos.more-contents {
         grid-area: more;
         position: relative;
         margin-top: 6em;
         border-top: 1px solid var(--border-color);
         padding-top: 0.5em;
-        &::before {
-            content: "更多内容";
+        dt {
             position: absolute;
             top: -2em;
             color: var(--text-color-primary);
             font-weight: bolder;
             font-size: large;
         }
-        .challenges {
-            .list {
-                .challenge-list-styles();
-            }
+        dd.challenges {
+            .challenge-list-styles();
         }
         &:empty {
             display: none;

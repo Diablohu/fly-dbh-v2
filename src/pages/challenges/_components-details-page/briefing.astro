@@ -115,12 +115,14 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
 
     .briefing {
         --img-max-width: 75%;
+        --img-max-height: calc(100vh - var(--global-sticky-top) - 10rem);
 
         .screen-lg({
             --img-max-width: calc(100% - var(--global-edge-safe-distance) * 2);
         });
         .screen-md-below({
             --img-max-width: 100%;
+            --img-max-height: calc(100vh - var(--global-sticky-top) - 15rem);
         });
 
         :global(ul) {
@@ -128,10 +130,13 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
         }
         :global(img) {
             display: block;
+            width: 100%;
+            height: 100%;
             max-width: var(--img-max-width);
-            max-height: calc(100vh - var(--global-sticky-top) - 15rem);
+            max-height: var(--img-max-height);
             margin-left: auto;
             margin-right: auto;
+            object-fit: contain;
         }
         :global(code) {
             font-family: var(--font-family-monospace);

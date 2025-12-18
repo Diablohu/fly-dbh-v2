@@ -23,10 +23,10 @@ function parseMarkdown(src: string) {
                                 ? undefined
                                 : "https://fly-dbh.com"
                         );
-                        // const m =
-                        //     /[-]*(?<width>\d*)[x]*(?<height>\d*)[\.]*(?<ext>\w+)$/.exec(
-                        //         url.pathname
-                        //     );
+                        const match =
+                            /[-]*(?<width>\d*)[x]*(?<height>\d*)[\.]*(?<ext>\w+)$/.exec(
+                                url.pathname
+                            );
                         // const aspectRatio =
                         //     m?.groups?.width && m?.groups?.height
                         //         ? Number(m.groups.width) /
@@ -47,6 +47,9 @@ function parseMarkdown(src: string) {
                             src: url.href,
                             srcOriginal: token.href,
                             alt: token.text,
+
+                            width: match?.groups?.width,
+                            height: match?.groups?.height,
                         });
                     },
                 },
