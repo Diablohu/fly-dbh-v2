@@ -21,13 +21,17 @@ function parseArrStr(string: string) {
     {...props}
     title="示例航线"
     emoji="🌏"
-    isTodo={!route.origin?.icao && !route.origin?.iata}
+    isTodo={!route.origin?.icao && !route.origin?.iata && !route.origin?.faa}
 >
     <dl>
         <dt>起飞</dt>
         <dd class="code">
             {
-                [route.origin?.icao, route.origin?.iata]
+                [
+                    route.origin?.icao,
+                    route.origin?.iata,
+                    route.origin?.faa && `${route.origin.faa} (FAA)`,
+                ]
                     .filter(Boolean)
                     .join(" / ")
             }
@@ -75,7 +79,11 @@ function parseArrStr(string: string) {
         <dt>目的</dt>
         <dd class="code">
             {
-                [route.destination?.icao, route.destination?.iata]
+                [
+                    route.destination?.icao,
+                    route.destination?.iata,
+                    route.destination?.faa && `${route.destination.faa} (FAA)`,
+                ]
                     .filter(Boolean)
                     .join(" / ")
             }

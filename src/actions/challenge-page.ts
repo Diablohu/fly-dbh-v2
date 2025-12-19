@@ -15,7 +15,7 @@ import {
     type ChallengeDifficultyType,
 } from "@/types";
 
-export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc`;
+export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc`;
 
 const actions = {
     fetchList: defineAction({
@@ -125,7 +125,12 @@ const actions = {
   runways[],
   'route': {
     'origin': routeOrigin->{
-      _id, 'slug': slug.current, name,icao,iata,
+      _id,
+      'slug': slug.current,
+      name,
+      icao,
+      iata,
+      faa,
     },
     'sid': routeSID[]{
       rwy,
@@ -133,7 +138,12 @@ const actions = {
     },
     'enroute': routeEnroute,
     'destination': routeDestination->{
-      _id, 'slug': slug.current, name,icao,iata,
+      _id,
+      'slug': slug.current,
+      name,
+      icao,
+      iata,
+      faa,
     },
     'star': routeSTAR[]{
       rwy,

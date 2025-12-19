@@ -208,7 +208,7 @@ export type ChallengeItemType = {
     route: {
         origin?: Pick<
             AerodromeItemType,
-            "_id" | "slug" | "name" | "icao" | "iata"
+            "_id" | "slug" | "name" | "icao" | "iata" | "faa"
         >;
         sid?: {
             rwy: string;
@@ -217,7 +217,7 @@ export type ChallengeItemType = {
         enroute?: string;
         destination?: Pick<
             AerodromeItemType,
-            "_id" | "slug" | "name" | "icao" | "iata"
+            "_id" | "slug" | "name" | "icao" | "iata" | "faa"
         >;
         star?: {
             rwy: string;
