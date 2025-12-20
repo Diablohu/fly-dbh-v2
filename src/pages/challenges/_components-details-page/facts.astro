@@ -51,10 +51,10 @@ E：166 ~ 210
     @import "@/utils/mixins.less";
 
     dl {
+        --dl-padding-left: 4.75em;
         display: block;
         margin: 0;
         position: relative;
-        padding-left: 4.75em;
         dt {
             position: absolute;
             top: 0;
@@ -63,13 +63,6 @@ E：166 ~ 210
         }
         dd {
             .difficulty-variables();
-            margin: 0;
-            :global(p, ul) {
-                margin: 0;
-            }
-            :global(ul) {
-                padding-left: 2em;
-            }
             &[data-difficulty] {
                 color: var(--difficulty-color);
                 padding-left: 1.5em;
