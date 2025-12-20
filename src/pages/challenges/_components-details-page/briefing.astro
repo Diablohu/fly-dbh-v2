@@ -203,50 +203,8 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
     }
 
     .briefing {
-        --img-max-width: 75%;
-        --img-max-height: calc(100vh - var(--global-sticky-top) - 10rem);
-
-        .screen-lg({
-            --img-max-width: calc(100% - var(--global-edge-safe-distance) * 2);
-        });
-        .screen-md-below({
-            --img-max-width: 100%;
-            --img-max-height: calc(100vh - var(--global-sticky-top) - 15rem);
-        });
-
         :global(ul) {
             padding-left: 2em;
-        }
-        :global(img) {
-            display: block;
-            width: 100%;
-            height: 100%;
-            max-width: var(--img-max-width);
-            max-height: var(--img-max-height);
-            margin-left: auto;
-            margin-right: auto;
-            object-fit: contain;
-        }
-        :global(code) {
-            font-family: var(--font-family-monospace);
-            position: relative;
-            display: inline-block;
-            padding: 0 0.33333em;
-            margin-left: 0.3333em;
-            margin-right: 0.3333em;
-            font-size: 0.9em;
-            vertical-align: baseline;
-            &::after {
-                content: "";
-                position: absolute;
-                top: -0.03333em;
-                bottom: 0.15em;
-                left: -0.15em;
-                right: -0.15em;
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                background: var(--tag-background-color);
-            }
         }
     }
 </style>
