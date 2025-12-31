@@ -1,6 +1,6 @@
 @import "@/utils/mixins.less";
 
-.video-list-horizontal {
+.list-container-horizontal {
     @scroll-container-z-index: 5;
     @edge-gradient-layer-z-index: 10;
     @arrow-container-z-index: 20;
@@ -13,7 +13,7 @@
     );
 
     position: relative;
-    container-name: video-list-horizontal;
+    container-name: list-container-horizontal;
     container-type: inline-size;
 
     & > .scroll-container,
@@ -32,8 +32,10 @@
         flex-flow: row nowrap;
         padding-left: var(--global-edge-safe-distance);
         padding-right: var(--global-edge-safe-distance);
+        padding-bottom: 1em;
         margin-left: calc(var(--global-edge-safe-distance) * -1);
         margin-right: calc(var(--global-edge-safe-distance) * -1);
+        margin-bottom: -1em;
         overflow: hidden;
         overflow-x: auto;
         // scrollbar-width: thin;
@@ -67,22 +69,10 @@
         position: absolute;
         z-index: @arrow-container-z-index;
         top: 0;
-        height: 0;
+        height: 100%;
         width: var(--item-width);
         overflow: visible;
         pointer-events: none;
-
-        // 占位：半个视频元素高度
-        // 这样可以让箭头按钮在纵向永远在和视频元素的中间对齐
-        &::before {
-            position: relative;
-            content: "";
-            display: block;
-            width: 0;
-            height: 0;
-            padding-bottom: percentage((0.5 * 9 / 16));
-            // background: #f00;
-        }
 
         & > .arrow {
             pointer-events: all;
@@ -174,30 +164,47 @@
             transparent
         );
     }
+
+    &.is-video-list {
+        & > .arrow-container {
+            height: 0;
+            // 占位：半个视频元素高度
+            // 这样可以让箭头按钮在纵向永远在和视频元素的中间对齐
+            &::before {
+                position: relative;
+                content: "";
+                display: block;
+                width: 0;
+                height: 0;
+                padding-bottom: percentage((0.5 * 9 / 16));
+                // background: #f00;
+            }
+        }
+    }
 }
 
-@container video-list-horizontal (width < @screen-size-xl-plus-edge-safe-distance) {
+@container list-container-horizontal (width < @screen-size-xl-plus-edge-safe-distance) {
     .scroll-container,
     .arrow-container {
         --items-in-view: 4;
     }
 }
 
-@container video-list-horizontal (width < @screen-size-lg-plus-edge-safe-distance) {
+@container list-container-horizontal (width < @screen-size-lg-plus-edge-safe-distance) {
     .scroll-container,
     .arrow-container {
         --items-in-view: 3;
     }
 }
 
-@container video-list-horizontal (width < @screen-size-md-plus-edge-safe-distance) {
+@container list-container-horizontal (width < @screen-size-md-plus-edge-safe-distance) {
     .scroll-container,
     .arrow-container {
         --items-in-view: 2;
     }
 }
 
-@container video-list-horizontal (width < @screen-size-sm-plus-edge-safe-distance) {
+@container list-container-horizontal (width < @screen-size-sm-plus-edge-safe-distance) {
     .scroll-container,
     .arrow-container {
         --items-in-view: 2;
@@ -207,7 +214,7 @@
     // }
 }
 
-@container video-list-horizontal (width < @screen-size-xs) {
+@container list-container-horizontal (width < @screen-size-xs) {
     .scroll-container,
     .arrow-container {
         --items-in-view: 1;

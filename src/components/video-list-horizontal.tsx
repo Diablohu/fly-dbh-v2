@@ -14,7 +14,7 @@ const VideoListHorizontal: FC<{
     videos: VideoItemProps[];
     showMore?: boolean;
 }> = ({ videos, showMore }) => (
-    <ListContainerHorizontal showMore={showMore}>
+    <ListContainerHorizontal showMore={showMore} isVideoList>
         {videos.map((v) => (
             <VideoItem key={v._id} className={classNameItem} {...v} />
         ))}

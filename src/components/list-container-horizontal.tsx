@@ -19,11 +19,13 @@ export const classNameItem = styles.item;
 
 // ============================================================================
 
-const VideoListHorizontal: FC<
+const ListContainerHorizontal: FC<
     Required<PropsWithChildren> & {
+        // TODO:
         showMore?: boolean;
+        isVideoList?: boolean;
     }
-> = ({ children }) => {
+> = ({ children, isVideoList }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
     const IntersectionProbeBegin = useRef<HTMLDivElement>(null);
     const IntersectionProbeEnd = useRef<HTMLDivElement>(null);
@@ -102,7 +104,14 @@ const VideoListHorizontal: FC<
     }, []);
 
     return (
-        <div className={styles["video-list-horizontal"]}>
+        <div
+            className={classNames([
+                styles["list-container-horizontal"],
+                {
+                    [styles["is-video-list"]]: isVideoList,
+                },
+            ])}
+        >
             <div className={styles["scroll-container"]} ref={ContainerRef}>
                 <div
                     className={classNames([
@@ -135,7 +144,7 @@ const VideoListHorizontal: FC<
     );
 };
 
-export default memo(VideoListHorizontal);
+export default memo(ListContainerHorizontal);
 
 // ============================================================================
 
