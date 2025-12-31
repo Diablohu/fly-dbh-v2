@@ -22,7 +22,9 @@ type Props = {
 const { showMore = true } = Astro.props;
 const moreLink =
     Astro.props.link ??
-    `${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`;
+    (Astro.props.route?.[0] === "/"
+        ? Astro.props.route
+        : `${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`);
 ---
 
 <dl
