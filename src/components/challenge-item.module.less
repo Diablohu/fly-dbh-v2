@@ -71,10 +71,15 @@
         // pointer-events: none;
         // border: inherit;
         border-radius: inherit;
+        // background: linear-gradient(
+        //     145deg,
+        //     var(--difficulty-color),
+        //     transparent 12em
+        // );
         background: linear-gradient(
             145deg,
             var(--difficulty-color),
-            transparent 12em
+            var(--theme-color) 18em
         );
         opacity: 0.3333;
     }
@@ -104,4 +109,15 @@
     //     line-height: 1;
     //     opacity: 0.5;
     // }
+
+    .aerodrome-photo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -5;
+        opacity: 0.25;
+    }
 }

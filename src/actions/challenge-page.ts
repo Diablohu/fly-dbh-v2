@@ -47,6 +47,12 @@ const actions = {
                             err.cause = { GROQ: queryString };
                             throw err;
                         }
+                        // res.forEach((post) => {
+                        //     if (post.aerodrome.photo)
+                        //         post.aerodrome.photo = transformImagePath(
+                        //             post.aerodrome.photo
+                        //         );
+                        // });
                         // res[0].cover = transformImagePath(res[0].cover);
                         return res;
                     },
@@ -270,6 +276,12 @@ const actions = {
                             err.cause = { GROQ: queryString };
                             throw err;
                         }
+                        // res.forEach((post) => {
+                        //     if (post.aerodrome.photo)
+                        //         post.aerodrome.photo = transformImagePath(
+                        //             post.aerodrome.photo
+                        //         );
+                        // });
                         // res[0].cover = transformImagePath(res[0].cover);
                         return res;
                     },

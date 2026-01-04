@@ -126,6 +126,14 @@ ${(
                                         case "challenges": {
                                             collections.challenges =
                                                 posts as HomeCollectionsType["challenges"];
+                                            /*.map((post) => {
+                                                if (post.aerodrome.photo)
+                                                    post.aerodrome.photo =
+                                                        transformImagePath(
+                                                            post.aerodrome.photo
+                                                        );
+                                                return post;
+                                            });*/
                                             break;
                                         }
                                         default: {

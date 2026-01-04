@@ -161,6 +161,7 @@ export type ChallengeListItemType = Pick<
     aerodrome: Pick<
         AerodromeItemType,
         "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "location"
+        //  | "photo"
     >;
 };
 export type ChallengeItemType = {

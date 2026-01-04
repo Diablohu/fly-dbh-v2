@@ -70,6 +70,13 @@ const ChallengeItem: FC<{
                         {item.aerodrome.location.filter(Boolean).join(" ")}
                     </span>
                 )}
+            {item.aerodrome?.photo && (
+                <img
+                    className={styles["aerodrome-photo"]}
+                    src={`${item.aerodrome.photo}?auto=format&w=400&blur=5&q=60`}
+                    loading="lazy"
+                />
+            )}
         </a>
     );
 };
