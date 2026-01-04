@@ -128,6 +128,7 @@ const runwayPairs: [RunwayType, RunwayType][] = challenge.aerodrome.runways
                 widthInFeet,
                 widthInMeters: widthInFeet * 0.3048,
                 elevationInFeet: elevationsInFeet[index],
+                elevationInMeters: elevationsInFeet[index] * 0.3048,
                 slopePercentage: slopeInfo.percentage,
                 slopeDegrees: slopeInfo.degrees,
             };

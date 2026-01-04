@@ -15,8 +15,10 @@ export type RunwayType = {
     widthInMeters: number;
     /** 跑道宽度（英尺） */
     widthInFeet: number;
-    /** 跑道海拔（英尺） */
+    /** 跑道标高（英尺） */
     elevationInFeet: number;
+    /** 跑道标高（米） */
+    elevationInMeters: number;
     /** 坡度（%） */
     slopePercentage: number;
     /** 坡度（°） */

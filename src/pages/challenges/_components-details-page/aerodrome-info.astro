@@ -112,6 +112,15 @@ type Props = {
                                     "标高",
                                     ...runwayPair.map(
                                         (runway) =>
+                                            Math.round(
+                                                runway.elevationInMeters
+                                            ) + " m"
+                                    ),
+                                ],
+                                [
+                                    "",
+                                    ...runwayPair.map(
+                                        (runway) =>
                                             runway.elevationInFeet + " ft"
                                     ),
                                 ],
