@@ -18,6 +18,8 @@ const defaultLength = 10;
 const getKeywords = (keyword: string, split = false) => [
     ...new Set([
         ...(split ? keyword.trim().toLowerCase().split(/\s+/g) : [keyword]),
+
+        // 变换机型名称
         keyword.replace(/([a-z])([0-9])/gi, "$1-$2"),
         keyword.replace(/^[a-z]{1}([0-9a-z]{3})/gi, "$1"),
         keyword.replace(/[^\s^0-9^a-z]+([0-9a-z])/gi, "$1"),
@@ -25,6 +27,9 @@ const getKeywords = (keyword: string, split = false) => [
             new RegExp(`(\\d+)(${commonAircraftNameSuffix.join("|")})`, "gi"),
             "$1 $2"
         ),
+
+        // 变换 [X]U[数字] -> [X]U0[数字]
+        keyword.replace(/(\w)u([0-9])([^0-9]|$)/gi, "$1u0$2$3"),
     ]),
 ];
 const projection = `{
