@@ -336,6 +336,7 @@
         var(--global-header-height) / 2 + 2rem + 1.25rem * 1.2 / 2
     );
 
+    // &,
     // & + .header-glossy-mask {
     --global-header-background-color: transparent;
     --global-header-backdrop-filter: none;
@@ -354,6 +355,7 @@
 
     --global-header-options-offset-y: 0;
 
+    // &,
     // & + .header-glossy-mask {
     --global-header-background-color: revert;
     --global-header-backdrop-filter: revert;
@@ -394,6 +396,11 @@
         background-color, backdrop-filter, border-color, color, height;
     // will-change: border-color, color, height;
     // transition-property: border-color, color, height;
+
+    &:has(+ .header-glossy-mask) {
+        background-color: transparent;
+    }
+
     .styles-header-isolated();
 
     // bottom border
@@ -592,31 +599,32 @@
     //     }
     // }
 }
-/*
-.header-glossy-mask {
-    z-index: calc(var(--global-header-z-index) - 1);
-    margin-top: calc(var(--global-header-height) * -1);
-    background-color: var(--global-header-background-color);
-    backdrop-filter: var(--global-header-backdrop-filter);
-    will-change: background-color, backdrop-filter, height;
-    transition-property: background-color, backdrop-filter, height;
-    @supports (mask-image: linear-gradient(black, transparent)) {
-        mask-image: linear-gradient(
-            black var(--global-header-height),
-            transparent
-        );
-        flex-basis: calc(
-            var(--global-header-height) +
-                var(--global-header-glossy-extra-height)
-        );
-        height: calc(
-            var(--global-header-height) +
-                var(--global-header-glossy-extra-height)
-        );
-        margin-bottom: calc(var(--global-header-glossy-extra-height) * -1);
-    }
-}
-*/
+// .header-glossy-mask {
+//     z-index: calc(var(--global-header-z-index) - 1);
+//     margin-top: calc(var(--global-header-height) * -1);
+//     background-color: var(--global-header-background-color);
+//     backdrop-filter: var(--global-header-backdrop-filter);
+//     will-change: background-color, backdrop-filter, height;
+//     transition-property: background-color, backdrop-filter, height;
+//     pointer-events: none;
+//     @supports (mask-image: linear-gradient(black, transparent)) {
+//         --global-header-glossy-extra-height: 20vh;
+//         mask-image: linear-gradient(
+//             black var(--global-header-height),
+//             black calc(var(--global-header-glossy-extra-height) * 1/2),
+//             transparent
+//         );
+//         flex-basis: calc(
+//             var(--global-header-height) +
+//                 var(--global-header-glossy-extra-height)
+//         );
+//         height: calc(
+//             var(--global-header-height) +
+//                 var(--global-header-glossy-extra-height)
+//         );
+//         margin-bottom: calc(var(--global-header-glossy-extra-height) * -1);
+//     }
+// }
 
 .banner + .header {
     .styles-header-over-banner();
