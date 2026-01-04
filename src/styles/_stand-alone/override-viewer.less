@@ -3,9 +3,10 @@
 .viewer-container.viewer-backdrop {
     --button-size: calc(var(--global-header-height) / 2 + 2px);
     --button-icon-size: 20px;
+    --button-border-color: var(--border-color);
     --button-background-color: var(--tag-background-color);
     --button-background-color-hover: var(--menu-background-color-highlight);
-    --button-background-color-active: var(--theme-color-90);
+    --button-background-color-active: var(--theme-color-p-90);
     --button-gap: calc(var(--global-edge-safe-distance) / 2);
     --button-border-radius: 0.6667em;
     --footer-x-align: space-between;
@@ -122,7 +123,7 @@
         width: var(--button-size);
         height: var(--button-size);
         background: var(--button-background-color);
-        border: 1px solid var(--button-background-color);
+        border: 1px solid var(--button-border-color);
         // border: 0;
         &::before {
             position: absolute;
@@ -147,6 +148,7 @@
             --button-background-color: var(--button-background-color-active);
             z-index: 1000;
             box-shadow: none;
+            // border: 1px solid var(--button-background-color);
         }
     }
 }
