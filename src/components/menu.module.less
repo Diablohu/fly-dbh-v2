@@ -150,6 +150,9 @@
     border-top-width: 0;
 }
 .menu-switch-item {
+    --pill-background-color: var(--tag-background-color);
+    --dot-background-color: var(--theme-color-invert-p-50);
+    // --dot-border-color: transparent;
     color: var(--text-color-secondary);
     & > label {
         display: flex;
@@ -178,7 +181,7 @@
             width: var(--width);
             height: var(--height);
             border-radius: 50px;
-            background: var(--tag-background-color);
+            background: var(--pill-background-color);
             border: 1px solid var(--tag-background-color);
             transition: background-color var(--base-transition-duration);
             &::before {
@@ -189,25 +192,28 @@
                 top: 50%;
                 left: 0;
                 margin-top: calc(var(--dot-size) * -0.5);
-                background: var(--border-color);
+                background: var(--dot-background-color);
+                // border: 1px solid var(--dot-border-color);
                 border-radius: 100%;
                 transform: translateX(var(--dot-margin));
                 transition: all var(--base-transition-duration);
             }
         }
         & > input[type="checkbox"]:checked ~ .switch {
+            --pill-background-color: var(--tag-background-color-invert);
+            --dot-background-color: var(--theme-color);
             &::before {
                 transform: translateX(
                     calc(var(--width) - var(--dot-size) - var(--dot-margin) * 2)
                 );
-                background: var(--text-color-primary);
             }
         }
         &:hover {
+            --pill-background-color: var(--menu-background-color-highlight);
             color: var(--text-color-primary);
-            & > .switch {
-                background-color: var(--menu-background-color-highlight);
-            }
+            // & > input[type="checkbox"]:checked ~ .switch {
+            //     --pill-background-color: var(--theme-color-invert-p-80);
+            // }
         }
     }
 }
