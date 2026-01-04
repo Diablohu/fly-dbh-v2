@@ -30,15 +30,19 @@ type Props = {
                         }`,
                     })}
                 />
-                {Astro.props.aerodrome.photo_credit_url && (
+                {Astro.props.aerodrome.photo_credit && (
                     <figcaption class="credit">
-                        <a
-                            href={Astro.props.aerodrome.photo_credit_url}
-                            target="_blank"
-                            rel="nofollow noopener noreferrer external"
-                        >
-                            {Astro.props.aerodrome.photo_credit}
-                        </a>
+                        {Astro.props.aerodrome.photo_credit_url ? (
+                            <a
+                                href={Astro.props.aerodrome.photo_credit_url}
+                                target="_blank"
+                                rel="nofollow noopener noreferrer external"
+                            >
+                                {Astro.props.aerodrome.photo_credit}
+                            </a>
+                        ) : (
+                            Astro.props.aerodrome.photo_credit
+                        )}
                     </figcaption>
                 )}
             </figure>
