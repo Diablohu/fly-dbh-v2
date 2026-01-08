@@ -1,0 +1,58 @@
+---
+import TagButton from "@/components/tag-button.astro";
+import { routeBase } from "@/global";
+
+type Props = {
+    label?: string;
+    value: string;
+    showAll?: boolean;
+    filters: [string, string][];
+};
+
+const { label, showAll = true, value } = Astro.props;
+
+const list = (showAll ? [["全部", ""]] : []).concat(
+    Astro.props.filters
+) as Props["filters"];
+---
+
+<dl>
+    {label && <dt>{label}</dt>}
+    <dd class="filters">
+        {
+            list.map(([label, slug]) => (
+                <TagButton
+                    href={[routeBase.videoList, value, slug]
+                        .filter(Boolean)
+                        .join("/")}
+                    class:list={[
+                        "filter-button",
+                        {
+                            "is-active": new RegExp((slug || value) + "$").test(
+                                Astro.request.url
+                            ),
+                        },
+                    ]}
+                >
+                    {label}
+                </TagButton>
+            ))
+        }
+    </dd>
+</dl>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .filters {
+        --info-list-item-gap: 0.75em 1em;
+        .filter-button {
+            flex-basis: auto;
+            &.is-active {
+                background-color: var(--tag-background-color-invert);
+                color: var(--text-color-primary-invert);
+                pointer-events: none;
+            }
+        }
+    }
+</style>

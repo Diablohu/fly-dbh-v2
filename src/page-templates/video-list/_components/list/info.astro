@@ -6,7 +6,7 @@ import { level2TagsMap, routeBase, challengeDifficultyString } from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 import TagButton from "@/components/tag-button.astro";
-import ChallengeItem from "@/components/challenge-item.tsx";
+import InfoExtraFilters from "./info-extra-filters.astro";
 
 type Props = {
     category?: string;
@@ -54,36 +54,21 @@ type Props = {
         Astro.props.isIndex ? null : Astro.props.type === "tag" ? (
             Astro.props.slug === "game-guide" ? (
                 <section class="info">
-                    <dl>
-                        <dt>平台</dt>
-                        <dd class="filters">
-                            {[
-                                ["全部", ""],
-                                ["仅微软 2024", "platform-msfs2024"],
-                                ["仅微软 2020", "platform-msfs2020"],
-                            ].map(([label, slug]) => (
-                                <TagButton
-                                    href={[
-                                        routeBase.videoList,
-                                        "tag-game-guide",
-                                        slug,
-                                    ]
-                                        .filter(Boolean)
-                                        .join("/")}
-                                    class:list={[
-                                        "filter-button",
-                                        {
-                                            "is-active": new RegExp(
-                                                (slug || "tag-game-guide") + "$"
-                                            ).test(Astro.request.url),
-                                        },
-                                    ]}
-                                >
-                                    {label}
-                                </TagButton>
-                            ))}
-                        </dd>
-                    </dl>
+                    <InfoExtraFilters
+                        label="平台"
+                        value="tag-game-guide"
+                        filters={[
+                            ["仅微软 2024", "platform-msfs2024"],
+                            ["仅微软 2020", "platform-msfs2020"],
+                        ]}
+                    />
+                </section>
+            ) : Astro.props.slug === "review" ? (
+                <section class="info">
+                    <InfoExtraFilters
+                        value="tag-review"
+                        filters={[["硬件外设", "tag-peripheral"]]}
+                    />
                 </section>
             ) : null
         ) : (
@@ -346,6 +331,7 @@ type Props = {
     }
 
     .info {
+        --info-list-item-gap: 0.75em 1.5em;
         // background: var(--tag-background-color);
         // background: linear-gradient(
         //     to bottom,
@@ -372,20 +358,20 @@ type Props = {
             margin: 0 auto;
         }
 
-        dl {
+        :global(dl) {
             margin: 0;
             display: flex;
             flex-flow: row nowrap;
-            dt {
+            :global(dt) {
                 flex: 0 0 3em;
             }
-            dd {
+            :global(dd) {
                 margin: 0;
                 font-weight: normal;
                 color: var(--text-color-primary);
                 display: flex;
                 flex-flow: row wrap;
-                gap: 0.75em 1.5em;
+                gap: var(--info-list-item-gap);
                 & > * {
                     flex: 0;
                     white-space: nowrap;
@@ -425,19 +411,6 @@ type Props = {
                     display: inline-block;
                     vertical-align: top;
                     margin-right: 0.75em;
-                }
-                &.filters {
-                    gap: 1em;
-                    .filter-button {
-                        flex-basis: auto;
-                        &.is-active {
-                            background-color: var(
-                                --tag-background-color-invert
-                            );
-                            color: var(--text-color-primary-invert);
-                            pointer-events: none;
-                        }
-                    }
                 }
                 &.challenges {
                     margin-top: 0.25em;
