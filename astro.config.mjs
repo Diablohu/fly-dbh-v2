@@ -39,6 +39,7 @@ export default defineConfig({
                         "homepage",
                         "live", // TODO: unlock
                         "tools", // TODO: unlock
+                        "challenges-wip", // TODO: remove
                     ].join("|")})($|/)).)*$`
                 ).test(page),
             customSitemaps: [
