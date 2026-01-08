@@ -3,6 +3,7 @@ import {
     useCallback,
     useEffect,
     useMemo,
+    useRef,
     Fragment,
     type FC,
     type FormEventHandler,
@@ -33,6 +34,8 @@ const SearchFormAndResult: FC<{
     initialResults?: Awaited<ReturnType<typeof searchAction>>["data"];
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 }> = ({ initialKeyword, initialResults, defaultContentListAutoLoadMore }) => {
+    const InputRef = useRef<HTMLInputElement>(null);
+
     const [status, setStatus] = useState<StatusType>("pending");
     const [error, setError] = useState<string>();
     const [keyword, setKeyword] = useState<string>();
@@ -93,19 +96,26 @@ const SearchFormAndResult: FC<{
     }, [keyword]);
 
     useEffect(() => {
+        if (InputRef.current) InputRef.current.focus();
         setStatus("ready");
     }, []);
+
+    useEffect(() => {
+        if (status === "ready" && InputRef.current) InputRef.current.focus();
+    }, [status]);
 
     return (
         <>
             <form className={styles["form"]} method="GET" onSubmit={onSubmit}>
                 <input
+                    ref={InputRef}
                     type="search"
                     name="keyword"
                     defaultValue={initialKeyword}
                     autoComplete="off"
                     placeholder="请输入关键字..."
                     required
+                    autoFocus
                 />
                 <button
                     type="submit"
