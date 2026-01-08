@@ -43,7 +43,17 @@ const { hazards, challengeRunways, ...props } = Astro.props;
                 ]
                     .filter(Boolean)
                     .map((text) => (
-                        <span class="fragment">{text}</span>
+                        <span
+                            class:list={[
+                                "fragment",
+                                {
+                                    "is-start-with-bracket":
+                                        typeof text === "string" &&
+                                        /^[\(（)]/.test(text),
+                                },
+                            ]}
+                            set:text={text}
+                        />
                     ))}
             </span>
         ))
@@ -73,7 +83,7 @@ const { hazards, challengeRunways, ...props } = Astro.props;
         .fragment {
             font-weight: normal;
             display: inline-block;
-            &:has(+ .fragment) {
+            &:has(+ .fragment:not(.is-start-with-bracket)) {
                 &::after {
                     content: "：";
                 }

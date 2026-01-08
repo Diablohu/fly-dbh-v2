@@ -19,7 +19,7 @@ function parseArrStr(string: string) {
 
 <InfoBlock
     {...props}
-    title="示例航线"
+    title="示例航线（飞行约30分钟）"
     emoji="🌏"
     isTodo={!route.origin?.icao && !route.origin?.iata && !route.origin?.faa}
 >
@@ -129,11 +129,25 @@ function parseArrStr(string: string) {
     </dl>
     <dl>
         <dt>长度</dt>
-        {route.distance ? <dd>约 {route.distance} 海里</dd> : <dd>未知</dd>}
+        {
+            route.distance ? (
+                <dd>
+                    约 <span class="highlight">{route.distance}</span> 海里
+                </dd>
+            ) : (
+                <dd>未知</dd>
+            )
+        }
     </dl>
     <dl>
         <dt>巡航</dt>
-        {route.cruise ? <dd>{route.cruise}</dd> : <dd>无（保持 VFR）</dd>}
+        {
+            route.cruise ? (
+                <dd class="highlight">{route.cruise}</dd>
+            ) : (
+                <dd>无（保持 VFR）</dd>
+            )
+        }
     </dl>
 </InfoBlock>
 
@@ -179,6 +193,10 @@ function parseArrStr(string: string) {
             .via {
                 // color: var(--theme-color-invert-p-40);
                 color: var(--text-color-secondary);
+            }
+            &.highlight,
+            .highlight {
+                color: var(--text-color-primary);
             }
         }
     }
