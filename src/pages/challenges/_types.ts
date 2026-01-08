@@ -23,4 +23,6 @@ export type RunwayType = {
     slopePercentage: number;
     /** 坡度（°） */
     slopeDegrees: number;
+    /** 坡度是否过小 */
+    slopeTooSmall: boolean;
 };

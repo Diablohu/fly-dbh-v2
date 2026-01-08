@@ -130,8 +130,9 @@ type Props = {
                                 ],
                                 [
                                     "坡度",
-                                    ...(runwayPair[0].slopePercentage !==
-                                    runwayPair[1].slopePercentage
+                                    ...(!runwayPair[0].slopeTooSmall &&
+                                    runwayPair[0].slopePercentage !==
+                                        runwayPair[1].slopePercentage
                                         ? runwayPair.map(
                                               (runway) =>
                                                   runway.slopePercentage.toFixed(
@@ -140,8 +141,9 @@ type Props = {
                                           )
                                         : ["--"]),
                                 ],
+                                !runwayPair[0].slopeTooSmall &&
                                 runwayPair[0].slopePercentage !==
-                                runwayPair[1].slopePercentage
+                                    runwayPair[1].slopePercentage
                                     ? [
                                           "",
                                           ...runwayPair.map(

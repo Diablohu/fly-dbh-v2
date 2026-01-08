@@ -131,6 +131,7 @@ const runwayPairs: [RunwayType, RunwayType][] = challenge.aerodrome.runways
                 elevationInMeters: elevationsInFeet[index] * 0.3048,
                 slopePercentage: slopeInfo.percentage,
                 slopeDegrees: slopeInfo.degrees,
+                slopeTooSmall: Math.abs(slopeInfo.percentage) < 0.1,
             };
         }) as [RunwayType, RunwayType];
     })
