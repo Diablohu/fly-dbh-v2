@@ -528,6 +528,13 @@ const relatedChallenges = video.aerodromes
                 "links"
                 "sources"
                 "relations";
+            &:not(:has(.sources)) {
+                grid-template-areas:
+                    "title"
+                    "description"
+                    "links"
+                    "relations";
+            }
         });
     }
 
