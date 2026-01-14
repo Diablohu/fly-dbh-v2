@@ -8,11 +8,12 @@
     }
 
     .category-title {
-        position: sticky;
-        top: calc(
+        --sticky-top: calc(
             var(--global-sticky-top) //  + var(--hero-image-stiky-height)
             + var(--container-top-edge)
         );
+        position: sticky;
+        top: var(--sticky-top);
         z-index: 5;
         display: block;
         margin: 0;
@@ -37,6 +38,13 @@
             );
             pointer-events: none;
             // backdrop-filter: var(--backdrop-filter-glass);
+            .glossy-background-in-main-styles(
+                var(--sticky-top),
+                {
+                    left: calc(var(--global-edge-safe-distance) * -0.95);
+                    right: calc(var(--global-edge-safe-distance) * -0.95);
+                }
+            );
         }
         .category-code,
         .category-opaque-layer {

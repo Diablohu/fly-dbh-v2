@@ -1,10 +1,12 @@
-@import "@/utils/mixins.less";
+@import "../_mixins.less";
 
 .title-block {
+    --sticky-top: calc(var(--global-sticky-top) - 1em);
+
     position: sticky;
     align-self: start;
     grid-area: title;
-    top: calc(var(--global-sticky-top) - 1em);
+    top: var(--sticky-top);
     z-index: var(--title-block-z-index);
     // z-index: 10000000000000000000000000000;
 
@@ -79,6 +81,7 @@
             var(--theme-color-p-70) 60%,
             transparent
         );
+        .glossy-background-in-main-styles(var(--sticky-top), {});
     }
 
     .intersection-probe {
