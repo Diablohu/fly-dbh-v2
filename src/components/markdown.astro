@@ -5,7 +5,7 @@ type Props = {
     src?: string;
 };
 
-const slotContent = Astro.props.src || (await Astro.slots.render("default"));
+const slotContent = Astro.props.src ?? (await Astro.slots.render("default"));
 ---
 
 <Fragment set:html={parseMarkdown(slotContent)} />
