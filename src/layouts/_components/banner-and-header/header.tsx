@@ -70,14 +70,10 @@ const Header: FC<
                     </section>
                 </section>
             </header>
+            {/* scrapped. see `.glossy-background-in-main-styles()` */}
             {/* <div className={styles["header-glossy-mask"]} /> */}
         </>
     );
 };
 
 export default memo(Header);
-
-/* TODO: Header Mask
-	mask for bottom gradient
-	extend via css variables
-*/
