@@ -7,8 +7,7 @@ import {
 } from "@/global";
 
 import InfoBlock from "./_info-block.astro";
-
-import parseMarkdown from "@/utils/parse-markdown";
+import Markdown from "@/components/markdown.astro";
 
 type Props = {
     difficulty: ChallengeItemType["difficulty"];
@@ -43,7 +42,9 @@ E：166 ~ 210
     </dl>
     <dl>
         <dt>当地常客</dt>
-        <dd set:html={parseMarkdown(typicalAircrafts)} />
+        <dd>
+            <Markdown src={typicalAircrafts} />
+        </dd>
     </dl>
 </InfoBlock>
 

@@ -1,10 +1,8 @@
 ---
 import { type ChallengeItemType } from "@/types";
-import { getVideoPageLink } from "@/global";
-import parseMarkdown from "@/utils/parse-markdown";
 
+import Markdown from "@/components/markdown.astro";
 import InfoBlock from "./_info-block.astro";
-import TagButton from "@/components/tag-button.astro";
 
 type Props = {
     freeAddons?: ChallengeItemType["aerodrome"]["free_addons"];
@@ -124,10 +122,8 @@ const sceneryAddons = generateList(freeSceneryAddons);
             {aerodromeAddons?.map(
                 (item) =>
                     item !== false && (
-                        <Fragment
-                            set:html={parseMarkdown(
-                                "#### " + item.title + "\n" + item.markdown
-                            )}
+                        <Markdown
+                            src={"#### " + item.title + "\n" + item.markdown}
                         />
                     )
             )}
@@ -141,10 +137,8 @@ const sceneryAddons = generateList(freeSceneryAddons);
             {sceneryAddons?.map(
                 (item) =>
                     item !== false && (
-                        <Fragment
-                            set:html={parseMarkdown(
-                                "#### " + item.title + "\n" + item.markdown
-                            )}
+                        <Markdown
+                            src={"#### " + item.title + "\n" + item.markdown}
                         />
                     )
             )}

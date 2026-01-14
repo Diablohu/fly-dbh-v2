@@ -1,0 +1,11 @@
+---
+import parseMarkdown from "@/utils/parse-markdown";
+
+type Props = {
+    src?: string;
+};
+
+const slotContent = Astro.props.src || (await Astro.slots.render("default"));
+---
+
+<Fragment set:html={parseMarkdown(slotContent)} />

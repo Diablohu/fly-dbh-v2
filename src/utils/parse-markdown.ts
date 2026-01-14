@@ -1,6 +1,6 @@
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
-import { htmlAttributeImageViewer } from "@/global";
+// import { htmlAttributeImageViewer } from "@/global";
 import { generateHtmlImageViewer } from "@/utils/image-viewer";
 
 // ============================================================================

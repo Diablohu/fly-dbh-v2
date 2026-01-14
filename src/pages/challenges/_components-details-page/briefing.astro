@@ -1,10 +1,10 @@
 ---
 import { type ChallengeItemType } from "@/types";
 import { getVideoPageLink } from "@/global";
-import parseMarkdown from "@/utils/parse-markdown";
 
 import InfoBlock from "./_info-block.astro";
 import TagButton from "@/components/tag-button.astro";
+import Markdown from "@/components/markdown.astro";
 
 import MovieSVG from "@/assets/svg-symbols/movie.svg";
 import MonitorPlaySVG from "@/assets/svg-symbols/monitor-play.svg";
@@ -52,62 +52,40 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             </section>
         )
     }
-    <section class="briefing">
-        {
-            type === "vfr" ? (
-                <Fragment
-                    set:html={
-                        briefing &&
-                        parseMarkdown(`#### 目视进近 *Visual Approach*
+    {
+        briefing && (
+            <section class="briefing">
+                <Markdown
+                    src={
+                        (type === "vfr"
+                            ? `#### 目视进近 *Visual Approach*
 * 在飞行电脑中无法选择对应程序；
-* 遵循 VFR 目视飞行规则，没有决断高度概念。`)
-                    }
-                />
-            ) : type === "rnp-ar" ? (
-                <Fragment
-                    set:html={
-                        briefing &&
-                        parseMarkdown(`#### RNP (AR) 进近 *RNP (AR) Approach*
+* 遵循 VFR 目视飞行规则，没有决断高度概念。`
+                            : type === "rnp-ar"
+                              ? `#### RNP (AR) 进近 *RNP (AR) Approach*
 * 飞行电脑内可选择对应的 RNAV 进近程序；
 * 该进近类型的导航精度极高；
-* 现实运作中，需要飞机与机组都有对应资质，同时要求在进近时飞机的导航精度满足指定程序需要。`)
-                    }
-                />
-            ) : type === "rnp-visual" ? (
-                <Fragment
-                    set:html={
-                        briefing &&
-                        parseMarkdown(`#### RNP 目视进近 *RNP Visual Approach*
+* 现实运作中，需要飞机与机组都有对应资质，同时要求在进近时飞机的导航精度满足指定程序需要。`
+                              : type === "rnp-visual"
+                                ? `#### RNP 目视进近 *RNP Visual Approach*
 * 飞行电脑内可选择对应的 RNAV 进近程序；
 * 虽然该进近类型的导航精度很高，但所选择的这个进近方式并没有对准跑道，故最终进近阶段需要目视手操；
-* 该进近方式仅用于定位机场。`)
-                    }
-                />
-            ) : type === "circling" ? (
-                <Fragment
-                    set:html={
-                        briefing &&
-                        parseMarkdown(`#### 目视盘旋进近 *Circling Approach*
+* 该进近方式仅用于定位机场。`
+                                : type === "circling"
+                                  ? `#### 目视盘旋进近 *Circling Approach*
 * 按选定的仪表进近程序飞行，直至目视盘旋最低下降高度，即航图上的 \`CIRCLING MDA(H)\` (LIDO) 或 \`CIRCLE-TO-LAND MDA(H)\` (杰普逊)；
-* 之后转为目视进近，自行目视手操降落到目标跑道。`)
-                    }
-                />
-            ) : type === "ils" ? (
-                <Fragment
-                    set:html={
-                        briefing &&
-                        parseMarkdown(`#### ILS 进近 *Instrument Landing System Approach*
+* 之后转为目视进近，自行目视手操降落到目标跑道。`
+                                  : type === "ils"
+                                    ? `#### ILS 进近 *Instrument Landing System Approach*
 * “盲降”进近；
 * 根据航图，在飞行电脑中输入/确认 \`ILS 频率\`，部分机型还需要在自动驾驶面板手动调节航迹 \`Course\`；
-* 确保飞机自动驾驶系统先后截获 \`航向道 LOC (Localizer)\` 和 \`下滑道 G/S (Glide Slope)\`。`)
+* 确保飞机自动驾驶系统先后截获 \`航向道 LOC (Localizer)\` 和 \`下滑道 G/S (Glide Slope)\`。`
+                                    : "") + briefing
                     }
                 />
-            ) : (
-                ""
-            )
-        }
-        <Fragment set:html={briefing && parseMarkdown(briefing)} />
-    </section>
+            </section>
+        )
+    }
 </InfoBlock>
 
 <style lang="less">

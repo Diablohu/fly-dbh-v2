@@ -14,6 +14,7 @@ import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import TagButton from "@/components/tag-button.astro";
 import ChallengeItem from "@/components/challenge-item.tsx";
+import Markdown from "@/components/markdown.astro";
 import Player from "./_components/player";
 import SelectPlatform from "./_components/select-platform";
 
@@ -23,7 +24,6 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getVideoCategoryInfoFromRawTypeData, {
     type CategoryInfoType,
 } from "@/utils/get-video-category-info-from-raw-type-data";
-import parseMarkdown from "@/utils/parse-markdown";
 import { errorLog } from "@/utils/log";
 
 // ============================================================================
@@ -140,10 +140,9 @@ const relatedChallenges = video.aerodromes
                 />
             </section>
 
-            <section
-                class="description markdown-container"
-                set:html={parseMarkdown(video.description)}
-            />
+            <section class="description markdown-container">
+                <Markdown src={video.description} />
+            </section>
 
             <section class="relations">
                 {
@@ -304,10 +303,9 @@ const relatedChallenges = video.aerodromes
                     <section class="sources">
                         <dl>
                             <dt>参考资料</dt>
-                            <dd
-                                class="markdown-container"
-                                set:html={parseMarkdown(video.sources)}
-                            />
+                            <dd class="markdown-container">
+                                <Markdown src={video.sources} />
+                            </dd>
                         </dl>
                     </section>
                 )
