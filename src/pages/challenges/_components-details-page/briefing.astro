@@ -40,7 +40,7 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
                         href={getVideoPageLink(
                             videoExtremeAirport?.slug ||
                                 videoExtremeAirport?._id ||
-                                ""
+                                "",
                         )}
                         class="is-extreme-airport"
                     >
@@ -56,8 +56,8 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
         briefing && (
             <section class="briefing">
                 <Markdown
-                    src={
-                        (type === "vfr"
+                    src={[
+                        type === "vfr"
                             ? `#### 目视进近 *Visual Approach*
 * 在飞行电脑中无法选择对应程序；
 * 遵循 VFR 目视飞行规则，没有决断高度概念。`
@@ -80,8 +80,11 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
 * “盲降”进近；
 * 根据航图，在飞行电脑中输入/确认 \`ILS 频率\`，部分机型还需要在自动驾驶面板手动调节航迹 \`Course\`；
 * 确保飞机自动驾驶系统先后截获 \`航向道 LOC (Localizer)\` 和 \`下滑道 G/S (Glide Slope)\`。`
-                                    : "") + briefing
-                    }
+                                    : "",
+                        briefing,
+                    ]
+                        .filter(Boolean)
+                        .join("\n\n")}
                 />
             </section>
         )
