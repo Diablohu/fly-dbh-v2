@@ -2,6 +2,7 @@
 
 .title-block {
     --sticky-top: calc(var(--global-sticky-top) - 1em);
+    --content-padding-right: 13rem;
 
     position: sticky;
     align-self: start;
@@ -55,6 +56,7 @@
         margin-top: 0.25em;
         margin-bottom: 0;
         text-shadow: 0 0.025em 0.15em var(--theme-color);
+        padding-right: var(--content-padding-right);
     }
 
     .aerodrome-name {
@@ -116,7 +118,9 @@
     .screen-lg({
         .styles-screen-lg();
     });
-
+    .screen-md-below({
+        --content-padding-right: 0;
+    });
     .styles-screen-sm() {
         .challenge-details-page {
             .challenge-name {

@@ -95,6 +95,7 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
     @import "@/utils/mixins.less";
 
     .brefing-video {
+        --container-position: sticky;
         --container-display: flex;
         --container-float: right;
         --container-margin-top: -0.25em;
@@ -102,8 +103,14 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
         --container-margin-left: 1em;
         --container-text-align: unset;
         --item-margin-right: 0;
+        --item-backdrop-filter: var(--global-header-backdrop-filter);
+        --item-extra-background-display: block;
         --text-color: var(--text-color-secondary);
+        // --text-shadow: 0 0.025em 0.15em var(--shadow-color);
 
+        position: var(--container-position);
+        top: calc(var(--global-sticky-top) + 1rem);
+        z-index: calc(var(--title-block-z-index) + 10);
         display: var(--container-display);
         flex-flow: column nowrap;
         gap: 0;
@@ -113,14 +120,19 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
         margin-left: var(--container-margin-left);
         margin-right: var(--title-border-x-offset);
         text-align: var(--container-text-align);
+        // text-shadow: var(--text-shadow);
         .screen-md-below({
+            --container-position: static;
             --container-display: block;
             --container-float: none;
             --container-margin-top: 1em;
             --container-margin-bottom: -0.25em;
             --container-margin-left: auto;
+            --item-backdrop-filter: none;
             --item-margin-right: calc(var(--title-border-x-offset) * -1);
+            --item-extra-background-display: none;
             --container-text-align: center;
+            // --text-shadow: none;
         });
         &::before,
         &::after {
@@ -137,7 +149,21 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
             margin-right: var(--item-margin-right);
             text-align: left;
             color: var(--text-color);
+            box-shadow: 0 4px 10px 0 var(--theme-color);
+            // background: var(--theme-color);
             // border: 1px solid var(--text-color-secondary);
+            &::before {
+                display: var(--item-extra-background-display);
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--theme-color-p-50);
+                z-index: -1;
+                backdrop-filter: var(--item-backdrop-filter);
+            }
             & > :global(.prefix) {
                 --size: 2.25em;
                 position: absolute;
