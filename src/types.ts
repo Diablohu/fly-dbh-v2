@@ -170,6 +170,7 @@ export type ChallengeItemType = {
     name: string;
     type:
         | "vfr"
+        | "vpt"
         | "ils"
         | "lda"
         | "igs"
