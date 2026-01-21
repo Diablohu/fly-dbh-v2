@@ -1,4 +1,13 @@
 ---
+
+/*
+TODO: Remember Options
+DEFAULTS
+    Categories: C+D
+    Difficulty: 3+5+7
+Trigger: COOKIE - RANDOM or CATALOG
+*/
+
 import { actions, ActionError } from "astro:actions";
 
 import Layout from "@/layouts/layout.astro";
@@ -57,10 +66,10 @@ if (error) {
 // ============================================================================
 ---
 
-<Layout title="着陆挑战名册" header footer>
+<Layout title="固定翼飞机着陆挑战" header footer>
     <HeroImage
         client:idle
-        title="着陆挑战名册（开发中）"
+        title="固定翼飞机着陆挑战"
         sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
         sticky={false}
     />
