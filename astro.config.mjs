@@ -1,6 +1,6 @@
 // @ts-check
 import path from "node:path";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
@@ -40,7 +40,7 @@ export default defineConfig({
                         "live", // TODO: unlock
                         "tools", // TODO: unlock
                         "challenges-wip", // TODO: remove
-                    ].join("|")})($|/)).)*$`
+                    ].join("|")})($|/)).)*$`,
                 ).test(page),
             customSitemaps: [
                 `${site}/sitemap-videos.xml`,
@@ -83,7 +83,7 @@ export default defineConfig({
                 targets: [
                     {
                         src: normalizePath(
-                            path.resolve("node_modules/viewerjs/dist/**/*")
+                            path.resolve("node_modules/viewerjs/dist/**/*"),
                         ),
                         dest: "libs/viewerjs",
                     },
@@ -96,15 +96,19 @@ export default defineConfig({
     experimental: {
         fonts: [
             {
-                provider: "local",
+                provider: fontProviders.local(),
                 name: "Helvetica Compressed",
                 cssVariable: "--font-helvetica-compressed",
                 fallbacks: ["sans-serif"],
-                variants: [
-                    {
-                        src: ["./src/assets/fonts/Helvetica-Compressed.otf"],
-                    },
-                ],
+                options: {
+                    variants: [
+                        {
+                            src: [
+                                "./src/assets/fonts/Helvetica-Compressed.otf",
+                            ],
+                        },
+                    ],
+                },
             },
         ],
     },
