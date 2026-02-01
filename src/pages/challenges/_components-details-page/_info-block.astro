@@ -110,7 +110,7 @@ const TitleChild = titleLink ? "a" : Fragment;
                 margin-top: 1.25em;
             }
             :global(ul ul) {
-                margin-top: 0;
+                --body-first-paragraph-margin-top: 0;
             }
 
             :global(dl) {
@@ -161,7 +161,7 @@ const TitleChild = titleLink ? "a" : Fragment;
                 margin-right: auto;
                 object-fit: contain;
             }
-            
+
             :global(code) {
                 font-family: var(--font-family-monospace);
                 position: relative;
