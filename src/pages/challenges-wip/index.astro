@@ -1,5 +1,4 @@
 ---
-
 /*
 TODO: Remember Options
 DEFAULTS
@@ -10,19 +9,21 @@ Trigger: COOKIE - RANDOM or CATALOG
 
 import { actions, ActionError } from "astro:actions";
 
+import { urlPrefixSanityImageCdn } from "@/global";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import HeroImage from "@/components/hero-image";
+import HomeCollectionChallenges from "@/pages/homepage/collection-challenges.astro";
 
 import { errorLog } from "@/utils/log";
 
 // ============================================================================
 
-const { data: list, error } = await Astro.callAction(
-    actions.challengePage.fetchList,
-    undefined
+const { data: latest, error } = await Astro.callAction(
+    actions.challengePage.fetchLatest,
+    {},
 );
-if ((error && error.code === "NOT_FOUND") || !list) {
+if ((error && error.code === "NOT_FOUND") || !latest) {
     if (error)
         errorLog(
             [
@@ -34,13 +35,13 @@ if ((error && error.code === "NOT_FOUND") || !list) {
                     : "",
             ]
                 .filter(Boolean)
-                .join(" | ")
+                .join(" | "),
         );
     else
         errorLog(
             [`${Astro.originPathname} -> 404`, "No challenge list"]
                 .filter(Boolean)
-                .join(" | ")
+                .join(" | "),
         );
     return Astro.rewrite("/404");
 }
@@ -56,7 +57,7 @@ if (error) {
                 : "",
         ]
             .filter(Boolean)
-            .join(" | ")
+            .join(" | "),
     );
     Astro.response.status = 500;
     Astro.props.error = error;
@@ -67,49 +68,165 @@ if (error) {
 ---
 
 <Layout title="固定翼飞机着陆挑战" header footer>
-    <HeroImage
-        client:idle
-        title="固定翼飞机着陆挑战"
-        sanityImageFilename="5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png"
-        sticky={false}
-    />
+    <section class="challenges-home">
+        <section class="hero-image">
+            <h1 class="title">固定翼飞机着陆挑战</h1>
+            <!-- <span
+                class="image-container"
+                style={{
+                    backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=960&blur=100&q=60)`,
+                }}
+                ><span
+                    class="image"
+                    style={{
+                        backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=1280&q=60)`,
+                    }}></span></span
+            > -->
+            <span
+                class="image-container"
+                style={{
+                    backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=1280&q=60)`,
+                }}></span>
+        </section>
 
-    <Block>123</Block>
+        <section class="content-body">
+            <Block>
+                <HomeCollectionChallenges
+                    title="最新收录"
+                    list={latest}
+                    showMore={false}
+                    titleMore={false}
+                />
+
+                <section class="section">
+                    <h3>按类别查询</h3>
+                    <p>WIP...</p>
+                </section>
+
+                <section class="section">
+                    <h3>决定目的地</h3>
+                    <p>WIP...</p>
+                </section>
+            </Block>
+        </section>
+    </section>
 </Layout>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .list {
-        --container-top-edge: 0.5em;
-        margin-top: 1em;
+    .challenges-home {
+        --hero-image-height: 400px;
+        --hero-image-bottom-offset-percentage: 30%;
     }
 
-    .sticky-actions {
-        position: sticky;
-        top: calc(
-            var(--global-sticky-top) //  + var(--hero-image-stiky-height)
-            + var(--container-top-edge) + 0.5em
-        );
-        left: 0;
-        z-index: calc(var(--hero-image-z-index) + 1);
-        margin-top: -4.2em;
-        margin-bottom: 4.2em;
-        height: 0;
+    .hero-image {
+        position: relative;
+        z-index: 1;
+        height: 280px;
+        // height: 33.3333vh;
+        margin-top: calc(var(--global-header-height) * -1);
+        margin-bottom: 2em;
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: column nowrap;
+        align-items: center;
         justify-content: flex-end;
-        display: none;
-        button {
-            .tag-styles();
+
+        h1 {
+            .block-wrapper();
+            // position: absolute;
+            // bottom: var(--hero-image-bottom-offset-percentage);
+            // bottom: 0;
+            z-index: 10;
+            margin: 0;
+            color: var(--dark-text-color-primary);
+            text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
+            letter-spacing: 0.15em;
+            line-height: 1.2em;
+            padding-bottom: calc((var(--global-header-height) - 1.2em) / 2);
+        }
+
+        .image-container {
             display: block;
-            height: 2em;
+            position: absolute;
+            top: 0;
+            bottom: -120px;
+            left: 0;
+            right: 0;
+            background: no-repeat center/cover;
+            overflow: hidden;
+
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+
+            &::before {
+                z-index: 3;
+                background: linear-gradient(
+                    to top,
+                    var(--theme-color) 0,
+                    transparent 40%;
+                );
+            }
+            // 点阵
+            &::after {
+                z-index: 2;
+                background-image: radial-gradient(
+                    var(--dark-theme-color) 66.6667%,
+                    transparent 66.6667%
+                );
+                background-size: 4px 4px;
+                opacity: 0.05;
+                // pointer-events: none;
+            }
+
+            // .image {
+            //     display: block;
+            //     position: relative;
+            //     margin: 0 auto;
+            //     height: 100%;
+            //     width: 100%;
+            //     max-width: var(--global-block-max-width);
+            //     background: no-repeat center/cover;
+            //     z-index: 1;
+            //     mask-image: linear-gradient(
+            //         to right,
+            //         transparent,
+            //         #000 var(--global-edge-safe-distance),
+            //         #000 calc(100% - var(--global-edge-safe-distance)),
+            //         transparent
+            //     );
+            // }
         }
     }
 
-    .actions {
-        margin-top: 2em;
-        margin-bottom: 4em;
-        text-align: center;
+    .content-body {
+        position: relative;
+        z-index: 5;
+
+        .section {
+            margin-bottom: var(--homepage-collection-gap);
+            position: relative;
+
+            & + .section {
+                &::before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: calc(var(--homepage-collection-gap) / -2);
+                    height: var(--homepage-collection-divider-height);
+                    left: 0;
+                    right: 0;
+                    background: var(--homepage-collection-divider-color);
+                }
+            }
+        }
     }
 </style>

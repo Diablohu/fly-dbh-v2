@@ -1,4 +1,5 @@
 ---
+import { type ComponentProps } from "react";
 import { type HomeCollectionsType } from "@/types";
 
 import Collection from "./collection.astro";
@@ -8,18 +9,24 @@ import { routeBase } from "@/global";
 
 type Props = {
     list: HomeCollectionsType["challenges"];
-};
+    title?: string;
+} & Pick<ComponentProps<typeof Collection>, "showMore" | "titleMore">;
 
 // console.log(Astro.props.list)
 ---
 
 <Collection
     name="latest-challenges"
-    title="着陆挑战"
+    title={Astro.props.title ?? "最新收录着陆挑战"}
     route={routeBase.challenges}
-    showMore
+    showMore={Astro.props.showMore}
+    titleMore={Astro.props.titleMore}
 >
-    <ChallengeListHorizontal client:idle challenges={Astro.props.list} />
+    <ChallengeListHorizontal
+        client:idle
+        challenges={Astro.props.list}
+        showCategory
+    />
     <!-- <section class="challenges">
         {Astro.props.list.map((item) => <ChallengeItem item={item} />)}
     </section> -->

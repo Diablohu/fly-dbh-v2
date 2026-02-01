@@ -1,4 +1,5 @@
 import { createClient, type SanityDocument } from "@sanity/client";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import cache from "./_cache";
 
 // ============================================================================
@@ -16,6 +17,12 @@ export const client = createClient({
     // token: process.env.SANITY_SECRET_TOKEN // Needed for certain operations like updating content, accessing drafts or using draft perspectives
 });
 
+export const imageBuilder = createImageUrlBuilder({
+    baseUrl: "/",
+    projectId: process.env.SANITY_PROJECT_ID || "",
+    dataset: process.env.SANITY_DATASET || "",
+});
+
 // ============================================================================
 
 export const fetch = async <
@@ -25,9 +32,9 @@ export const fetch = async <
     options?: {
         transform?: (
             res: SanityDocument<T>[],
-            query: string
+            query: string,
         ) => SanityDocument<T>[];
-    } & Partial<Parameters<typeof cache.wrap>[2]>
+    } & Partial<Parameters<typeof cache.wrap>[2]>,
 ) =>
     await cache.wrap(
         `SANITY:${queryString}`,
@@ -40,5 +47,5 @@ export const fetch = async <
             return posts;
         },
         options?.ttl,
-        options?.refreshThreshold
+        options?.refreshThreshold,
     );

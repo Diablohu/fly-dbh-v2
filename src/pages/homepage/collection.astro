@@ -17,9 +17,10 @@ type Props = {
         >
     >;
     showMore?: boolean;
+    titleMore?: boolean;
     highlighted?: boolean;
 };
-const { showMore = true } = Astro.props;
+const { showMore = true, titleMore = true } = Astro.props;
 const moreLink =
     Astro.props.link ??
     (Astro.props.route?.[0] === "/"
@@ -38,9 +39,13 @@ const moreLink =
 >
     <dt class="collection-title">
         <h3>
-            <a href={moreLink}>
-                {Astro.props.title}
-            </a>
+            {
+                titleMore ? (
+                    <a href={moreLink}>{Astro.props.title}</a>
+                ) : (
+                    Astro.props.title
+                )
+            }
         </h3>
         {
             showMore && (
@@ -76,7 +81,7 @@ const moreLink =
                                           ? "review"
                                           : (Astro.props.name as Parameters<
                                                 typeof getVideoItemTopTags
-                                            >[1])
+                                            >[1]),
                                 ) || []),
                                 new Date(post.release),
                             ].filter(Boolean),
@@ -93,7 +98,7 @@ const moreLink =
     @import "@/utils/mixins.less";
 
     .collection {
-        --margin-bottom: 5em;
+        --margin-bottom: var(--homepage-collection-gap);
         // --title-link-more-opacity: unset;
         --title-link-more-transform: unset;
 
@@ -106,10 +111,10 @@ const moreLink =
             content: "";
             position: absolute;
             bottom: calc(var(--margin-bottom) / -2);
-            height: 1px;
+            height: var(--homepage-collection-divider-height);
             left: 0;
             right: 0;
-            background: var(--border-color);
+            background: var(--homepage-collection-divider-color);
         }
 
         & > .collection-title,

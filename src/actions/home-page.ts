@@ -1,8 +1,9 @@
 import { defineAction } from "astro:actions";
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/services/sanity-helpers";
+import { resolveAssetPath } from "@/services/sanity-helpers";
 import { type HomeVideoDocumentType, type HomeCollectionsType } from "@/types";
 import actionErrorHandler from "./_error-handler";
+import { getGroqLatestChallenges } from "./challenge-page";
 
 const fetchSorting = ` | order( release desc )`;
 const getProjections = (collection: string) => `{
@@ -90,28 +91,12 @@ ${(
     })
     .join(",")},
     'config': *[_id == 'db0caed0-d756-4162-953b-f96a65a731e9']{config[]{key,'value':value.code}},
-    'challenges': *[_type == "approach_challenge"] {
-        _id,
-        _createdAt,
-        'slug': slug.current,
-        'aerodrome': aerodrome->{
-            _id,
-            'slug': slug.current,
-            name,
-            icao,
-            iata,
-            faa,
-            location,
-        },
-        name,
-        difficulty,
-        max_allowed_aircraft_category
-    } | order(_createdAt desc) [0...10]
+    'challenges': ${getGroqLatestChallenges(10)}
 }`,
                     {
                         transform: (res) => {
                             return Object.entries(
-                                res as unknown as HomeCollectionsType
+                                res as unknown as HomeCollectionsType,
                             ).reduce<HomeCollectionsType>(
                                 (collections, [collection, posts]) => {
                                     switch (collection) {
@@ -140,19 +125,17 @@ ${(
                                             collections[collection] = (
                                                 posts as HomeVideoDocumentType[]
                                             ).map(({ cover, ...post }) => ({
-                                                cover: transformImagePath(
-                                                    cover
-                                                ),
+                                                cover: resolveAssetPath(cover),
                                                 ...post,
                                             }));
                                         }
                                     }
                                     return collections;
                                 },
-                                { config: [], challenges: [] }
+                                { config: [], challenges: [] },
                             ) as unknown as HomeVideoDocumentType[];
                         },
-                    }
+                    },
                 )) as unknown as HomeCollectionsType;
             } catch (err) {
                 actionErrorHandler(err);

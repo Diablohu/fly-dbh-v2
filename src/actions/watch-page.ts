@@ -1,7 +1,7 @@
 import { z } from "astro:schema";
 import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/services/sanity-helpers";
+import { resolveAssetPath } from "@/services/sanity-helpers";
 import { type VideoItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 import { E30000 } from "@/constants/error-codes";
@@ -98,7 +98,7 @@ const actions = {
                                 err.cause = { GROQ: queryString };
                                 throw err;
                             }
-                            res[0].cover = transformImagePath(res[0].cover);
+                            res[0].cover = resolveAssetPath(res[0].cover);
                             return res;
                         },
                     })

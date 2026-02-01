@@ -181,6 +181,30 @@
             }
         }
     }
+
+    @supports (
+        mask-image: linear-gradient(
+                to right,
+                transparent,
+                #000 20px,
+                #000 calc(100% - 20px),
+                transparent
+            )
+    ) {
+        & > .scroll-container {
+            mask-image: linear-gradient(
+                to right,
+                transparent calc(var(--global-edge-safe-distance) * 0.15),
+                #000 var(--global-edge-safe-distance),
+                #000 calc(100% - var(--global-edge-safe-distance)),
+                transparent calc(100% - var(--global-edge-safe-distance) * 0.15)
+            );
+        }
+        &::before,
+        &::after {
+            background: transparent;
+        }
+    }
 }
 
 @container list-container-horizontal (width < @screen-size-xl-plus-edge-safe-distance) {

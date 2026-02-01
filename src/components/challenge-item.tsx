@@ -13,7 +13,9 @@ const ChallengeItem: FC<{
     className?: string;
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty">;
-}> = ({ item, className }) => {
+    /** 在难度行显示最大允许 Category */
+    showCategory?: boolean;
+}> = ({ item, className, showCategory = false }) => {
     return (
         <a
             className={classNames(styles["challenge-item"], className)}
@@ -48,6 +50,9 @@ const ChallengeItem: FC<{
                         ])}
                     >
                         {challengeDifficultyString[item.difficulty]}
+                        {showCategory && item.max_allowed_aircraft_category
+                            ? `－${item.max_allowed_aircraft_category.toUpperCase()} 类飞机`
+                            : ""}
                     </span>
                 )
             }

@@ -56,18 +56,23 @@ export default defineConfig({
     server: ({ command }) => ({ port: command === "dev" ? 8088 : 8080 }),
     site,
 
-    // 多语言设置
+    // #region 多语言
     // i18n: {},
 
-    // 客户端设置
+    // #region 客户端
     prefetch: {
         defaultStrategy: "tap",
     },
 
-    // 服务器设置
+    // #region 服务器
     trailingSlash: "never",
 
-    // Vite 打包工具相关设置
+    // 开发环境
+    devToolbar: {
+        enabled: false,
+    },
+
+    // #region Vite
     // Asotro 框架默认使用 Vite 进行打包
     vite: {
         plugins: [

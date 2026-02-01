@@ -155,14 +155,18 @@ export type VideoItemType = {
 export type ChallengeDifficultyType = 1 | 3 | 5 | 7;
 export type ChallengeListItemType = Pick<
     ChallengeItemType,
-    "_id" | "name" | "difficulty" | "max_allowed_aircraft_category"
+    | "_id"
+    | "name"
+    | "difficulty"
+    | "max_allowed_aircraft_category"
+    | "airac_cyle"
 > & {
     slug: string;
     aerodrome: Pick<
         AerodromeItemType,
         "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "location"
-        //  | "photo"
-    >;
+    > &
+        Partial<Pick<AerodromeItemType, "photo">>;
 };
 export type ChallengeItemType = {
     _id: string;

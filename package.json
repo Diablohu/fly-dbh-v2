@@ -26,6 +26,7 @@
         "@oslojs/otp": "^1.1.0",
         "@react-oauth/google": "^0.13.4",
         "@sanity/client": "^7.14.1",
+        "@sanity/image-url": "^2.0.3",
         "@splendidlabz/astro": "^5.4.0",
         "astro": "^5.17.1",
         "astro-portabletext": "^0.13.0",

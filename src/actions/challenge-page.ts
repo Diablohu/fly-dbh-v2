@@ -17,6 +17,27 @@ import {
 
 export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc`;
 
+export const getGroqLatestChallenges = (
+    length = 10,
+) => `*[_type == "approach_challenge" && defined(airac_cyle)] {
+  _id,
+  _createdAt,
+  'slug': slug.current,
+  'aerodrome': aerodrome->{
+    _id,
+    'slug': slug.current,
+    name,
+    icao,
+    iata,
+    faa,
+    location,
+  },
+  name,
+  difficulty,
+  airac_cyle,
+  max_allowed_aircraft_category
+} | order( airac_cyle desc, _createdAt desc ) [0...${length}]`;
+
 const actions = {
     fetchList: defineAction({
         handler: async () => {
@@ -73,6 +94,7 @@ const actions = {
         },
     }),
 
+    /** 获取挑战条目详情 */
     fetchChallenge: defineAction({
         input: z.string(),
         handler: async (cmsIdOrSlug) => {
@@ -197,15 +219,15 @@ const actions = {
                         // 处理图片路径
                         if (res[0].aerodrome.photo)
                             res[0].aerodrome.photo = transformImagePath(
-                                res[0].aerodrome.photo
+                                res[0].aerodrome.photo,
                             );
                         if (res[0].briefing)
                             res[0].briefing = stringReplaceImagePath(
-                                res[0].briefing
+                                res[0].briefing,
                             );
                         // 按难度排序难点灾害，由难到易
                         res[0].hazards.sort(
-                            (a, b) => b.difficulty - a.difficulty
+                            (a, b) => b.difficulty - a.difficulty,
                         );
                         // 处理机场相关视频的图片路径
                         if (Array.isArray(res[0].videos_this_aerodrome))
@@ -214,7 +236,7 @@ const actions = {
                                     !res[0]
                                         .video_this_aerodrome_extreme_airport &&
                                     post.tags.some(
-                                        ({ slug }) => slug === EXTREME_AIRPORT
+                                        ({ slug }) => slug === EXTREME_AIRPORT,
                                     )
                                 ) {
                                     res[0].video_this_aerodrome_extreme_airport =
@@ -250,22 +272,7 @@ const actions = {
         }),
         handler: async ({ length = 10 }) => {
             try {
-                const queryString = `*[_type == "approach_challenge"] {
-  _id,
-  'slug': slug.current,
-  'aerodrome': aerodrome->{
-    _id,
-    'slug': slug.current,
-    name,
-    icao,
-    iata,
-    faa,
-    location,
-  },
-  name,
-  difficulty,
-  max_allowed_aircraft_category
-} | order( _updateAt desc ) [0...${length}]`;
+                const queryString = getGroqLatestChallenges(length);
                 const res = await fetch<ChallengeListItemType>(queryString, {
                     transform: (res, queryString) => {
                         if (!res[0]) {
