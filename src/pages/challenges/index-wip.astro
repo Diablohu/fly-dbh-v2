@@ -9,10 +9,9 @@ Trigger: COOKIE - RANDOM or CATALOG
 
 import { actions, ActionError } from "astro:actions";
 
-import { urlPrefixSanityImageCdn } from "@/global";
+import { urlPrefixSanityImageCdn, getChallengeCatalogPageLink } from "@/global";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
-import HeroImage from "@/components/hero-image";
 import HomeCollectionChallenges from "@/pages/homepage/collection-challenges.astro";
 
 import { errorLog } from "@/utils/log";
@@ -94,18 +93,19 @@ if (error) {
                 <HomeCollectionChallenges
                     title="最新收录"
                     list={latest}
-                    showMore={false}
-                    titleMore={false}
+                    route={getChallengeCatalogPageLink()}
                 />
 
-                <section class="section">
-                    <h3>按类别查询</h3>
-                    <p>WIP...</p>
-                </section>
+                <section class="sections-container">
+                    <section class="section" data-section="categories">
+                        <h3>按类别查询</h3>
+                        <div>WIP...</div>
+                    </section>
 
-                <section class="section">
-                    <h3>决定目的地</h3>
-                    <p>WIP...</p>
+                    <section class="section" data-section="filters">
+                        <h3>决定目的地</h3>
+                        <div>WIP...</div>
+                    </section>
                 </section>
             </Block>
         </section>
@@ -211,20 +211,36 @@ if (error) {
         position: relative;
         z-index: 5;
 
-        .section {
+        .sections-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: "categories filters";
+            gap: var(--homepage-collection-gap);
             margin-bottom: var(--homepage-collection-gap);
-            position: relative;
 
-            & + .section {
-                &::before {
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    top: calc(var(--homepage-collection-gap) / -2);
-                    height: var(--homepage-collection-divider-height);
-                    left: 0;
-                    right: 0;
-                    background: var(--homepage-collection-divider-color);
+            .screen-md({
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "categories"
+                    "filters";
+                .section + .section { 
+                    &::before {
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        top: calc(var(--homepage-collection-gap) / -2);
+                        height: var(--homepage-collection-divider-height);
+                        left: 0;
+                        right: 0;
+                        background: var(--homepage-collection-divider-color);
+                    }
+                }
+            });
+
+            .section {
+                position: relative;
+                h3 {
+                    margin-top: 0;
                 }
             }
         }

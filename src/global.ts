@@ -49,6 +49,16 @@ export const level2TagsMap = Object.entries(level2Tags).reduce<{
 
 export const htmlAttributeImageViewer = "data-image-viewer";
 
+export const defaultVideoSource: ValidVideoSourceType = "bilibili";
+export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType =
+    "1";
+export const extraAviationKnowledgeTitle = "相关航空知识";
+export const commonAircraftNameSuffix = ["ceo", "neo", "max", "ng"];
+
+// ============================================================================
+//
+// #region 路由相关
+//
 // ============================================================================
 
 export const routeBase = {
@@ -61,39 +71,6 @@ export const routeBase = {
     donate: "/donate",
     search: "/search",
 };
-export function getVideoListPageLink(
-    type?: VideoListPageTypesType,
-    slug?: string,
-    extra?: {
-        type: VideoListPageTypesType;
-        slug: string;
-    }[]
-) {
-    if (!type) return routeBase.videoList;
-    if (!slug) return routeBase.videoList;
-    const getTypeString = (type: VideoListPageTypesType) =>
-        type === "aircraftFamily"
-            ? "aircraftfamily"
-            : type === "aircraftOnboardDevice"
-              ? "aircraftonboarddevice"
-              : type === "platformUpdate"
-                ? "platformupdate"
-                : type;
-    return (
-        routeBase.videoList +
-        `/${getTypeString(type)}-${slug}` +
-        (Array.isArray(extra)
-            ? extra
-                  .map(({ type, slug }) => `/${getTypeString(type)}-${slug}`)
-                  .join("")
-            : "")
-    );
-}
-export function getVideoPageLink(slug: string) {
-    return `${routeBase.watch}/${slug}`;
-}
-
-// ============================================================================
 
 export const navLinks = [
     {
@@ -156,11 +133,53 @@ export const navLinks = [
     extraChecks?: RegExp[];
 }[];
 
-export const defaultVideoSource: ValidVideoSourceType = "bilibili";
-export const defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType =
-    "1";
-export const extraAviationKnowledgeTitle = "相关航空知识";
-export const commonAircraftNameSuffix = ["ceo", "neo", "max", "ng"];
+/** 生成路由: 视频列表页 */
+export function getVideoListPageLink(
+    type?: VideoListPageTypesType,
+    slug?: string,
+    extra?: {
+        type: VideoListPageTypesType;
+        slug: string;
+    }[],
+) {
+    if (!type) return routeBase.videoList;
+    if (!slug) return routeBase.videoList;
+    const getTypeString = (type: VideoListPageTypesType) =>
+        type === "aircraftFamily"
+            ? "aircraftfamily"
+            : type === "aircraftOnboardDevice"
+              ? "aircraftonboarddevice"
+              : type === "platformUpdate"
+                ? "platformupdate"
+                : type;
+    return (
+        routeBase.videoList +
+        `/${getTypeString(type)}-${slug}` +
+        (Array.isArray(extra)
+            ? extra
+                  .map(({ type, slug }) => `/${getTypeString(type)}-${slug}`)
+                  .join("")
+            : "")
+    );
+}
+/** 生成路由: 视频观看页 */
+export function getVideoPageLink(slug: string) {
+    return `${routeBase.watch}/${slug}`;
+}
+/** 生成路由: 挑战列表页 */
+export function getChallengeCatalogPageLink(
+    /** 
+     * 飞机 Category
+     * - 不传入则生成“最新收录”列表
+     */
+    aircraftCategory?: AircraftCategoryType,
+) {
+    return (
+        routeBase.challenges +
+        "/catalog" +
+        (aircraftCategory ? `/${aircraftCategory}` : "")
+    );
+}
 
 // ============================================================================
 //
@@ -178,9 +197,9 @@ export const defaultCacheRefreshThreshold =
 
 // #endregion
 // ============================================================================
-// 
+//
 // #region 着陆挑战相关
-// 
+//
 // ============================================================================
 
 export const challengeDifficultyString: Record<

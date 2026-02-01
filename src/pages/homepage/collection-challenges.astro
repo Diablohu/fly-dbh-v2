@@ -10,6 +10,7 @@ import { routeBase } from "@/global";
 type Props = {
     list: HomeCollectionsType["challenges"];
     title?: string;
+    route?: string;
 } & Pick<ComponentProps<typeof Collection>, "showMore" | "titleMore">;
 
 // console.log(Astro.props.list)
@@ -18,7 +19,7 @@ type Props = {
 <Collection
     name="latest-challenges"
     title={Astro.props.title ?? "最新收录着陆挑战"}
-    route={routeBase.challenges}
+    route={Astro.props.route ?? routeBase.challenges}
     showMore={Astro.props.showMore}
     titleMore={Astro.props.titleMore}
 >
