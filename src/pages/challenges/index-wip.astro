@@ -9,7 +9,13 @@ Trigger: COOKIE - RANDOM or CATALOG
 
 import { actions, ActionError } from "astro:actions";
 
-import { urlPrefixSanityImageCdn, getChallengeCatalogPageLink } from "@/global";
+import {
+    urlPrefixSanityImageCdn,
+    getChallengeCatalogPageLink,
+    routeBase,
+    aircraftTypeString,
+} from "@/global";
+import { type AircraftTypes } from "@/types";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 import HomeCollectionChallenges from "@/pages/homepage/collection-challenges.astro";
@@ -66,7 +72,35 @@ if (error) {
 // ============================================================================
 ---
 
-<Layout title="固定翼飞机着陆挑战" header footer>
+<Layout
+    title="固定翼飞机着陆挑战"
+    header
+    footer
+    sideBar={[
+        {
+            type: "link",
+            text: "最新收录",
+            route: routeBase.challenges,
+            isActive: Astro.url.pathname === routeBase.challenges,
+        },
+        {
+            type: "link",
+            text: "过滤 / 抽选",
+            route: routeBase.challenges,
+            isActive: Astro.url.pathname === routeBase.challenges,
+        },
+        { type: "divider" },
+        { type: "subtitle", text: "按飞机类别查询" },
+        ...Object.entries(aircraftTypeString).map(([key, value]) => ({
+            type: "link" as const,
+            text: value,
+            route: getChallengeCatalogPageLink(key as AircraftTypes),
+            isActive:
+                Astro.url.pathname ===
+                getChallengeCatalogPageLink(key as AircraftTypes),
+        })),
+    ]}
+>
     <section class="challenges-home">
         <section class="hero-image">
             <h1 class="title">固定翼飞机着陆挑战</h1>

@@ -56,6 +56,21 @@
     --body-safe-min-width: 375px;
     --body-scrollbar-width: 0px;
 
+    --layout-aside-link-item-padding-x: unit(
+        (@global-edge-safe-distance-sm * 2/3),
+        px
+    );
+    --layout-aside-link-item-padding-left-extra: 0px;
+    --layout-aside-link-item-icon-size: 1.5em;
+    --layout-aside-link-item-icon-margin: 0.75em;
+    --layout-aside-link-item-with-icon-padding-left: calc(
+        var(--layout-aside-link-item-padding-left-extra) +
+            var(--layout-aside-link-item-icon-size) +
+            var(--layout-aside-link-item-icon-margin) * 2
+    );
+    --layout-aside-link-item-no-icon-dot-size: 0.75em;
+    --layout-aside-link-item-no-icon-dot-border-width: 2px;
+
     --hero-image-z-index: 9000;
     --hero-image-offset-y: 0;
     --hero-image-glossy-opacity: 0;

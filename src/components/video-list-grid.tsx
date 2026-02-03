@@ -1,32 +1,22 @@
-import {
-    useState,
-    useEffect,
-    useRef,
-    useCallback,
-    useMemo,
-    memo,
-    type FC,
-} from "react";
+import { useState, useRef, useCallback, useMemo, memo, type FC } from "react";
 import { actions } from "astro:actions";
-import classNames from "classnames";
 import {
     type VideoListPageTypesType,
     type VideoItemType,
     type ValidContentListAutoLoadMoreType,
-    type VideoTagType,
 } from "@/types";
 
-import { videoListGrid as debug } from "@/utils/log";
+import ListContainerGrid from "@/components/list-container-grid";
 import VideoItem from "@/components/video-item";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 
 import getVideoItemTopTags from "@/utils/get-video-item-top-tags";
 
-import styles from "./video-list-grid.module.less";
-
 // ============================================================================
 
 type StatusType = "ready" | "loading" | "complete" | "error";
+type ItemType = Partial<VideoItemType> &
+    Pick<VideoItemType, "_id" | "title" | "release" | "cover">;
 type Props = {
     type?: VideoListPageTypesType | "search";
     slug?: string;
@@ -37,8 +27,7 @@ type Props = {
     isIndex?: boolean;
     /** 每次请求的内容长度，即传统概念上的每页条目数 */
     length?: number;
-    initialList?: (Partial<VideoItemType> &
-        Pick<VideoItemType, "_id" | "title" | "release" | "cover">)[];
+    initialList?: ItemType[];
     /** 初始列表是否已完成（已没有更多内容） */
     initialListIsComplete?: boolean;
     /**
@@ -71,7 +60,7 @@ const VideoListGrid: FC<Props> = ({
     slug,
     isIndex: _isIndex,
     length = 20,
-    initialList = [],
+    initialList = [] as ItemType[],
     initialListIsComplete = false,
     infiniteScroll: _infiniteScroll = false,
     defaultContentListAutoLoadMore,
@@ -87,7 +76,7 @@ const VideoListGrid: FC<Props> = ({
      */
     const CurrentIndexRef = useRef(initialList?.length || 0);
     const StatusRef = useRef<StatusType>(
-        initialListIsComplete ? "complete" : "ready"
+        initialListIsComplete ? "complete" : "ready",
     );
     /**
      * _Ref_ 用于记录上次传入的 `slug` 值
@@ -100,12 +89,12 @@ const VideoListGrid: FC<Props> = ({
         typeof defaultContentListAutoLoadMore === "undefined"
     ) {
         throw new Error(
-            `Props "defaultContentListAutoLoadMore" is required for React Component "VideoListGrid"`
+            `Props "defaultContentListAutoLoadMore" is required for React Component "VideoListGrid"`,
         );
     }
 
     const [contentListAutoLoadMore] = useContentListAutoLoadMore(
-        defaultContentListAutoLoadMore ?? "0"
+        defaultContentListAutoLoadMore ?? "0",
     );
 
     const [status, setStatus] = useState<StatusType>(StatusRef.current);
@@ -118,14 +107,14 @@ const VideoListGrid: FC<Props> = ({
      */
     const isIndex = useMemo(
         () => (typeof _isIndex === "boolean" ? _isIndex : !type),
-        [_isIndex, type]
+        [_isIndex, type],
     );
     /**
      * 是否允许自动加载更多内容，或称“无限滚动”
      */
     const infiniteScroll = useMemo(
         () => _infiniteScroll && contentListAutoLoadMore === "1",
-        [_infiniteScroll, contentListAutoLoadMore]
+        [_infiniteScroll, contentListAutoLoadMore],
     );
 
     /**
@@ -136,80 +125,32 @@ const VideoListGrid: FC<Props> = ({
      *      - 加载完成，且无更多内容: `complete`
      *      - 加载完成，且还有更多内容: `ready`
      */
-    const loadMore = useCallback(() => {
-        if (["loading", "complete"].includes(StatusRef.current)) return;
-
-        setStatus("loading");
-        (type === "search"
-            ? actions.search.query({
-                  keyword: slug || "",
-                  from: CurrentIndexRef.current,
-                  length,
-              })
-            : actions.videoListPage.fetchList({
-                  filters:
-                      type && slug
-                          ? [
-                                {
-                                    type,
-                                    slug,
-                                },
-                            ]
-                          : undefined,
-                  from: CurrentIndexRef.current,
-                  length,
-              })
-        )
-            .then((res) => {
-                debug("fetch action response: %O", res.data);
-                if (!res || !res.data || !Array.isArray(res.data.list)) {
-                    throw res;
-                } else {
-                    const forceComplete = res.data.list.length < length;
-                    if (!res.data || !res.data.list.length) {
-                        debug("no data received. set complete");
-                        setStatus("complete");
-                    } else
-                        setList((prevList) => {
-                            if (!res.data) return prevList;
-                            const newList = [
-                                ...prevList,
-                                ...res.data.list.filter(
-                                    ({ _id }) =>
-                                        !prevList.some(
-                                            (post) => post._id === _id
-                                        )
-                                ),
-                            ];
-                            if (forceComplete) {
-                                debug(
-                                    `received item count less than ${length}. set complete. total: ${newList.length}`
-                                );
-                                setStatus("complete");
-                            } else {
-                                debug(
-                                    "list expanded: " +
-                                        [
-                                            `current page: ${res.data.page} / ${Math.ceil(
-                                                res.data.total / length
-                                            )}`,
-                                            `items: ${newList.length} / ${res.data.total}`,
-                                        ].join(" | ")
-                                );
-                                if (newList.length >= res.data.total) {
-                                    setStatus("complete");
-                                } else {
-                                    setStatus("ready");
-                                }
-                            }
-                            return newList;
-                        });
-                }
-            })
-            .catch((err) => {
-                console.trace(err);
-            });
-    }, [type, slug, length]);
+    const loadMore = useCallback(
+        ({ from }: { from: number }) => {
+            return (
+                type === "search"
+                    ? actions.search.query({
+                          keyword: slug || "",
+                          from,
+                          length,
+                      })
+                    : actions.videoListPage.fetchList({
+                          filters:
+                              type && slug
+                                  ? [
+                                        {
+                                            type,
+                                            slug,
+                                        },
+                                    ]
+                                  : undefined,
+                          from,
+                          length,
+                      })
+            ).then((res) => res.data);
+        },
+        [type, slug, length],
+    );
 
     /**
      * 获取要显示的“标签”
@@ -270,80 +211,13 @@ const VideoListGrid: FC<Props> = ({
 
             return undefined;
         },
-        [type, slug, isIndex, tagPurpose]
+        [type, slug, isIndex, tagPurpose],
     );
 
-    // 准备检测自动加载更多的 Observer
-    useEffect(() => {
-        if (!ListContainerRef.current) return;
-
-        if (!infiniteScroll) return;
-        if (!InfiniteScrollObserverRef.current) {
-            InfiniteScrollObserverRef.current = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (
-                            entry.target === InfiniteScrollProbeRef.current &&
-                            entry.isIntersecting
-                        ) {
-                            loadMore();
-                        }
-                    });
-                },
-                { threshold: 0 }
-            );
-        }
-
-        if (InfiniteScrollProbeRef.current)
-            InfiniteScrollObserverRef.current.observe(
-                InfiniteScrollProbeRef.current
-            );
-
-        return () => {
-            if (InfiniteScrollProbeRef.current)
-                InfiniteScrollObserverRef.current?.unobserve(
-                    InfiniteScrollProbeRef.current
-                );
-            InfiniteScrollObserverRef.current?.disconnect();
-            InfiniteScrollObserverRef.current = null;
-        };
-    }, [infiniteScroll, loadMore]);
-
-    // useEffect(() => {
-    //     if (!infiniteScroll) return;
-    //     loadMore();
-    // }, [loadMore, infiniteScroll]);
-
-    // 同步 `StatusRef` 和 _State_ `status`
-    useEffect(() => {
-        StatusRef.current = status;
-    }, [status]);
-
-    // 更新 `CurrentIndexRef`
-    useEffect(() => {
-        CurrentIndexRef.current = list.length;
-    }, [list]);
-
-    // useEffect(() => {
-    //     console.log(LastSlugRef.current, slug);
-    //     if (LastSlugRef.current === slug) return;
-
-    //     debug(
-    //         "slug changed from %s to %s. Reset list.",
-    //         LastSlugRef.current,
-    //         slug
-    //     );
-    //     setList(initialList);
-    //     setStatus(initialListIsComplete ? "complete" : "ready"); // Reset status
-
-    //     LastSlugRef.current = slug;
-    // }, [slug, initialList]);
-
-    return (
-        <div className={styles["video-list-grid"]} ref={ListContainerRef}>
-            {list.map((post) => (
+    const itemRender = useMemo<FC<ItemType>>(
+        () => (post: ItemType) => {
+            return (
                 <VideoItem
-                    key={post._id}
                     _id={post._id}
                     slug={post.slug}
                     title={post.title}
@@ -353,34 +227,28 @@ const VideoListGrid: FC<Props> = ({
                     tags={getTags(post)}
                     infos={[new Date(post.release)]}
                 />
-            ))}
+            );
+        },
+        [getTags],
+    );
 
-            <section className={styles["block"]}>
-                <span
-                    ref={InfiniteScrollProbeRef}
-                    className={styles["infinite-scroll-probe"]}
-                />
-                {showLoadMoreButton &&
-                    (status === "complete" ? (
-                        <span className={styles["completed"]}>没有更多啦~</span>
-                    ) : (
-                        <button
-                            type="button"
-                            onClick={loadMore}
-                            className={classNames([
-                                styles["button-load-more"],
-                                {
-                                    [styles["is-loading"]]:
-                                        status === "loading",
-                                },
-                            ])}
-                            disabled={["loading", "complete"].includes(status)}
-                        >
-                            {status === "loading" ? "加载更多..." : "加载更多"}
-                        </button>
-                    ))}
-            </section>
-        </div>
+    return (
+        <ListContainerGrid<
+            ItemType,
+            | Awaited<ReturnType<typeof actions.search.query>>["data"]
+            | Awaited<
+                  ReturnType<typeof actions.videoListPage.fetchList>
+              >["data"]
+        >
+            loadMore={loadMore}
+            itemRender={itemRender}
+            length={length}
+            initialList={initialList}
+            initialListIsComplete={initialListIsComplete}
+            infiniteScroll={infiniteScroll}
+            defaultContentListAutoLoadMore={defaultContentListAutoLoadMore}
+            showLoadMoreButton={showLoadMoreButton}
+        />
     );
 };
 

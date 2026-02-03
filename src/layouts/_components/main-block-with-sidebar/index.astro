@@ -113,22 +113,12 @@ export type Props = {
         --item-line-height: 1.1em;
         --item-gap: 0.25em;
 
-        --link-item-padding-x: unit((@global-edge-safe-distance-sm * 2/3), px);
-        --link-item-padding-left-extra: 0px;
-        --link-item-icon-size: 1.5em;
-        --link-item-icon-margin: 0.75em;
-        --link-item-with-icon-padding-left: calc(
-            var(--link-item-padding-left-extra) + var(--link-item-icon-size) +
-                var(--link-item-icon-margin) * 2
-        );
-        --link-item-no-icon-line-color: var(--border-color);
-        --link-item-no-icon-line-color: color-mix(
+        --layout-aside-link-item-no-icon-line-color: var(--border-color);
+        --layout-aside-link-item-no-icon-line-color: color-mix(
             in hsl,
             var(--theme-color),
             var(--text-color-primary) 25%
         );
-        --link-item-no-icon-dot-size: 0.75em;
-        --link-item-no-icon-dot-border-width: 2px;
 
         position: sticky;
         top: calc(var(--global-sticky-top) + 0.5em);
@@ -199,29 +189,35 @@ export type Props = {
                 padding: calc(
                         (var(--item-min-height) - var(--item-line-height)) / 2
                     )
-                    var(--link-item-padding-x);
+                    var(--layout-aside-link-item-padding-x);
                 border-radius: 8px;
                 & > :global(svg) {
                     position: absolute;
                     display: block;
-                    width: var(--link-item-icon-size);
-                    height: var(--link-item-icon-size);
+                    width: var(--layout-aside-link-item-icon-size);
+                    height: var(--layout-aside-link-item-icon-size);
                     top: 50%;
                     margin-left: calc(
-                        var(--link-item-icon-size) * -1 -
-                            var(--link-item-icon-margin)
+                        var(--layout-aside-link-item-icon-size) * -1 -
+                            var(--layout-aside-link-item-icon-margin)
                     );
-                    margin-right: calc(var(--link-item-icon-margin) / 2);
-                    margin-top: calc(var(--link-item-icon-size) * -0.5);
+                    margin-right: calc(
+                        var(--layout-aside-link-item-icon-margin) / 2
+                    );
+                    margin-top: calc(
+                        var(--layout-aside-link-item-icon-size) * -0.5
+                    );
                     color: var(--text-color-secondary);
                     &.right-arrow {
-                        --link-item-icon-size: 0.75em;
+                        --layout-aside-link-item-icon-size: 0.75em;
                         position: relative;
                         top: 0.225em;
                         margin: auto;
                         display: inline-block;
                         vertical-align: top;
-                        margin-left: calc(var(--link-item-icon-margin) / 2);
+                        margin-left: calc(
+                            var(--layout-aside-link-item-icon-margin) / 2
+                        );
                         // color: var(--text-color-secondary);
                     }
                 }
@@ -237,7 +233,9 @@ export type Props = {
             & > :global(button.item) {
                 color: var(--text-color-primary);
                 transition-property: transform, background-color;
-                padding-left: var(--link-item-with-icon-padding-left);
+                padding-left: var(
+                    --layout-aside-link-item-with-icon-padding-left
+                );
                 .styles-hover() {
                     background: var(--tag-background-color);
                 }
@@ -250,15 +248,20 @@ export type Props = {
                     position: absolute;
                     top: 50%;
                     left: calc(
-                        var(--link-item-with-icon-padding-left) / 2 -
-                            var(--link-item-no-icon-dot-size) / 2
+                        var(--layout-aside-link-item-with-icon-padding-left) /
+                            2 - var(--layout-aside-link-item-no-icon-dot-size) /
+                            2
                     );
-                    margin-top: calc(var(--link-item-no-icon-dot-size) / -2);
-                    width: var(--link-item-no-icon-dot-size);
-                    height: var(--link-item-no-icon-dot-size);
+                    margin-top: calc(
+                        var(--layout-aside-link-item-no-icon-dot-size) / -2
+                    );
+                    width: var(--layout-aside-link-item-no-icon-dot-size);
+                    height: var(--layout-aside-link-item-no-icon-dot-size);
                     background: transparent;
-                    border: var(--link-item-no-icon-dot-border-width) solid
-                        var(--link-item-no-icon-line-color);
+                    border: var(
+                            --layout-aside-link-item-no-icon-dot-border-width
+                        )
+                        solid var(--layout-aside-link-item-no-icon-line-color);
                     border-radius: 100%;
                     transition: inherit;
                     transition-property: border-color, background-color;
@@ -285,22 +288,37 @@ export type Props = {
                         position: absolute;
                         content: "";
                         left: calc(
-                            var(--link-item-with-icon-padding-left) / 2 -
-                                var(--link-item-no-icon-dot-border-width) / 2
+                            var(
+                                    --layout-aside-link-item-with-icon-padding-left
+                                ) /
+                                2 -
+                                var(
+                                    --layout-aside-link-item-no-icon-dot-border-width
+                                ) /
+                                2
                         );
                         top: calc(var(--item-gap) * -1);
                         bottom: calc(
-                            50% + var(--link-item-no-icon-dot-size) / 2
+                            50% +
+                                var(--layout-aside-link-item-no-icon-dot-size) /
+                                2
                         );
-                        width: var(--link-item-no-icon-dot-border-width);
-                        background: var(--link-item-no-icon-line-color);
+                        width: var(
+                            --layout-aside-link-item-no-icon-dot-border-width
+                        );
+                        background: var(
+                            --layout-aside-link-item-no-icon-line-color
+                        );
                         transition: inherit;
                         transition-property: background-color;
                     }
                     & + :global(.is-level-2) {
                         &::after {
                             top: calc(
-                                -50% + var(--link-item-no-icon-dot-border-width)
+                                -50% +
+                                    var(
+                                        --layout-aside-link-item-no-icon-dot-border-width
+                                    )
                             );
                         }
                     }
@@ -308,7 +326,7 @@ export type Props = {
                 /*
                     &.is-level-2 {
                         --line-left-edge: calc(
-                            var(--link-item-icon-size) - var(--link-item-icon-margin) * 1 / 4
+                            var(--layout-aside-link-item-icon-size) - var(--layout-aside-link-item-icon-margin) * 1 / 4
                         );
                         --line-width: 2px;
                         --line-border-radius: 0;
@@ -317,14 +335,14 @@ export type Props = {
                             50% + var(--item-gap) / 2
                         );
                         // margin-left: calc(
-                        //     var(--link-item-icon-size) + var(--link-item-icon-margin)
+                        //     var(--layout-aside-link-item-icon-size) + var(--layout-aside-link-item-icon-margin)
                         // );
-                        // padding-left: var(--link-item-icon-margin);
+                        // padding-left: var(--layout-aside-link-item-icon-margin);
                         &::before,
                         &::after {
                             content: "";
                             position: absolute;
-                            border: 0px solid var(--link-item-no-icon-line-color);
+                            border: 0px solid var(--layout-aside-link-item-no-icon-line-color);
                             border-bottom-left-radius: var(
                                 --line-border-radius
                             );
@@ -347,7 +365,7 @@ export type Props = {
                             height: var(--line-horizontal-box-height);
                             border-bottom-width: var(--line-width);
                         }
-                        // --link-item-padding-left-extra: 1em;
+                        // --layout-aside-link-item-padding-left-extra: 1em;
                         & + .is-level-2 {
                             &::before {
                                 top: calc(var(--item-gap) * -1);
@@ -401,7 +419,9 @@ export type Props = {
                 cursor: pointer;
                 transition: color var(--base-transition-duration);
                 display: none;
-                padding-left: var(--link-item-with-icon-padding-left);
+                padding-left: var(
+                    --layout-aside-link-item-with-icon-padding-left
+                );
                 margin-bottom: 1.3333em;
                 &::after {
                     content: "";
@@ -413,7 +433,7 @@ export type Props = {
                     background: var(--border-color);
                 }
                 & > :global(svg) {
-                    --link-item-icon-size: 1em;
+                    --layout-aside-link-item-icon-size: 1em;
                 }
                 &:hover {
                     color: var(--text-color-primary);
