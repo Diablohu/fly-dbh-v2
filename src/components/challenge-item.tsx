@@ -60,13 +60,14 @@ const ChallengeItem: FC<{
             {Array.isArray(item.typical_aircraft_types) &&
                 item.typical_aircraft_types
                     .filter(Boolean)
-                    .map((type) => (
+                    .map((type, index) => (
                         <span
                             className={classNames([
                                 styles["line"],
                                 styles["challenge-difficulty"],
                                 styles["aerodrome-location"],
                             ])}
+                            key={index}
                         >
                             ・{aircraftTypeString[type]}
                         </span>
