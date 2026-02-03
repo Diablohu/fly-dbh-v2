@@ -4,6 +4,7 @@ import {
     type VideoListPageTypesType,
     type ChallengeDifficultyType,
     type AircraftCategoryType,
+    type AircraftTypes,
 } from "@/types";
 
 export const themeColorLight = "#ffffff";
@@ -168,7 +169,7 @@ export function getVideoPageLink(slug: string) {
 }
 /** 生成路由: 挑战列表页 */
 export function getChallengeCatalogPageLink(
-    /** 
+    /**
      * 飞机 Category
      * - 不传入则生成“最新收录”列表
      */
@@ -219,5 +220,15 @@ export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> =
         c: "干线客机 & 商务喷气机",
         d: "重型喷气机",
     };
+
+export const aircraftTypeString: Record<AircraftTypes, string> = {
+    bush: "野地＆短距起降飞机",
+    "luxury-private": "高档私人飞机",
+    "small-commercial": "小型客机/货机",
+    "medium-commercial": "中型客机/货机",
+    "business-jets": "商务喷气机",
+    "large-narrow-body": "大型窄体喷气机",
+    "large-wide-body": "大型宽体喷气机",
+};
 
 // #endregion

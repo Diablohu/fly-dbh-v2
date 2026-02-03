@@ -17,9 +17,7 @@ import {
 
 export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc`;
 
-export const getGroqLatestChallenges = (
-    length = 10,
-) => `*[_type == "approach_challenge" && defined(airac_cyle)] {
+const projectionListItem = `
   _id,
   _createdAt,
   'slug': slug.current,
@@ -35,29 +33,17 @@ export const getGroqLatestChallenges = (
   name,
   difficulty,
   airac_cyle,
-  max_allowed_aircraft_category
-} | order( airac_cyle desc, _createdAt desc ) [0...${length}]`;
+  max_allowed_aircraft_category,
+  typical_aircraft_types,`;
+
+export const getGroqLatestChallenges = (length = 10) =>
+    `*[_type == "approach_challenge" && defined(airac_cyle)] {${projectionListItem}} | order( airac_cyle desc, _createdAt desc ) [0...${length}]`;
 
 const actions = {
     fetchList: defineAction({
         handler: async () => {
             try {
-                const queryString = `*[_type == "approach_challenge"] {
-  _id,
-  'slug': slug.current,
-  'aerodrome': aerodrome->{
-    _id,
-    'slug': slug.current,
-    name,
-    icao,
-    iata,
-    faa,
-    location,
-  },
-  name,
-  difficulty,
-  max_allowed_aircraft_category
-} | order(${orderList})`;
+                const queryString = `*[_type == "approach_challenge"] {${projectionListItem}} | order(${orderList})`;
                 const res = await fetch<ChallengeListItemType>(queryString, {
                     transform: (res, queryString) => {
                         if (!res[0]) {
@@ -116,6 +102,7 @@ const actions = {
     extra_comment,
   },
   max_allowed_aircraft_category,
+  typical_aircraft_types,
   'aerodrome': aerodrome->{
     _id,
     'slug': slug.current,

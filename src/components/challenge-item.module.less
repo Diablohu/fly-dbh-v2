@@ -1,6 +1,8 @@
 @import "@/utils/mixins.less";
 
 .challenge-item {
+    // --tag-background-color: transparent;
+    --menu-background-color-highlight: var(--tag-background-color);
     .tag-styles();
     .difficulty-variables();
     position: relative;
@@ -8,7 +10,7 @@
     // border-color: var(--difficulty-color, var(--tag-background-color));
     padding: 0.75em 1.25em 1em 1.25em;
     border-radius: 0.5em;
-    // background-color: transparent;
+    background-color: transparent;
     // background-image: linear-gradient(
     //     to right,
     //     var(--difficulty-color),
@@ -31,16 +33,27 @@
         background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+    .aerodrome-name,
+    .challenge-name {
+        line-height: 1.2;
+        display: block;
+        position: relative;
+        z-index: 10;
+    }
     .aerodrome-name {
         font-size: unit(
             (@base-font-size-number-h3 / @base-font-size-number),
             em
         );
-        position: relative;
-        z-index: 10;
-        line-height: 1.2;
-        display: block;
         padding-top: 0.13333em;
+    }
+    .challenge-name {
+        // font-size: unit(
+        //     (@base-font-size-number-h5 / @base-font-size-number),
+        //     em
+        // );
+        margin-top: 0.3em;
+        // font-weight: normal;
     }
     // .aerodrome-name + .line {
     //     margin-top: 0.4em;
@@ -79,7 +92,7 @@
         background: linear-gradient(
             145deg,
             var(--difficulty-color),
-            var(--theme-color) 18em
+            var(--tag-background-color) 18em
         );
         opacity: 0.3333;
     }

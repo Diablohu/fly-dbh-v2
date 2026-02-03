@@ -25,6 +25,14 @@ export type ValidVideoItemShowPlatformLinksOnHoverType = "0" | "1";
 // ============================================================================
 
 export type AircraftCategoryType = "a" | "b" | "c" | "d";
+export type AircraftTypes =
+    | "bush"
+    | "luxury-private"
+    | "small-commercial"
+    | "medium-commercial"
+    | "business-jets"
+    | "large-narrow-body"
+    | "large-wide-body";
 
 // ============================================================================
 
@@ -159,6 +167,7 @@ export type ChallengeListItemType = Pick<
     | "name"
     | "difficulty"
     | "max_allowed_aircraft_category"
+    | "typical_aircraft_types"
     | "airac_cyle"
 > & {
     slug: string;
@@ -187,6 +196,7 @@ export type ChallengeItemType = {
     difficulty: ChallengeDifficultyType;
     max_allowed_aircraft_category: AircraftCategoryType;
     typical_aircrafts: string;
+    typical_aircraft_types: AircraftTypes[];
     hazards: {
         name: string;
         emoji: string;

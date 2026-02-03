@@ -2,7 +2,7 @@ import { memo, type FC } from "react";
 import classNames from "classnames";
 
 import { type ChallengeListItemType } from "@/types";
-import { challengeDifficultyString } from "@/global";
+import { challengeDifficultyString, aircraftTypeString } from "@/global";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 
 import styles from "./challenge-item.module.less";
@@ -40,6 +40,7 @@ const ChallengeItem: FC<{
                     {item.aerodrome.name}
                 </strong>
             )}
+            <strong className={styles["challenge-name"]}>{item.name}</strong>
             {
                 // [1, 3, 5].includes(item.difficulty)
                 item.difficulty && (
@@ -50,20 +51,26 @@ const ChallengeItem: FC<{
                         ])}
                     >
                         {challengeDifficultyString[item.difficulty]}
-                        {showCategory && item.max_allowed_aircraft_category
+                        {/* {showCategory && item.max_allowed_aircraft_category
                             ? `－${item.max_allowed_aircraft_category.toUpperCase()} 类飞机`
-                            : ""}
+                            : ""} */}
                     </span>
                 )
             }
-            <span
-                className={classNames([
-                    styles["line"],
-                    styles["challenge-name"],
-                ])}
-            >
-                {item.name}
-            </span>
+            {Array.isArray(item.typical_aircraft_types) &&
+                item.typical_aircraft_types
+                    .filter(Boolean)
+                    .map((type) => (
+                        <span
+                            className={classNames([
+                                styles["line"],
+                                styles["challenge-difficulty"],
+                                styles["aerodrome-location"],
+                            ])}
+                        >
+                            ・{aircraftTypeString[type]}
+                        </span>
+                    ))}
             {Array.isArray(item.aerodrome?.location) &&
                 item.aerodrome?.location.length > 0 && (
                     <span
