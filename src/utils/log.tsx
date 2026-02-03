@@ -7,7 +7,7 @@ const names = {
     ERROR: "Error",
     COOKIES: "Cookies",
     SEARCH: "Search",
-    VIDEO_LIST_GRID: "Video List Grid",
+    LIST_GRID: "List Grid",
     VIDEO_LIST_PAGE_CATEGORIES: "Video List Page: Categories",
     CHALLENGE: "Challenge",
 };
@@ -31,8 +31,8 @@ cookie.namespace = names.COOKIES;
 export const search = dbg(names.SEARCH);
 search.namespace = names.SEARCH;
 
-export const videoListGrid = dbg(names.VIDEO_LIST_GRID);
-videoListGrid.namespace = names.VIDEO_LIST_GRID;
+export const listGrid = dbg(names.LIST_GRID);
+listGrid.namespace = names.LIST_GRID;
 
 export const videoListPageCategories = dbg(names.VIDEO_LIST_PAGE_CATEGORIES);
 videoListPageCategories.namespace = names.VIDEO_LIST_PAGE_CATEGORIES;
@@ -46,7 +46,7 @@ if (import.meta.env.DEV || import.meta.env.MODE === "test") {
     debug.enabled = true;
     cookie.enabled = true;
     search.enabled = true;
-    videoListGrid.enabled = true;
+    listGrid.enabled = true;
     videoListPageCategories.enabled = true;
     challenge.enabled = true;
 }

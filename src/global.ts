@@ -222,13 +222,23 @@ export const aircraftCategoryTypeString: Record<AircraftCategoryType, string> =
     };
 
 export const aircraftTypeString: Record<AircraftTypes, string> = {
-    bush: "野地＆短距起降飞机",
+    bush: "野地＆短距起降",
     "luxury-private": "高档私人飞机",
     "small-commercial": "小型客机/货机",
     "medium-commercial": "中型客机/货机",
     "business-jets": "商务喷气机",
-    "large-narrow-body": "大型窄体喷气机",
-    "large-wide-body": "大型宽体喷气机",
+    "large-narrow-body": "窄体喷气机",
+    "large-wide-body": "宽体喷气机",
+};
+
+export const aircraftTypeStringShort: Record<AircraftTypes, string> = {
+    bush: "短距起降",
+    "luxury-private": "高档私人",
+    "small-commercial": "小型客货",
+    "medium-commercial": "中型客货",
+    "business-jets": "商务喷气",
+    "large-narrow-body": "窄体喷气",
+    "large-wide-body": "宽体喷气",
 };
 
 // #endregion

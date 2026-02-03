@@ -12,7 +12,7 @@ import { errorLog } from "@/utils/log";
 // ============================================================================
 
 const { data: list, error } = await Astro.callAction(
-    actions.challengePage.fetchList,
+    actions.challengePage.fetchListAll,
     undefined
 );
 if ((error && error.code === "NOT_FOUND") || !list) {

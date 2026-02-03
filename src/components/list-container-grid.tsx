@@ -6,12 +6,11 @@ import {
     useMemo,
     memo,
     type FC,
-    type PropsWithChildren,
 } from "react";
 import classNames from "classnames";
 import { type ValidContentListAutoLoadMoreType } from "@/types";
 
-import { videoListGrid as debug } from "@/utils/log";
+import { listGrid as debug } from "@/utils/log";
 import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 
 import styles from "./list-container-grid.module.less";
@@ -46,7 +45,7 @@ type Props<T extends {}, R extends {} | undefined> = {
      *      - 即，不显示按钮时，也能自动加载更多
      */
     showLoadMoreButton?: boolean;
-} & PropsWithChildren;
+};
 
 // ============================================================================
 
@@ -68,7 +67,6 @@ const ListContainerGrid = <
     infiniteScroll: _infiniteScroll = false,
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
-    children,
 }: Props<T, R>) => {
     const ListContainerRef = useRef<HTMLDivElement>(null);
     const InfiniteScrollProbeRef = useRef<HTMLDivElement>(null);

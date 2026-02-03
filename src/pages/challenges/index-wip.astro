@@ -13,7 +13,7 @@ import {
     urlPrefixSanityImageCdn,
     getChallengeCatalogPageLink,
     routeBase,
-    aircraftTypeString,
+    aircraftTypeStringShort,
 } from "@/global";
 import { type AircraftTypes } from "@/types";
 import Layout from "@/layouts/layout.astro";
@@ -25,8 +25,8 @@ import { errorLog } from "@/utils/log";
 // ============================================================================
 
 const { data: latest, error } = await Astro.callAction(
-    actions.challengePage.fetchLatest,
-    {},
+    actions.challengePage.fetchList,
+    { length: 10, sort: "latest" },
 );
 if ((error && error.code === "NOT_FOUND") || !latest) {
     if (error)
@@ -90,20 +90,21 @@ if (error) {
             isActive: Astro.url.pathname === routeBase.challenges,
         },
         { type: "divider" },
-        { type: "subtitle", text: "按飞机类别查询" },
-        ...Object.entries(aircraftTypeString).map(([key, value]) => ({
-            type: "link" as const,
-            text: value,
-            route: getChallengeCatalogPageLink(key as AircraftTypes),
-            isActive:
-                Astro.url.pathname ===
-                getChallengeCatalogPageLink(key as AircraftTypes),
-        })),
+        ...Object.entries(aircraftTypeStringShort).map(([key, value]) => {
+            const route = getChallengeCatalogPageLink(key as AircraftTypes);
+            return {
+                type: "link" as const,
+                text: value,
+                route,
+                isActive: Astro.url.pathname === route,
+            };
+        }),
     ]}
 >
     <section class="challenges-home">
         <section class="hero-image">
-            <h1 class="title">固定翼飞机着陆挑战</h1>
+            <h2 class="title">固定翼飞机着陆挑战</h2>
+            <h1 class="title">最新收录</h1>
             <!-- <span
                 class="image-container"
                 style={{

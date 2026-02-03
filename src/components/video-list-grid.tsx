@@ -67,23 +67,6 @@ const VideoListGrid: FC<Props> = ({
     showLoadMoreButton = true,
     tagPurpose,
 }) => {
-    const ListContainerRef = useRef<HTMLDivElement>(null);
-    const InfiniteScrollProbeRef = useRef<HTMLDivElement>(null);
-    const InfiniteScrollObserverRef = useRef<IntersectionObserver>(null);
-    /**
-     * _Ref_ 当前所在的列表索引值
-     *  - 与列表内容数量同步
-     */
-    const CurrentIndexRef = useRef(initialList?.length || 0);
-    const StatusRef = useRef<StatusType>(
-        initialListIsComplete ? "complete" : "ready",
-    );
-    /**
-     * _Ref_ 用于记录上次传入的 `slug` 值
-     *  - 用于判断是否需要重置列表
-     */
-    // const LastSlugRef = useRef<string | undefined>(slug);
-
     if (
         _infiniteScroll &&
         typeof defaultContentListAutoLoadMore === "undefined"
@@ -96,10 +79,6 @@ const VideoListGrid: FC<Props> = ({
     const [contentListAutoLoadMore] = useContentListAutoLoadMore(
         defaultContentListAutoLoadMore ?? "0",
     );
-
-    const [status, setStatus] = useState<StatusType>(StatusRef.current);
-    const [list, setList] =
-        useState<Required<Props>["initialList"]>(initialList);
 
     /**
      * 当前是否是“首页”型
@@ -117,14 +96,6 @@ const VideoListGrid: FC<Props> = ({
         [_infiniteScroll, contentListAutoLoadMore],
     );
 
-    /**
-     * 加载更多内容
-     *  - 手动触发和自动触发均调用该函数
-     *  - 会自动更新 _State_ `status`
-     *      - 开始加载时: `loading`
-     *      - 加载完成，且无更多内容: `complete`
-     *      - 加载完成，且还有更多内容: `ready`
-     */
     const loadMore = useCallback(
         ({ from }: { from: number }) => {
             return (
