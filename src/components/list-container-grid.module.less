@@ -7,12 +7,13 @@
         auto-fill,
         minmax(var(--list-container-grid-item-min-width), 1fr)
     );
-    gap: 2em 1em;
+    gap: var(--list-container-grid-gap);
 
     & > .block {
         grid-column: 1 / -1;
         position: relative;
         text-align: center;
+        margin-top: var(--list-container-grid-more-margin-top);
     }
 
     .infinite-scroll-probe {

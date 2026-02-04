@@ -31,7 +31,7 @@ const ChallengeList: FC<{
         list.filter(
             ({ difficulty, max_allowed_aircraft_category }) =>
                 $difficulties.includes(difficulty) &&
-                $aircraftCategories.includes(max_allowed_aircraft_category)
+                $aircraftCategories.includes(max_allowed_aircraft_category),
         ).forEach((item) => {
             if (!result[item.max_allowed_aircraft_category]) {
                 result[item.max_allowed_aircraft_category] = [];
@@ -40,7 +40,7 @@ const ChallengeList: FC<{
         });
 
         return Object.entries(result).sort(([a], [b]) =>
-            a > b ? 1 : a === b ? 0 : -1
+            a > b ? 1 : a === b ? 0 : -1,
         ) as [AircraftCategoryType, SanityDocument<ChallengeListItemType>[]][];
     }, [list, $difficulties, $aircraftCategories]);
 
@@ -59,7 +59,11 @@ const ChallengeList: FC<{
             </dt>
             <dd className={styles["challenges-list"]}>
                 {items.map((item) => (
-                    <ChallengeItem item={item} key={item._id} />
+                    <ChallengeItem
+                        item={item}
+                        key={item._id}
+                        showAircraftTypes
+                    />
                 ))}
             </dd>
         </dl>

@@ -173,12 +173,16 @@ export function getChallengeCatalogPageLink(
      * 飞机 Category
      * - 不传入则生成“最新收录”列表
      */
-    aircraftCategory?: AircraftTypes,
+    aircraftCategory?: "filter" | AircraftTypes,
 ) {
     return (
         routeBase.challenges +
         "/catalog" +
-        (aircraftCategory ? `/${aircraftCategory}` : "")
+        (aircraftCategory === "filter"
+            ? "/filter"
+            : aircraftCategory
+              ? `/${aircraftCategory}`
+              : "")
     );
 }
 

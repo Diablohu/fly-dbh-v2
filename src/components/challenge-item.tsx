@@ -14,8 +14,15 @@ const ChallengeItem: FC<{
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty">;
     /** 在难度行显示最大允许 Category */
-    // showCategory?: boolean;
-}> = ({ item, className }) => {
+    showMaxCategory?: boolean;
+    /** 在难度下方显示飞机类型 */
+    showAircraftTypes?: boolean;
+}> = ({
+    item,
+    className,
+    showMaxCategory = false,
+    showAircraftTypes = false,
+}) => {
     return (
         <a
             className={classNames(styles["challenge-item"], className)}
@@ -51,13 +58,14 @@ const ChallengeItem: FC<{
                         ])}
                     >
                         {challengeDifficultyString[item.difficulty]}
-                        {/* {showCategory && item.max_allowed_aircraft_category
+                        {showMaxCategory && item.max_allowed_aircraft_category
                             ? `－${item.max_allowed_aircraft_category.toUpperCase()} 类飞机`
-                            : ""} */}
+                            : ""}
                     </span>
                 )
             }
-            {Array.isArray(item.typical_aircraft_types) &&
+            {showAircraftTypes &&
+                Array.isArray(item.typical_aircraft_types) &&
                 item.typical_aircraft_types
                     .filter(Boolean)
                     .map((type, index) => (

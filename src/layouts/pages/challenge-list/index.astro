@@ -36,7 +36,7 @@ type Props = {
 
 // #region Data ===============================================================
 
-const length = 10;
+const length = 20;
 const { data: initialList, error } = await Astro.callAction(
     actions.challengePage.fetchList,
     {
@@ -109,8 +109,8 @@ if (error) {
         },
         {
             type: "link",
-            text: "过滤 / 抽选",
-            route: routeBase.challenges,
+            text: "查询 / 抽选",
+            route: getChallengeCatalogPageLink("filter"),
             isActive: Astro.props.catalog === "filter",
         },
         ...(import.meta.env.DEV
@@ -141,14 +141,15 @@ if (error) {
             <h1 class="title">
                 {
                     Astro.props.catalog === "latest"
-                        ? undefined
+                        ? "最新收录"
                         : Astro.props.catalog === "filter"
-                          ? undefined
+                          ? "查询 / 抽选"
                           : aircraftTypeString[
                                 Astro.props.catalog as AircraftTypes
                             ]
                 }
             </h1>
+            <span class="total">已收录 {initialList.total} 个挑战</span>
             <!-- <span
                 class="image-container"
                 style={{
@@ -184,6 +185,9 @@ if (error) {
                         Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)
                             ?.value as ValidContentListAutoLoadMoreType
                     }
+                    showAircraftTypes={["latest", "filter"].includes(
+                        Astro.props.catalog,
+                    )}
                 />
             )
         }
@@ -211,15 +215,19 @@ if (error) {
         align-items: center;
         justify-content: flex-end;
 
-        h1 {
+        .title,
+        .total {
             .block-wrapper();
+            display: block;
+            z-index: 10;
+            text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
+            color: var(--dark-text-color-primary);
+        }
+        h1 {
             // position: absolute;
             // bottom: var(--hero-image-bottom-offset-percentage);
             // bottom: 0;
-            z-index: 10;
             margin: 0;
-            color: var(--dark-text-color-primary);
-            text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
             letter-spacing: 0.15em;
             line-height: 1.2em;
             padding-bottom: calc((var(--global-header-height) - 1.2em) / 2);
@@ -283,45 +291,6 @@ if (error) {
             //         transparent
             //     );
             // }
-        }
-    }
-
-    .content-body {
-        position: relative;
-        z-index: 5;
-
-        .sections-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-areas: "categories filters";
-            gap: var(--homepage-collection-gap);
-            margin-bottom: var(--homepage-collection-gap);
-
-            .screen-md({
-                grid-template-columns: 1fr;
-                grid-template-areas:
-                    "categories"
-                    "filters";
-                .section + .section { 
-                    &::before {
-                        content: "";
-                        display: block;
-                        position: absolute;
-                        top: calc(var(--homepage-collection-gap) / -2);
-                        height: var(--homepage-collection-divider-height);
-                        left: 0;
-                        right: 0;
-                        background: var(--homepage-collection-divider-color);
-                    }
-                }
-            });
-
-            .section {
-                position: relative;
-                h3 {
-                    margin-top: 0;
-                }
-            }
         }
     }
 </style>

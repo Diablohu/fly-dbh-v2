@@ -1,4 +1,12 @@
-import { useCallback, useMemo, memo, type FC } from "react";
+import {
+    useCallback,
+    useMemo,
+    memo,
+    type FC,
+    type ComponentProps,
+    type HTMLAttributes,
+} from "react";
+import classNames from "classnames";
 import { actions } from "astro:actions";
 import {
     type ChallengeListItemType,
@@ -8,6 +16,8 @@ import {
 
 import ListContainerGrid from "@/components/list-container-grid";
 import ChallengeItem from "@/components/challenge-item";
+
+import styles from "./challenge-list-grid.module.less";
 
 // ============================================================================
 
@@ -39,11 +49,16 @@ type Props = {
      *      - 即，不显示按钮时，也能自动加载更多
      */
     showLoadMoreButton?: boolean;
-};
+} & Pick<
+    ComponentProps<typeof ChallengeItem>,
+    "showMaxCategory" | "showAircraftTypes"
+> &
+    Pick<HTMLAttributes<HTMLDivElement>, "className">;
 
 // ============================================================================
 
 const ChallengeListGrid: FC<Props> = ({
+    className,
     catalog,
     length = 20,
     initialList = [] as ChallengeListItemType[],
@@ -51,6 +66,8 @@ const ChallengeListGrid: FC<Props> = ({
     infiniteScroll = false,
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
+    showMaxCategory = false,
+    showAircraftTypes = false,
 }) => {
     if (
         infiniteScroll &&
@@ -82,10 +99,12 @@ const ChallengeListGrid: FC<Props> = ({
                     key={post._id}
                     // className={classNameItem}
                     item={post}
+                    showMaxCategory={showMaxCategory}
+                    showAircraftTypes={showAircraftTypes}
                 />
             );
         },
-        [],
+        [showMaxCategory, showAircraftTypes],
     );
 
     return (
@@ -93,6 +112,7 @@ const ChallengeListGrid: FC<Props> = ({
             ChallengeListItemType,
             Awaited<ReturnType<typeof actions.challengePage.fetchList>>["data"]
         >
+            className={classNames(styles["challenge-list-grid"], className)}
             loadMore={loadMore}
             itemRender={itemRender}
             length={length}
