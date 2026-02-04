@@ -424,7 +424,7 @@ ${
                                     : type === "platform"
                                       ? "name_full asc"
                                       : type === "platformUpdate"
-                                        ? "release desc"
+                                        ? "release desc, number desc"
                                         : type === "event"
                                           ? "start desc"
                                           : ""
