@@ -19,6 +19,11 @@ import {
 // ============================================================================
 
 type SortType = "latest" | "difficulty";
+export type ChallengeListResponseDataType = {
+    list: ChallengeItemType[];
+    total: number;
+    page: number;
+};
 
 export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc`;
 
@@ -41,15 +46,11 @@ const projectionListItem = `
   max_allowed_aircraft_category,
   typical_aircraft_types,`;
 
-export const getGroqChallengeList = ({
-    from = 0,
-    length = 10,
+const getGroqFiltersChallengeList = ({
     sort = "latest",
     types = [],
     hazards = [],
 }: {
-    from?: number;
-    length?: number;
     sort?: SortType;
     types?: AircraftTypes[];
     hazards?: string[];
@@ -65,16 +66,35 @@ export const getGroqChallengeList = ({
         (Array.isArray(hazards) && hazards.length > 0
             ? hazards.map((hazard) => `&& "${hazard}" in hazards[].hazard->_id`)
             : [])
-    }] {${projectionListItem}} | order(${
+    }]`;
+
+export const getGroqQueryChallengeList = ({
+    from = 0,
+    length = 10,
+    sort = "latest",
+    types = [],
+    hazards = [],
+}: {
+    from?: number;
+    length?: number;
+    sort?: SortType;
+    types?: AircraftTypes[];
+    hazards?: string[];
+} = {}) =>
+    `${getGroqFiltersChallengeList({
+        sort,
+        types,
+        hazards,
+    })}{${projectionListItem}} | order(${
         sort === "latest"
             ? "airac_cyle desc, _createdAt desc"
             : sort === "difficulty"
               ? "difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc"
               : ""
-    }) [${from}...${length}]`;
+    }) [${from}...${from + length}]`;
 
 export const getGroqLatestChallenges = (length = 10) =>
-    getGroqChallengeList({ from: 0, length, sort: "latest" });
+    getGroqQueryChallengeList({ from: 0, length, sort: "latest" });
 
 // ============================================================================
 
@@ -95,16 +115,15 @@ const actions = {
         }>,
         handler: async ({ from = 0, length = 20, sort, types, hazards }) => {
             try {
-                const queryString = getGroqChallengeList({
-                    from,
-                    length,
-                    sort,
-                    types,
-                    hazards,
-                });
-                const res = await fetch<ChallengeListItemType>(queryString, {
+                const queryString = `{
+'list': ${getGroqQueryChallengeList({ from, length, sort, types, hazards })},
+'total': count(${getGroqFiltersChallengeList({ sort, types, hazards })})
+}`;
+                const res = (await fetch(queryString, {
                     transform: (res, queryString) => {
-                        if (!res[0]) {
+                        const r =
+                            res as unknown as ChallengeListResponseDataType;
+                        if (!r) {
                             const err = new ActionError({
                                 message: E60000,
                                 code: "NOT_FOUND",
@@ -119,9 +138,12 @@ const actions = {
                         //         );
                         // });
                         // res[0].cover = transformImagePath(res[0].cover);
-                        return res;
+                        // const maxPage = Math.ceil(r.total / length);
+                        // console.log(r.total, from, length, maxPage);
+                        r.page = Math.floor(from / length) + 1;
+                        return r as unknown as SanityDocument<ChallengeListResponseDataType>[];
                     },
-                });
+                })) as unknown as ChallengeListResponseDataType;
 
                 if (!res) {
                     const err = new ActionError({

@@ -14,8 +14,8 @@ const ChallengeItem: FC<{
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty">;
     /** 在难度行显示最大允许 Category */
-    showCategory?: boolean;
-}> = ({ item, className, showCategory = false }) => {
+    // showCategory?: boolean;
+}> = ({ item, className }) => {
     return (
         <a
             className={classNames(styles["challenge-item"], className)}

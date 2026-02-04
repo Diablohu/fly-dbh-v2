@@ -6,6 +6,7 @@ import {
     useMemo,
     memo,
     type FC,
+    type HTMLAttributes,
 } from "react";
 import classNames from "classnames";
 import { type ValidContentListAutoLoadMoreType } from "@/types";
@@ -45,7 +46,7 @@ type Props<T extends {}, R extends {} | undefined> = {
      *      - 即，不显示按钮时，也能自动加载更多
      */
     showLoadMoreButton?: boolean;
-};
+} & Pick<HTMLAttributes<HTMLDivElement>, "className">;
 
 // ============================================================================
 
@@ -59,6 +60,7 @@ const ListContainerGrid = <
           }
         | undefined,
 >({
+    className,
     loadMore,
     itemRender: ItemComponent,
     length = 20,
@@ -90,7 +92,7 @@ const ListContainerGrid = <
         typeof defaultContentListAutoLoadMore === "undefined"
     ) {
         throw new Error(
-            `Props "defaultContentListAutoLoadMore" is required for React Component "VideoListGrid"`,
+            `Props "defaultContentListAutoLoadMore" is required for React Component "ListContainerGrid"`,
         );
     }
 
@@ -242,7 +244,10 @@ const ListContainerGrid = <
     // }, [slug, initialList]);
 
     return (
-        <div className={styles["list-container-grid"]} ref={ListContainerRef}>
+        <div
+            className={classNames(styles["list-container-grid"], className)}
+            ref={ListContainerRef}
+        >
             {list.map((item) => (
                 <ItemComponent key={item._id} {...item} />
             ))}

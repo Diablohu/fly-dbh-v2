@@ -16,10 +16,14 @@ import {
     aircraftTypeString,
     aircraftTypeStringShort,
 } from "@/global";
-import { type AircraftTypes } from "@/types";
+import {
+    type AircraftTypes,
+    type ValidContentListAutoLoadMoreType,
+} from "@/types";
+import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
-import HomeCollectionChallenges from "@/pages/homepage/collection-challenges.astro";
+import ChallengeListGrid from "@/components/challenge-list-grid";
 
 import { errorLog } from "@/utils/log";
 
@@ -32,10 +36,11 @@ type Props = {
 
 // #region Data ===============================================================
 
-const { data: latest, error } = await Astro.callAction(
+const length = 10;
+const { data: initialList, error } = await Astro.callAction(
     actions.challengePage.fetchList,
     {
-        length: 10,
+        length,
         sort: Astro.props.catalog === "latest" ? "latest" : "difficulty",
         types:
             Astro.props.catalog === "latest"
@@ -45,7 +50,7 @@ const { data: latest, error } = await Astro.callAction(
                   : [Astro.props.catalog as AircraftTypes],
     },
 );
-if ((error && error.code === "NOT_FOUND") || !latest) {
+if ((error && error.code === "NOT_FOUND") || !initialList) {
     if (error)
         errorLog(
             [
@@ -86,6 +91,8 @@ if (error) {
     return Astro.rewrite("/500");
 }
 
+// console.log(initialList)
+
 // ============================================================================
 ---
 
@@ -106,6 +113,16 @@ if (error) {
             route: routeBase.challenges,
             isActive: Astro.props.catalog === "filter",
         },
+        ...(import.meta.env.DEV
+            ? [
+                  {
+                      type: "link" as const,
+                      text: "[DEV] 门户",
+                      route: routeBase.challenges + "/portal",
+                      isActive: false,
+                  },
+              ]
+            : []),
         { type: "divider" },
         ...Object.entries(aircraftTypeStringShort).map(([key, value]) => {
             const route = getChallengeCatalogPageLink(key as AircraftTypes);
@@ -118,7 +135,7 @@ if (error) {
         }),
     ]}
 >
-    <section class="challenges-home">
+    <section class="list">
         <section class="hero-image">
             <h2 class="title">固定翼飞机着陆挑战</h2>
             <h1 class="title">
@@ -150,24 +167,36 @@ if (error) {
                 }}></span>
         </section>
 
-        <section class="content-body">
-            <Block>
-                <HomeCollectionChallenges
-                    title="最新收录"
-                    list={latest}
-                    route={getChallengeCatalogPageLink()}
+        {
+            Astro.props.catalog === "filter" ? (
+                "TODO: FILTER"
+            ) : (
+                <ChallengeListGrid
+                    client:idle
+                    catalog={Astro.props.catalog}
+                    length={length}
+                    initialList={initialList.list}
+                    initialListIsComplete={
+                        initialList.list.length >= initialList.total
+                    }
+                    infiniteScroll
+                    defaultContentListAutoLoadMore={
+                        Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)
+                            ?.value as ValidContentListAutoLoadMoreType
+                    }
                 />
-            </Block>
-        </section>
+            )
+        }
     </section>
 </Layout>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .challenges-home {
+    .list {
         --hero-image-height: 400px;
         --hero-image-bottom-offset-percentage: 30%;
+        padding-bottom: 4em;
     }
 
     .hero-image {

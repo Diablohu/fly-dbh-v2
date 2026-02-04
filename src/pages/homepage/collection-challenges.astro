@@ -23,11 +23,7 @@ type Props = {
     showMore={Astro.props.showMore}
     titleMore={Astro.props.titleMore}
 >
-    <ChallengeListHorizontal
-        client:idle
-        challenges={Astro.props.list}
-        showCategory
-    />
+    <ChallengeListHorizontal client:idle challenges={Astro.props.list} />
     <!-- <section class="challenges">
         {Astro.props.list.map((item) => <ChallengeItem item={item} />)}
     </section> -->

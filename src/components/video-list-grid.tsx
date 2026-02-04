@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo, memo, type FC } from "react";
+import { useCallback, useMemo, memo, type FC } from "react";
 import { actions } from "astro:actions";
 import {
     type VideoListPageTypesType,
@@ -14,7 +14,6 @@ import getVideoItemTopTags from "@/utils/get-video-item-top-tags";
 
 // ============================================================================
 
-type StatusType = "ready" | "loading" | "complete" | "error";
 type ItemType = Partial<VideoItemType> &
     Pick<VideoItemType, "_id" | "title" | "release" | "cover">;
 type Props = {
@@ -25,14 +24,21 @@ type Props = {
      *  - 决定“标签”内容类型
      */
     isIndex?: boolean;
-    /** 每次请求的内容长度，即传统概念上的每页条目数 */
+    /**
+     * 每次请求的内容长度，即传统概念上的每页条目数
+     * @default 20
+     */
     length?: number;
     initialList?: ItemType[];
-    /** 初始列表是否已完成（已没有更多内容） */
+    /**
+     * 初始列表是否已完成（已没有更多内容）
+     * @default false
+     */
     initialListIsComplete?: boolean;
     /**
      * 是否启用无限滚动（自动加载更多内容）功能
      *  - 注！如需启用，则 **必须** 传入 `defaultContentListAutoLoadMore`
+     * @default false
      */
     infiniteScroll?: boolean;
     /**
@@ -62,23 +68,19 @@ const VideoListGrid: FC<Props> = ({
     length = 20,
     initialList = [] as ItemType[],
     initialListIsComplete = false,
-    infiniteScroll: _infiniteScroll = false,
+    infiniteScroll = false,
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
     tagPurpose,
 }) => {
     if (
-        _infiniteScroll &&
+        infiniteScroll &&
         typeof defaultContentListAutoLoadMore === "undefined"
     ) {
         throw new Error(
             `Props "defaultContentListAutoLoadMore" is required for React Component "VideoListGrid"`,
         );
     }
-
-    const [contentListAutoLoadMore] = useContentListAutoLoadMore(
-        defaultContentListAutoLoadMore ?? "0",
-    );
 
     /**
      * 当前是否是“首页”型
@@ -87,13 +89,6 @@ const VideoListGrid: FC<Props> = ({
     const isIndex = useMemo(
         () => (typeof _isIndex === "boolean" ? _isIndex : !type),
         [_isIndex, type],
-    );
-    /**
-     * 是否允许自动加载更多内容，或称“无限滚动”
-     */
-    const infiniteScroll = useMemo(
-        () => _infiniteScroll && contentListAutoLoadMore === "1",
-        [_infiniteScroll, contentListAutoLoadMore],
     );
 
     const loadMore = useCallback(
