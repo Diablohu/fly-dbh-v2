@@ -55,8 +55,8 @@ const exampleAircrafts: Record<Props["catalog"], string[]> = {
     latest: [],
     filter: [],
 
-    bush: ["DHC-6“双水獭”", "塞斯纳208“大篷车”"],
-    "luxury-private": ["钻石 DA-42", "西瑞 SF50 VisionJet"],
+    bush: ["DHC-6“双水獭”", "塞斯纳208"],
+    "luxury-private": ["钻石 DA-42", "西瑞 VisionJet"],
     "small-commercial": ["皮拉图斯 PC-12"],
     "medium-commercial": ["ATR", "冲8"],
     "business-jets": ["塞斯纳奖状", "庞巴迪挑战者"],
@@ -173,6 +173,7 @@ if (error) {
             return {
                 type: "link" as const,
                 text: value,
+                subTexts: exampleAircrafts[key as Props["catalog"]],
                 route,
                 isActive: Astro.props.catalog === key,
             };
@@ -269,8 +270,7 @@ if (error) {
         position: relative;
         z-index: 1;
         height: var(--hero-image-height);
-        // height: 33.3333vh;
-        // margin-top: calc(var(--global-header-height) * -1);
+        background: var(--dark-theme-color);
         margin-bottom: 1em;
         background: no-repeat center/cover;
         border-radius: 0.5em;

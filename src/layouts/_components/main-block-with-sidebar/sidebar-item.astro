@@ -2,6 +2,7 @@
 type Props = {
     type?: "link" | "button" | "divider" | "subtitle";
     text?: string;
+    subTexts?: string[];
     route?: string;
     level?: number;
     isActive?: boolean;
@@ -46,6 +47,10 @@ const Element = Astro.props.route ? "a" : "button";
                 }
             />
             {Astro.props.text}
+            {Astro.props.subTexts &&
+                Astro.props.subTexts.map((text) => (
+                    <small class="sub-text">{text}</small>
+                ))}
             <slot />
         </Element>
     )

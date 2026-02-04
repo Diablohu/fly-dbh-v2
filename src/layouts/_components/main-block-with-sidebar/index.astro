@@ -112,6 +112,7 @@ export type Props = {
         --item-min-height: 2.5em;
         --item-line-height: 1.1em;
         --item-gap: 0.25em;
+        --item-sub-text-color: var(--text-color-secondary);
 
         --layout-aside-link-item-no-icon-line-color: var(--border-color);
         --layout-aside-link-item-no-icon-line-color: color-mix(
@@ -237,6 +238,7 @@ export type Props = {
                     --layout-aside-link-item-with-icon-padding-left
                 );
                 .styles-hover() {
+                    --item-sub-text-color: var(--text-color-primary);
                     background: var(--tag-background-color);
                 }
                 &.is-active,
@@ -246,15 +248,24 @@ export type Props = {
                 .pointer-hover(.styles-hover());
                 &::before {
                     position: absolute;
-                    top: 50%;
+                    top: calc(
+                        (
+                                var(--item-min-height) -
+                                    var(
+                                        --layout-aside-link-item-no-icon-dot-size
+                                    )
+                            ) /
+                            2
+                    );
+                    // top: 50%;
                     left: calc(
                         var(--layout-aside-link-item-with-icon-padding-left) /
                             2 - var(--layout-aside-link-item-no-icon-dot-size) /
                             2
                     );
-                    margin-top: calc(
-                        var(--layout-aside-link-item-no-icon-dot-size) / -2
-                    );
+                    // margin-top: calc(
+                    //     var(--layout-aside-link-item-no-icon-dot-size) / -2
+                    // );
                     width: var(--layout-aside-link-item-no-icon-dot-size);
                     height: var(--layout-aside-link-item-no-icon-dot-size);
                     background: transparent;
@@ -269,6 +280,17 @@ export type Props = {
                 &:not(:has(> svg))::before,
                 &:has(> svg.right-arrow)::before {
                     content: "";
+                }
+                & > :global(.sub-text) {
+                    display: block;
+                    // margin-left: -1.75em;
+                    margin-top: 0.3333em;
+                    color: var(--item-sub-text-color);
+                    transition: var(--base-transition-duration);
+                    transition-property: color;
+                    & + :global(.sub-text) {
+                        margin-top: 0.1333em;
+                    }
                 }
             }
             & > :global(.item.link) {
