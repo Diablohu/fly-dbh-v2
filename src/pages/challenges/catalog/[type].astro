@@ -1,0 +1,7 @@
+---
+import { type AircraftTypes } from "@/types";
+
+import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
+---
+
+<ChallengeListPage catalog={Astro.params.type as AircraftTypes} />
