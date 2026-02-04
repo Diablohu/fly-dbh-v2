@@ -23,6 +23,10 @@
 );
 
 // ============================================================================
+//
+// MARK: 字号
+//
+// ============================================================================
 
 @base-font-size-number: 14;
 @base-font-size-number-h1: 22px;
@@ -32,11 +36,34 @@
 @base-font-size-number-h5: 14px;
 @base-transition-duration: 0.2s;
 
+.font-size-clamp(@min-font-size, @font-size) {
+    font-size: unit(@font-size, px);
+    font-size: clamp(
+        unit(@min-font-size, px),
+        unit((175 * @font-size / 1920), vw),
+        unit(@font-size, px)
+    );
+}
+
+.font-size-clamp-with-line-height(@size, @line-height) {
+    font-size: @size;
+    font-size: clamp((@size * 0.85), unit((175 * @size / 1920), vw), @size);
+    line-height: unit((@line-height / @size), em);
+}
+
+// ============================================================================
+//
+// MARK: 视频播放器
+//
 // ============================================================================
 
 @video-player-sticky-screen-aspect-ratio: 0.75;
 @video-player-dynamic-screen-min-height: 620px;
 
+// ============================================================================
+//
+// MARK: 响应式
+//
 // ============================================================================
 
 .screen-sm(@rules) {
@@ -75,6 +102,12 @@
     }
 }
 
+// ============================================================================
+//
+// MARK: 颜色主题
+//
+// ============================================================================
+
 @selector-root-scheme-light: ~":root.force-color-scheme-light";
 @selector-root-scheme-dark: ~":root:not(.force-color-scheme-dark)";
 .color-scheme-light(@rules) {
@@ -105,21 +138,10 @@
 }
 
 // ============================================================================
-
-.font-size-clamp(@min-font-size, @font-size) {
-    font-size: unit(@font-size, px);
-    font-size: clamp(
-        unit(@min-font-size, px),
-        unit((175 * @font-size / 1920), vw),
-        unit(@font-size, px)
-    );
-}
-
-.font-size-clamp-with-line-height(@size, @line-height) {
-    font-size: @size;
-    font-size: clamp((@size * 0.85), unit((175 * @size / 1920), vw), @size);
-    line-height: unit((@line-height / @size), em);
-}
+//
+// MARK: 容器
+//
+// ============================================================================
 
 .block-wrapper() {
     display: block;
@@ -141,6 +163,12 @@
     .block-wrapper();
     user-select: auto;
 }
+
+// ============================================================================
+//
+// MARK: 指针悬停样式
+//
+// ============================================================================
 
 .pointer-hover(@rules, @extraRootSelector: "") {
     // @media (hover: hover) and (pointer: fine) {
@@ -165,6 +193,10 @@
     }
 }
 
+// ============================================================================
+//
+// MARK: 标签样式
+//
 // ============================================================================
 
 .tag-styles-base() {
@@ -197,6 +229,12 @@
         pointer-events: none;
     }
 }
+
+// ============================================================================
+//
+// MARK: 箭头链接样式
+//
+// ============================================================================
 
 .link-with-arrow-styles() {
     --arrow-line-width: 2px;
@@ -241,6 +279,12 @@
     });
 }
 
+// ============================================================================
+//
+// MARK: 加载指示器
+//
+// ============================================================================
+
 .spinner-styles() {
     display: block;
     color: transparent;
@@ -262,6 +306,12 @@
         }
     }
 }
+
+// ============================================================================
+//
+// MARK: 挑战
+//
+// ============================================================================
 
 .difficulty-variables() {
     &[data-difficulty="1"] {
@@ -303,6 +353,26 @@
     margin: 0;
     padding: 0 0 1em 0;
 }
+
+// ============================================================================
+//
+// MARK: 点阵样式
+//
+// ============================================================================
+.pixel-dots-styles() {
+    background-image: radial-gradient(
+        var(--dark-theme-color) 66.6667%,
+        transparent 66.6667%
+    );
+    background-size: 4px 4px;
+    opacity: 0.05;
+}
+
+// ============================================================================
+//
+// MARK: 毛玻璃样式
+//
+// ============================================================================
 
 .glossy-background-in-main-styles(@stickyTop: var(--global-header-height), @extraRules) {
     @supports (mask-image: linear-gradient(black, transparent)) {

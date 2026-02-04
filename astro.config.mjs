@@ -67,7 +67,7 @@ export default defineConfig({
     // #region 服务器
     trailingSlash: "never",
 
-    // 开发环境
+    // #region 开发环境
     devToolbar: {
         enabled: false,
     },

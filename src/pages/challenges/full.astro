@@ -1,0 +1,188 @@
+---
+import { actions, ActionError } from "astro:actions";
+
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+import HeroImage from "@/components/hero-image";
+
+import List from "./_components/list";
+
+import { errorLog } from "@/utils/log";
+
+// ============================================================================
+
+const { data: list, error } = await Astro.callAction(
+    actions.challengePage.fetchListAll,
+    undefined
+);
+if ((error && error.code === "NOT_FOUND") || !list) {
+    if (error)
+        errorLog(
+            [
+                `${Astro.originPathname} -> 404`,
+                error.code,
+                error.message,
+                (error.cause as any)?.GROQ
+                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                    : "",
+            ]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    else
+        errorLog(
+            [`${Astro.originPathname} -> 404`, "No challenge list"]
+                .filter(Boolean)
+                .join(" | ")
+        );
+    return Astro.rewrite("/404");
+}
+if (error) {
+    const err = error as unknown as ActionError;
+    errorLog(
+        [
+            `${Astro.originPathname} -> 500`,
+            err.code,
+            err.message,
+            (err.cause as any)?.GROQ
+                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                : "",
+        ]
+            .filter(Boolean)
+            .join(" | ")
+    );
+    Astro.response.status = 500;
+    Astro.props.error = error;
+    return Astro.rewrite("/500");
+}
+
+// ============================================================================
+
+/*
+
+
+
+FILTER
+ROLL A DICE in current filtered list
+
+
+
+
+normal state
+	browse | roll a dice (/roll) | 加入粉丝群/提议更多挑战
+	---
+	小有挑战 | 相当挑战 | 极具挑战
+	---
+
+dice state
+	highlight: roll a dice
+	---select difficulty (multiple)
+	小有挑战 | 相当挑战 | 极具挑战
+	---select aircraft category (multiple)
+	A | B | C | D
+	---actions
+	roulette right half | ROLL
+	---
+	加入粉丝群(small text)
+	提议更多挑战
+
+
+
+
+
+
+difficulty block
+🌱			⚠️			💀
+小有挑战	相当挑战	极具挑战
+rookie		challenge	extreme
+green		purple		legendary
+
+aircraft category title
+CATEGORY A (OW2 Style gradient to transparent at bottom)
+轻型飞机
+Help Icon at far right
+
+B	支线客机、商务喷气机
+C	大型喷气机
+D	重型喷气机
+D+	超重型
+
+
+
+
+challenge item block
+ICAO OW2 Style gradient to transparent at bottom
+Airport Name
+Difficulty | Approach Name
+contry, location, etc,... small text below
+
+
+
+
+sub route
+* `/roll`
+* `/[icao]/[...tab]`
+	* Airport Infos (location, runway, etc...)
+	* 
+
+
+*/
+---
+
+<Layout title="着陆挑战名册" header footer>
+    <HeroImage
+        client:idle
+        title="着陆挑战名册（开发中）"
+        sanityImageFilename="5a99e9237a5a459b5b14f9d30c999e38150359af-2560x1440.png"
+        sticky={false}
+    />
+
+    <Block class="list">
+        <section class="sticky-actions">
+            <!-- TODO: Actions -->
+            <button type="button">过滤</button>
+            <button type="button">抽选</button>
+            <button type="button">提议</button>
+        </section>
+        <List list={list} client:idle />
+    </Block>
+    <!-- <Block class="actions"> TODO: 抽选 | 提议 </Block> -->
+    <Block class="actions">🚧 开发中……</Block>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .list {
+        --container-top-edge: 0.5em;
+        margin-top: 1em;
+    }
+
+    .sticky-actions {
+        position: sticky;
+        top: calc(
+            var(--global-sticky-top) //  + var(--hero-image-stiky-height)
+            + var(--container-top-edge) + 0.5em
+        );
+        left: 0;
+        z-index: calc(var(--hero-image-z-index) + 1);
+        margin-top: -4.2em;
+        margin-bottom: 4.2em;
+        height: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        display: none;
+        button {
+            .tag-styles();
+            display: block;
+            height: 2em;
+        }
+    }
+
+    .actions {
+        margin-top: 2em;
+        margin-bottom: 4em;
+        text-align: center;
+    }
+</style>

@@ -1,12 +1,4 @@
 ---
-/*
-TODO: Remember Options
-DEFAULTS
-    Categories: C+D
-    Difficulty: 3+5+7
-Trigger: COOKIE - RANDOM or CATALOG
-*/
-
 import { actions, ActionError } from "astro:actions";
 
 import {
@@ -27,14 +19,56 @@ import ChallengeListGrid from "@/components/challenge-list-grid";
 
 import { errorLog } from "@/utils/log";
 
-// #region Props ==============================================================
+// ============================================================================
+//
+// MARK: Props
+//
+// ============================================================================
 
 type Props = {
     catalog: "latest" | "filter" | AircraftTypes;
     error?: ActionError | null;
 };
 
-// #region Data ===============================================================
+// ============================================================================
+//
+// MARK: Constants
+//
+// ============================================================================
+
+const heroImage: Record<Props["catalog"], string> = {
+    latest: "dc8c90a5e20183a9e3713e460593908e325a0170-2560x1440.png",
+    filter: "956647eaa837008e04c2b5c690b42546d6c7eccc-2560x1440.png",
+
+    bush: "e955577ad3939d29c3ffbc33a002cb99111bdd22-2560x1440.png",
+    "luxury-private": "6098c0f600461bc27680128b8c321b169f3a6b8e-2560x1440.png",
+    "small-commercial":
+        "f1394f67799f573b24375aa9faf9fdff4ee7b0b8-2560x1440.png",
+    "medium-commercial":
+        "e985098d1b6c19b9704eb87dff9ebe5dcd409b4b-2560x1440.png",
+    "business-jets": "8a5b4efc96e0447566140d00c5bcace603d53848-2560x1440.png",
+    "large-narrow-body":
+        "5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png",
+    "large-wide-body": "2d9a4f49126a181e19899072cf88c18b964fd9ba-2560x1440.png",
+};
+const exampleAircrafts: Record<Props["catalog"], string[]> = {
+    latest: [],
+    filter: [],
+
+    bush: ["DHC-6“双水獭”", "塞斯纳208“大篷车”"],
+    "luxury-private": ["钻石 DA-42", "西瑞 SF50 VisionJet"],
+    "small-commercial": ["皮拉图斯 PC-12"],
+    "medium-commercial": ["ATR", "冲8"],
+    "business-jets": ["塞斯纳奖状", "庞巴迪挑战者"],
+    "large-narrow-body": ["空客 A320", "波音 737"],
+    "large-wide-body": ["空客 A350", "波音 777"],
+};
+
+// ============================================================================
+//
+// MARK: Data
+//
+// ============================================================================
 
 const length = 20;
 const { data: initialList, error } = await Astro.callAction(
@@ -94,6 +128,16 @@ if (error) {
 // console.log(initialList)
 
 // ============================================================================
+//
+// MARK: 默认值
+//
+// ============================================================================
+
+// ============================================================================
+//
+// MARK: Astro Template
+//
+// ============================================================================
 ---
 
 <Layout
@@ -107,14 +151,14 @@ if (error) {
             route: routeBase.challenges,
             isActive: Astro.props.catalog === "latest",
         },
-        {
-            type: "link",
-            text: "查询 / 抽选",
-            route: getChallengeCatalogPageLink("filter"),
-            isActive: Astro.props.catalog === "filter",
-        },
         ...(import.meta.env.DEV
             ? [
+                  {
+                      type: "link" as const,
+                      text: "[DEV] 查询 / 抽选",
+                      route: getChallengeCatalogPageLink("filter"),
+                      isActive: Astro.props.catalog === "filter",
+                  },
                   {
                       type: "link" as const,
                       text: "[DEV] 门户",
@@ -137,7 +181,7 @@ if (error) {
 >
     <section class="list">
         <section class="hero-image">
-            <h2 class="title">固定翼飞机着陆挑战</h2>
+            <h2 class="title"><small>固定翼飞机</small>着陆挑战</h2>
             <h1 class="title">
                 {
                     Astro.props.catalog === "latest"
@@ -149,23 +193,18 @@ if (error) {
                             ]
                 }
             </h1>
-            <span class="total">已收录 {initialList.total} 个挑战</span>
-            <!-- <span
-                class="image-container"
+            <span class="total"
+                ><strong>{initialList.total}</strong><small>已收录</small></span
+            >
+            <div
+                class="image"
                 style={{
-                    backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=960&blur=100&q=60)`,
+                    backgroundImage: `url(${urlPrefixSanityImageCdn}/${
+                        heroImage[Astro.props.catalog]
+                    }?auto=format&w=1280&q=60)`,
                 }}
-                ><span
-                    class="image"
-                    style={{
-                        backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=1280&q=60)`,
-                    }}></span></span
-            > -->
-            <span
-                class="image-container"
-                style={{
-                    backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=1280&q=60)`,
-                }}></span>
+            >
+            </div>
         </section>
 
         {
@@ -195,35 +234,108 @@ if (error) {
 </Layout>
 
 <style lang="less">
+    // ========================================================================
+    //
+    // MARK: LESS Module
+    //
+    // ========================================================================
+
     @import "@/utils/mixins.less";
 
     .list {
-        --hero-image-height: 400px;
+        --hero-image-height: 16em;
         --hero-image-bottom-offset-percentage: 30%;
+        --hero-image-blur-from: 7em;
+        --hero-image-blur-to: 33.3333%;
+        --container-padding-top: 1em;
+        padding-top: var(--container-padding-top);
         padding-bottom: 4em;
+        .screen-lg({
+            --hero-image-height: 14em;
+        });
+        .screen-md({
+            --hero-image-height: 11.5em;
+            --hero-image-blur-to: 66.6667%;
+        });
+        .screen-sm({
+            --hero-image-height: 13em;
+            --hero-image-blur-from: 5em;
+            --hero-image-blur-to: 50%;
+            --container-padding-top: 1.75em;
+        });
     }
 
     .hero-image {
         position: relative;
         z-index: 1;
-        height: 280px;
+        height: var(--hero-image-height);
         // height: 33.3333vh;
-        margin-top: calc(var(--global-header-height) * -1);
-        margin-bottom: 2em;
+        // margin-top: calc(var(--global-header-height) * -1);
+        margin-bottom: 1em;
+        background: no-repeat center/cover;
+        border-radius: 0.5em;
+        overflow: hidden;
         display: flex;
         flex-flow: column nowrap;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-end;
+        padding: 1em 1.5em;
+
+        .image {
+            &,
+            &::before,
+            &::after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+            z-index: 1;
+            background: no-repeat center/cover;
+            pointer-events: none;
+            // filter: saturate(150%);
+
+            &::before,
+            &::after {
+                content: "";
+            }
+            &::after {
+                .pixel-dots-styles();
+                z-index: 3;
+                // pointer-events: none;
+            }
+            @supports (mask-image: linear-gradient(black, transparent)) {
+                &::before {
+                    z-index: 2;
+                    mask-image: linear-gradient(
+                        to right,
+                        black var(--hero-image-blur-from),
+                        transparent var(--hero-image-blur-to)
+                    );
+                    backdrop-filter: blur(var(--backdrop-filter-blur-value));
+                    // &::after {
+                    //     content: "";
+                    //     position: absolute;
+                    //     bottom: 0;
+                    //     left: 0;
+                    //     width: 100%;
+                    //     height: 100%;
+                    //     background: var(--dark-theme-color-p-30);
+                    // }
+                }
+            }
+        }
 
         .title,
         .total {
-            .block-wrapper();
             display: block;
             z-index: 10;
             text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
             color: var(--dark-text-color-primary);
         }
-        h1 {
+        h1,
+        h2 {
             // position: absolute;
             // bottom: var(--hero-image-bottom-offset-percentage);
             // bottom: 0;
@@ -231,66 +343,19 @@ if (error) {
             letter-spacing: 0.15em;
             line-height: 1.2em;
             padding-bottom: calc((var(--global-header-height) - 1.2em) / 2);
+            small {
+                display: block;
+                letter-spacing: 0.14em;
+            }
         }
-
-        .image-container {
-            display: block;
-            position: absolute;
-            top: 0;
-            bottom: -120px;
-            left: 0;
-            right: 0;
-            background: no-repeat center/cover;
-            overflow: hidden;
-
-            &::before,
-            &::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
+        .total {
+            background: var(--dark-theme-color-p-60);
+            border-radius: 10em;
+            padding: 0 0.6667em;
+            strong {
+                display: inline-block;
+                margin-right: 0.3333em;
             }
-
-            &::before {
-                z-index: 3;
-                background: linear-gradient(
-                    to top,
-                    var(--theme-color) 0,
-                    transparent 40%;
-                );
-            }
-            // 点阵
-            &::after {
-                z-index: 2;
-                background-image: radial-gradient(
-                    var(--dark-theme-color) 66.6667%,
-                    transparent 66.6667%
-                );
-                background-size: 4px 4px;
-                opacity: 0.05;
-                // pointer-events: none;
-            }
-
-            // .image {
-            //     display: block;
-            //     position: relative;
-            //     margin: 0 auto;
-            //     height: 100%;
-            //     width: 100%;
-            //     max-width: var(--global-block-max-width);
-            //     background: no-repeat center/cover;
-            //     z-index: 1;
-            //     mask-image: linear-gradient(
-            //         to right,
-            //         transparent,
-            //         #000 var(--global-edge-safe-distance),
-            //         #000 calc(100% - var(--global-edge-safe-distance)),
-            //         transparent
-            //     );
-            // }
         }
     }
 </style>

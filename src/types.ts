@@ -67,6 +67,8 @@ export type AerodromeItemType = {
 };
 
 // ============================================================================
+//
+// #region 视频
 
 export type VideoListPageTypeAircraftFamily = "aircraftFamily";
 export type VideoListPageTypeAircraftOnboardDevice = "aircraftOnboardDevice";
@@ -157,8 +159,11 @@ export type VideoItemType = {
     }[];
 };
 
+// #endregion
+//
 // ============================================================================
-// #region Challenges
+//
+// #region 挑战
 
 export type ChallengeDifficultyType = 1 | 3 | 5 | 7;
 export type ChallengeListItemType = Pick<
@@ -268,8 +273,10 @@ export type ChallengeItemType = {
 };
 
 // #endregion
+//
 // ============================================================================
-// #region Home Page
+//
+// #region 首页
 export type HomeVideoDocumentType = SanityDocument<
     Partial<VideoItemType> &
         Pick<VideoItemType, "_id" | "title" | "release" | "cover" | "tags">
@@ -281,4 +288,5 @@ export type HomeCollectionsType = {
     [collection: string]: HomeVideoDocumentType[];
 };
 // #endregion
+//
 // ============================================================================

@@ -101,13 +101,8 @@
         }
         // 点阵
         &::after {
+            .pixel-dots-styles();
             z-index: 2;
-            background-image: radial-gradient(
-                var(--dark-theme-color) 66.6667%,
-                transparent 66.6667%
-            );
-            background-size: 4px 4px;
-            opacity: 0.05;
             // pointer-events: none;
         }
     }

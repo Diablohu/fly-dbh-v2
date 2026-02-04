@@ -37,6 +37,10 @@ import type React from "react";
 export { type MainBlockWithSidebarProps };
 
 // ============================================================================
+//
+// MARK: Props
+//
+// ============================================================================
 
 interface Props {
     /**
@@ -111,7 +115,7 @@ interface Props {
 
 // ============================================================================
 //
-// 多语言 & 语言包
+// MARK: 多语言 & 语言包
 //
 // ============================================================================
 
@@ -122,6 +126,10 @@ interface Props {
 // );
 // console.log(Astro.locals.global);
 
+// ============================================================================
+//
+// MARK: 默认值
+//
 // ============================================================================
 
 const {
@@ -134,6 +142,12 @@ const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
 const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.value;
 const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER)?.value;
 const { htmlClassList = [] } = Astro.props;
+
+// ============================================================================
+//
+// MARK: Astro Template
+//
+// ============================================================================
 ---
 
 <!doctype html>
@@ -348,6 +362,12 @@ const { htmlClassList = [] } = Astro.props;
 </html>
 
 <style lang="less">
+    // ========================================================================
+    //
+    // MARK: LESS Module
+    //
+    // ========================================================================
+
     @import "@/utils/mixins.less";
 
     html,
