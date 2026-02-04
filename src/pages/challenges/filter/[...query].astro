@@ -1,0 +1,8 @@
+---
+import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
+---
+
+<ChallengeListPage catalog="filter" query={Astro.params.query}>
+    <form>FILTER FORM</form>
+    <section>QUERY: {Astro.params.query ?? "NONE"}</section>
+</ChallengeListPage>

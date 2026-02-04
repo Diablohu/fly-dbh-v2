@@ -26,7 +26,11 @@ import { errorLog } from "@/utils/log";
 // ============================================================================
 
 type Props = {
+    /**
+     * - 如果为 `filter`，为查询页，需在页面模板中自行实现数据查询方法
+     */
     catalog: "latest" | "filter" | AircraftTypes;
+    query?: string;
     error?: ActionError | null;
 };
 
@@ -55,7 +59,7 @@ const exampleAircrafts: Record<Props["catalog"], string[]> = {
     latest: [],
     filter: [],
 
-    bush: ["DHC-6“双水獭”", "塞斯纳208"],
+    bush: ["DHC-6“双水獭”", "塞斯纳 208"],
     "luxury-private": ["钻石 DA-42", "西瑞 VisionJet"],
     "small-commercial": ["皮拉图斯 PC-12"],
     "medium-commercial": ["ATR", "冲8"],
@@ -71,19 +75,17 @@ const exampleAircrafts: Record<Props["catalog"], string[]> = {
 // ============================================================================
 
 const length = 20;
-const { data: initialList, error } = await Astro.callAction(
-    actions.challengePage.fetchList,
-    {
-        length,
-        sort: Astro.props.catalog === "latest" ? "latest" : "difficulty",
-        types:
-            Astro.props.catalog === "latest"
-                ? undefined
-                : Astro.props.catalog === "filter"
-                  ? undefined
-                  : [Astro.props.catalog as AircraftTypes],
-    },
-);
+const { data: initialList, error } =
+    Astro.props.catalog === "filter"
+        ? { data: { initialList: [], total: 0 } }
+        : await Astro.callAction(actions.challengePage.fetchList, {
+              length,
+              sort: Astro.props.catalog === "latest" ? "latest" : "difficulty",
+              types:
+                  Astro.props.catalog === "latest"
+                      ? undefined
+                      : [Astro.props.catalog as AircraftTypes],
+          });
 if ((error && error.code === "NOT_FOUND") || !initialList) {
     if (error)
         errorLog(
@@ -155,7 +157,7 @@ if (error) {
             ? [
                   {
                       type: "link" as const,
-                      text: "[DEV] 查询 / 抽选",
+                      text: "查询 / 抽选",
                       route: getChallengeCatalogPageLink("filter"),
                       isActive: Astro.props.catalog === "filter",
                   },
@@ -194,9 +196,16 @@ if (error) {
                             ]
                 }
             </h1>
-            <span class="total"
-                ><strong>{initialList.total}</strong><small>已收录</small></span
-            >
+            {
+                Astro.props.catalog !== "filter" && (
+                    <span class="total">
+                        <>
+                            <strong>{initialList.total}</strong>
+                            <small>已收录</small>
+                        </>
+                    </span>
+                )
+            }
             <div
                 class="image"
                 style={{
@@ -210,8 +219,8 @@ if (error) {
 
         {
             Astro.props.catalog === "filter" ? (
-                "TODO: FILTER"
-            ) : (
+                <slot />
+            ) : Array.isArray(initialList.list) ? (
                 <ChallengeListGrid
                     client:idle
                     catalog={Astro.props.catalog}
@@ -229,7 +238,7 @@ if (error) {
                         Astro.props.catalog,
                     )}
                 />
-            )
+            ) : null
         }
     </section>
 </Layout>
@@ -248,7 +257,7 @@ if (error) {
         --hero-image-bottom-offset-percentage: 30%;
         --hero-image-blur-from: 7em;
         --hero-image-blur-to: 33.3333%;
-        --container-padding-top: 1em;
+        --container-padding-top: 1.25em;
         padding-top: var(--container-padding-top);
         padding-bottom: 4em;
         .screen-lg({

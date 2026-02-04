@@ -177,11 +177,10 @@ export function getChallengeCatalogPageLink(
 ) {
     return (
         routeBase.challenges +
-        "/catalog" +
         (aircraftCategory === "filter"
             ? "/filter"
             : aircraftCategory
-              ? `/${aircraftCategory}`
+              ? `/catalog/${aircraftCategory}`
               : "")
     );
 }
