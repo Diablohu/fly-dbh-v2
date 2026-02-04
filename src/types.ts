@@ -166,6 +166,15 @@ export type VideoItemType = {
 // #region 挑战
 
 export type ChallengeDifficultyType = 1 | 3 | 5 | 7;
+export type ChallengeListSortType = "latest" | "difficulty";
+export type ChallengeListQueryConditionType = {
+    from: number;
+    length: number;
+    sort: ChallengeListSortType;
+    difficulties: ChallengeDifficultyType[];
+    types: AircraftTypes[];
+    hazards: string[];
+};
 export type ChallengeListItemType = Pick<
     ChallengeItemType,
     | "_id"

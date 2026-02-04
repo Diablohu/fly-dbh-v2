@@ -6,7 +6,7 @@ import {
     useRef,
     Fragment,
     type FC,
-    type FormEventHandler,
+    type SubmitEventHandler,
 } from "react";
 import { actions } from "astro:actions";
 import classNames from "classnames";
@@ -42,17 +42,17 @@ const SearchFormAndResult: FC<{
     const [results, setResults] =
         useState<Awaited<ReturnType<typeof searchAction>>["data"]>();
 
-    const onSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    const onSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (evt) => {
             evt.preventDefault();
 
             if (status === "pending") return;
             if (status === "loading") return;
             setKeyword(
-                new FormData(evt.currentTarget).get("keyword") as string
+                new FormData(evt.currentTarget).get("keyword") as string,
             );
         },
-        [status]
+        [status],
     );
 
     useEffect(() => {
@@ -66,7 +66,7 @@ const SearchFormAndResult: FC<{
         window.history.replaceState(
             window.history.state,
             "",
-            `${routeBase.search}/${keyword}`
+            `${routeBase.search}/${keyword}`,
         );
 
         setError("");
@@ -152,7 +152,7 @@ const Results: FC<{
 }> = ({ keyword, results, defaultContentListAutoLoadMore }) => {
     const matched = useMemo(
         () => results && "tutorialsForMatchedAircraftOrDevice" in results,
-        [results]
+        [results],
     );
 
     return (
@@ -191,11 +191,11 @@ const Results: FC<{
                         <dd>
                             {Object.entries(
                                 results?.tutorialsForMatchedAircraftOrDevice
-                                    ?.list
+                                    ?.list,
                             )
                                 .filter(
                                     ([_, list]) =>
-                                        Array.isArray(list) && list.length > 0
+                                        Array.isArray(list) && list.length > 0,
                                 )
                                 .map(([type, list]) => (
                                     <Fragment key={type}>

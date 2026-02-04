@@ -13,12 +13,11 @@ import {
     type ChallengeListItemType,
     type ChallengeItemType,
     type ChallengeDifficultyType,
-    type AircraftTypes,
+    type ChallengeListQueryConditionType,
 } from "@/types";
 
 // ============================================================================
 
-type SortType = "latest" | "difficulty";
 export type ChallengeListResponseDataType = {
     list: ChallengeItemType[];
     total: number;
@@ -48,21 +47,27 @@ const projectionListItem = `
 
 const getGroqFiltersChallengeList = ({
     sort = "latest",
+    difficulties = [],
     types = [],
     hazards = [],
-}: {
-    sort?: SortType;
-    types?: AircraftTypes[];
-    hazards?: string[];
-} = {}) =>
+}: Partial<
+    Pick<
+        ChallengeListQueryConditionType,
+        "sort" | "difficulties" | "types" | "hazards"
+    >
+> = {}) =>
     `*[_type == "approach_challenge" ${
         // 按时间排序时，必须有 `airac_cyle` 字段
         (sort === "latest" ? "&& defined(airac_cyle)" : "") +
-        // 筛选机型
+        // 筛选难度，方式：`OR`
+        (Array.isArray(difficulties) && difficulties.length > 0
+            ? `(${difficulties.map((difficulty) => `difficulty == "${difficulty}"`).join(" || ")})`
+            : "") +
+        // 筛选机型，方式：`AND`
         (Array.isArray(types) && types.length > 0
             ? types.map((type) => `&& "${type}" in typical_aircraft_types`)
             : "") +
-        // 筛选难点灾害
+        // 筛选难点灾害，方式：`AND`
         (Array.isArray(hazards) && hazards.length > 0
             ? hazards.map((hazard) => `&& "${hazard}" in hazards[].hazard->_id`)
             : [])
@@ -72,17 +77,13 @@ export const getGroqQueryChallengeList = ({
     from = 0,
     length = 10,
     sort = "latest",
+    difficulties = [],
     types = [],
     hazards = [],
-}: {
-    from?: number;
-    length?: number;
-    sort?: SortType;
-    types?: AircraftTypes[];
-    hazards?: string[];
-} = {}) =>
+}: Partial<ChallengeListQueryConditionType> = {}) =>
     `${getGroqFiltersChallengeList({
         sort,
+        difficulties,
         types,
         hazards,
     })}{${projectionListItem}} | order(${
@@ -104,20 +105,22 @@ const actions = {
             from: z.number().optional(),
             length: z.number().optional(),
             sort: z.string().optional(),
+            difficulties: z.array(z.string()).optional(),
             types: z.array(z.string()).optional(),
             hazards: z.array(z.string()).optional(),
-        }) as z.ZodType<{
-            from?: number;
-            length?: number;
-            sort?: SortType;
-            types?: AircraftTypes[];
-            hazards?: string[];
-        }>,
-        handler: async ({ from = 0, length = 20, sort, types, hazards }) => {
+        }) as z.ZodType<Partial<ChallengeListQueryConditionType>>,
+        handler: async ({
+            from = 0,
+            length = 20,
+            sort,
+            difficulties,
+            types,
+            hazards,
+        }) => {
             try {
                 const queryString = `{
-'list': ${getGroqQueryChallengeList({ from, length, sort, types, hazards })},
-'total': count(${getGroqFiltersChallengeList({ sort, types, hazards })})
+'list': ${getGroqQueryChallengeList({ from, length, sort, difficulties, types, hazards })},
+'total': count(${getGroqFiltersChallengeList({ sort, difficulties, types, hazards })})
 }`;
                 const res = (await fetch(queryString, {
                     transform: (res, queryString) => {

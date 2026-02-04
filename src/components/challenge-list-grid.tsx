@@ -22,7 +22,7 @@ import styles from "./challenge-list-grid.module.less";
 // ============================================================================
 
 type Props = {
-    catalog: "latest" | AircraftTypes;
+    catalog: "latest" | "filter" | AircraftTypes;
     /** 每次请求的内容长度，即传统概念上的每页条目数 */
     length?: number;
     initialList?: ChallengeListItemType[];
@@ -85,7 +85,10 @@ const ChallengeListGrid: FC<Props> = ({
                     from,
                     length,
                     sort: catalog === "latest" ? "latest" : "difficulty",
-                    types: catalog === "latest" ? undefined : [catalog],
+                    types:
+                        catalog === "latest" || catalog === "filter"
+                            ? undefined
+                            : [catalog],
                 })
                 .then((res) => res.data);
         },

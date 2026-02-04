@@ -4,7 +4,14 @@
     --height: 45px;
     --icon-size: 28px;
 
-    position: relative;
+    position: sticky;
+    top: calc(var(--global-header-height) + 1em);
+    z-index: 10;
+    backdrop-filter: var(--backdrop-filter-glass);
+    border-radius: var(--height);
+    background: var(--global-header-background-color);
+    // box-shadow: var(--overlay-box-shadow);
+
     margin: 2em auto;
     width: auto;
     max-width: calc(var(--body-safe-min-width) * 1.5);
@@ -15,8 +22,8 @@
         font-size: 1.25em;
         height: var(--height);
         padding: 0 calc(var(--height) + 1em) 0 1em;
-        border-radius: var(--height);
         border: 2px solid var(--menu-border-color);
+        border-radius: inherit;
         background: var(--tag-background-color);
         color: var(--text-color-primary);
         transition: var(--base-transition-duration);

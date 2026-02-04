@@ -1,8 +1,86 @@
 ---
+import { actions, ActionError } from "astro:actions";
+
 import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
+import FormAndResult from "./_form-and-result.tsx";
+
+import { parseSearchParams } from "./_query";
+import { errorLog } from "@/utils/log";
+
+// ============================================================================
+//
+// MARK: 常量
+//
+// ============================================================================
+
+const length = 20;
+
+// ============================================================================
+//
+// MARK: 分析URL参数
+//
+// ============================================================================
+
+const initialConditions = parseSearchParams(
+    new URLSearchParams(Astro.params.query),
+);
+
+// ============================================================================
+//
+// MARK: Data
+//
+// ============================================================================
+
+const { data: hazards, error: errorHazards } = await Astro.callAction(
+    actions.challengePage.fetchHazards,
+    undefined,
+);
+if (errorHazards || !hazards) return Astro.rewrite("/500");
+
+const { data: initialResult, error: errorinitialResult } = !Astro.params.query
+    ? { data: undefined }
+    : await Astro.callAction(actions.challengePage.fetchList, {
+          length,
+          sort: "difficulty",
+          types: initialConditions.types,
+          difficulties: initialConditions.difficulties,
+          hazards: initialConditions.hazards,
+      });
+if (errorinitialResult) {
+    const err = errorinitialResult as unknown as ActionError;
+    errorLog(
+        [
+            `${Astro.originPathname} -> 500`,
+            err.code,
+            err.message,
+            (err.cause as any)?.GROQ
+                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                : "",
+        ]
+            .filter(Boolean)
+            .join(" | "),
+    );
+    Astro.response.status = 500;
+    Astro.props.error = errorinitialResult;
+    return Astro.rewrite("/500");
+}
+
+// ============================================================================
+//
+// MARK: Astro Template
+//
+// ============================================================================
 ---
 
 <ChallengeListPage catalog="filter" query={Astro.params.query}>
-    <form>FILTER FORM</form>
-    <section>QUERY: {Astro.params.query ?? "NONE"}</section>
+    <FormAndResult
+        client:idle
+        hazards={hazards}
+        length={length}
+        initialDifficulties={initialConditions.difficulties}
+        initialTypes={initialConditions.types}
+        initialHazards={initialConditions.hazards}
+        initialResult={initialResult}
+        noInitialCondition={!Astro.params.query}
+    />
 </ChallengeListPage>

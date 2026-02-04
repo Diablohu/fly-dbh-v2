@@ -1,0 +1,19 @@
+@import "@/utils/mixins.less";
+
+.form {
+    position: sticky;
+    top: calc(var(--global-header-height) + 1em);
+    z-index: 10;
+
+    border: 1px solid var(--menu-border-color);
+    border-radius: 0.6667em;
+    overflow: hidden;
+    backdrop-filter: var(--backdrop-filter-glass);
+    background: var(--global-header-background-color);
+    // background: var(--menu-background-color);
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 4em;
+
+    margin-bottom: 1em;
+}

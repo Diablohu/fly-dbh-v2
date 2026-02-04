@@ -1,6 +1,7 @@
 ---
 import { actions, ActionError } from "astro:actions";
 
+import { type ComponentProps } from "react";
 import {
     urlPrefixSanityImageCdn,
     getChallengeCatalogPageLink,
@@ -14,7 +15,6 @@ import {
 } from "@/types";
 import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
 import Layout from "@/layouts/layout.astro";
-import Block from "@/components/block.astro";
 import ChallengeListGrid from "@/components/challenge-list-grid";
 
 import { errorLog } from "@/utils/log";
@@ -29,7 +29,7 @@ type Props = {
     /**
      * - 如果为 `filter`，为查询页，需在页面模板中自行实现数据查询方法
      */
-    catalog: "latest" | "filter" | AircraftTypes;
+    catalog: ComponentProps<typeof ChallengeListGrid>["catalog"];
     query?: string;
     error?: ActionError | null;
 };
@@ -199,10 +199,8 @@ if (error) {
             {
                 Astro.props.catalog !== "filter" && (
                     <span class="total">
-                        <>
-                            <strong>{initialList.total}</strong>
-                            <small>已收录</small>
-                        </>
+                        <strong>{initialList.total}</strong>
+                        <small>已收录</small>
                     </span>
                 )
             }
@@ -361,9 +359,12 @@ if (error) {
             background: var(--dark-theme-color-p-60);
             border-radius: 10em;
             padding: 0 0.6667em;
-            strong {
+            strong,
+            small {
                 display: inline-block;
-                margin-right: 0.3333em;
+            }
+            strong {
+                margin-right: 0.15em;
             }
         }
     }
