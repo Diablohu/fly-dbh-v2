@@ -1,0 +1,248 @@
+---
+/*
+TODO: Remember Options
+DEFAULTS
+    Categories: C+D
+    Difficulty: 3+5+7
+Trigger: COOKIE - RANDOM or CATALOG
+*/
+
+import { actions, ActionError } from "astro:actions";
+
+import { urlPrefixSanityImageCdn, getChallengeCatalogPageLink } from "@/global";
+import Layout from "@/layouts/layout.astro";
+import Block from "@/components/block.astro";
+import HomeCollectionChallenges from "@/pages/homepage/collection-challenges.astro";
+
+import { errorLog } from "@/utils/log";
+
+// ============================================================================
+
+const { data: latest, error } = await Astro.callAction(
+    actions.challengePage.fetchList,
+    { length: 10, sort: "latest" },
+);
+if ((error && error.code === "NOT_FOUND") || !latest) {
+    if (error)
+        errorLog(
+            [
+                `${Astro.originPathname} -> 404`,
+                error.code,
+                error.message,
+                (error.cause as any)?.GROQ
+                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                    : "",
+            ]
+                .filter(Boolean)
+                .join(" | "),
+        );
+    else
+        errorLog(
+            [`${Astro.originPathname} -> 404`, "No challenge list"]
+                .filter(Boolean)
+                .join(" | "),
+        );
+    return Astro.rewrite("/404");
+}
+if (error) {
+    const err = error as unknown as ActionError;
+    errorLog(
+        [
+            `${Astro.originPathname} -> 500`,
+            err.code,
+            err.message,
+            (err.cause as any)?.GROQ
+                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
+                : "",
+        ]
+            .filter(Boolean)
+            .join(" | "),
+    );
+    Astro.response.status = 500;
+    Astro.props.error = error;
+    return Astro.rewrite("/500");
+}
+
+// ============================================================================
+---
+
+<Layout title="固定翼飞机着陆挑战" header footer>
+    <section class="challenges-home">
+        <section class="hero-image">
+            <h1 class="title">固定翼飞机着陆挑战</h1>
+            <!-- <span
+                class="image-container"
+                style={{
+                    backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=960&blur=100&q=60)`,
+                }}
+                ><span
+                    class="image"
+                    style={{
+                        backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=1280&q=60)`,
+                    }}></span></span
+            > -->
+            <span
+                class="image-container"
+                style={{
+                    backgroundImage: `url(${urlPrefixSanityImageCdn}/5d0f7d320d719d59ad974b8a5ba89b5b02efa464-2560x1440.png?auto=format&w=1280&q=60)`,
+                }}></span>
+        </section>
+
+        <section class="content-body">
+            <Block>
+                <HomeCollectionChallenges
+                    title="最新收录"
+                    list={latest}
+                    route={getChallengeCatalogPageLink()}
+                />
+
+                <section class="sections-container">
+                    <section class="section" data-section="categories">
+                        <h3>按类别查询</h3>
+                        <div>WIP...</div>
+                    </section>
+
+                    <section class="section" data-section="filters">
+                        <h3>决定目的地</h3>
+                        <div>WIP...</div>
+                    </section>
+                </section>
+            </Block>
+        </section>
+    </section>
+</Layout>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    .challenges-home {
+        --hero-image-height: 400px;
+        --hero-image-bottom-offset-percentage: 30%;
+    }
+
+    .hero-image {
+        position: relative;
+        z-index: 1;
+        height: 280px;
+        // height: 33.3333vh;
+        margin-top: calc(var(--global-header-height) * -1);
+        margin-bottom: 2em;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: flex-end;
+
+        h1 {
+            .block-wrapper();
+            // position: absolute;
+            // bottom: var(--hero-image-bottom-offset-percentage);
+            // bottom: 0;
+            z-index: 10;
+            margin: 0;
+            color: var(--dark-text-color-primary);
+            text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
+            letter-spacing: 0.15em;
+            line-height: 1.2em;
+            padding-bottom: calc((var(--global-header-height) - 1.2em) / 2);
+        }
+
+        .image-container {
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: -120px;
+            left: 0;
+            right: 0;
+            background: no-repeat center/cover;
+            overflow: hidden;
+
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+
+            &::before {
+                z-index: 3;
+                background: linear-gradient(
+                    to top,
+                    var(--theme-color) 0,
+                    transparent 40%;
+                );
+            }
+            // 点阵
+            &::after {
+                z-index: 2;
+                background-image: radial-gradient(
+                    var(--dark-theme-color) 66.6667%,
+                    transparent 66.6667%
+                );
+                background-size: 4px 4px;
+                opacity: 0.05;
+                // pointer-events: none;
+            }
+
+            // .image {
+            //     display: block;
+            //     position: relative;
+            //     margin: 0 auto;
+            //     height: 100%;
+            //     width: 100%;
+            //     max-width: var(--global-block-max-width);
+            //     background: no-repeat center/cover;
+            //     z-index: 1;
+            //     mask-image: linear-gradient(
+            //         to right,
+            //         transparent,
+            //         #000 var(--global-edge-safe-distance),
+            //         #000 calc(100% - var(--global-edge-safe-distance)),
+            //         transparent
+            //     );
+            // }
+        }
+    }
+
+    .content-body {
+        position: relative;
+        z-index: 5;
+
+        .sections-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: "categories filters";
+            gap: var(--homepage-collection-gap);
+            margin-bottom: var(--homepage-collection-gap);
+
+            .screen-md({
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "categories"
+                    "filters";
+                .section + .section { 
+                    &::before {
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        top: calc(var(--homepage-collection-gap) / -2);
+                        height: var(--homepage-collection-divider-height);
+                        left: 0;
+                        right: 0;
+                        background: var(--homepage-collection-divider-color);
+                    }
+                }
+            });
+
+            .section {
+                position: relative;
+                h3 {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+</style>

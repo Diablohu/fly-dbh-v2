@@ -13,7 +13,7 @@
 import { type VideoListPageTypesType } from "@/types";
 import VideoListPage, {
     type FilterType,
-} from "@/page-templates/video-list/index.astro";
+} from "@/layouts/pages/video-list/index.astro";
 
 const filters: FilterType[] =
     Astro.params.filters?.split("/").map((str) => {

@@ -1,6 +1,6 @@
 ---
 import { actions } from "astro:actions";
-import AdminPage from "@/page-templates/admin/index.astro";
+import AdminPage from "@/layouts/pages/admin/index.astro";
 
 const { data: list, error } = await Astro.callAction(
     actions.challengePage.fetchHazards,
