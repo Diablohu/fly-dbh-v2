@@ -143,7 +143,14 @@ if (error) {
 ---
 
 <Layout
-    title="固定翼飞机着陆挑战"
+    title={[
+        "固定翼飞机着陆挑战",
+        Astro.props.catalog === "latest"
+            ? "最新收录"
+            : Astro.props.catalog === "filter"
+              ? "查询 / 抽选"
+              : aircraftTypeString[Astro.props.catalog as AircraftTypes],
+    ].join(" : ")}
     header
     footer
     sideBar={[
