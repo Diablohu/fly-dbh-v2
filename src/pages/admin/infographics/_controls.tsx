@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, Fragment, type FC } from "react";
+import { useCallback, useState, Fragment, type FC } from "react";
 import classNames from "classnames";
 
 import { generateLocalImagePath } from "@/services/sanity-helpers";
@@ -34,13 +34,13 @@ const InfographicsControls: FC = () => {
                 setViewType(t as typeof viewType);
             }
         },
-        [setViewType]
+        [setViewType],
     );
     const onBackgroundChange = useCallback(
         (e: React.ChangeEvent<HTMLSelectElement>) => {
             setBackgroundImageFilename(e.currentTarget.value);
         },
-        []
+        [],
     );
 
     // useEffect(() => {
@@ -107,7 +107,7 @@ const InfographicsControls: FC = () => {
                 ])}
                 style={{
                     backgroundImage: `url(${generateLocalImagePath(
-                        backgroundImageFilename
+                        backgroundImageFilename,
                     )}?auto=format)`,
                 }}
             ></section>

@@ -8,7 +8,6 @@ import {
 
 import ListContainerGrid from "@/components/list-container-grid";
 import VideoItem from "@/components/video-item";
-import useContentListAutoLoadMore from "@/react-hooks/use-content-list-auto-load-more";
 
 import getVideoItemTopTags from "@/utils/get-video-item-top-tags";
 
@@ -92,7 +91,7 @@ const VideoListGrid: FC<Props> = ({
     );
 
     const loadMore = useCallback(
-        ({ from }: { from: number }) => {
+        async ({ from }: { from: number }) => {
             return (
                 type === "search"
                     ? actions.search.query({

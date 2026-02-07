@@ -13,13 +13,13 @@ const { freeAddons, freeSceneryAddons, ...props } = Astro.props;
 
 function generateList(list: typeof freeAddons) {
     return list
-        ?.map((item, index, list) => {
+        ?.map((item, _, list) => {
             const indexSamePlatformFirstParty =
                 item.type === "third-party"
                     ? list.findIndex(
                           (i) =>
                               i.type === "first-party" &&
-                              i.platform === item.platform
+                              i.platform === item.platform,
                       )
                     : -1;
 
@@ -37,7 +37,7 @@ function generateList(list: typeof freeAddons) {
                                         .map((n) => {
                                             const m =
                                                 /(?<update>[a-zA-Z]+)(?<number>\d+)/.exec(
-                                                    n
+                                                    n,
                                                 );
                                             const isWorldUpdate =
                                                 m?.groups?.update.toLowerCase() ===
@@ -51,7 +51,7 @@ function generateList(list: typeof freeAddons) {
                                                   ? "城市更新"
                                                   : "";
                                             const number = Number(
-                                                m?.groups?.number
+                                                m?.groups?.number,
                                             );
                                             const noAction =
                                                 typeof m?.groups?.number ===
@@ -125,7 +125,7 @@ const sceneryAddons = generateList(freeSceneryAddons);
                         <Markdown
                             src={"#### " + item.title + "\n" + item.markdown}
                         />
-                    )
+                    ),
             )}
         </InfoBlock>
     )
@@ -140,7 +140,7 @@ const sceneryAddons = generateList(freeSceneryAddons);
                         <Markdown
                             src={"#### " + item.title + "\n" + item.markdown}
                         />
-                    )
+                    ),
             )}
         </InfoBlock>
     )

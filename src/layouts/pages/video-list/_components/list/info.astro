@@ -2,7 +2,7 @@
 import { actions } from "astro:actions";
 import dayjs from "dayjs";
 import { type VideoListPageTypesType } from "@/types";
-import { level2TagsMap, routeBase, challengeDifficultyString } from "@/global";
+import { level2TagsMap, challengeDifficultyString } from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 import TagButton from "@/components/tag-button.astro";
@@ -31,7 +31,7 @@ type Props = {
                         <a
                             href={getVideoListPageLink(
                                 "tag",
-                                level2TagsMap[Astro.props.slug]
+                                level2TagsMap[Astro.props.slug],
                             )}
                         >
                             {level2TagsMap[Astro.props.slug] === "news"
@@ -107,7 +107,7 @@ type Props = {
                                                 <TagButton
                                                     class="item"
                                                     href={getChallengePageLink(
-                                                        item.slug || item._id
+                                                        item.slug || item._id,
                                                     )}
                                                     difficultyColor={
                                                         item.difficulty
@@ -125,7 +125,7 @@ type Props = {
                                                     {item.name}
                                                 </TagButton>
                                                 // <ChallengeItem item={item} />
-                                            )
+                                            ),
                                         )}
                                     </dd>
                                 </dl>
@@ -151,7 +151,7 @@ type Props = {
                                         {aircraft.icao_code !== aircraft.name &&
                                             aircraft.name}
                                     </span>
-                                )
+                                ),
                             )}
                         </dd>
                     </dl>
@@ -170,7 +170,7 @@ type Props = {
                                     <dt>链接</dt>
                                     <dd>
                                         {Object.entries(
-                                            Astro.props.info.links
+                                            Astro.props.info.links,
                                         ).map((l) => (
                                             <a
                                                 href={l[1] as string}
@@ -202,7 +202,7 @@ type Props = {
                                                 <span class="tag">
                                                     {developer.name}
                                                 </span>
-                                            )
+                                            ),
                                         )}
                                     </dd>
                                 </dl>
@@ -213,7 +213,7 @@ type Props = {
                                     <dt>链接</dt>
                                     <dd>
                                         {Object.entries(
-                                            Astro.props.info.links
+                                            Astro.props.info.links,
                                         ).map((l) => (
                                             <a
                                                 href={l[1] as string}
@@ -235,7 +235,7 @@ type Props = {
                         <dd>
                             {Astro.props.info?.release
                                 ? dayjs(Astro.props.info?.release).format(
-                                      "YYYY 年 M 月 D 日"
+                                      "YYYY 年 M 月 D 日",
                                   )
                                 : "待定"}
                         </dd>
@@ -256,10 +256,10 @@ type Props = {
                                 {[
                                     ...new Set([
                                         dayjs(Astro.props.info?.start).format(
-                                            "YYYY 年 M 月 D 日"
+                                            "YYYY 年 M 月 D 日",
                                         ),
                                         dayjs(Astro.props.info?.end).format(
-                                            "YYYY 年 M 月 D 日"
+                                            "YYYY 年 M 月 D 日",
                                         ),
                                     ]),
                                 ].join(" ~ ")}
@@ -271,7 +271,7 @@ type Props = {
                                     <dt>链接</dt>
                                     <dd>
                                         {Object.entries(
-                                            Astro.props.info.links
+                                            Astro.props.info.links,
                                         ).map((l) => (
                                             <a
                                                 href={l[1] as string}

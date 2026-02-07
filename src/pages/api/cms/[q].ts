@@ -6,7 +6,7 @@ export const GET: APIRoute<
     {
         q: string;
     }
-> = async ({ params, request, callAction }) => {
+> = async ({ params /*, request, callAction*/ }) => {
     if (!params.q) {
         return new Response(null, {
             status: 404,

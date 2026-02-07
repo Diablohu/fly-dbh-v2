@@ -281,14 +281,13 @@ const { htmlClassList = [] } = Astro.props;
             defer
             src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
         ></script>
-        <script is:inline defer define:vars={{ gtagId }}>
+        <script is:inline defer define:vars={{ id: gtagId }}>
             window.dataLayer = window.dataLayer || [];
             function gtag() {
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
-            gtag("config", gtagId);
+            gtag("config", id);
         </script>
 
         <div class="root">

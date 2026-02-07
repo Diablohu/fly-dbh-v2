@@ -56,15 +56,15 @@ const Menu: FC<
     const [openState, setOpenState] = useState(_open);
     const [render, setRender] = useState(false);
 
-    const openMenu = useCallback(() => {
-        setOpenState(true);
-    }, []);
+    // const openMenu = useCallback(() => {
+    //     setOpenState(true);
+    // }, []);
     const closeMenu = useCallback(() => {
         setOpenState(false);
     }, []);
-    const toggleMenu = useCallback(() => {
-        setOpenState((prev) => !prev);
-    }, []);
+    // const toggleMenu = useCallback(() => {
+    //     setOpenState((prev) => !prev);
+    // }, []);
     const onDocumentBodyClick = useCallback(
         (evt: MouseEvent) => {
             if (

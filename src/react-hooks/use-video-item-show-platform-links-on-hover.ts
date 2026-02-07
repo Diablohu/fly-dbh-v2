@@ -19,18 +19,18 @@ const videoItemShowPlatformLinksOnHover = atom<
         ? (parseCookie(document.cookie)[
               VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER
           ] as unknown as ValidVideoItemShowPlatformLinksOnHoverType) || "0"
-        : "0"
+        : "0",
 );
 
 if (globalThis.window) {
     // 客户端中
     // 监听 `contentListAutoLoadMore` 变化，将最新值写入 cookie
-    videoItemShowPlatformLinksOnHover.listen((newValue, oldValue) => {
+    videoItemShowPlatformLinksOnHover.listen((newValue /*, oldValue*/) => {
         const v = !newValue ? "0" : newValue;
         document.cookie = serializeCookie(
             VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
             v,
-            getGeneralCookieOptions()
+            getGeneralCookieOptions(),
         );
         logCookie(`set VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER to ${v}`);
     });
@@ -47,7 +47,7 @@ const useVideoItemShowPlatformLinksOnHover = (
      * 为什么需要传入初始值
      *  - 为确保 _Astro_ 渲染结果和 _React_ 脱水结果一致
      */
-    selected: ValidVideoItemShowPlatformLinksOnHoverType
+    selected: ValidVideoItemShowPlatformLinksOnHoverType,
 ): [
     ValidVideoItemShowPlatformLinksOnHoverType | undefined,
     typeof videoItemShowPlatformLinksOnHover.set,
@@ -57,7 +57,7 @@ const useVideoItemShowPlatformLinksOnHover = (
      *  - 方便同一页中可以有多个 UI 实例，保证同时更新
      */
     const $videoItemShowPlatformLinksOnHover = useStore(
-        videoItemShowPlatformLinksOnHover
+        videoItemShowPlatformLinksOnHover,
     );
     const [currentValue, setCurrentValue] = useState<
         ValidVideoItemShowPlatformLinksOnHoverType | undefined
@@ -67,7 +67,7 @@ const useVideoItemShowPlatformLinksOnHover = (
         (newValue: ValidVideoItemShowPlatformLinksOnHoverType) => {
             videoItemShowPlatformLinksOnHover.set(newValue);
         },
-        []
+        [],
     );
 
     useEffect(() => {

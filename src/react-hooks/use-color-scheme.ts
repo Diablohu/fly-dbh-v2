@@ -17,13 +17,13 @@ const forcedColorScheme = atom<ValidColorSchemeType | undefined>(
         ? (parseCookie(document.cookie)[
               FORCE_COLOR_SCHEME
           ] as unknown as ValidColorSchemeType) || undefined
-        : undefined
+        : undefined,
 );
 
 if (globalThis.window) {
     // 客户端中
     // 监听 `forcedColorScheme` 变化，将最新值写入 cookie，并更改 HTML
-    forcedColorScheme.listen((newValue, oldValue) => {
+    forcedColorScheme.listen((newValue /*, oldValue*/) => {
         document.documentElement.classList.remove("force-color-scheme-dark");
         document.documentElement.classList.remove("force-color-scheme-light");
 
@@ -37,10 +37,10 @@ if (globalThis.window) {
             document.cookie = serializeCookie(
                 FORCE_COLOR_SCHEME,
                 newValue,
-                getGeneralCookieOptions()
+                getGeneralCookieOptions(),
             );
             document.documentElement.classList.add(
-                `force-color-scheme-${newValue}`
+                `force-color-scheme-${newValue}`,
             );
             logCookie(`set FORCE_COLOR_SCHEME to ${newValue}`);
         }
@@ -58,7 +58,7 @@ const useColorScheme = (
      * 为什么需要传入初始值
      *  - 为确保 _Astro_ 渲染结果和 _React_ 脱水结果一致
      */
-    selected?: ValidColorSchemeType
+    selected?: ValidColorSchemeType,
 ): [ValidColorSchemeType | undefined, typeof forcedColorScheme.set] => {
     /**
      * 为什么要使用 Nanostore

@@ -18,7 +18,7 @@ function rootOnPointerEnter(evt: PointerEvent) {
         document.documentElement.classList.add(pointerHovering);
     else document.documentElement.classList.remove(pointerHovering);
 }
-function rootOnPointerLeave(evt: PointerEvent) {
+function rootOnPointerLeave(/*evt: PointerEvent*/) {
     document.documentElement.classList.remove(pointerHovering);
 }
 function bodyDelegateClick(evt: MouseEvent) {
@@ -32,7 +32,7 @@ function bodyDelegateClick(evt: MouseEvent) {
             evt.preventDefault();
             openImageViewer(
                 elImg,
-                elImg.getAttribute(htmlAttributeImageViewer) as string
+                elImg.getAttribute(htmlAttributeImageViewer) as string,
             );
             return;
         }
@@ -44,7 +44,7 @@ function bodyDelegateClick(evt: MouseEvent) {
         evt.preventDefault();
         openImageViewer(
             evt.target,
-            evt.target.getAttribute(htmlAttributeImageViewer) as string
+            evt.target.getAttribute(htmlAttributeImageViewer) as string,
         );
         return;
     }
@@ -80,7 +80,7 @@ const PrepareClient: FC<{
 }> = ({ defaults }) => {
     const [videoItemShowPlatformLinksOnHover] =
         useVideoItemShowPlatformLinksOnHover(
-            defaults.videoItemShowPlatformLinksOnHover || "0"
+            defaults.videoItemShowPlatformLinksOnHover || "0",
         );
 
     /** 计算并设置滚动条宽度 */
@@ -89,7 +89,7 @@ const PrepareClient: FC<{
             "--body-scrollbar-width",
             // window.innerWidth - document.documentElement.clientWidth + "px"
             // 获取 body 实际宽度，这个数值不包含 body 的 margin
-            window.innerWidth - document.body.offsetWidth + "px"
+            window.innerWidth - document.body.offsetWidth + "px",
         );
     }, []);
     useWindow(setScrollbarWidth, {
@@ -103,7 +103,7 @@ const PrepareClient: FC<{
 
         // 设置全局根节点属性
         window._contentRoot = document.querySelector(
-            "body > .root"
+            "body > .root",
         ) as HTMLDivElement;
 
         // 利用 pointer event 判断当前交互是否为 pointer hover
@@ -111,11 +111,11 @@ const PrepareClient: FC<{
             document.documentElement.classList.add(pointerHovering);
             document.documentElement.addEventListener(
                 "pointerenter",
-                rootOnPointerEnter
+                rootOnPointerEnter,
             );
             document.documentElement.addEventListener(
                 "pointerleave",
-                rootOnPointerLeave
+                rootOnPointerLeave,
             );
         } else {
             document.documentElement.classList.add(pointerHovering);
@@ -127,11 +127,11 @@ const PrepareClient: FC<{
             if (window.PointerEvent) {
                 document.documentElement.removeEventListener(
                     "pointerenter",
-                    rootOnPointerEnter
+                    rootOnPointerEnter,
                 );
                 document.documentElement.addEventListener(
                     "pointerleave",
-                    rootOnPointerLeave
+                    rootOnPointerLeave,
                 );
             }
             document.body.removeEventListener("click", bodyDelegateClick);
@@ -142,11 +142,11 @@ const PrepareClient: FC<{
     useEffect(() => {
         if (videoItemShowPlatformLinksOnHover === "1") {
             document.documentElement.classList.add(
-                "option-video-item-show-platform-links-on-hover"
+                "option-video-item-show-platform-links-on-hover",
             );
         } else {
             document.documentElement.classList.remove(
-                "option-video-item-show-platform-links-on-hover"
+                "option-video-item-show-platform-links-on-hover",
             );
         }
     }, [videoItemShowPlatformLinksOnHover]);

@@ -1,10 +1,10 @@
 import {
     useState,
     useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    Fragment,
+    // useEffect,
+    // useMemo,
+    // useRef,
+    // Fragment,
     type FC,
     type SubmitEventHandler,
 } from "react";
@@ -12,7 +12,7 @@ import { actions } from "astro:actions";
 
 import ChallengeListGrid from "@/components/challenge-list-grid";
 
-import { toString as conditionToString } from "./_query";
+// import { toString as conditionToString } from "./_query";
 
 import styles from "./_form-and-result.module.less";
 
@@ -57,18 +57,18 @@ const SearchFormAndResult: FC<{
     initialResult?: Awaited<ReturnType<typeof fetchAction>>["data"];
     noInitialCondition?: boolean;
 }> = ({
-    length,
-    hazards,
+    // length,
+    // hazards,
 
-    initialDifficulties,
-    initialTypes,
-    initialHazards,
+    // initialDifficulties,
+    // initialTypes,
+    // initialHazards,
     initialResult,
     noInitialCondition,
 }) => {
-    const [status, setStatus] = useState<StatusType>("pending");
-    const [error, setError] = useState<string>();
-    const [results, setResults] =
+    const [status /*, setStatus*/] = useState<StatusType>("pending");
+    const [error /*, setError*/] = useState<string>();
+    const [results /*, setResults*/] =
         useState<Awaited<ReturnType<typeof fetchAction>>["data"]>(
             initialResult,
         );
@@ -126,7 +126,7 @@ const Condition: FC<{
     label: string;
     name: "aircraftTypes" | "difficulties" | "hazards";
     multiple?: boolean;
-}> = ({ label, name, multiple }) => {
+}> = ({ label /*, name*/, multiple }) => {
     return (
         <section className={styles["condition"]}>
             <strong>

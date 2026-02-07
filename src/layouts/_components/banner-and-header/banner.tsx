@@ -37,14 +37,17 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
 
     const onBannerTransitionEnd = useCallback<
         TransitionEventHandler<HTMLElement>
-    >((evt) => {
-        // const marginTop = getComputedStyle(evt.currentTarget).marginTop;
-        // if (marginTop && parseInt(marginTop) < 0) {
-        //     Banner.bannerInView = false;
-        //     setRenderBanner(false);
-        //     setUnmountedOnce(true);
-        // }
-    }, []);
+    >(
+        (/*evt*/) => {
+            // const marginTop = getComputedStyle(evt.currentTarget).marginTop;
+            // if (marginTop && parseInt(marginTop) < 0) {
+            //     Banner.bannerInView = false;
+            //     setRenderBanner(false);
+            //     setUnmountedOnce(true);
+            // }
+        },
+        [],
+    );
 
     /** 计算并设置视差滚动样式值 */
     const setParallaxStyles = useCallback((force?: boolean) => {
@@ -58,13 +61,13 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                     1,
                     Math.max(
                         0,
-                        (wrapperHeight - window.scrollY) / wrapperHeight
-                    )
-                )}`
+                        (wrapperHeight - window.scrollY) / wrapperHeight,
+                    ),
+                )}`,
             );
             BannerRef.current.style.setProperty(
                 "--video-offset-y",
-                `${Math.max(window.scrollY, 0) / 2}px`
+                `${Math.max(window.scrollY, 0) / 2}px`,
             );
         }
     }, []);
@@ -85,11 +88,11 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                             //     BannerIntersectionRef.current
                             // );
                             document.documentElement.classList.add(
-                                rootClassNameBannerVisible
+                                rootClassNameBannerVisible,
                             );
                             Banner.bannerInView = true;
                             BannerRef.current?.classList.remove(
-                                styles["mod-not-in-view"]
+                                styles["mod-not-in-view"],
                             );
                             VideoRef.current?.play();
                             // console.log("Banner is in view");
@@ -100,18 +103,18 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                             //     BannerIntersectionRef.current
                             // );
                             document.documentElement.classList.remove(
-                                rootClassNameBannerVisible
+                                rootClassNameBannerVisible,
                             );
                             Banner.bannerInView = false;
                             BannerRef.current?.classList.add(
-                                styles["mod-not-in-view"]
+                                styles["mod-not-in-view"],
                             );
                             VideoRef.current?.pause();
                             // console.log("Banner is out of view");
                         }
                     });
                 },
-                { threshold: 0 }
+                { threshold: 0 },
             );
         }
 

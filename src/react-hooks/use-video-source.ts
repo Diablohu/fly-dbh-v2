@@ -18,17 +18,17 @@ const videoSource = atom<ValidVideoSourceType>(
         ? (parseCookie(document.cookie)[
               VIDEO_SOURCE
           ] as unknown as ValidVideoSourceType) || defaultVideoSource
-        : defaultVideoSource
+        : defaultVideoSource,
 );
 
 if (globalThis.window) {
     // 客户端中
     // 监听 `videoSource` 变化，将最新值写入 cookie
-    videoSource.listen((newValue, oldValue) => {
+    videoSource.listen((newValue /*, oldValue*/) => {
         document.cookie = serializeCookie(
             VIDEO_SOURCE,
             newValue,
-            getGeneralCookieOptions()
+            getGeneralCookieOptions(),
         );
         logCookie(`set VIDEO_SOURCE to ${newValue}`);
     });
@@ -45,7 +45,7 @@ const useVideoSource = (
      * 为什么需要传入初始值
      *  - 为确保 _Astro_ 渲染结果和 _React_ 脱水结果一致
      */
-    selected: ValidVideoSourceType
+    selected: ValidVideoSourceType,
 ): [ValidVideoSourceType, typeof videoSource.set] => {
     /**
      * 为什么要使用 Nanostore

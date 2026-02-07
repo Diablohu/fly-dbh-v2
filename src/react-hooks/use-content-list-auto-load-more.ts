@@ -19,18 +19,18 @@ const contentListAutoLoadMore = atom<
         ? (parseCookie(document.cookie)[
               CONTENT_LIST_AUTO_LOAD_MORE
           ] as unknown as ValidContentListAutoLoadMoreType) || "0"
-        : "0"
+        : "0",
 );
 
 if (globalThis.window) {
     // 客户端中
     // 监听 `contentListAutoLoadMore` 变化，将最新值写入 cookie
-    contentListAutoLoadMore.listen((newValue, oldValue) => {
+    contentListAutoLoadMore.listen((newValue /*, oldValue*/) => {
         const v = !newValue ? "0" : newValue;
         document.cookie = serializeCookie(
             CONTENT_LIST_AUTO_LOAD_MORE,
             v,
-            getGeneralCookieOptions()
+            getGeneralCookieOptions(),
         );
         logCookie(`set CONTENT_LIST_AUTO_LOAD_MORE to ${v}`);
     });
@@ -47,7 +47,7 @@ const useContentListAutoLoadMore = (
      * 为什么需要传入初始值
      *  - 为确保 _Astro_ 渲染结果和 _React_ 脱水结果一致
      */
-    selected: ValidContentListAutoLoadMoreType
+    selected: ValidContentListAutoLoadMoreType,
 ): [
     ValidContentListAutoLoadMoreType | undefined,
     typeof contentListAutoLoadMore.set,
@@ -65,7 +65,7 @@ const useContentListAutoLoadMore = (
         (newValue: ValidContentListAutoLoadMoreType) => {
             contentListAutoLoadMore.set(newValue);
         },
-        []
+        [],
     );
 
     useEffect(() => {

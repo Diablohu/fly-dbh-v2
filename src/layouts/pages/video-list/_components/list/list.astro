@@ -62,7 +62,7 @@ if (
         extra.push({
             name: extraAviationKnowledgeTitle,
             query: getExtraQueryString(
-                `[${Astro.props.info.tags.map(({ _id }) => `"${_id}"`).join(",")}]`
+                `[${Astro.props.info.tags.map(({ _id }) => `"${_id}"`).join(",")}]`,
             ),
         });
     }
@@ -97,7 +97,7 @@ const { data, error: error } = await Astro.callAction(
         from: 0,
         length,
         extra: extra.length > 0 ? extra : undefined,
-    }
+    },
 );
 
 type List = Exclude<typeof data, undefined>["list"];
@@ -122,10 +122,10 @@ if (error) {
                         // 则不在主要类别（如 `教程`）中显示
                         if (
                             Array.isArray(
-                                data?.[extraAviationKnowledgeTitle]
+                                data?.[extraAviationKnowledgeTitle],
                             ) &&
                             data?.[extraAviationKnowledgeTitle].some(
-                                ({ _id }) => _id === currentPost._id
+                                ({ _id }) => _id === currentPost._id,
                             )
                         )
                             return listByCategory;
@@ -137,7 +137,7 @@ if (error) {
                                 list: [],
                             };
                         listByCategory[currentPost.tags[0]._id].list.push(
-                            currentPost
+                            currentPost,
                         );
                         return listByCategory;
                     },
@@ -163,14 +163,14 @@ if (error) {
                             slug?: string;
                             list: List;
                         };
-                    }
-                )
+                    },
+                ),
             )
                 // .filter(
                 //     ([_id, { name, list }]) =>
                 //         Array.isArray(list) && list.length > 0
                 // )
-                .map(([_id, { name, list, slug }], index, arr) => (
+                .map(([_id, { name, list, slug }] /*, index, arr*/) => (
                     <Fragment>
                         {Array.isArray(list) && list.length > 0 && (
                             <Fragment>
@@ -210,15 +210,15 @@ if (error) {
                                                               ].every(
                                                                   ({ _id }) =>
                                                                       _id !==
-                                                                      post._id
-                                                              )
+                                                                      post._id,
+                                                              ),
                                                       )
                                             }
                                             initialListIsComplete
                                             showLoadMoreButton={false}
                                         />
                                     </Fragment>
-                                ) : null
+                                ) : null,
                             )}
                     </Fragment>
                 ))
@@ -230,10 +230,10 @@ if (error) {
                         // 则不在主要类别（如 `教程`）中显示
                         if (
                             Array.isArray(
-                                data?.[extraAviationKnowledgeTitle]
+                                data?.[extraAviationKnowledgeTitle],
                             ) &&
                             data?.[extraAviationKnowledgeTitle].some(
-                                ({ _id }) => _id === currentPost._id
+                                ({ _id }) => _id === currentPost._id,
                             )
                         )
                             return listByCategory;
@@ -242,7 +242,7 @@ if (error) {
                             listByCategory["OTHER"].list.push(currentPost);
                         else
                             listByCategory[currentPost.tags[0]._id].list.push(
-                                currentPost
+                                currentPost,
                             );
                         return listByCategory;
                     },
@@ -263,14 +263,14 @@ if (error) {
                             slug?: string;
                             list: List;
                         };
-                    }
-                )
+                    },
+                ),
             )
                 // .filter(
                 //     ([_id, { name, list }]) =>
                 //         Array.isArray(list) && list.length > 0
                 // )
-                .map(([_id, { name, slug, list }], index, arr) => (
+                .map(([_id, { name, slug, list }] /*, index, arr*/) => (
                     <Fragment>
                         {Array.isArray(list) && list.length > 0 && (
                             <Fragment>
@@ -302,7 +302,7 @@ if (error) {
                                             showLoadMoreButton={false}
                                         />
                                     </Fragment>
-                                ) : null
+                                ) : null,
                             )}
                     </Fragment>
                 ))

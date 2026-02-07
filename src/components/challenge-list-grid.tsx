@@ -79,7 +79,7 @@ const ChallengeListGrid: FC<Props> = ({
     }
 
     const loadMore = useCallback(
-        ({ from }: { from: number }) => {
+        async ({ from }: { from: number }) => {
             return actions.challengePage
                 .fetchList({
                     from,

@@ -12,6 +12,7 @@
         "preview": "astro preview --host --allowed-hosts local-dev.fly-dbh.com",
         "check": "astro check",
         "astro": "astro",
+        "astro:check": "astro check",
         "astro:upgrade": "npx @astrojs/upgrade",
         "test": "vitest",
         "up": "npm run astro:upgrade && npx --yes npm-check-updates -i"

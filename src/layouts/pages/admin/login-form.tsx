@@ -1,4 +1,4 @@
-import { useState, useCallback, type FC, type FormEventHandler } from "react";
+import { useState, useCallback, type FC, type SubmitEventHandler } from "react";
 import { actions } from "astro:actions";
 
 // ============================================================================
@@ -12,7 +12,7 @@ const LoginForm: FC = () => {
     const [status, setStatus] = useState<StatusType>("ready");
     const [error, setError] = useState<string>();
 
-    const onSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    const onSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (evt) => {
             evt.preventDefault();
 
@@ -30,7 +30,7 @@ const LoginForm: FC = () => {
             //     body: new FormData(evt.currentTarget),
             // });
             const { data, error } = await loginAction(
-                new FormData(evt.currentTarget)
+                new FormData(evt.currentTarget),
             );
 
             // if (res.status !== 200) {
@@ -50,7 +50,7 @@ const LoginForm: FC = () => {
 
             setStatus("ready");
         },
-        [status]
+        [status],
     );
 
     return (

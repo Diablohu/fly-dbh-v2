@@ -84,7 +84,7 @@ const fetchProjections = `{
 const actions = {
     fetch: defineAction({
         input: z.string(),
-        handler: async (cmsIdOrSlug, context) => {
+        handler: async (cmsIdOrSlug/*, context*/) => {
             try {
                 const queryString = `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`;
                 const res = (
