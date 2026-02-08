@@ -12,8 +12,8 @@ import styles from "./player.module.less";
 
 type Props = {
     title: string;
-    links: VideoItemType["links"];
-    embedded: VideoItemType["embedded"];
+    links?: VideoItemType["links"];
+    embedded?: VideoItemType["embedded"];
     cover: string;
     defaultVideoSource: ValidVideoSourceType;
 };
@@ -48,19 +48,20 @@ const Player: FC<Props> = ({
         if (embedded?.[$videoSource]) return embedded[$videoSource];
 
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[$videoSource] || "",
+            links?.[$videoSource] || "",
         )?.[1];
         if (bilibiliId)
-            return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1&high_quality=1`;
+            return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1`;
+        // &high_quality=1
 
         const youtubeId =
             /(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/)(.+?)(\/|\?|\#|\&|$)/.exec(
-                links[$videoSource] || "",
+                links?.[$videoSource] || "",
             )?.[2];
         if (youtubeId) return `//youtube.com/embed/${youtubeId}?autoplay=1`;
 
         const douyinId = /douyin\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[$videoSource] || "",
+            links?.[$videoSource] || "",
         )?.[1];
         if (douyinId)
             return `//open.douyin.com/player/video?vid=${douyinId}&autoplay=1`;
@@ -90,7 +91,7 @@ const Player: FC<Props> = ({
                         <p>请更换视频平台</p>
                         <SelectPlatform
                             defaultVideoSource={defaultVideoSource}
-                            links={links}
+                            links={links ?? {}}
                             isInsidePlayer
                         />
                     </section>
