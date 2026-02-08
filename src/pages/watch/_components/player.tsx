@@ -45,13 +45,13 @@ const Player: FC<Props> = ({
 
     const url = useMemo(() => {
         if (!$videoSource) return "";
-        if (embedded[$videoSource]) return embedded[$videoSource];
+        if (embedded?.[$videoSource]) return embedded[$videoSource];
 
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
             links[$videoSource] || "",
         )?.[1];
         if (bilibiliId)
-            return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1`;
+            return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1&high_quality=1`;
 
         const youtubeId =
             /(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/)(.+?)(\/|\?|\#|\&|$)/.exec(
