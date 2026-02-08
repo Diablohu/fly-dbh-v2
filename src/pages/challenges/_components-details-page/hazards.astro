@@ -26,18 +26,19 @@ const { hazards, challengeRunways, ...props } = Astro.props;
                         ? hazard.extra_comment
                         : !Array.isArray(challengeRunways)
                           ? null
-                          : hazard.name.includes("大坡度")
+                          : hazard.name.includes("大坡度") &&
+                              !hazard.name.includes("大坡度转向")
                             ? // 如果挑战跑道有多个，这里显示的坡度取绝对值
                               challengeRunways.length > 0
                                 ? `${Math.abs(
-                                      challengeRunways[0].slopePercentage
+                                      challengeRunways[0].slopePercentage,
                                   ).toFixed(2)}% / ${Math.abs(
-                                      challengeRunways[0].slopeDegrees
+                                      challengeRunways[0].slopeDegrees,
                                   ).toFixed(2)}°`
                                 : `${challengeRunways[0].slopePercentage.toFixed(
-                                      2
+                                      2,
                                   )}% / ${challengeRunways[0].slopeDegrees.toFixed(
-                                      2
+                                      2,
                                   )}°`
                             : null,
                 ]
