@@ -103,6 +103,7 @@ const relatedChallenges = video.aerodromes
     <section class="player-container">
         <Player
             links={video.links}
+            embedded={video.embedded}
             title={video.title}
             cover={video.cover}
             defaultVideoSource={Astro.cookies.get(VIDEO_SOURCE)

@@ -27,6 +27,7 @@ const fetchProjections = `{
     description,
     sources,
     links,
+    embedded,
     'aircraft_families': aircraft_families[]->{
         _id,
         'slug': slug.current,

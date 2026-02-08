@@ -13,13 +13,20 @@ import styles from "./player.module.less";
 type Props = {
     title: string;
     links: VideoItemType["links"];
+    embedded: VideoItemType["embedded"];
     cover: string;
     defaultVideoSource: ValidVideoSourceType;
 };
 
 // ============================================================================
 
-const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
+const Player: FC<Props> = ({
+    links,
+    embedded,
+    title,
+    cover,
+    defaultVideoSource,
+}) => {
     const PlayerRef = useRef<HTMLDivElement>(null);
     const [$videoSource] = useVideoSource(defaultVideoSource);
 
@@ -27,7 +34,7 @@ const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
         if (PlayerRef.current) {
             PlayerRef.current.style.setProperty(
                 "--player-height-shrink",
-                `${window.scrollY}px`
+                `${window.scrollY}px`,
             );
         }
     }, []);
@@ -38,27 +45,28 @@ const Player: FC<Props> = ({ links, title, cover, defaultVideoSource }) => {
 
     const url = useMemo(() => {
         if (!$videoSource) return "";
+        if (embedded[$videoSource]) return embedded[$videoSource];
 
         const bilibiliId = /bilibili\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[$videoSource] || ""
+            links[$videoSource] || "",
         )?.[1];
         if (bilibiliId)
             return `//player.bilibili.com/player.html?isOutside=true&bvid=${bilibiliId}&p=1`;
 
         const youtubeId =
             /(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/)(.+?)(\/|\?|\#|\&|$)/.exec(
-                links[$videoSource] || ""
+                links[$videoSource] || "",
             )?.[2];
         if (youtubeId) return `//youtube.com/embed/${youtubeId}?autoplay=1`;
 
         const douyinId = /douyin\.com\/video\/(.+?)(\/|\?|\#|\&|$)/.exec(
-            links[$videoSource] || ""
+            links[$videoSource] || "",
         )?.[1];
         if (douyinId)
             return `//open.douyin.com/player/video?vid=${douyinId}&autoplay=1`;
 
         return "";
-    }, [$videoSource, links]);
+    }, [$videoSource, links, embedded]);
 
     return (
         <section className={styles["player"]} ref={PlayerRef}>

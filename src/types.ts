@@ -111,6 +111,9 @@ export type VideoItemType = {
     links: {
         [platform in ValidVideoSourceType]?: string;
     };
+    embedded: {
+        [platform in ValidVideoSourceType]?: string;
+    };
 
     aircraft_families: {
         _id: string;
