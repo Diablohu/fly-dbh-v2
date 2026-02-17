@@ -21,7 +21,7 @@ import { errorLog } from "@/utils/log";
 
 // ============================================================================
 
-// if (!Astro.params.slug) return Astro.redirect(routeBase.challenges, 303);
+// if (!Astro.params.slug) return Astro.redirect(routeBase.challenges, 301);
 
 const { data: challenge, error } = await Astro.callAction(
     actions.challengePage.fetchChallenge,

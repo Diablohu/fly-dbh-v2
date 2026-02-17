@@ -18,6 +18,7 @@ import Markdown from "@/components/markdown.astro";
 import Player from "./_components/player";
 import SelectPlatform from "./_components/select-platform";
 
+import { getVideoPageLink } from "@/global";
 import prettifyTitle from "@/utils/prettify-title";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
@@ -32,7 +33,7 @@ if (!Astro.params.slug) return Astro.redirect(getVideoListPageLink(), 303);
 
 const { data: video, error } = await Astro.callAction(
     actions.watchPage.fetch,
-    Astro.params.slug
+    Astro.params.slug,
 );
 if ((error && error.code === "NOT_FOUND") || !video) {
     if (error)
@@ -46,13 +47,13 @@ if ((error && error.code === "NOT_FOUND") || !video) {
                     : "",
             ]
                 .filter(Boolean)
-                .join(" | ")
+                .join(" | "),
         );
     else
         errorLog(
             [`${Astro.originPathname} -> 404`, "No video info"]
                 .filter(Boolean)
-                .join(" | ")
+                .join(" | "),
         );
     return Astro.rewrite("/404");
 }
@@ -68,7 +69,7 @@ if (error) {
                 : "",
         ]
             .filter(Boolean)
-            .join(" | ")
+            .join(" | "),
     );
     Astro.response.status = 500;
     Astro.props.error = error;
@@ -76,17 +77,20 @@ if (error) {
 }
 
 // console.log(video);
+if (video.slug && video.slug !== Astro.params.slug) {
+    return Astro.redirect(getVideoPageLink(video.slug), 301);
+}
 
 const relatedChallenges = video.aerodromes
     ?.flatMap((aerodrome) =>
         aerodrome.challenges?.map((challenge) => ({
             aerodrome,
             ...challenge,
-        }))
+        })),
     )
     .filter(Boolean)
     .sort(
-        (a, b) => (b?.difficulty || 0) - (a?.difficulty || 0)
+        (a, b) => (b?.difficulty || 0) - (a?.difficulty || 0),
     ) as unknown as Array<React.ComponentProps<typeof ChallengeItem>["item"]>;
 ---
 
@@ -129,7 +133,7 @@ const relatedChallenges = video.aerodromes
                 <section class="release">
                     {
                         dayjs(new Date(video.release)).format(
-                            `YYYY年M月D日 HH:mm`
+                            `YYYY年M月D日 HH:mm`,
                         )
                     }
                 </section>
@@ -164,19 +168,19 @@ const relatedChallenges = video.aerodromes
                                 video.aircraft_families?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "aircraftFamily",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                             [
                                 getVideoListPageTypeInfo(
-                                    "aircraftOnboardDevice"
+                                    "aircraftOnboardDevice",
                                 ).name,
                                 video.aircraft_onboard_devices?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "aircraftOnboardDevice",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                             [
@@ -184,8 +188,8 @@ const relatedChallenges = video.aerodromes
                                 video.aerodromes?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "aerodrome",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                             [
@@ -193,8 +197,8 @@ const relatedChallenges = video.aerodromes
                                 video.developers?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "developer",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                             [
@@ -202,8 +206,8 @@ const relatedChallenges = video.aerodromes
                                 video.games?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "platform",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                             [
@@ -211,8 +215,8 @@ const relatedChallenges = video.aerodromes
                                 video.game_updates?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "platformUpdate",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                             [
@@ -220,8 +224,8 @@ const relatedChallenges = video.aerodromes
                                 video.events?.map((item) =>
                                     getVideoCategoryInfoFromRawTypeData(
                                         "event",
-                                        item
-                                    )
+                                        item,
+                                    ),
                                 ),
                             ],
                         ] as [string, CategoryInfoType[]][]
@@ -250,11 +254,11 @@ const relatedChallenges = video.aerodromes
                                                         ? ` (${suffix})`
                                                         : ""}
                                                 </TagButton>
-                                            )
+                                            ),
                                         )}
                                     </dd>
                                 </dl>
-                            )
+                            ),
                     )
                 }
             </section>
@@ -271,7 +275,7 @@ const relatedChallenges = video.aerodromes
                         ).map(([platform, url]) => {
                             if (!url) return null;
                             const thisPlatform = videoPlatforms.find(
-                                ({ name }) => name === platform
+                                ({ name }) => name === platform,
                             );
                             if (!thisPlatform) return null;
                             return (
