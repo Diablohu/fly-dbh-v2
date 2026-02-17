@@ -1,4 +1,10 @@
-import { useCallback, useMemo, memo, type FC } from "react";
+import {
+    useCallback,
+    useMemo,
+    memo,
+    type FC,
+    type ComponentProps,
+} from "react";
 import { actions } from "astro:actions";
 import {
     type VideoListPageTypesType,
@@ -57,6 +63,12 @@ type Props = {
      */
     tagPurpose?: Parameters<typeof getVideoItemTopTags>[1];
 };
+
+const ListContainer = ListContainerGrid<
+    ItemType,
+    | Awaited<ReturnType<typeof actions.search.query>>["data"]
+    | Awaited<ReturnType<typeof actions.videoListPage.fetchList>>["data"]
+>;
 
 // ============================================================================
 
@@ -179,8 +191,10 @@ const VideoListGrid: FC<Props> = ({
         [type, slug, isIndex, tagPurpose],
     );
 
-    const itemRender = useMemo<FC<ItemType>>(
-        () => (post: ItemType) => {
+    const itemRender = useMemo<
+        ComponentProps<typeof ListContainer>["itemRender"]
+    >(
+        () => (post) => {
             return (
                 <VideoItem
                     _id={post._id}
@@ -191,20 +205,15 @@ const VideoListGrid: FC<Props> = ({
                     links={post.links}
                     tags={getTags(post)}
                     infos={[new Date(post.release)]}
+                    assetPriority={post.index < length ? "high" : false}
                 />
             );
         },
-        [getTags],
+        [getTags, length],
     );
 
     return (
-        <ListContainerGrid<
-            ItemType,
-            | Awaited<ReturnType<typeof actions.search.query>>["data"]
-            | Awaited<
-                  ReturnType<typeof actions.videoListPage.fetchList>
-              >["data"]
-        >
+        <ListContainer
             loadMore={loadMore}
             itemRender={itemRender}
             length={length}

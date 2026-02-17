@@ -31,6 +31,11 @@ export type Props = Pick<Required<VideoItemType>, "_id" | "title" | "cover"> &
             | VideoTagType
             | Array<string | Date | VideoTagType>
         )[];
+        /**
+         * 是否优先显示媒体资源
+         * @default false
+         */
+        assetPriority?: "high" | false;
     };
 
 // ============================================================================
@@ -38,7 +43,18 @@ export type Props = Pick<Required<VideoItemType>, "_id" | "title" | "cover"> &
 const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
     getDurationText?: (duration: number) => string;
 } = memo(
-    ({ _id, slug, title, cover, duration, tags, infos, links, className }) => {
+    ({
+        _id,
+        slug,
+        title,
+        cover,
+        duration,
+        tags,
+        infos,
+        links,
+        className,
+        assetPriority = false,
+    }) => {
         // const searchString = useMemo(() => `?v=${cmsId}`, [cmsId]);
         // const onClick = useCallback<MouseEventHandler<HTMLAnchorElement>>(
         //     (evt) => {
@@ -84,7 +100,12 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                         <img
                             src={cover + "?auto=format&w=400&q=60"}
                             alt={prettifiedTitle}
-                            loading="lazy"
+                            loading={
+                                assetPriority === "high" ? undefined : "lazy"
+                            }
+                            fetchPriority={
+                                assetPriority === "high" ? "high" : undefined
+                            }
                         />
                     </picture>
 
@@ -185,7 +206,7 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                 )}
             </figure>
         );
-    }
+    },
 );
 VideoItem.getDurationText = (duration: number) => {
     const h = Math.floor(duration / (60 * 60));
@@ -193,7 +214,7 @@ VideoItem.getDurationText = (duration: number) => {
     return [h > 0 ? h : null, m, duration % 60]
         .filter((number) => typeof number === "number")
         .map((number, index) =>
-            index > 0 ? `${number}`.padStart(2, "0") : number
+            index > 0 ? `${number}`.padStart(2, "0") : number,
         )
         .join(":");
 };

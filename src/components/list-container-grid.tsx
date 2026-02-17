@@ -22,7 +22,11 @@ type StatusType = "ready" | "loading" | "complete" | "error";
 type Props<T extends {}, R extends {} | undefined> = {
     /** 查询函数 */
     loadMore: ({ from }: { from: number }) => Promise<R | undefined>;
-    itemRender: FC<T>;
+    itemRender: FC<
+        T & {
+            index: number;
+        }
+    >;
     /** 每次请求的内容长度，即传统概念上的每页条目数 */
     length?: number;
     /** 初始列表内容 */
@@ -248,8 +252,8 @@ const ListContainerGrid = <
             className={classNames(styles["list-container-grid"], className)}
             ref={ListContainerRef}
         >
-            {list.map((item) => (
-                <ItemComponent key={item._id} {...item} />
+            {list.map((item, index) => (
+                <ItemComponent key={item._id} index={index} {...item} />
             ))}
 
             <section className={styles["block"]}>
