@@ -28,6 +28,8 @@ type Props = {
                                 ? ` (${Astro.props.aerodrome.location.join(" ")})`
                                 : ""
                         }`,
+                        loading: "eager",
+                        fetchpriority: "high",
                     })}
                 />
                 {Astro.props.aerodrome.photo_credit && (
@@ -95,7 +97,7 @@ type Props = {
                                 [
                                     "",
                                     ...runwayPair.map(
-                                        (runway) => runway.identifier
+                                        (runway) => runway.identifier,
                                     ),
                                 ],
                                 [
@@ -109,7 +111,7 @@ type Props = {
                                 [
                                     "磁航向",
                                     ...runwayPair.map(
-                                        (runway) => runway.bearing + "°"
+                                        (runway) => runway.bearing + "°",
                                     ),
                                 ],
                                 [
@@ -117,15 +119,15 @@ type Props = {
                                     ...runwayPair.map(
                                         (runway) =>
                                             Math.round(
-                                                runway.elevationInMeters
-                                            ) + " m"
+                                                runway.elevationInMeters,
+                                            ) + " m",
                                     ),
                                 ],
                                 [
                                     "",
                                     ...runwayPair.map(
                                         (runway) =>
-                                            runway.elevationInFeet + " ft"
+                                            runway.elevationInFeet + " ft",
                                     ),
                                 ],
                                 [
@@ -136,8 +138,8 @@ type Props = {
                                         ? runwayPair.map(
                                               (runway) =>
                                                   runway.slopePercentage.toFixed(
-                                                      2
-                                                  ) + "%"
+                                                      2,
+                                                  ) + "%",
                                           )
                                         : ["--"]),
                                 ],
@@ -149,8 +151,8 @@ type Props = {
                                           ...runwayPair.map(
                                               (runway) =>
                                                   runway.slopeDegrees.toFixed(
-                                                      2
-                                                  ) + "°"
+                                                      2,
+                                                  ) + "°",
                                           ),
                                       ]
                                     : [],
