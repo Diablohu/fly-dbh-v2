@@ -15,7 +15,6 @@ import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/roo
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
-import bannerCoverImage from "@/assets/banner-video/cover.webp";
 
 import styles from "./index.module.less";
 
@@ -23,10 +22,14 @@ import { links, type Props } from "./";
 
 // ============================================================================
 
-const Banner: FC<Pick<Props, "banner" | "logo">> & {
+const Banner: FC<
+    Pick<Props, "banner" | "logo"> & {
+        coverImage?: Props["bannerCoverImage"];
+    }
+> & {
     observer?: IntersectionObserver;
     bannerInView?: boolean;
-} = ({ banner, logo }) => {
+} = ({ banner, logo, coverImage }) => {
     const BannerRef = useRef<HTMLDivElement>(null);
     const BannerIntersectionRef = useRef<HTMLDivElement>(null);
     const VideoRef = useRef<HTMLVideoElement>(null);
@@ -198,7 +201,7 @@ const Banner: FC<Pick<Props, "banner" | "logo">> & {
                 <section
                     className={styles["video-container"]}
                     style={{
-                        backgroundImage: `url(${bannerCoverImage.src})`,
+                        backgroundImage: `url(${coverImage})`,
                     }}
                 >
                     {renderVideo && (

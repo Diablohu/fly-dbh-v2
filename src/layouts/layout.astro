@@ -18,6 +18,8 @@ import {
 } from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
+import bannerCoverImage from "@/assets/banner-video/cover.webp";
+
 import HeadPageInfos from './_components/head-page-infos.astro';
 import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
@@ -261,6 +263,8 @@ const { htmlClassList = [] } = Astro.props;
             <Font cssVariable='--font-helvetica-compressed' />
         </Fragment>
 
+        {banner && <link rel="preload" as="image" href={bannerCoverImage.src} />}
+
         <ClientRouter />
     </head>
     <body>
@@ -294,6 +298,7 @@ const { htmlClassList = [] } = Astro.props;
             <BannerAndHeader
                 client:idle
                 banner={banner}
+                bannerCoverImage={banner && bannerCoverImage.src}
                 header={header}
                 originPathname={Astro.originPathname}
                 defaults={{

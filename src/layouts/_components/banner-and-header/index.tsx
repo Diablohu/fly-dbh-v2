@@ -34,6 +34,7 @@ export const links: {
 ];
 export type Props = {
     banner: boolean;
+    bannerCoverImage?: string;
     header: boolean;
     logo?: ReactNode;
     originPathname: string;
@@ -50,13 +51,14 @@ export type Props = {
 const BannerAndHeader: FC<Props> = ({
     header = false,
     banner = false,
+    bannerCoverImage,
     logo,
     originPathname,
     defaults,
 }) => {
     return (
         <>
-            <Banner banner={banner} logo={logo} />
+            <Banner banner={banner} coverImage={bannerCoverImage} logo={logo} />
             <Header
                 header={header}
                 logo={logo}
