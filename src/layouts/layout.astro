@@ -164,6 +164,48 @@ const { htmlClassList = [] } = Astro.props;
         ...htmlClassList,
     ]}>
     <head>
+        <Fragment transition:persist="layout-global-header-elements">
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width" />
+            <base target="_self" />
+            <link rel="icon" href="/favicon.ico" sizes="any">
+            <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+            <link rel="manifest" href="/manifest.json">
+            <link
+                rel="alternate"
+                type="application/rss+xml"
+                title={title + ' 最新模拟飞行视频'}
+                href={new URL("/feed.xml", Astro.url)}
+            />
+            <link rel="sitemap" href="/sitemap-index.xml" />
+
+            <meta name="generator" content={Astro.generator} />
+
+            <style
+                is:inline
+                set:html={`:root {
+    --light-theme-color: ${themeColorLight};
+    --light-theme-color-p-20: ${themeColorLight}33;
+    --light-theme-color-p-30: ${themeColorLight}4d;
+    --light-theme-color-p-40: ${themeColorLight}66;
+    --light-theme-color-p-50: ${themeColorLight}80;
+    --light-theme-color-p-60: ${themeColorLight}99;
+    --light-theme-color-p-70: ${themeColorLight}b3;
+    --light-theme-color-p-80: ${themeColorLight}cc;
+    --light-theme-color-p-90: ${themeColorLight}e6;
+    --dark-theme-color: ${themeColorDark};
+    --dark-theme-color-p-20: ${themeColorDark}33;
+    --dark-theme-color-p-30: ${themeColorDark}4d;
+    --dark-theme-color-p-40: ${themeColorDark}66;
+    --dark-theme-color-p-50: ${themeColorDark}80;
+    --dark-theme-color-p-60: ${themeColorDark}99;
+    --dark-theme-color-p-70: ${themeColorDark}b3;
+    --dark-theme-color-p-80: ${themeColorDark}cc;
+    --dark-theme-color-p-90: ${themeColorDark}e6;
+}`}
+            ></style>
+            <Font cssVariable='--font-helvetica-compressed' />
+        </Fragment>
         {forcedColorScheme === 'dark'
             ? <meta
                 name="theme-color"
@@ -217,51 +259,6 @@ const { htmlClassList = [] } = Astro.props;
             </script>
         )}
         <!-- End Google Tag Manager -->
-
-        <Fragment transition:persist="layout-global-header-elements">
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width" />
-            <base target="_self" />
-            <link rel="icon" href="/favicon.ico" sizes="any">
-            <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-            <link rel="manifest" href="/manifest.json">
-            <link
-                rel="alternate"
-                type="application/rss+xml"
-                title={title + ' 最新模拟飞行视频'}
-                href={new URL("/feed.xml", Astro.url)}
-            />
-            <link rel="sitemap" href="/sitemap-index.xml" />
-
-            <meta name="generator" content={Astro.generator} />
-
-            <style
-                is:inline
-                set:html={`
-    :root {
-        --light-theme-color: ${themeColorLight};
-        --light-theme-color-p-20: ${themeColorLight}33;
-        --light-theme-color-p-30: ${themeColorLight}4d;
-        --light-theme-color-p-40: ${themeColorLight}66;
-        --light-theme-color-p-50: ${themeColorLight}80;
-        --light-theme-color-p-60: ${themeColorLight}99;
-        --light-theme-color-p-70: ${themeColorLight}b3;
-        --light-theme-color-p-80: ${themeColorLight}cc;
-        --light-theme-color-p-90: ${themeColorLight}e6;
-        --dark-theme-color: ${themeColorDark};
-        --dark-theme-color-p-20: ${themeColorDark}33;
-        --dark-theme-color-p-30: ${themeColorDark}4d;
-        --dark-theme-color-p-40: ${themeColorDark}66;
-        --dark-theme-color-p-50: ${themeColorDark}80;
-        --dark-theme-color-p-60: ${themeColorDark}99;
-        --dark-theme-color-p-70: ${themeColorDark}b3;
-        --dark-theme-color-p-80: ${themeColorDark}cc;
-        --dark-theme-color-p-90: ${themeColorDark}e6;
-    }
-    `}
-            ></style>
-            <Font cssVariable='--font-helvetica-compressed' />
-        </Fragment>
 
         {banner && <link rel="preload" as="image" href={bannerCoverImage.src} />}
 
