@@ -295,7 +295,7 @@ const { htmlClassList = [] } = Astro.props;
             <BannerAndHeader
                 client:idle
                 banner={banner}
-                bannerCoverImage={banner && bannerCoverImage.src}
+                bannerCoverImage={banner ? bannerCoverImage.src : undefined}
                 header={header}
                 originPathname={Astro.originPathname}
                 defaults={{

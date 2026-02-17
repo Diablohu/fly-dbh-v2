@@ -18,6 +18,7 @@ import Layout from "@/layouts/layout.astro";
 import ChallengeListGrid from "@/components/challenge-list-grid";
 
 import { errorLog } from "@/utils/log";
+import { page } from "dist/server/pages/_image.astro.mjs";
 
 // ============================================================================
 //
@@ -135,6 +136,16 @@ if (error) {
 //
 // ============================================================================
 
+const pageTitle = {
+    catalog: ["固定翼飞机", "着陆挑战"],
+    name:
+        Astro.props.catalog === "latest"
+            ? "最新收录"
+            : Astro.props.catalog === "filter"
+              ? "查询 / 抽选"
+              : aircraftTypeString[Astro.props.catalog as AircraftTypes],
+};
+
 // ============================================================================
 //
 // MARK: Astro Template
@@ -143,14 +154,7 @@ if (error) {
 ---
 
 <Layout
-    title={[
-        "固定翼飞机着陆挑战",
-        Astro.props.catalog === "latest"
-            ? "最新收录"
-            : Astro.props.catalog === "filter"
-              ? "查询 / 抽选"
-              : aircraftTypeString[Astro.props.catalog as AircraftTypes],
-    ].join(" : ")}
+    title={[pageTitle.catalog.join(""), pageTitle.name].join(" : ")}
     header
     footer
     sideBar={[
@@ -191,18 +195,10 @@ if (error) {
 >
     <section class="list">
         <section class="hero-image">
-            <h2 class="title"><small>固定翼飞机</small>着陆挑战</h2>
-            <h1 class="title">
-                {
-                    Astro.props.catalog === "latest"
-                        ? "最新收录"
-                        : Astro.props.catalog === "filter"
-                          ? "查询 / 抽选"
-                          : aircraftTypeString[
-                                Astro.props.catalog as AircraftTypes
-                            ]
-                }
-            </h1>
+            <h2 class="title">
+                <small>{pageTitle.catalog[0]}</small>{pageTitle.catalog[1]}
+            </h2>
+            <h1 class="title">{pageTitle.name}</h1>
             {
                 Astro.props.catalog !== "filter" && (
                     <span class="total">
@@ -211,14 +207,16 @@ if (error) {
                     </span>
                 )
             }
-            <div
-                class="image"
-                style={{
-                    backgroundImage: `url(${urlPrefixSanityImageCdn}/${
+            <div class="image">
+                <img
+                    alt={[pageTitle.catalog.join(""), pageTitle.name].join(
+                        " : ",
+                    )}
+                    src={`${urlPrefixSanityImageCdn}/${
                         heroImage[Astro.props.catalog]
-                    }?auto=format&w=1280&q=60)`,
-                }}
-            >
+                    }?fm=webp&w=1280&q=50`}
+                    fetchpriority="high"
+                />
             </div>
         </section>
 
@@ -297,6 +295,7 @@ if (error) {
 
         .image {
             &,
+            & > img,
             &::before,
             &::after {
                 position: absolute;
@@ -306,9 +305,14 @@ if (error) {
                 height: 100%;
             }
             z-index: 1;
-            background: no-repeat center/cover;
+            // background: no-repeat center/cover;
             pointer-events: none;
             // filter: saturate(150%);
+
+            & > img {
+                display: block;
+                object-fit: cover;
+            }
 
             &::before,
             &::after {
