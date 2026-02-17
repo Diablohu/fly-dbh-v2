@@ -205,7 +205,7 @@ const VideoListGrid: FC<Props> = ({
                     links={post.links}
                     tags={getTags(post)}
                     infos={[new Date(post.release)]}
-                    assetPriority={post.index < length ? "high" : false}
+                    assetPriority={post.index < 10 ? "high" : false}
                 />
             );
         },
