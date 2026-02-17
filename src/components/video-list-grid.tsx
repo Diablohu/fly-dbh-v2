@@ -66,7 +66,7 @@ type Props = {
      * 优先级设置：对于列表中的前 N 个条目，使用更高优先级的资源加载（如封面图）
      * - 如果传入 `true`，默认 N 值为 10
      */
-    assetPriorityHighForFirstNItems?: number | boolean;
+    allowAssetPriorityHigh?: number | boolean;
 };
 
 const ListContainer = ListContainerGrid<
@@ -88,7 +88,7 @@ const VideoListGrid: FC<Props> = ({
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
     tagPurpose,
-    assetPriorityHighForFirstNItems = false,
+    allowAssetPriorityHigh = false,
 }) => {
     if (
         infiniteScroll &&
@@ -212,19 +212,17 @@ const VideoListGrid: FC<Props> = ({
                     tags={getTags(post)}
                     infos={[new Date(post.release)]}
                     assetPriority={
-                        assetPriorityHighForFirstNItems === true &&
-                        post._index < 10
+                        allowAssetPriorityHigh === true && post._index < 10
                             ? "high"
-                            : typeof assetPriorityHighForFirstNItems ===
-                                    "number" &&
-                                post._index < assetPriorityHighForFirstNItems
+                            : typeof allowAssetPriorityHigh === "number" &&
+                                post._index < allowAssetPriorityHigh
                               ? "high"
                               : undefined
                     }
                 />
             );
         },
-        [getTags, length, assetPriorityHighForFirstNItems],
+        [getTags, length, allowAssetPriorityHigh],
     );
 
     return (
