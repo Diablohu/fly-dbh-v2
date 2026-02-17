@@ -19,6 +19,7 @@ type Props = {
     showMore?: boolean;
     titleMore?: boolean;
     highlighted?: boolean;
+    allowAssetPriorityHigh?: boolean;
 };
 const { showMore = true, titleMore = true } = Astro.props;
 const moreLink =
@@ -87,6 +88,7 @@ const moreLink =
                             ].filter(Boolean),
                         ],
                     }))}
+                    allowAssetPriorityHigh={Astro.props.allowAssetPriorityHigh}
                 />
             )
         }

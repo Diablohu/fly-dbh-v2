@@ -60,7 +60,7 @@ import CollectionChallenges from "./homepage/collection-challenges.astro";
 
 const { data: collections, error: error } = await Astro.callAction(
     actions.homePage.fetch,
-    undefined
+    undefined,
 );
 if (error) {
     Astro.response.status = 500;
@@ -69,7 +69,7 @@ if (error) {
 }
 
 const spotlightConfigString = collections?.config.find(
-    ({ key }) => key === "Spotlight"
+    ({ key }) => key === "Spotlight",
 )?.value;
 ---
 
@@ -79,6 +79,7 @@ const spotlightConfigString = collections?.config.find(
             name="latest"
             title="最新模拟飞行视频"
             videos={collections?.["latest"]}
+            allowAssetPriorityHigh
         />
 
         {

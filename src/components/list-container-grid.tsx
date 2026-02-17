@@ -24,7 +24,7 @@ type Props<T extends {}, R extends {} | undefined> = {
     loadMore: ({ from }: { from: number }) => Promise<R | undefined>;
     itemRender: FC<
         T & {
-            index: number;
+            _index: number;
         }
     >;
     /** 每次请求的内容长度，即传统概念上的每页条目数 */
@@ -253,7 +253,7 @@ const ListContainerGrid = <
             ref={ListContainerRef}
         >
             {list.map((item, index) => (
-                <ItemComponent key={item._id} index={index} {...item} />
+                <ItemComponent key={item._id} _index={index} {...item} />
             ))}
 
             <section className={styles["block"]}>

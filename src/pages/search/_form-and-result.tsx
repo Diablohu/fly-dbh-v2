@@ -205,6 +205,7 @@ const Results: FC<{
                                             initialList={list}
                                             initialListIsComplete
                                             showLoadMoreButton={false}
+                                            assetPriorityHighForFirstNItems
                                         />
                                     </Fragment>
                                 ))}
@@ -285,6 +286,7 @@ const Results: FC<{
                             }
                             showLoadMoreButton
                             tagPurpose="search-result"
+                            assetPriorityHighForFirstNItems
                         />
                     </dd>
                 </dl>

@@ -13,10 +13,18 @@ import ListContainerHorizontal, {
 const VideoListHorizontal: FC<{
     videos: VideoItemProps[];
     showMore?: boolean;
-}> = ({ videos, showMore }) => (
+    allowAssetPriorityHigh?: boolean;
+}> = ({ videos, showMore, allowAssetPriorityHigh = false }) => (
     <ListContainerHorizontal showMore={showMore} isVideoList>
-        {videos.map((v) => (
-            <VideoItem key={v._id} className={classNameItem} {...v} />
+        {videos.map((v, index) => (
+            <VideoItem
+                key={v._id}
+                className={classNameItem}
+                assetPriority={
+                    allowAssetPriorityHigh && index < 10 ? "high" : undefined
+                }
+                {...v}
+            />
         ))}
     </ListContainerHorizontal>
 );

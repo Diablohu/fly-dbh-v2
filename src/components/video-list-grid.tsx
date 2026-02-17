@@ -62,6 +62,11 @@ type Props = {
      * **强制** 指定是否显示标签，如果显示，确定显示的“目的”类型
      */
     tagPurpose?: Parameters<typeof getVideoItemTopTags>[1];
+    /**
+     * 优先级设置：对于列表中的前 N 个条目，使用更高优先级的资源加载（如封面图）
+     * - 如果传入 `true`，默认 N 值为 10
+     */
+    assetPriorityHighForFirstNItems?: number | boolean;
 };
 
 const ListContainer = ListContainerGrid<
@@ -83,6 +88,7 @@ const VideoListGrid: FC<Props> = ({
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
     tagPurpose,
+    assetPriorityHighForFirstNItems = false,
 }) => {
     if (
         infiniteScroll &&
@@ -205,11 +211,20 @@ const VideoListGrid: FC<Props> = ({
                     links={post.links}
                     tags={getTags(post)}
                     infos={[new Date(post.release)]}
-                    assetPriority={post.index < 10 ? "high" : false}
+                    assetPriority={
+                        assetPriorityHighForFirstNItems === true &&
+                        post._index < 10
+                            ? "high"
+                            : typeof assetPriorityHighForFirstNItems ===
+                                    "number" &&
+                                post._index < assetPriorityHighForFirstNItems
+                              ? "high"
+                              : undefined
+                    }
                 />
             );
         },
-        [getTags, length],
+        [getTags, length, assetPriorityHighForFirstNItems],
     );
 
     return (
