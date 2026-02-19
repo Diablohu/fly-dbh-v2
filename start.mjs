@@ -171,10 +171,10 @@ async function main() {
             const tag = `publish-${command}-${dayjs().format(
                 `YYYYMMDD`,
             )}-${dayjs().format(`HHmmss`)}`;
-            spawnSync(`git`, ["tag", tag], { shell: true });
-            // spawnSync(`git`, ["push", "origin", tag], { shell: true });
+            spawnSync(`git`, ["tag", tag], { stdio: "inherit" });
+            // spawnSync(`git`, ["push", "origin", tag], { stdio: "inherit", });
             spawnSync(`git`, ["push", "origin", "--tags"], {
-                shell: true,
+                stdio: "inherit",
             });
             logSuccess("Git", "提交完成");
             break;
