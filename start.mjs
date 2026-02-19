@@ -1,10 +1,34 @@
-import { spawn, execSync } from "node:child_process";
+import { execSync, spawnSync } from "node:child_process";
 import dayjs from "dayjs";
 import { select, Separator } from "@inquirer/prompts";
 import npmRunScript from "npm-run-script";
 import { startVitest } from "vitest/node";
+import chalk from "chalk";
 
 import p from "./package.json" with { type: "json" };
+
+// ============================================================================
+
+function logSuccess(t, msg) {
+    console.error(
+        ["✅ ", chalk.bgGreen.bold(` ${t} `), chalk.green.bold(` ${msg}`)].join(
+            "",
+        ),
+    );
+}
+function logError(t, error) {
+    if (!(error instanceof Error)) error = new Error(error);
+    console.error(
+        [
+            "🚫 ",
+            chalk.bgRed.bold(` ${t} `),
+            chalk.red.bold(` ${error.message}`),
+        ].join(""),
+    );
+    if (error.cause) console.log(chalk.gray.italic(`   ${error.cause}`));
+}
+
+// ============================================================================
 
 async function main() {
     const answer = await select({
@@ -84,7 +108,7 @@ async function main() {
                         p.scripts[[type, command].filter(Boolean).join(":")],
                         {
                             stdio: "inherit",
-                        }
+                        },
                     );
                     child.on("close", () => {
                         resolve(true);
@@ -93,6 +117,33 @@ async function main() {
             }
             break;
         case "publish":
+            try {
+                await new Promise((resolve, reject) => {
+                    const child = npmRunScript("npm run astro:check", {
+                        stdio: "inherit",
+                    });
+                    child.on("error", (error) => reject(error));
+                    child.on("exit", (exitCode) => {
+                        switch (exitCode) {
+                            case 0:
+                                return resolve(true);
+                            default:
+                                return reject(
+                                    new Error(`类型检查发现代码错误！`, {
+                                        cause: `"astro check" exit with code ${exitCode}`,
+                                    }),
+                                );
+                        }
+                    });
+                });
+            } catch (e) {
+                if (e) {
+                    logError(`Astro`, e);
+                    return;
+                }
+            }
+            logSuccess("Astro", "类型检查通过");
+
             const test = await startVitest(
                 "test",
                 [], // CLI filters
@@ -100,30 +151,32 @@ async function main() {
                     run: true,
                 }, // override test config
                 {}, // override Vite config
-                {} // custom Vitest options
+                {}, // custom Vitest options
             );
             if (
                 !test.state
                     .getTestModules()
                     .every((testModule) => testModule.ok())
             ) {
-                console.error("⛔ 测试未通过！");
+                logError("Vitest", "单元测试未通过！");
                 return;
             }
+            logSuccess("Vitest", "单元测试通过");
 
             const status = execSync("git status --porcelain").toString().trim();
             if (status) {
-                console.error("⛔ 请先提交本地的改动！");
+                logError("Git", "请先提交本地改动！");
                 return;
             }
             const tag = `publish-${command}-${dayjs().format(
-                `YYYYMMDD`
+                `YYYYMMDD`,
             )}-${dayjs().format(`HHmmss`)}`;
-            spawn(`git`, ["tag", tag], { stdio: "inherit" });
-            // spawn(`git`, ["push", "origin", tag], { stdio: "inherit" });
-            spawn(`git`, ["push", "origin", "--tags"], {
-                stdio: "inherit",
+            spawnSync(`git`, ["tag", tag], { shell: true });
+            // spawnSync(`git`, ["push", "origin", tag], { shell: true });
+            spawnSync(`git`, ["push", "origin", "--tags"], {
+                shell: true,
             });
+            logSuccess("Git", "提交完成");
             break;
     }
 }
