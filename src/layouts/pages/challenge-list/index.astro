@@ -42,7 +42,7 @@ type Props = {
 
 const heroImage: Record<Props["catalog"], string> = {
     latest: "dc8c90a5e20183a9e3713e460593908e325a0170-2560x1440.png",
-    filter: "956647eaa837008e04c2b5c690b42546d6c7eccc-2560x1440.png",
+    filter: "72652ccf561caabf581c6ca18450ab69ad1823ef-2560x1440.jpg",
 
     bush: "e955577ad3939d29c3ffbc33a002cb99111bdd22-2560x1440.png",
     "luxury-private": "6098c0f600461bc27680128b8c321b169f3a6b8e-2560x1440.png",
@@ -259,6 +259,7 @@ const pageTitle = {
         --hero-image-bottom-offset-percentage: 30%;
         --hero-image-blur-from: 7em;
         --hero-image-blur-to: 33.3333%;
+        --hero-image-margin-bottom: 1em;
         --container-padding-top: 1.25em;
         padding-top: var(--container-padding-top);
         padding-bottom: 4em;
@@ -282,7 +283,7 @@ const pageTitle = {
         z-index: 1;
         height: var(--hero-image-height);
         background: var(--dark-theme-color);
-        margin-bottom: 1em;
+        margin-bottom: var(--hero-image-margin-bottom);
         background: no-repeat center/cover;
         border-radius: 0.5em;
         overflow: hidden;
