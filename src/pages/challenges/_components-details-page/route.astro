@@ -10,6 +10,7 @@ type Props = {
 const { route, ...props } = Astro.props;
 
 function parseArrStr(string: string) {
+    if (!string) return "";
     return string
         .split("/")
         .map((part) => part.trim())
