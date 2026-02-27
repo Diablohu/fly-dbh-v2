@@ -85,9 +85,9 @@ const SearchFormAndResult: FC<{
     return (
         <>
             <form className={styles["form"]} method="GET" onSubmit={onSubmit}>
-                <Condition label="难度级别" name="difficulties" />
-                <Condition label="挑战机型" name="aircraftTypes" />
-                <Condition label="难点灾害" name="hazards" multiple />
+                <Condition label="难度" name="difficulties" />
+                <Condition label="机型" name="aircraftTypes" />
+                <Condition label="灾害" name="hazards" multiple />
                 <section className={styles["actions"]}>
                     <button type="submit" disabled={status === "loading"}>
                         查询

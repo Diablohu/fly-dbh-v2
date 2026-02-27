@@ -204,6 +204,7 @@ export type ChallengeItemType = {
         | "ils"
         | "lda"
         | "igs"
+        | "loc"
         | "rnav"
         | "rnp-visual"
         | "rnp-ar"
