@@ -2,22 +2,27 @@
 
 .form {
     position: sticky;
-    top: var(--global-header-height);
+    top: calc(var(--global-header-height) + var(--hero-image-margin-bottom));
     z-index: 10;
 
-    border-bottom: 1px solid var(--menu-border-color);
-    // border-radius: 0.6667em;
+    background: var(--theme-color-p-80);
+    border: 1px solid var(--menu-border-color);
+    border-radius: 0.6667em;
     overflow: hidden;
     backdrop-filter: var(--backdrop-filter-glass);
-    background: var(--global-header-background-color);
     // background: var(--menu-background-color);
     // background: var(--theme-color-invert);
 
-    margin-top: calc(var(--hero-image-margin-bottom) * -1);
-    margin-bottom: .75em;
+    // margin-top: calc(var(--hero-image-margin-bottom) * -1);
+    margin-top: var(--hero-image-margin-bottom);
+    margin-bottom: 1em;
+    // margin-left: calc(var(--global-edge-safe-distance) * -0.5);
+    // margin-right: calc(var(--global-edge-safe-distance) * -0.5);
 
     display: grid;
     grid-template-columns: repeat(3, 1fr) 4em;
-    padding-top: var(--hero-image-margin-bottom);
-    padding-bottom: .75em;
+    // padding-top: var(--hero-image-margin-bottom);
+    // padding-bottom: 0.75em;
+
+    box-shadow: var(--overlay-box-shadow);
 }

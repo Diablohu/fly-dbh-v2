@@ -99,7 +99,13 @@ const SearchFormAndResult: FC<{
             </form>
             {status === "error" && <div>{error}</div>}
             {noInitialCondition ? (
-                "请选择条件"
+                <img
+                    src="/sanity-images/00ef50cf5f3e039ccd76334357180690289b49c2-2560x1440.png?fm-webp&w=1280&q=50"
+                    style={{
+                        display: "block",
+                        width: "100%",
+                    }}
+                />
             ) : typeof results?.total === "number" && results?.total === 0 ? (
                 <ChallengeListGrid
                     catalog="filter"
