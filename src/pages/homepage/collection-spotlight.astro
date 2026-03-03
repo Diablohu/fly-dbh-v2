@@ -50,11 +50,11 @@ try {
                                     slug: href[3],
                                 },
                             ]
-                          : undefined
+                          : undefined,
                   )
                 : undefined,
             ...l,
-        })
+        }),
     );
 } catch (e) {
     // TODO: error logging
@@ -178,7 +178,12 @@ try {
 }
 ---
 
-<Collection name="spotlight" title="亮点内容" showMore={false} highlighted>
+<Collection
+    name="spotlight"
+    title="亮点内容"
+    showMore={false}
+    backgroundColor="teal"
+>
     <section class="spotlight">
         {
             spotlights.map((list) =>
@@ -235,7 +240,7 @@ try {
                             }))}
                         />
                     </section>
-                ) : null
+                ) : null,
             )
         }
     </section>
