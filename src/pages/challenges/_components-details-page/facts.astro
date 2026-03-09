@@ -4,6 +4,7 @@ import { type ChallengeItemType } from "@/types";
 import {
     challengeDifficultyString,
     aircraftCategoryTypeString,
+    aircraftTypeString,
 } from "@/global";
 
 import InfoBlock from "./_info-block.astro";
@@ -13,9 +14,16 @@ type Props = {
     difficulty: ChallengeItemType["difficulty"];
     maxCategory: ChallengeItemType["max_allowed_aircraft_category"];
     typicalAircrafts: ChallengeItemType["typical_aircrafts"];
+    typicalAircraftTypes: ChallengeItemType["typical_aircraft_types"];
 } & astroHTML.JSX.HTMLAttributes;
 
-const { difficulty, maxCategory, typicalAircrafts, ...props } = Astro.props;
+const {
+    difficulty,
+    maxCategory,
+    typicalAircrafts,
+    typicalAircraftTypes,
+    ...props
+} = Astro.props;
 /*
 A：＜ 91
 B：91 ~ 120
@@ -35,8 +43,16 @@ E：166 ~ 210
     <dl>
         <dt>最大允许</dt>
         <dd>
-            {maxCategory.toUpperCase()} 类飞机：{
-                aircraftCategoryTypeString[maxCategory]
+            {maxCategory.toUpperCase()} 类飞机（进近速度分类）
+        </dd>
+    </dl>
+    <dl>
+        <dt>适合机型</dt>
+        <dd>
+            {
+                typicalAircraftTypes
+                    .map((type) => aircraftTypeString[type])
+                    .join("、")
             }
         </dd>
     </dl>
