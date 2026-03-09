@@ -10,6 +10,7 @@
         "build:next": "cross-env FLYDBH_BUILD_MODE=next astro build --mode=next",
         "analyze": "cross-env FLYDBH_BUILD_MODE=analyze npm run build && npx --yes open-cli dist/client/stats.html",
         "preview": "astro preview --host --allowed-hosts local-dev.fly-dbh.com",
+        "preview:next": "cross-env FLYDBH_BUILD_MODE=next astro preview --host --allowed-hosts local-dev.fly-dbh.com",
         "check": "astro check",
         "astro": "astro",
         "astro:check": "astro check",
@@ -61,7 +62,7 @@
         "winston-daily-rotate-file": "^5.0.0"
     },
     "devDependencies": {
-        "@astrojs/check": "^0.9.6",
+        "@astrojs/check": "^0.9.2",
         "@inquirer/prompts": "^8.3.0",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
@@ -74,6 +75,7 @@
         "@types/react-dom": "^19.2.3",
         "@types/toastify-js": "^1.12.4",
         "baseline-browser-mapping": "^2.10.0",
+        "buffer": "^6.0.3",
         "cross-env": "^10.1.0",
         "npm-run-script": "^0.0.4",
         "rollup-plugin-visualizer": "^7.0.1",

@@ -1,14 +1,18 @@
 import type { APIRoute } from "astro";
 
-const getRobotsTxt = (sitemapURL: URL) => `\
+const getRobotsTxt = (site: URL) => `\
 User-agent: *
-Disallow: /includes/
-Disallow: /admin/
+${(import.meta.env.FLYDBH_BUILD_MODE === "next"
+    ? ["/"]
+    : ["/includes/", "/admin/"]
+)
+    .map((path) => `Disallow: ${path}`)
+    .join("\n")}
 
-Sitemap: ${sitemapURL.href}
+Sitemap: ${new URL("sitemap-index.xml", site).href}
 `;
 
 export const GET: APIRoute = ({ site }) => {
-    const sitemapURL = new URL("sitemap-index.xml", site);
-    return new Response(getRobotsTxt(sitemapURL));
+    if (!site) return new Response("Site URL is not defined", { status: 500 });
+    return new Response(getRobotsTxt(site));
 };
