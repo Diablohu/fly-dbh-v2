@@ -56,6 +56,23 @@ export default defineConfig({
     server: ({ command }) => ({ port: command === "dev" ? 8088 : 8080 }),
     site,
 
+    // #region 字体
+    fonts: [
+        {
+            provider: fontProviders.local(),
+            name: "Helvetica Compressed",
+            cssVariable: "--font-helvetica-compressed",
+            fallbacks: ["sans-serif"],
+            options: {
+                variants: [
+                    {
+                        src: ["./src/assets/fonts/Helvetica-Compressed.otf"],
+                    },
+                ],
+            },
+        },
+    ],
+
     // #region 多语言
     // i18n: {},
 
@@ -96,26 +113,12 @@ export default defineConfig({
             }),
             compileStandAloneLessFilesPlugin(),
         ],
+        // TODO: remove this code after Astro fix following issue
+        // https://github.com/withastro/astro/issues/15520
+        optimizeDeps: { exclude: ["astro/virtual-modules/prefetch.js"] },
     },
 
-    experimental: {
-        fonts: [
-            {
-                provider: fontProviders.local(),
-                name: "Helvetica Compressed",
-                cssVariable: "--font-helvetica-compressed",
-                fallbacks: ["sans-serif"],
-                options: {
-                    variants: [
-                        {
-                            src: [
-                                "./src/assets/fonts/Helvetica-Compressed.otf",
-                            ],
-                        },
-                    ],
-                },
-            },
-        ],
-    },
+    // #region 试验选项
+    experimental: {},
 });
 // #endregion Astro Config

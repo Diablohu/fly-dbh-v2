@@ -1,5 +1,5 @@
 import type { SanityDocument } from "@sanity/client";
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 import { defineAction, ActionError } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import {
@@ -99,16 +99,10 @@ export const getGroqLatestChallenges = (length = 10) =>
 
 // ============================================================================
 
+type T = Partial<ChallengeListQueryConditionType>;
 const actions = {
     fetchList: defineAction({
-        input: z.object({
-            from: z.number().optional(),
-            length: z.number().optional(),
-            sort: z.string().optional(),
-            difficulties: z.array(z.string()).optional(),
-            types: z.array(z.string()).optional(),
-            hazards: z.array(z.string()).optional(),
-        }) as z.ZodType<Partial<ChallengeListQueryConditionType>>,
+        input: z.custom<T>(),
         handler: async ({
             from = 0,
             length = 20,

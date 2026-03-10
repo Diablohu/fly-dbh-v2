@@ -1,4 +1,4 @@
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 import { defineAction, ActionError } from "astro:actions";
 import type { SanityDocument } from "@sanity/client";
 
@@ -103,26 +103,7 @@ export type ResponseDataType = {
 
 const actions = {
     fetchList: defineAction({
-        input: z.object({
-            filters: z
-                .array(
-                    z.object({
-                        type: z.string(),
-                        slug: z.string(),
-                    })
-                )
-                .optional(),
-            from: z.number().optional(),
-            length: z.number().optional(),
-            extra: z
-                .array(
-                    z.object({
-                        name: z.string(),
-                        query: z.string(),
-                    })
-                )
-                .optional(),
-        }) as z.ZodType<{
+        input: z.custom<{
             filters?: {
                 type: VideoListPageTypesType;
                 slug: string;
@@ -133,7 +114,7 @@ const actions = {
                 name: string;
                 query: string;
             }[];
-        }>,
+        }>(),
         handler: async ({ filters, from = 0, length = 20, extra = [] }) => {
             try {
                 const query = `*[_type == "video"${
@@ -145,10 +126,10 @@ const actions = {
                                     filters
                                         ?.filter(
                                             (filter) =>
-                                                filter.type && filter.slug
+                                                filter.type && filter.slug,
                                         )
                                         ?.map((filter) =>
-                                            getFilter(filter.type, filter.slug)
+                                            getFilter(filter.type, filter.slug),
                                         )
                                         .join(" && ") +
                                     ")"
@@ -184,7 +165,7 @@ ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
                             r.page = Math.floor(from / length) + 1;
                             return r as unknown as SanityDocument<ReturnVideoItemType>[];
                         },
-                    }
+                    },
                 )) as unknown as ResponseDataType;
             } catch (err) {
                 actionErrorHandler(err);
@@ -307,7 +288,7 @@ ${
                                 return [r];
                             },
                             ttl: defaultCacheTtl * 3,
-                        }
+                        },
                     )
                 )[0];
                 return res as unknown as {
@@ -479,7 +460,7 @@ ${
                 `,
                     {
                         ttl: defaultCacheTtl * 3,
-                    }
+                    },
                 );
             } catch (err) {
                 actionErrorHandler(err);

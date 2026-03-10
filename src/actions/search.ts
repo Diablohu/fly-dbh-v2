@@ -1,5 +1,5 @@
 import { defineAction, ActionError } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 import type { SanityDocument } from "@sanity/client";
 
 import { type VideoItemType, type VideoListPageTypesType } from "@/types";
@@ -25,7 +25,7 @@ const getKeywords = (keyword: string, split = false) => [
         keyword.replace(/[^\s^0-9^a-z]+([0-9a-z])/gi, "$1"),
         keyword.replace(
             new RegExp(`(\\d+)(${commonAircraftNameSuffix.join("|")})`, "gi"),
-            "$1 $2"
+            "$1 $2",
         ),
 
         // 变换 [X]U[数字] -> [X]U0[数字]
@@ -210,7 +210,7 @@ const actions = {
                             (res as unknown as ResultType).list.forEach(
                                 (post) => {
                                     post.cover = transformImagePath(post.cover);
-                                }
+                                },
                             );
 
                             (res as unknown as ResultType).page =
@@ -218,7 +218,7 @@ const actions = {
 
                             return res;
                         },
-                    }
+                    },
                 )) as unknown as ResultType;
 
                 // 如果有匹配 `机型系列` 或 `航电设备`
@@ -243,21 +243,21 @@ const actions = {
                                         .some((n) => kw === n.toLowerCase()) ||
                                     (new RegExp(
                                         `^\\d+(${commonAircraftNameSuffix.map((s) => ` ${s}`).join("|")}|$)`,
-                                        "i"
+                                        "i",
                                     ).test(kw) &&
                                         new RegExp(
                                             `^[a-z]${kw}( |-|$)`,
-                                            "i"
+                                            "i",
                                         ).test(item.name)) ||
                                     item.aircrafts?.some(
                                         (aircraft) =>
                                             kw ===
                                                 aircraft.name.toLowerCase() ||
                                             kw ===
-                                                aircraft.icao_code.toLowerCase()
+                                                aircraft.icao_code.toLowerCase(),
                                     )
                                 );
-                            })
+                            }),
                         ) || []),
                         ...(res?.aircraftOnboardDevices?.filter((item) =>
                             keywords.find((kw) => {
@@ -266,10 +266,10 @@ const actions = {
                                     (/^\d+$/i.test(kw) &&
                                         new RegExp(
                                             `^[a-z]${kw}( |-|$)`,
-                                            "i"
+                                            "i",
                                         ).test(item.name))
                                 );
-                            })
+                            }),
                         ) || []),
                     ];
 
@@ -306,12 +306,12 @@ const actions = {
                                                   ({ _id, maker, name }) => ({
                                                       _id,
                                                       label: `${maker} ${name}`,
-                                                  })
+                                                  }),
                                               )
                                             : undefined,
                                     aircraftTags: matched.tagsId,
                                 },
-                                { projection }
+                                { projection },
                             ),
                         };
                     }

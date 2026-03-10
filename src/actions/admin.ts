@@ -5,7 +5,7 @@ import {
     ActionError,
     type ActionAPIContext,
 } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "astro/zod";
 import { createTOTPKeyURI, verifyTOTPWithGracePeriod } from "@oslojs/otp";
 import dayjs from "dayjs";
 import { title } from "@/global";
@@ -44,7 +44,7 @@ function refreshCookie(context: ActionAPIContext) {
 }
 function handlerWrapper<R>(
     context: ActionAPIContext,
-    func: () => R | Promise<R>
+    func: () => R | Promise<R>,
 ) {
     try {
         if (!isLoginValid(context))
@@ -69,7 +69,7 @@ const actions = {
                     accountName,
                     adminTOTP.key,
                     adminTOTP.intervalInSeconds,
-                    adminTOTP.digits
+                    adminTOTP.digits,
                 );
 
                 return { uri };
@@ -91,7 +91,7 @@ const actions = {
                     adminTOTP.intervalInSeconds,
                     adminTOTP.digits,
                     code,
-                    30
+                    30,
                 );
 
                 if (!valid) throw new ActionError({ code: "UNAUTHORIZED" });
@@ -132,7 +132,7 @@ const actions = {
         handler: async (_, context) =>
             handlerWrapper<string[]>(context, async () => {
                 const files = (await fs.readdir(folderNameLogs)).filter((f) =>
-                    /\d+\-\d+\-\d+\.combined\./.test(f)
+                    /\d+\-\d+\-\d+\.combined\./.test(f),
                 );
                 return files;
             }),
