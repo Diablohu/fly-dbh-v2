@@ -36,4 +36,5 @@ for (const { key, required } of [
 
 // ============================================================================
 
+console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
 await import("../dist/server/entry.mjs");
