@@ -1,13 +1,13 @@
 import { createClient, type SanityDocument } from "@sanity/client";
 import cache from "./_cache";
 
-console.log(import.meta.env);
+console.log({ importenv: import.meta.env, processenv: process.env });
 
 // ============================================================================
 
 export const client = createClient({
-    projectId: import.meta.env.SANITY_PROJECT_ID,
-    dataset: import.meta.env.SANITY_DATASET,
+    projectId: process.env.SANITY_PROJECT_ID,
+    dataset: process.env.SANITY_DATASET,
     // useCdn: false, // for static builds
     useCdn: true,
     // Set default headers to be included with all requests

@@ -62,7 +62,7 @@
         "winston-daily-rotate-file": "^5.0.0"
     },
     "devDependencies": {
-        "@astrojs/check": "^0.9.7",
+        "@astrojs/check": "^0.9.2",
         "@inquirer/prompts": "^8.3.0",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
@@ -75,7 +75,6 @@
         "@types/react-dom": "^19.2.3",
         "@types/toastify-js": "^1.12.4",
         "baseline-browser-mapping": "^2.10.7",
-        "buffer": "^6.0.3",
         "chalk": "^5.6.2",
         "cross-env": "^10.1.0",
         "npm-run-script": "^0.0.4",
