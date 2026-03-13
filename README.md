@@ -26,7 +26,7 @@ _Sanity_ 是一个开源的 CMS 项目，包含数据库逻辑和前端管理页
 上述所需的 `PROJECT_ID` 和 `DATASET` 就是 _Sanity_ 托管服务的项目标识。
 
 运行该代码库需要这些标识信息，而我自然不会公开 [fly-dbh.com](https://fly-dbh.com) 所用的 _Sanity_ 项目 ID。
-关于 [fly-dbh.com](https://fly-dbh.com) 所用的 _Sanity_ 项目结构，是开源公开的，可见 https://github.com/Diablohu/fly-dbh-cms-sanity。
+关于 [fly-dbh.com](https://fly-dbh.com) 所用的 _Sanity_ 项目结构，是开源公开的，可见 [这一代码库](https://github.com/Diablohu/fly-dbh-cms-sanity)。
 
 各位如果想在本地运行该项目，可以使用上述 _Sanity_ 结构开设一个 _Sanity_ 项目，并使用开设的项目的 ID。
 
