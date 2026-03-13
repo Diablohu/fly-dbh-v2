@@ -2,6 +2,7 @@
     "name": "fly-dbh-v2",
     "type": "module",
     "version": "0.0.1",
+    "license": "GPL-3.0-only",
     "scripts": {
         "start": "node ./start.mjs",
         "dev": "astro dev --host --allowed-hosts local-dev.fly-dbh.com",
