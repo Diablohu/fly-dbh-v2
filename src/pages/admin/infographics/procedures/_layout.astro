@@ -1,0 +1,12 @@
+---
+import { type ComponentProps } from "react";
+
+import BaseLayout from "../_layout.astro";
+import Procedures from "./_procedures.tsx";
+
+type Props = ComponentProps<typeof Procedures>;
+---
+
+<BaseLayout>
+    <Procedures client:idle {...Astro.props} />
+</BaseLayout>

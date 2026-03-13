@@ -1,5 +1,5 @@
 import { urlPrefixSanityImageCdn } from "@/global";
-import { imageBuilder } from "./sanity";
+import { imageBuilder } from "./sanity-image";
 
 export const transformImagePath = (pathname: string) =>
     `${urlPrefixSanityImageCdn}${pathname.replace(

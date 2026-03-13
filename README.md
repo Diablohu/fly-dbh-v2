@@ -3,8 +3,7 @@
 基于 _Astro_ 框架，UI 组件使用 _React_ 开发，打包输出结果为 _Node.js_ 服务器。
 
 - _Astro_ 框架允许混用 _React_、_Vue_、_Svelte_ 等 UI 框架，目前仅使用 _React_，当然还有 _Astro_ 自带格式的组件（`.astro` 模板文件）。
-- 由于本项目有多语言需求，所以打包输出结果设置为 _Node.js_ 服务器。
-    - 基于此，可以通过 _中间件 Middleware_ 的方式，来扩展服务器和渲染功能。_中间件_ 函数文件在 `@/middleware` 目录下。
+- 由于本项使用 CMS，内容是动态的，考虑到 SEO，所以需要 SSR，故打包输出结果设置为 _Node.js_ 服务器。
 
 ---
 
@@ -17,6 +16,21 @@ SANITY_PROJECT_ID=[Sanity 项目 ID]
 SANITY_DATASET=[Sanity 数据集名称]
 ADMIN_TOTP_KEY=[登录管理页面所用一次性密码的生成密钥]
 ```
+
+<details>
+<summary>关于 Sanity</summary>
+
+[fly-dbh.com](https://fly-dbh.com) 使用 _Sanity_ 作为 CMS。
+
+_Sanity_ 是一个开源的 CMS 项目，包含数据库逻辑和前端管理页面，同时，_Sanity_ 项目背后的其运营方，也为小型项目提供免费的内容托管服务。
+上述所需的 `PROJECT_ID` 和 `DATASET` 就是 _Sanity_ 托管服务的项目标识。
+
+运行该代码库需要这些标识信息，而我自然不会公开 [fly-dbh.com](https://fly-dbh.com) 所用的 _Sanity_ 项目 ID。
+关于 [fly-dbh.com](https://fly-dbh.com) 所用的 _Sanity_ 项目结构，是开源公开的，可见 https://github.com/Diablohu/fly-dbh-cms-sanity。
+
+各位如果想在本地运行该项目，可以使用上述 _Sanity_ 结构开设一个 _Sanity_ 项目，并使用开设的项目的 ID。
+
+</details>
 
 2. 运行命令
 
@@ -34,8 +48,9 @@ ADMIN_TOTP_KEY=[登录管理页面所用一次性密码的生成密钥]
 
 线上版本使用 _Docker_ 镜像部署发布，打包流程是在 _Docker_ 容器内完成的。
 
-- 代码库根目录下的各 `Dockerfile` 文件为对应的 _Docker_ 镜像生成文件，供线上生产环境使用。
-- 如果要更改生产环境发布流程，只需修改 `Dockerfile`。
+- 代码库根目录下的各 `Dockerfile` 文件为对应的 _Docker_ 镜像生成文件，供各环境使用。
+    - 不带后缀的文件，对应生产环境使用。
+- 如果要更改生产环境发布流程，只需修改对应的 `Dockerfile`。
 
 </details>
 

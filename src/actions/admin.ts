@@ -35,10 +35,12 @@ function isLoginValid(context: ActionAPIContext) {
 function refreshCookie(context: ActionAPIContext) {
     const now = Date.now();
     const expiresTimestamp = now + adminLoginValidPeriod;
-    context.cookies.set(ADMIN_LAST_LOGIN, now.toString(), {
-        path: "/admin",
-        expires: dayjs(expiresTimestamp).toDate(),
-    });
+    try {
+        context.cookies.set(ADMIN_LAST_LOGIN, now.toString(), {
+            path: "/admin",
+            expires: dayjs(expiresTimestamp).toDate(),
+        });
+    } catch (e) {}
 
     return expiresTimestamp;
 }

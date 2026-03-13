@@ -1,0 +1,12 @@
+---
+import { type ComponentProps } from "react";
+
+import BaseLayout from "../_layout.astro";
+import Highlights from "./_highlights.tsx";
+
+type Props = ComponentProps<typeof Highlights>;
+---
+
+<BaseLayout>
+    <Highlights client:idle {...Astro.props} />
+</BaseLayout>

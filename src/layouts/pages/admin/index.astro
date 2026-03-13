@@ -14,10 +14,15 @@ type Props = {
 
 const { data: isLoginValid } = await Astro.callAction(
     actions.admin.isLoginValid,
-    undefined
+    undefined,
 );
 
-const { showTitle = true } = Astro.props;
+const { showTitle = true, layout } = Astro.props;
+
+if (!isLoginValid && layout) {
+    layout.header = true;
+    layout.footer = true;
+}
 ---
 
 <Layout
@@ -65,7 +70,7 @@ const { showTitle = true } = Astro.props;
               },
           ]
         : undefined}
-    {...Astro.props.layout}
+    {...layout}
 >
     {
         isLoginValid ? (
