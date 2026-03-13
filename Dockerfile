@@ -10,4 +10,4 @@ RUN npm run build
 ENV HOST=0.0.0.0
 ENV PORT=8080
 EXPOSE 8080
-CMD ["pm2-runtime", "pm2.json"]
+CMD ["pm2-runtime", "pm2.config.cjs", "--only", "fly-dbh-v2"]

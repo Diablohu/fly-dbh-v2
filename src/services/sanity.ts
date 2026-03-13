@@ -1,7 +1,7 @@
 import { createClient, type SanityDocument } from "@sanity/client";
 import cache from "./_cache";
 
-console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
+// console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
 // ============================================================================
 
 export const client = createClient({

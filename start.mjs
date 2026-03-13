@@ -89,6 +89,24 @@ async function main() {
                 value: "preview",
                 description: "本地打包并开启 Astro 预览服务器 (Preview)\n",
             },
+            {
+                name: "PM2: latest",
+                short: "\n👾 本地调试：PM2 - latest",
+                value: "pm2:::latest",
+                description: "使用 PM2 运行 Latest 环境\n",
+            },
+            {
+                name: "PM2: next",
+                short: "\n👾 本地调试：PM2 - next",
+                value: "pm2:::next",
+                description: "使用 PM2 运行 Next 环境\n",
+            },
+            {
+                name: "结束 PM2 服务",
+                short: "\n👾 本地调试：结束 PM2 服务",
+                value: "pm2:::kill",
+                description: "停止 PM2 运行的服务\n",
+            },
             new Separator(" "),
         ],
     });
@@ -177,6 +195,34 @@ async function main() {
                 stdio: "inherit",
             });
             logSuccess("Git", "提交完成");
+            break;
+        case "pm2":
+            switch (command) {
+                case "kill": {
+                    spawnSync(`npx`, `pm2 delete pm2.config.cjs`.split(" "), {
+                        stdio: "inherit",
+                    });
+                    break;
+                }
+                case "next": {
+                    spawnSync(
+                        `npx`,
+                        `pm2 start pm2.config.cjs --only fly-dbh-v2-next`.split(
+                            " ",
+                        ),
+                        { stdio: "inherit" },
+                    );
+                    break;
+                }
+                default:
+                    spawnSync(
+                        `npx`,
+                        `pm2 start pm2.config.cjs --only fly-dbh-v2`.split(
+                            " ",
+                        ),
+                        { stdio: "inherit" },
+                    );
+            }
             break;
     }
 }
