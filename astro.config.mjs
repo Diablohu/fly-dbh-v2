@@ -84,7 +84,7 @@ export default defineConfig({
     // #region 服务器
     output: "server",
     server: ({ command }) => ({
-        port: command === "dev" ? 8088 : isNext ? 8094 : 8080,
+        port: command === "dev" ? 8088 : 8080,
     }),
     trailingSlash: "never",
     security: {
@@ -94,6 +94,9 @@ export default defineConfig({
                 hostname: `**.${domain}`,
                 protocol: "https",
             },
+            // {
+            //     hostname: `0.0.0.0`,
+            // },
         ],
     },
 
