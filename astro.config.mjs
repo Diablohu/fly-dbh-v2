@@ -13,6 +13,7 @@ import "dotenv/config";
 
 // ============================================================================
 
+const domain = "fly-dbh.com";
 const { FLYDBH_BUILD_MODE } = process.env;
 const isDev = process.env.NODE_ENV === "development";
 /** 模式：分析打包文件尺寸 */
@@ -22,8 +23,8 @@ const isNext = FLYDBH_BUILD_MODE === "next";
 const site = isDev
     ? "http://localhost:8088"
     : isNext
-      ? "https://next.fly-dbh.com"
-      : "https://fly-dbh.com";
+      ? `https://next.${domain}`
+      : `https://${domain}`;
 
 // #region Astro Config
 // https://astro.build/config
@@ -83,6 +84,14 @@ export default defineConfig({
 
     // #region 服务器
     trailingSlash: "never",
+    security: {
+        allowedDomains: [
+            {
+                hostname: `**.${domain}`,
+                protocol: "https",
+            },
+        ],
+    },
 
     // #region 开发环境
     devToolbar: {
