@@ -11,9 +11,10 @@ import compileStandAloneLessFilesPlugin from "./config/vite-plugins/compile-stan
 
 import "dotenv/config";
 
+import { domain, hostnameNext } from "./vars.mjs";
+
 // ============================================================================
 
-const domain = "fly-dbh.com";
 const { FLYDBH_BUILD_MODE } = process.env;
 const isDev = process.env.NODE_ENV === "development";
 /** 模式：分析打包文件尺寸 */
@@ -23,7 +24,7 @@ const isNext = FLYDBH_BUILD_MODE === "next";
 const site = isDev
     ? "http://localhost:8088"
     : isNext
-      ? `https://next.${domain}`
+      ? `https://${hostnameNext}`
       : `https://${domain}`;
 
 // #region Astro Config
@@ -53,8 +54,6 @@ export default defineConfig({
         mode: "standalone",
     }),
 
-    output: "server",
-    server: ({ command }) => ({ port: command === "dev" ? 8088 : 8080 }),
     site,
 
     // #region 字体
@@ -83,6 +82,10 @@ export default defineConfig({
     },
 
     // #region 服务器
+    output: "server",
+    server: ({ command }) => ({
+        port: command === "dev" ? 8088 : isNext ? 8094 : 8080,
+    }),
     trailingSlash: "never",
     security: {
         allowedDomains: [
