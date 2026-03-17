@@ -66,6 +66,8 @@ const SearchFormAndResult: FC<{
     initialResult,
     noInitialCondition,
 }) => {
+    // TODO: const [isSticky] = useSticky()
+
     const [status /*, setStatus*/] = useState<StatusType>("pending");
     const [error /*, setError*/] = useState<string>();
     const [results /*, setResults*/] =
@@ -133,6 +135,17 @@ const Condition: FC<{
     name: "aircraftTypes" | "difficulties" | "hazards";
     multiple?: boolean;
 }> = ({ label /*, name*/, multiple }) => {
+    /**
+     * LABEL:
+     *     All
+     *     Option 1, Option 2, Opt.....
+     * 
+     * OPTIONS:
+     * [√] ALL
+     * ---
+     * [O] Option 1
+     * [O] Option 2
+     */
     return (
         <section className={styles["condition"]}>
             <strong>

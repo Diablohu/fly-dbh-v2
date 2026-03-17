@@ -181,6 +181,8 @@ async function main() {
             }
             logSuccess("Vitest", "单元测试通过");
 
+            // TODO: build → npx pm2 → test typical links
+
             const status = execSync("git status --porcelain").toString().trim();
             if (status) {
                 logError("Git", "请先提交本地改动！");
