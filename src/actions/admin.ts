@@ -87,7 +87,7 @@ const actions = {
             code: z.string(),
         }),
         handler: async ({ code }, context) => {
-            console.log({ code, context });
+            // console.log({ code, context });
             try {
                 const valid = verifyTOTPWithGracePeriod(
                     adminTOTP.key,

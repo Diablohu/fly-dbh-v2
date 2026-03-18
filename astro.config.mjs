@@ -92,16 +92,12 @@ export default defineConfig({
         allowedDomains: [
             {
                 hostname: domain,
-                protocol: "https",
             },
             {
                 hostname: `**.${domain}`,
-                protocol: "https",
             },
             {
                 hostname: "localhost",
-                protocol: "http",
-                port: "8080",
             },
         ],
     },
