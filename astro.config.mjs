@@ -88,7 +88,7 @@ export default defineConfig({
     }),
     trailingSlash: "never",
     security: {
-        // checkOrigin: false,
+        checkOrigin: false,
         allowedDomains: [
             {
                 hostname: domain,
@@ -97,9 +97,6 @@ export default defineConfig({
             {
                 hostname: `**.${domain}`,
                 protocol: "https",
-            },
-            {
-                hostname: `localhost`,
             },
         ],
     },
