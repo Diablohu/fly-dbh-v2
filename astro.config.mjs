@@ -88,8 +88,12 @@ export default defineConfig({
     }),
     trailingSlash: "never",
     security: {
-        // checkOrigin: false,
+        checkOrigin: false,
         allowedDomains: [
+            {
+                hostname: domain,
+                protocol: "https",
+            },
             {
                 hostname: `**.${domain}`,
                 protocol: "https",

@@ -32,6 +32,7 @@ const LoginForm: FC = () => {
             const { data, error } = await loginAction(
                 new FormData(evt.currentTarget),
             );
+            console.log({ data, error });
 
             // if (res.status !== 200) {
             //     setStatus("error");
