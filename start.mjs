@@ -182,6 +182,7 @@ async function main() {
             logSuccess("Vitest", "单元测试通过");
 
             // TODO: build → npx pm2 → test typical links
+            // TODO: test image viewer
 
             const status = execSync("git status --porcelain").toString().trim();
             if (status) {

@@ -5,6 +5,7 @@ import less from "less";
 import pc from "picocolors";
 import { type ResolvedConfig, type Plugin, normalizePath } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { getViteStaticCopyDestBase } from "./helpers";
 
 const pathname = ".cache-assets/styles";
 
@@ -22,7 +23,7 @@ async function buildStart(resolvedConfig: ResolvedConfig): Promise<void> {
         const outDir = path.resolve(resolvedConfig.envDir || "", pathname);
         const dest = path.resolve(
             outDir,
-            path.basename(lessFilePath, ".less") + ".css"
+            path.basename(lessFilePath, ".less") + ".css",
         );
 
         const input = await fs.readFile(file, "utf-8");
@@ -43,7 +44,7 @@ async function buildStart(resolvedConfig: ResolvedConfig): Promise<void> {
             [
                 pc.cyan("[vite-plugin-fly-dbh-build]"),
                 pc.green(`Compiled ${result.length} stand-alone less file(s).`),
-            ].join(" ")
+            ].join(" "),
         );
     }
 }
@@ -94,8 +95,9 @@ export default () => [
         targets: [
             {
                 src: normalizePath(path.resolve(pathname)),
-                dest: "",
+                dest: getViteStaticCopyDestBase() + "",
             },
         ],
+        // environment: "ssr",
     }),
 ];

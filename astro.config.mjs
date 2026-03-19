@@ -7,6 +7,7 @@ import sitemap from "@astrojs/sitemap";
 import { normalizePath } from "vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { getViteStaticCopyDestBase } from "./config/vite-plugins/helpers";
 import compileStandAloneLessFilesPlugin from "./config/vite-plugins/compile-stand-alone-less-files";
 
 import "dotenv/config";
@@ -110,6 +111,13 @@ export default defineConfig({
     // #region Vite
     // Asotro 框架默认使用 Vite 进行打包
     vite: {
+        // build: {
+        //     outDir: "",
+        // },
+        // build: {
+        //     ssr: true,
+        //     ssrEmitAssets: true,
+        // },
         plugins: [
             isAnalyze
                 ? visualizer({
@@ -125,15 +133,12 @@ export default defineConfig({
                         src: normalizePath(
                             path.resolve("node_modules/viewerjs/dist/**/*"),
                         ),
-                        dest: "libs/viewerjs",
+                        dest: getViteStaticCopyDestBase() + "libs/viewerjs",
                     },
                 ],
             }),
             compileStandAloneLessFilesPlugin(),
         ],
-        // TODO: remove this code after Astro fix following issue
-        // https://github.com/withastro/astro/issues/15520
-        optimizeDeps: { exclude: ["astro/virtual-modules/prefetch.js"] },
     },
 
     // #region 试验选项
