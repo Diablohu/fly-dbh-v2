@@ -293,6 +293,7 @@ const actions = {
       name,
       difficulty,
       max_allowed_aircraft_category,
+      typical_aircraft_types,
   } | order(${orderList}),
   video_url_briefing,
   'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{

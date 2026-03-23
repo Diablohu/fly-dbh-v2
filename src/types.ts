@@ -265,7 +265,11 @@ export type ChallengeItemType = {
     other_challenges_this_aerodrome: Array<
         Pick<
             ChallengeItemType,
-            "_id" | "name" | "difficulty" | "max_allowed_aircraft_category"
+            | "_id"
+            | "name"
+            | "difficulty"
+            | "max_allowed_aircraft_category"
+            | "typical_aircraft_types"
         > & {
             slug: string;
         }

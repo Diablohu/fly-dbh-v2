@@ -16,7 +16,7 @@
         "astro": "astro",
         "astro:check": "astro check",
         "astro:upgrade": "npx @astrojs/upgrade",
-        "test": "vitest",
+        "test": "vitest watch",
         "up": "npm run astro:upgrade && npx --yes npm-check-updates -i"
     },
     "dependencies": {

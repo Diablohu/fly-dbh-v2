@@ -16,7 +16,7 @@ const { list, ...props } = Astro.props;
         <InfoBlock {...props} title="本机场的其他挑战">
             <div class="list">
                 {list.map((item) => (
-                    <ChallengeItem item={item} />
+                    <ChallengeItem item={item} showAircraftTypes />
                 ))}
             </div>
         </InfoBlock>
