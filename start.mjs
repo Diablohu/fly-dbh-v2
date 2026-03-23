@@ -1,11 +1,10 @@
 import { execSync, exec, spawnSync } from "node:child_process";
 import dayjs from "dayjs";
 import { select, Separator } from "@inquirer/prompts";
-import { npmRunPath } from "npm-run-path";
 import { startVitest } from "vitest/node";
 import chalk from "chalk";
 
-import p from "./package.json" with { type: "json" };
+// import p from "./package.json" with { type: "json" };
 
 // ============================================================================
 
@@ -29,9 +28,7 @@ function logError(t, error) {
 }
 async function npmRun(cmd, opt = {}) {
     return await new Promise((resolve, reject) => {
-        const child = exec(
-            `npm run ${cmd}`,
-        );
+        const child = exec(`npm run ${cmd}`);
 
         const flush = () => {
             child.stdin.unpipe(process.stdin);
