@@ -1,7 +1,7 @@
-import { execSync, spawnSync } from "node:child_process";
+import { execSync, exec, spawnSync } from "node:child_process";
 import dayjs from "dayjs";
 import { select, Separator } from "@inquirer/prompts";
-import npmRunScript from "npm-run-script";
+import { npmRunPath } from "npm-run-path";
 import { startVitest } from "vitest/node";
 import chalk from "chalk";
 
@@ -26,6 +26,35 @@ function logError(t, error) {
         ].join(""),
     );
     if (error.cause) console.log(chalk.gray.italic(`   ${error.cause}`));
+}
+async function npmRun(cmd, opt = {}) {
+    return await new Promise((resolve, reject) => {
+        const child = exec(
+            `npm run ${cmd}`,
+        );
+
+        const flush = () => {
+            child.stdin.unpipe(process.stdin);
+            child.stdout.unpipe(process.stdout);
+            child.stderr.unpipe(process.stderr);
+        };
+
+        child.stdin.pipe(process.stdin);
+        child.stdout.pipe(process.stdout);
+        child.stderr.pipe(process.stderr);
+
+        child.on("close", () => {
+            resolve(true);
+        });
+        child.on("error", (error) => {
+            flush();
+            reject(error);
+        });
+        child.on("exit", (exitCode) => {
+            flush();
+            opt.onExit?.(exitCode, resolve, reject);
+        });
+    });
 }
 
 // ============================================================================
@@ -117,31 +146,17 @@ async function main() {
 
     switch (type) {
         case "npm":
-            npmRunScript(p.scripts[command], { stdio: "inherit" });
+            await npmRun(command);
             break;
         case "preview":
             for (const type of ["build", "preview"]) {
-                await new Promise((resolve) => {
-                    const child = npmRunScript(
-                        p.scripts[[type, command].filter(Boolean).join(":")],
-                        {
-                            stdio: "inherit",
-                        },
-                    );
-                    child.on("close", () => {
-                        resolve(true);
-                    });
-                });
+                await npmRun([type, command].filter(Boolean).join(":"));
             }
             break;
         case "publish":
             try {
-                await new Promise((resolve, reject) => {
-                    const child = npmRunScript("npm run astro:check", {
-                        stdio: "inherit",
-                    });
-                    child.on("error", (error) => reject(error));
-                    child.on("exit", (exitCode) => {
+                await npmRun("astro:check", {
+                    onExit: (exitCode, resolve, reject) => {
                         switch (exitCode) {
                             case 0:
                                 return resolve(true);
@@ -152,7 +167,7 @@ async function main() {
                                     }),
                                 );
                         }
-                    });
+                    },
                 });
             } catch (e) {
                 if (e) {
@@ -220,9 +235,7 @@ async function main() {
                 default:
                     spawnSync(
                         `npx`,
-                        `pm2 start pm2.config.cjs --only fly-dbh-v2`.split(
-                            " ",
-                        ),
+                        `pm2 start pm2.config.cjs --only fly-dbh-v2`.split(" "),
                         { stdio: "inherit" },
                     );
             }

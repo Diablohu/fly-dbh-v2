@@ -6,3 +6,4 @@
  */
 export const getViteStaticCopyDestBase = () =>
     process.env.NODE_ENV === "development" ? "" : "../client/";
+    // process.env.NODE_ENV === "";

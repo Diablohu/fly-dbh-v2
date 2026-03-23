@@ -134,6 +134,9 @@ export default defineConfig({
                             path.resolve("node_modules/viewerjs/dist/**/*"),
                         ),
                         dest: getViteStaticCopyDestBase() + "libs/viewerjs",
+                        rename: {
+                            stripBase: 3,
+                        },
                     },
                 ],
             }),

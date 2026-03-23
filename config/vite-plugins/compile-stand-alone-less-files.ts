@@ -96,6 +96,9 @@ export default () => [
             {
                 src: normalizePath(path.resolve(pathname)),
                 dest: getViteStaticCopyDestBase() + "",
+                rename: {
+                    stripBase: 1,
+                },
             },
         ],
         // environment: "ssr",
