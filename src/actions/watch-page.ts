@@ -52,6 +52,7 @@ const fetchProjections = `{
             name,
             difficulty,
             max_allowed_aircraft_category,
+            typical_aircraft_types,
         } | order(${orderList}),
     },
     'developers': developers[]->{
