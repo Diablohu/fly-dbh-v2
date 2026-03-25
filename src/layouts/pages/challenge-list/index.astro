@@ -10,6 +10,7 @@ import {
     aircraftTypeStringShort,
 } from "@/global";
 import {
+    type ChallengeListQueryConditionType,
     type AircraftTypes,
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
@@ -32,7 +33,7 @@ type Props = {
     catalog: ComponentProps<typeof ChallengeListGrid>["catalog"];
     query?: string;
     error?: ActionError | null;
-};
+} & Partial<Pick<ChallengeListQueryConditionType, "sort">>;
 
 // ============================================================================
 //
@@ -80,7 +81,9 @@ const { data: initialList, error } =
         ? { data: { initialList: [], total: 0 } }
         : await Astro.callAction(actions.challengePage.fetchList, {
               length,
-              sort: Astro.props.catalog === "latest" ? "latest" : "difficulty",
+              sort:
+                  Astro.props.sort ??
+                  (Astro.props.catalog === "latest" ? "latest" : "difficulty"),
               types:
                   Astro.props.catalog === "latest"
                       ? undefined
@@ -227,6 +230,10 @@ const pageTitle = {
                     client:idle
                     catalog={Astro.props.catalog}
                     length={length}
+                    sort={Astro.props.sort}
+                    showAircraftTypes={["latest", "filter"].includes(
+                        Astro.props.catalog,
+                    )}
                     initialList={initialList.list}
                     initialListIsComplete={
                         initialList.list.length >= initialList.total
@@ -236,9 +243,6 @@ const pageTitle = {
                         Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)
                             ?.value as ValidContentListAutoLoadMoreType
                     }
-                    showAircraftTypes={["latest", "filter"].includes(
-                        Astro.props.catalog,
-                    )}
                 />
             ) : null
         }

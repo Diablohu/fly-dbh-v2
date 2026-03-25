@@ -10,6 +10,7 @@ import classNames from "classnames";
 import { actions } from "astro:actions";
 import {
     type ChallengeListItemType,
+    type ChallengeListQueryConditionType,
     type ValidContentListAutoLoadMoreType,
     type AircraftTypes,
 } from "@/types";
@@ -23,8 +24,6 @@ import styles from "./challenge-list-grid.module.less";
 
 type Props = {
     catalog: "latest" | "filter" | AircraftTypes;
-    /** 每次请求的内容长度，即传统概念上的每页条目数 */
-    length?: number;
     initialList?: ChallengeListItemType[];
     /**
      * 初始列表是否已完成（已没有更多内容）
@@ -53,6 +52,7 @@ type Props = {
     ComponentProps<typeof ChallengeItem>,
     "showMaxCategory" | "showAircraftTypes"
 > &
+    Partial<ChallengeListQueryConditionType> &
     Pick<HTMLAttributes<HTMLDivElement>, "className">;
 
 // ============================================================================
@@ -61,6 +61,7 @@ const ChallengeListGrid: FC<Props> = ({
     className,
     catalog,
     length = 20,
+    sort,
     initialList = [] as ChallengeListItemType[],
     initialListIsComplete = false,
     infiniteScroll = false,
@@ -84,7 +85,9 @@ const ChallengeListGrid: FC<Props> = ({
                 .fetchList({
                     from,
                     length,
-                    sort: catalog === "latest" ? "latest" : "difficulty",
+                    sort:
+                        sort ??
+                        (catalog === "latest" ? "latest" : "difficulty"),
                     types:
                         catalog === "latest" || catalog === "filter"
                             ? undefined
@@ -92,7 +95,7 @@ const ChallengeListGrid: FC<Props> = ({
                 })
                 .then((res) => res.data);
         },
-        [catalog, length],
+        [catalog, length, sort],
     );
 
     const itemRender = useMemo<FC<ChallengeListItemType>>(

@@ -1,0 +1,10 @@
+---
+import { type ChallengeListSortType } from "@/types";
+
+import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
+---
+
+<ChallengeListPage
+    catalog="latest"
+    sort={Astro.params.sort as ChallengeListSortType}
+/>
