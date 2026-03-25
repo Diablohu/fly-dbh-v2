@@ -3,6 +3,7 @@ import {
     type ValidContentListAutoLoadMoreType,
     type VideoListPageTypesType,
     type ChallengeDifficultyType,
+    type ChallengeListSortType,
     type AircraftCategoryType,
     type AircraftTypes,
 } from "@/types";
@@ -174,6 +175,7 @@ export function getChallengeCatalogPageLink(
      * - 不传入则生成“最新收录”列表
      */
     aircraftCategory?: "filter" | AircraftTypes,
+    sort?: ChallengeListSortType,
 ) {
     return (
         routeBase.challenges +
@@ -181,7 +183,8 @@ export function getChallengeCatalogPageLink(
             ? "/filter"
             : aircraftCategory
               ? `/catalog/${aircraftCategory}`
-              : "")
+              : "") +
+        (sort ? `/sort-${sort}` : "")
     );
 }
 

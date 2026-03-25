@@ -15,8 +15,10 @@ import {
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
 import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
+
 import Layout from "@/layouts/layout.astro";
 import ChallengeListGrid from "@/components/challenge-list-grid";
+import TagButton from "@/components/tag-button.astro";
 
 import { errorLog } from "@/utils/log";
 
@@ -68,6 +70,27 @@ const exampleAircrafts: Record<Props["catalog"], string[]> = {
     "large-narrow-body": ["空客 A320", "波音 737"],
     "large-wide-body": ["空客 A350", "波音 777"],
 };
+const sortOptions:
+    | {
+          sort: ChallengeListQueryConditionType["sort"];
+          label: string;
+          url: string;
+      }[]
+    | undefined =
+    Astro.props.catalog === "latest"
+        ? [
+              {
+                  sort: "latest",
+                  label: "最新收录",
+                  url: getChallengeCatalogPageLink(),
+              },
+              {
+                  sort: "difficulty",
+                  label: "难度排序",
+                  url: getChallengeCatalogPageLink(undefined, "difficulty"),
+              },
+          ]
+        : undefined;
 
 // ============================================================================
 //
@@ -220,6 +243,28 @@ const pageTitle = {
                     fetchpriority="high"
                 />
             </div>
+            {
+                sortOptions && (
+                    <div class="sort-options">
+                        {sortOptions.map(({ sort, label, url }) => (
+                            <TagButton
+                                class:list={[
+                                    "item",
+                                    {
+                                        "is-active":
+                                            sort === Astro.props.sort ||
+                                            (sort === "latest" &&
+                                                !Astro.props.sort),
+                                    },
+                                ]}
+                                href={url}
+                            >
+                                {label}
+                            </TagButton>
+                        ))}
+                    </div>
+                )
+            }
         </section>
 
         {
@@ -308,7 +353,7 @@ const pageTitle = {
                 width: 100%;
                 height: 100%;
             }
-            z-index: 1;
+            z-index: -1;
             // background: no-repeat center/cover;
             pointer-events: none;
             // filter: saturate(150%);
@@ -352,7 +397,6 @@ const pageTitle = {
         .title,
         .total {
             display: block;
-            z-index: 10;
             text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
             color: var(--dark-text-color-primary);
         }
@@ -380,6 +424,76 @@ const pageTitle = {
             }
             strong {
                 margin-right: 0.15em;
+            }
+        }
+
+        .sort-options {
+            position: absolute;
+            bottom: 1em;
+            right: 1.5em;
+            user-select: none;
+            .item {
+                --text-color-primary: var(--dark-text-color-primary);
+                --tag-background-color: var(--dark-theme-color-p-60);
+                --tag-border-color: var(--dark-theme-color-p-80);
+                --menu-background-color-highlight: var(--dark-theme-color-p-80);
+                --padding-left: 0.6667em;
+                --padding-right: 0.6667em;
+                --dot-size: 0.6667em;
+                --dot-border-color: var(--light-theme-color-p-60);
+                --dot-background-color: transparent;
+                font-size: smaller;
+                // line-height: 1;
+                padding: 0.13333em var(--padding-right) 0.13333em
+                    calc(var(--padding-left) + var(--dot-size) * 1.25);
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: calc(var(--padding-left) - var(--dot-size) * 0.3333);
+                    margin-top: calc(var(--dot-size) * -0.5);
+                    width: var(--dot-size);
+                    height: var(--dot-size);
+                    background: var(--dot-background-color);
+                    border-radius: 50%;
+                    border: 1px solid var(--dot-border-color);
+                }
+                &:has(+ .item) {
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+                & + .item {
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                }
+                &:first-child {
+                    border-top-left-radius: 1em;
+                    border-bottom-left-radius: 1em;
+                    --padding-left: 0.85em;
+                }
+                &:last-child {
+                    border-top-right-radius: 1em;
+                    border-bottom-right-radius: 1em;
+                    --padding-right: 0.85em;
+                }
+                &.is-active {
+                    --text-color-primary: var(--dark-text-color-primary);
+                    --tag-background-color: var(--dark-theme-color-p-90);
+                    // --text-color-primary: var(--dark-theme-color);
+                    --dot-border-color: transparent;
+                    --dot-background-color: var(--light-theme-color-p-60);
+                    pointer-events: none;
+                    // box-shadow: inset 0 0 20px var(--light-theme-color-p-50);
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: var(--light-theme-color-p-40);
+                    }
+                }
             }
         }
     }
