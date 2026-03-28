@@ -37,14 +37,14 @@ export async function openImageViewer(opener: HTMLElement, src: string) {
         {
             type: "style",
             src: "/libs/viewerjs/viewer.min.css",
-            id: "i" + md5("styleTagIdViewerCss"),
-            options: { persist: true },
+            // id: "i" + md5("styleTagIdViewerCss"),
+            // options: { persist: true },
         },
         {
             type: "style",
             src: "/styles/override-viewer.css",
-            id: "i" + md5("idStyleOverrideCss"),
-            options: { persist: true },
+            // id: "i" + md5("idStyleOverrideCss"),
+            // options: { persist: true },
         },
         {
             type: "script",
