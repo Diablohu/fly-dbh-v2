@@ -43,6 +43,7 @@ export type AerodromeItemType = {
     icao: string;
     iata: string;
     faa: string;
+    designator: string;
     location: string[];
     runways: {
         identifier: string;
@@ -130,7 +131,7 @@ export type VideoItemType = {
     aerodromes: Array<
         Pick<
             AerodromeItemType,
-            "_id" | "slug" | "icao" | "iata" | "faa" | "name"
+            "_id" | "slug" | "icao" | "iata" | "faa" | "designator" | "name"
         > & {
             challenges?: ChallengeItemType["other_challenges_this_aerodrome"];
         }
@@ -190,7 +191,14 @@ export type ChallengeListItemType = Pick<
     slug: string;
     aerodrome: Pick<
         AerodromeItemType,
-        "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "location"
+        | "_id"
+        | "slug"
+        | "name"
+        | "icao"
+        | "iata"
+        | "faa"
+        | "designator"
+        | "location"
     > &
         Partial<Pick<AerodromeItemType, "photo">>;
 };
@@ -230,6 +238,7 @@ export type ChallengeItemType = {
         | "icao"
         | "iata"
         | "faa"
+        | "designator"
         | "location"
         | "runways"
         | "photo"
@@ -242,7 +251,7 @@ export type ChallengeItemType = {
     route: {
         origin?: Pick<
             AerodromeItemType,
-            "_id" | "slug" | "name" | "icao" | "iata" | "faa"
+            "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "designator"
         >;
         sid?: {
             rwy: string;
@@ -251,7 +260,7 @@ export type ChallengeItemType = {
         enroute?: string;
         destination?: Pick<
             AerodromeItemType,
-            "_id" | "slug" | "name" | "icao" | "iata" | "faa"
+            "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "designator"
         >;
         star?: {
             rwy: string;

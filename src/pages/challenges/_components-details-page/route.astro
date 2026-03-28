@@ -22,7 +22,10 @@ function parseArrStr(string: string) {
     {...props}
     title="示例航线（飞行约30分钟）"
     emoji="🌏"
-    isTodo={!route.origin?.icao && !route.origin?.iata && !route.origin?.faa}
+    isTodo={!route.origin?.icao &&
+        !route.origin?.iata &&
+        !route.origin?.faa &&
+        !route.origin?.designator}
 >
     <dl>
         <dt>起飞</dt>
@@ -32,6 +35,7 @@ function parseArrStr(string: string) {
                     route.origin?.icao,
                     route.origin?.iata,
                     route.origin?.faa && `${route.origin.faa} (FAA)`,
+                    route.origin?.designator,
                 ]
                     .filter(Boolean)
                     .join(" / ")
@@ -84,6 +88,7 @@ function parseArrStr(string: string) {
                     route.destination?.icao,
                     route.destination?.iata,
                     route.destination?.faa && `${route.destination.faa} (FAA)`,
+                    route.destination?.designator,
                 ]
                     .filter(Boolean)
                     .join(" / ")

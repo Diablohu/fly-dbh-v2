@@ -35,6 +35,7 @@ const ChallengeItem: FC<{
                     ? [
                           item.aerodrome.icao || item.aerodrome.faa,
                           item.aerodrome.iata,
+                          item.aerodrome.designator,
                       ]
                           .filter(Boolean)
                           .join("/")

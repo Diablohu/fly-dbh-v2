@@ -24,7 +24,7 @@ export type ChallengeListResponseDataType = {
     page: number;
 };
 
-export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc`;
+export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa, aerodrome.designator asc`;
 
 const projectionListItem = `
   _id,
@@ -37,6 +37,7 @@ const projectionListItem = `
     icao,
     iata,
     faa,
+    designator,
     location,
   },
   name,
@@ -90,7 +91,7 @@ export const getGroqQueryChallengeList = ({
         sort === "latest"
             ? "airac_cyle desc, _createdAt desc"
             : sort === "difficulty"
-              ? "difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa asc"
+              ? "difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa, aerodrome.designator asc"
               : ""
     }) [${from}...${from + length}]`;
 
@@ -228,6 +229,7 @@ const actions = {
     icao,
     iata,
     faa,
+    designator,
     location,
     'runways': runways[]{
       identifier,
@@ -264,6 +266,7 @@ const actions = {
       icao,
       iata,
       faa,
+      designator,
     },
     'sid': routeSID[]{
       rwy,
@@ -277,6 +280,7 @@ const actions = {
       icao,
       iata,
       faa,
+      designator,
     },
     'star': routeSTAR[]{
       rwy,

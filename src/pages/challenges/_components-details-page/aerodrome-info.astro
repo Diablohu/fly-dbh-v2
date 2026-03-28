@@ -63,6 +63,13 @@ type Props = {
                     </span>
                 )
             }
+            {
+                Astro.props.aerodrome.designator && (
+                    <span data-org="识别码">
+                        {Astro.props.aerodrome.designator || "-"}
+                    </span>
+                )
+            }
         </dd>
     </dl>
 
@@ -313,6 +320,12 @@ type Props = {
                 color: var(--text-color-secondary);
                 vertical-align: text-top;
                 border-radius: 0.25em;
+            }
+            &[data-org="识别码"] {
+                padding-left: 3.25em;
+                // &::before {
+                //     width: 3em;
+                // }
             }
         }
     }
