@@ -1,4 +1,4 @@
-import { execSync, exec, spawnSync } from "node:child_process";
+import { execSync, spawn, spawnSync } from "node:child_process";
 import dayjs from "dayjs";
 import { select, Separator } from "@inquirer/prompts";
 import { startVitest } from "vitest/node";
@@ -26,31 +26,9 @@ function logError(t, error) {
     );
     if (error.cause) console.log(chalk.gray.italic(`   ${error.cause}`));
 }
-async function npmRun(cmd, opt = {}) {
-    return await new Promise((resolve, reject) => {
-        const child = exec(`npm run ${cmd}`);
-
-        const flush = () => {
-            child.stdin.unpipe(process.stdin);
-            child.stdout.unpipe(process.stdout);
-            child.stderr.unpipe(process.stderr);
-        };
-
-        child.stdin.pipe(process.stdin);
-        child.stdout.pipe(process.stdout);
-        child.stderr.pipe(process.stderr);
-
-        child.on("close", () => {
-            resolve(true);
-        });
-        child.on("error", (error) => {
-            flush();
-            reject(error);
-        });
-        child.on("exit", (exitCode) => {
-            flush();
-            opt.onExit?.(exitCode, resolve, reject);
-        });
+async function npmRun(cmd) {
+    return execSync(`npm run ${cmd}`, {
+        stdio: "inherit",
     });
 }
 
@@ -152,8 +130,19 @@ async function main() {
             break;
         case "publish":
             try {
-                await npmRun("astro:check", {
-                    onExit: (exitCode, resolve, reject) => {
+                await new Promise((resolve, reject) => {
+                    const child = spawn("astro", `check`.split(" "), {
+                        stdio: "inherit",
+                        shell: true,
+                    });
+
+                    child.on("close", () => {
+                        resolve(true);
+                    });
+                    child.on("error", (error) => {
+                        reject(error);
+                    });
+                    child.on("exit", (exitCode) => {
                         switch (exitCode) {
                             case 0:
                                 return resolve(true);
@@ -164,7 +153,7 @@ async function main() {
                                     }),
                                 );
                         }
-                    },
+                    });
                 });
             } catch (e) {
                 if (e) {

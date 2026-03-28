@@ -12,7 +12,6 @@
         "analyze": "cross-env FLYDBH_BUILD_MODE=analyze npm run build && npx --yes open-cli dist/client/stats.html",
         "preview": "astro preview --host --allowed-hosts local-dev.fly-dbh.com",
         "preview:next": "cross-env FLYDBH_BUILD_MODE=next astro preview --host --allowed-hosts local-dev.fly-dbh.com",
-        "check": "astro check",
         "astro": "astro",
         "astro:check": "astro check",
         "astro:upgrade": "npx @astrojs/upgrade",
@@ -20,19 +19,19 @@
         "up": "npm run astro:upgrade && npx --yes npm-check-updates -i"
     },
     "dependencies": {
-        "@astrojs/node": "^10.0.3",
-        "@astrojs/react": "^5.0.1",
-        "@astrojs/rss": "^4.0.17",
-        "@astrojs/sitemap": "^3.7.1",
+        "@astrojs/node": "^10.0.4",
+        "@astrojs/react": "^5.0.2",
+        "@astrojs/rss": "^4.0.18",
+        "@astrojs/sitemap": "^3.7.2",
         "@microsoft/fetch-event-source": "^2.0.1",
         "@nanostores/react": "^1.1.0",
         "@oslojs/otp": "^1.1.0",
         "@react-oauth/google": "^0.13.4",
         "@sanity/client": "^7.20.0",
-        "@sanity/image-url": "^2.0.3",
-        "astro": "^6.0.8",
+        "@sanity/image-url": "^2.1.0",
+        "astro": "^6.1.1",
         "astro-portabletext": "^0.13.0",
-        "axios": "^1.13.6",
+        "axios": "^1.14.0",
         "cache-manager": "^7.2.8",
         "classnames": "^2.5.1",
         "colorthief": "^3.3.1",
@@ -42,7 +41,7 @@
         "fs-extra": "^11.3.4",
         "glob": "^13.0.6",
         "history": "^5.3.0",
-        "isomorphic-dompurify": "^3.6.0",
+        "isomorphic-dompurify": "^3.7.1",
         "less": "^4.6.4",
         "marked": "^17.0.5",
         "md5": "^2.3.0",
@@ -62,7 +61,6 @@
         "winston-daily-rotate-file": "^5.0.0"
     },
     "devDependencies": {
-        "@astrojs/check": "^0.9.8",
         "@inquirer/prompts": "^8.3.2",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
@@ -74,12 +72,12 @@
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "@types/toastify-js": "^1.12.4",
-        "baseline-browser-mapping": "^2.10.10",
+        "baseline-browser-mapping": "^2.10.11",
         "chalk": "^5.6.2",
         "cross-env": "^10.1.0",
         "rollup-plugin-visualizer": "^7.0.1",
         "typescript": "^5.9.3",
         "vite-plugin-static-copy": "^4.0.0",
-        "vitest": "^4.1.1"
+        "vitest": "^4.1.2"
     }
 }
