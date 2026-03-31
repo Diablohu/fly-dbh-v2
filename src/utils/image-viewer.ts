@@ -1,5 +1,5 @@
 import { htmlAttributeImageViewer } from "@/global";
-import md5 from "md5";
+// import md5 from "md5";
 import loadResources from "@/utils/load-resources";
 
 // ============================================================================
