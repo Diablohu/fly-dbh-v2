@@ -1,8 +1,9 @@
-import { useRef, useEffect, useState, type FC } from "react";
+import { useRef, type FC } from "react";
 import classNames from "classnames";
 
 import { type ChallengeItemType } from "@/types";
 import { routeBase } from "@/global";
+import useSticky from "@/react-hooks/use-sticky";
 import leftArrow from "@/assets/arrow/left3.svg?raw";
 
 import styles from "./title.module.less";
@@ -14,37 +15,8 @@ const TitleBlock: FC<{
     challengeName: string;
     airacCycle?: ChallengeItemType["airac_cyle"];
 }> = ({ aerodromeName, challengeName, airacCycle }) => {
-    const ProbeRef = useRef<HTMLSpanElement>(null);
-    const ProbeObserverRef = useRef<IntersectionObserver>(null);
-    const [isSticky, setSticky] = useState(false);
-
-    useEffect(() => {
-        if (!ProbeObserverRef.current)
-            ProbeObserverRef.current = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            // console.log("inview");
-                            setSticky(false);
-                        } else {
-                            // console.log("not inview");
-                            setSticky(true);
-                        }
-                    });
-                },
-                { threshold: 0 }
-            );
-
-        if (ProbeRef.current)
-            ProbeObserverRef.current?.observe(ProbeRef.current);
-
-        return () => {
-            if (ProbeObserverRef.current && ProbeRef.current) {
-                ProbeObserverRef.current.unobserve(ProbeRef.current);
-            }
-            ProbeObserverRef.current?.disconnect();
-        };
-    }, []);
+    const ContainerRef = useRef<HTMLElement>(null);
+    const { isSticky } = useSticky({ ContainerRef });
 
     return (
         <section
@@ -54,6 +26,7 @@ const TitleBlock: FC<{
                     [styles["is-sticky"]]: isSticky,
                 },
             ])}
+            ref={ContainerRef}
         >
             <a
                 className={styles["link-to-challenge-list"]}
@@ -70,7 +43,6 @@ const TitleBlock: FC<{
                     {challengeName}
                 </small>
             </h1>
-            <em className={styles["intersection-probe"]} ref={ProbeRef} />
             {airacCycle && (
                 <span className={styles["airac-cycle"]}>
                     本文基于 AIRAC CYCLE <strong>{airacCycle}</strong>
