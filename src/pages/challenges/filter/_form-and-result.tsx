@@ -3,12 +3,15 @@ import {
     useCallback,
     // useEffect,
     // useMemo,
-    // useRef,
+    useRef,
     // Fragment,
     type FC,
     type SubmitEventHandler,
 } from "react";
 import { actions } from "astro:actions";
+import classNames from "classnames";
+
+import useSticky from "@/react-hooks/use-sticky";
 
 import ChallengeListGrid from "@/components/challenge-list-grid";
 
@@ -66,7 +69,12 @@ const SearchFormAndResult: FC<{
     initialResult,
     noInitialCondition,
 }) => {
-    // TODO: const [isSticky] = useSticky()
+    const ContainerRef = useRef<HTMLFormElement>(null);
+
+    const { isSticky } = useSticky({
+        ContainerRef,
+        cssVariableNameExtraTop: "--sticky-extra-top",
+    });
 
     const [status /*, setStatus*/] = useState<StatusType>("pending");
     const [error /*, setError*/] = useState<string>();
@@ -86,7 +94,14 @@ const SearchFormAndResult: FC<{
 
     return (
         <>
-            <form className={styles["form"]} method="GET" onSubmit={onSubmit}>
+            <form
+                className={classNames(styles["form"], {
+                    [styles["is-sticky"]]: isSticky,
+                })}
+                method="GET"
+                onSubmit={onSubmit}
+                ref={ContainerRef}
+            >
                 <Condition label="难度" name="difficulties" />
                 <Condition label="机型" name="aircraftTypes" />
                 <Condition label="灾害" name="hazards" multiple />
@@ -139,7 +154,7 @@ const Condition: FC<{
      * LABEL:
      *     All
      *     Option 1, Option 2, Opt.....
-     * 
+     *
      * OPTIONS:
      * [√] ALL
      * ---

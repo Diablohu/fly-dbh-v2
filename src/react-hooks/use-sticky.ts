@@ -26,7 +26,7 @@ const useSticky = (
             ProbeRef.current = document.createElement("em");
             ProbeRef.current.style.position = "absolute";
             ProbeRef.current.style.zIndex = "-100";
-            ProbeRef.current.style.top = `calc(var(--global-sticky-top) * -1${
+            ProbeRef.current.style.top = `calc(-2px - var(--global-sticky-top)${
                 opt.cssVariableNameExtraTop
                     ? ` - var(${opt.cssVariableNameExtraTop})`
                     : ""
@@ -47,10 +47,10 @@ const useSticky = (
                 (entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
-                            // console.log("inview");
+                            console.log(entry, "inview");
                             setSticky(false);
                         } else {
-                            // console.log("not inview");
+                            console.log(entry, "not inview");
                             setSticky(true);
                         }
                     });
