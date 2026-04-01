@@ -17,7 +17,11 @@ export type SiteConfigsType = {
 
 /** https://ogp.me/#types */
 export type ValidPageContentType = "video-player" | "article" | "profile";
-export type ValidVideoSourceType = "bilibili" | "youtube" | "douyin";
+export type ValidVideoSourceType =
+    | "bilibili"
+    | "youtube"
+    | "douyin"
+    | "xiaohongshu";
 export type ValidColorSchemeType = "dark" | "light";
 export type ValidContentListAutoLoadMoreType = "0" | "1";
 export type ValidVideoItemShowPlatformLinksOnHoverType = "0" | "1";

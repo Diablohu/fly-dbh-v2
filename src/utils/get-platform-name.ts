@@ -21,6 +21,12 @@ const getPlatformName = (platform: string) => {
         case "tiktok": {
             return "TikTok";
         }
+
+        case "xhs":
+        case "xiaohongshu":
+        case "rednote": {
+            return "小红书";
+        }
     }
 
     return platform;

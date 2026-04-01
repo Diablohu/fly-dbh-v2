@@ -22,7 +22,9 @@ export const links: {
     iconType?: "svg" | "png";
     iconHtml?: string;
 }[] = [
-    ...videoPlatforms,
+    ...videoPlatforms.filter(({ name }) =>
+        ["bilibili", "youtube", "douyin"].includes(name),
+    ),
     { name: "live", title: "直播间", href: "https://live.fly-dbh.com" },
     {
         name: "qun",

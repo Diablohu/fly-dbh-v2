@@ -34,6 +34,13 @@ export const videoPlatforms: {
         iconType: "svg",
         iconHtml: getUseSymbolHtml("tiktok"),
     },
+    {
+        name: "xiaohongshu",
+        title: getPlatformName("xiaohongshu"),
+        href: "https://xiaohongshu.fly-dbh.com",
+        iconType: "svg",
+        iconHtml: getUseSymbolHtml("xiaohongshu"),
+    },
 ];
 
 export default videoPlatforms;

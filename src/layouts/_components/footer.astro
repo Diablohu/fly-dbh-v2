@@ -117,8 +117,9 @@ const contact: InfoGridType = {
                 © {new Date().getFullYear()}
                 <a href="/">FLY-DBH.com</a>
             </p>
+            <p>代码由人类编写</p>
             <p>
-                Powered by <a
+                基于 <a
                     href="https://astro.build/"
                     target="_blank"
                     rel="nofollow noopener noreferrer external">Astro</a
@@ -222,6 +223,9 @@ const contact: InfoGridType = {
             }
             &[data-platform="twitter"] {
                 --platform-color: var(--theme-color-twitter);
+            }
+            &[data-platform="xiaohongshu"] {
+                --platform-color: var(--theme-color-xiaohongshu);
             }
         }
 
