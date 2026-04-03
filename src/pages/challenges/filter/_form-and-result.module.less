@@ -2,6 +2,8 @@
 
 .form {
     --sticky-extra-top: calc(var(--hero-image-margin-bottom) * 0.6667);
+    --sticky-extend-padding: calc(var(--global-edge-safe-distance) * 0.5);
+
     --background-color: transparent;
     --border-color: transparent;
     --border-radius: 0;
@@ -9,8 +11,23 @@
     --padding-x: 0;
     --box-shadow: none;
 
+    --actions-flex: 0;
+    --actions-border-top: none;
+
+    &.is-sticky {
+        --background-color: var(--global-header-background-color);
+        --border-color: var(--menu-border-color);
+        --border-radius: 0.6667em;
+        --backdrop-filter: var(--backdrop-filter-glass);
+        --padding-x: var(--sticky-extend-padding);
+        --box-shadow: var(--overlay-box-shadow);
+    }
     .screen-sm({
-        --sticky-extra-top: calc(calc(var(--hero-image-margin-bottom) * 0.6667) + 3em);
+        --sticky-extra-top: calc(var(--hero-image-margin-bottom) * 0.6667 + 3em);
+    });
+    .screen-md-below({
+        --actions-flex: 1 0 100%;
+        --actions-border-top: 1px solid var(--menu-border-color);
     });
 
     position: sticky;
@@ -27,13 +44,15 @@
     // background: var(--theme-color-invert);
 
     // margin-top: calc(var(--hero-image-margin-bottom) * -1);
-    margin-top: var(--hero-image-margin-bottom);
+    margin-top: calc(
+        var(--hero-image-margin-bottom) - var(--global-edge-safe-distance)
+    );
     margin-bottom: 1em;
     margin-left: calc(var(--padding-x) * -1);
     margin-right: calc(var(--padding-x) * -1);
 
-    display: grid;
-    grid-template-columns: repeat(3, 1fr) 4em;
+    display: flex;
+    flex-flow: row wrap;
     padding: 0 var(--padding-x);
     // padding-top: var(--hero-image-margin-bottom);
     // padding-bottom: 0.75em;
@@ -45,12 +64,29 @@
         box-shadow;
     will-change: margin, padding, box-shadow;
 
-    &.is-sticky {
-        --background-color: var(--global-header-background-color);
-        --border-color: var(--menu-border-color);
-        --border-radius: 0.6667em;
-        --backdrop-filter: var(--backdrop-filter-glass);
-        --padding-x: calc(var(--global-edge-safe-distance) * 0.5);
-        --box-shadow: var(--overlay-box-shadow);
+    & > .filter {
+        flex: 1;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        min-height: 3em;
+        & > input[type="checkbox"],
+        & > input[type="radio"] {
+            display: none;
+        }
+    }
+    & > .actions {
+        flex: var(--actions-flex);
+        padding: calc(var(--sticky-extend-padding) * 0.6667) 0;
+        white-space: nowrap;
+        text-align: center;
+        border-top: var(--actions-border-top);
+
+        button {
+            padding: 0.15em 1em;
+            & + button {
+                margin-left: calc(var(--sticky-extend-padding) * 0.5);
+            }
+        }
     }
 }

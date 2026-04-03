@@ -2,17 +2,22 @@ import {
     useState,
     useCallback,
     // useEffect,
-    // useMemo,
+    useMemo,
     useRef,
     // Fragment,
     type FC,
     type SubmitEventHandler,
+    type ChangeEventHandler,
 } from "react";
 import { actions } from "astro:actions";
 import classNames from "classnames";
 
+import { type ChallengeDifficultyType } from "@/types";
+import { challengeDifficultyString, aircraftTypeString } from "@/global";
+
 import useSticky from "@/react-hooks/use-sticky";
 
+import TagButton from "@/components/tag-button";
 import ChallengeListGrid from "@/components/challenge-list-grid";
 
 // import { toString as conditionToString } from "./_query";
@@ -61,11 +66,11 @@ const SearchFormAndResult: FC<{
     noInitialCondition?: boolean;
 }> = ({
     // length,
-    // hazards,
+    hazards,
 
-    // initialDifficulties,
-    // initialTypes,
-    // initialHazards,
+    initialDifficulties,
+    initialTypes,
+    initialHazards,
     initialResult,
     noInitialCondition,
 }) => {
@@ -102,16 +107,51 @@ const SearchFormAndResult: FC<{
                 onSubmit={onSubmit}
                 ref={ContainerRef}
             >
-                <Condition label="难度" name="difficulties" />
-                <Condition label="机型" name="aircraftTypes" />
-                <Condition label="灾害" name="hazards" multiple />
+                <Filter
+                    label="难度"
+                    name="difficulties"
+                    options={Object.keys(challengeDifficultyString)
+                        .sort()
+                        .map((difficulty) => {
+                            const value = Number(
+                                difficulty,
+                            ) as ChallengeDifficultyType;
+                            return {
+                                label: challengeDifficultyString[value],
+                                value: value,
+                                difficulty: value,
+                            };
+                        })}
+                    initialValue={initialDifficulties}
+                />
+                <Filter
+                    label="机型"
+                    name="aircraftTypes"
+                    options={Object.entries(aircraftTypeString).map(
+                        ([value, label]) => ({ label, value }),
+                    )}
+                    initialValue={initialTypes}
+                />
+                <Filter
+                    label="灾害"
+                    name="hazards"
+                    options={
+                        hazards?.map((hazard) => ({
+                            label: `${hazard.emoji} ${hazard.name}`,
+                            value: hazard._id,
+                            difficulty: hazard.difficulty,
+                        })) || []
+                    }
+                    initialValue={initialHazards}
+                    multiple
+                />
                 <section className={styles["actions"]}>
-                    <button type="submit" disabled={status === "loading"}>
+                    <TagButton type="submit" disabled={status === "loading"}>
                         查询
-                    </button>
-                    <button type="button" disabled={status === "loading"}>
+                    </TagButton>
+                    <TagButton type="button" disabled={status === "loading"}>
                         抽选
-                    </button>
+                    </TagButton>
                 </section>
             </form>
             {status === "error" && <div>{error}</div>}
@@ -141,15 +181,95 @@ export default SearchFormAndResult;
 // #endregion
 // ============================================================================
 //
-// #region <Condition/>
+// #region <Filter/>
 //
 // ============================================================================
 
-const Condition: FC<{
+const Filter: FC<{
     label: string;
     name: "aircraftTypes" | "difficulties" | "hazards";
+    options: Array<{
+        label: string;
+        value: string | number;
+        difficulty?: ChallengeDifficultyType;
+    }>;
+    initialValue?: Array<string | number>;
     multiple?: boolean;
-}> = ({ label /*, name*/, multiple }) => {
+}> = ({ label, name, options: _options, initialValue, multiple }) => {
+    const inputType = useMemo(
+        () => (multiple ? "checkbox" : "radio"),
+        [multiple],
+    );
+    const options = useMemo(
+        () =>
+            _options.map((option) => ({
+                id: `__challenge|filter|${name}|${option.value}`,
+                ...option,
+            })),
+        [_options],
+    );
+    const optionIdAll = useMemo(
+        () => `__challenge|filter|${name}|!!all!!`,
+        [name],
+    );
+    // console.log({ initialValue, options });
+
+    const onValueChange = useCallback<
+        ChangeEventHandler<HTMLInputElement, HTMLInputElement>
+    >(
+        (evt) => {
+            if (inputType === "radio") return;
+
+            const isAllOption = !evt.target.value;
+
+            // 对于 `checkbox` 类型，`全部` 选项被取消选中时，强制保持选中状态
+            if (isAllOption && !evt.target.checked) evt.target.checked = true;
+
+            // 对于 `checkbox` 类型，`全部` 选项被选中时，取消所有非 `全部` 选项的选中状态
+            if (isAllOption && evt.target.checked) {
+                options.forEach((option) => {
+                    const optionInput = document.getElementById(
+                        option.id,
+                    ) as HTMLInputElement;
+                    if (optionInput) optionInput.checked = false;
+                });
+            }
+
+            // 对于 `checkbox` 类型，若有任何一个非 `全部` 选项被选中时，强制取消 `全部` 选项的选中状态
+            if (!isAllOption && evt.target.checked) {
+                const allOption = document.getElementById(
+                    optionIdAll,
+                ) as HTMLInputElement;
+                if (allOption) allOption.checked = false;
+            }
+
+            // 对于 `checkbox` 类型，若所有非 `全部` 选项被选中时，强制选中 `全部` 选项，所有非 `全部` 选项取消选中状态
+            if (
+                !isAllOption &&
+                evt.target.checked &&
+                options.every((option) => {
+                    const optionInput = document.getElementById(
+                        option.id,
+                    ) as HTMLInputElement;
+                    return optionInput ? optionInput.checked : false;
+                })
+            ) {
+                const allOption = document.getElementById(
+                    optionIdAll,
+                ) as HTMLInputElement;
+                if (allOption) {
+                    allOption.checked = true;
+                    options.forEach((option) => {
+                        const optionInput = document.getElementById(
+                            option.id,
+                        ) as HTMLInputElement;
+                        if (optionInput) optionInput.checked = false;
+                    });
+                }
+            }
+        },
+        [name, inputType, options, optionIdAll],
+    );
     /**
      * LABEL:
      *     All
@@ -162,11 +282,36 @@ const Condition: FC<{
      * [O] Option 2
      */
     return (
-        <section className={styles["condition"]}>
-            <strong>
+        <section className={styles["filter"]}>
+            <input
+                id={optionIdAll}
+                type={inputType}
+                name={name}
+                value=""
+                defaultChecked={!initialValue || initialValue.length === 0}
+                onChange={onValueChange}
+            />
+            {options.map(({ id, value }) => (
+                <input
+                    key={id}
+                    id={id}
+                    type={inputType}
+                    name={name}
+                    value={value}
+                    defaultChecked={initialValue?.includes(value)}
+                    onChange={onValueChange}
+                />
+            ))}
+            <span className={styles["label"]}>
                 {label}
-                {multiple && <small>（可多选）</small>}
-            </strong>
+                {/* {multiple && <small>（可多选）</small>} */}
+            </span>
+            <section className={styles["options"]}>
+                <label htmlFor={optionIdAll} className={styles["option"]}>
+                    <em className={styles["indicator"]} />
+                    全部
+                </label>
+            </section>
             {/* ALL | Options */}
         </section>
     );

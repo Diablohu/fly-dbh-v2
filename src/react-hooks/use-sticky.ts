@@ -47,10 +47,10 @@ const useSticky = (
                 (entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
-                            console.log(entry, "inview");
+                            // console.log(entry, "inview");
                             setSticky(false);
                         } else {
-                            console.log(entry, "not inview");
+                            // console.log(entry, "not inview");
                             setSticky(true);
                         }
                     });
