@@ -79,7 +79,7 @@ const Menu: FC<
 
             closeMenu();
         },
-        [closeMenu]
+        [closeMenu],
     );
 
     const onMenuClick = useCallback<MouseEventHandler<HTMLMenuElement>>(
@@ -90,7 +90,7 @@ const Menu: FC<
                 ClickedOnMenuRef.current = false;
             });
         },
-        []
+        [],
     );
     const onMenuTransitionEnd = useCallback<
         TransitionEventHandler<HTMLElement>
@@ -105,7 +105,7 @@ const Menu: FC<
                 setRender(false);
             }
         },
-        []
+        [],
     );
 
     const repositionMenu = useCallback(() => {
@@ -160,7 +160,7 @@ const Menu: FC<
         for (const [p, v] of Object.entries(position)) {
             MenuRef.current.style.setProperty(
                 `--position-${p}`,
-                typeof v === "number" ? `${v}px` : v
+                typeof v === "number" ? `${v}px` : v,
             );
         }
     }, [anchorPoint, grow]);
@@ -238,7 +238,7 @@ const Menu: FC<
                         )}
                         {children}
                     </menu>,
-                    document.body
+                    document.body,
                 )}
         </>
     ) : null;
@@ -256,7 +256,7 @@ export const MenuItem: FC<HTMLAttributes<HTMLDivElement>> = memo(
                 {...props}
             />
         );
-    }
+    },
 );
 
 export const MenuTitleItem: FC<
@@ -296,13 +296,13 @@ export const MenuSwitchItem: FC<
         (evt) => {
             onChange?.(evt.currentTarget.checked === true);
         },
-        [onChange]
+        [onChange],
     );
     const onLabelClick = useCallback<MouseEventHandler<HTMLLabelElement>>(
         (evt) => {
             evt.stopPropagation();
         },
-        []
+        [],
     );
     return (
         <MenuItem

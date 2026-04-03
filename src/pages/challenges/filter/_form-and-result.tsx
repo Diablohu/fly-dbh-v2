@@ -8,6 +8,7 @@ import {
     type FC,
     type SubmitEventHandler,
     type ChangeEventHandler,
+    type MouseEventHandler,
 } from "react";
 import { actions } from "astro:actions";
 import classNames from "classnames";
@@ -19,6 +20,7 @@ import useSticky from "@/react-hooks/use-sticky";
 
 import TagButton from "@/components/tag-button";
 import ChallengeListGrid from "@/components/challenge-list-grid";
+import Menu, { MenuItem, MenuLineItem } from "@/components/menu";
 
 // import { toString as conditionToString } from "./_query";
 
@@ -123,6 +125,7 @@ const SearchFormAndResult: FC<{
                             };
                         })}
                     initialValue={initialDifficulties}
+                    disabled={status === "loading"}
                 />
                 <Filter
                     label="机型"
@@ -131,6 +134,7 @@ const SearchFormAndResult: FC<{
                         ([value, label]) => ({ label, value }),
                     )}
                     initialValue={initialTypes}
+                    disabled={status === "loading"}
                 />
                 <Filter
                     label="灾害"
@@ -144,6 +148,7 @@ const SearchFormAndResult: FC<{
                     }
                     initialValue={initialHazards}
                     multiple
+                    disabled={status === "loading"}
                 />
                 <section className={styles["actions"]}>
                     <TagButton type="submit" disabled={status === "loading"}>
@@ -195,7 +200,15 @@ const Filter: FC<{
     }>;
     initialValue?: Array<string | number>;
     multiple?: boolean;
-}> = ({ label, name, options: _options, initialValue, multiple }) => {
+    disabled?: boolean;
+}> = ({
+    label,
+    name,
+    options: _options,
+    initialValue,
+    multiple = false,
+    disabled = false,
+}) => {
     const inputType = useMemo(
         () => (multiple ? "checkbox" : "radio"),
         [multiple],
@@ -214,6 +227,19 @@ const Filter: FC<{
     );
     // console.log({ initialValue, options });
 
+    const [showMenu, setShowMenu] = useState(false);
+
+    const onClick = useCallback(() => {
+        if (disabled) return;
+        setShowMenu((showMenu) => !showMenu);
+    }, [disabled]);
+
+    const onInputClick = useCallback<MouseEventHandler<HTMLInputElement>>(
+        (evt) => {
+            evt.stopPropagation();
+        },
+        [],
+    );
     const onValueChange = useCallback<
         ChangeEventHandler<HTMLInputElement, HTMLInputElement>
     >(
@@ -282,7 +308,15 @@ const Filter: FC<{
      * [O] Option 2
      */
     return (
-        <section className={styles["filter"]}>
+        <section
+            className={classNames([
+                styles["filter"],
+                {
+                    "is-menu-open": showMenu,
+                },
+            ])}
+            onClick={onClick}
+        >
             <input
                 id={optionIdAll}
                 type={inputType}
@@ -290,6 +324,7 @@ const Filter: FC<{
                 value=""
                 defaultChecked={!initialValue || initialValue.length === 0}
                 onChange={onValueChange}
+                onClick={onInputClick}
             />
             {options.map(({ id, value }) => (
                 <input
@@ -300,19 +335,44 @@ const Filter: FC<{
                     value={value}
                     defaultChecked={initialValue?.includes(value)}
                     onChange={onValueChange}
+                    onClick={onInputClick}
                 />
             ))}
             <span className={styles["label"]}>
                 {label}
                 {/* {multiple && <small>（可多选）</small>} */}
             </span>
-            <section className={styles["options"]}>
+            <span className={styles["current"]}>AAAAAA</span>
+            {/* <section className={styles["options"]}>
                 <label htmlFor={optionIdAll} className={styles["option"]}>
                     <em className={styles["indicator"]} />
                     全部
                 </label>
-            </section>
+            </section> */}
             {/* ALL | Options */}
+            <Menu
+                open={showMenu}
+                setOpenState={setShowMenu}
+                anchorPoint="bottomRight"
+                grow={["down", "left"]}
+                // onOpen={onMenuOpen}
+                // stickyTitle={title}
+            >
+                <MenuItem className={styles["option"]}>
+                    <label htmlFor={optionIdAll} className={styles["label"]}>
+                        <em className={styles["indicator"]} />
+                        全部
+                    </label>
+                </MenuItem>
+                <MenuLineItem />
+                {options.map(({ id, label, value, difficulty }) => (
+                    <MenuItem key={id} className={styles["option"]}>
+                        <label htmlFor={id} className={styles["label"]}>
+                            {label}
+                        </label>
+                    </MenuItem>
+                ))}
+            </Menu>
         </section>
     );
 };
