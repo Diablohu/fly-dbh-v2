@@ -200,13 +200,14 @@ const Banner: FC<
                 </section>
                 <section
                     className={styles["video-container"]}
-                    style={{
-                        backgroundImage: `url(${coverImage})`,
-                    }}
+                    // style={{
+                    //     backgroundImage: `url(${coverImage})`,
+                    // }}
                 >
                     {renderVideo && (
                         <video
                             // poster={require('@assets/banner/cover.jpg').default}
+                            poster={coverImage}
                             crossOrigin="anonymous"
                             preload="auto"
                             playsInline

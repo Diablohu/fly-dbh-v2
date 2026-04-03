@@ -1,8 +1,8 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import { Font } from 'astro:assets';
+import { Font } from "astro:assets";
 
-import { gtag as gtagId, gtm as gtmId } from "@/constants/google-analytics";
+import { gtag as gtagId } from "@/constants/google-analytics";
 import {
     VIDEO_SOURCE,
     FORCE_COLOR_SCHEME,
@@ -20,17 +20,17 @@ import {
 import LogoSVG from "@/assets/logo.svg";
 import bannerCoverImage from "@/assets/banner-video/cover.webp";
 
-import HeadPageInfos from './_components/head-page-infos.astro';
+import HeadPageInfos from "./_components/head-page-infos.astro";
 import BannerAndHeader from "./_components/banner-and-header";
 import Navbar from "./_components/navbar.astro";
 import Announcements from "./_components/announcements.astro";
 import PrepareClient from "./_components/prepare-client";
-import Footer from './_components/footer.astro';
+import Footer from "./_components/footer.astro";
 import MainBlockWithSidebar, {
-    type Props as MainBlockWithSidebarProps
+    type Props as MainBlockWithSidebarProps,
 } from "./_components/main-block-with-sidebar/index.astro";
 import BlurredBackgroundImage from "./_components/blurred-background-image";
-import GlobalSymbolDefinitionsRaw from '@/assets/symbol-defs.svg?raw';
+import GlobalSymbolDefinitionsRaw from "@/assets/symbol-defs.svg?raw";
 
 import { themeColorLight, themeColorDark, title } from "@/global";
 import "@/global.less";
@@ -93,7 +93,7 @@ interface Props {
      *  - _Array_ 则作为侧边栏内容
      *      - _Slot_ `sidebar-extra-items` 会追加到作为侧边栏内容末尾
      */
-    sideBar?: boolean | MainBlockWithSidebarProps['items'];
+    sideBar?: boolean | MainBlockWithSidebarProps["items"];
 
     /**
      * 用于社交分享 & 控制细节样式
@@ -112,7 +112,9 @@ interface Props {
      * 渲染模糊的背景图
      *  - 需传入 Sanity CMS 图片文件名或 Sanity 图片链接
      */
-    blurredBackgroundImage?: React.ComponentProps<typeof BlurredBackgroundImage>;
+    blurredBackgroundImage?: React.ComponentProps<
+        typeof BlurredBackgroundImage
+    >;
 }
 
 // ============================================================================
@@ -134,15 +136,15 @@ interface Props {
 //
 // ============================================================================
 
-const {
-    header = false,
-    banner = false,
-    footer = false,
-} = Astro.props;
+const { header = false, banner = false, footer = false } = Astro.props;
 
 const forcedColorScheme = Astro.cookies.get(FORCE_COLOR_SCHEME)?.value;
-const contentListAutoLoadMore = Astro.cookies.get(CONTENT_LIST_AUTO_LOAD_MORE)?.value;
-const videoItemShowPlatformLinksOnHover = Astro.cookies.get(VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER)?.value;
+const contentListAutoLoadMore = Astro.cookies.get(
+    CONTENT_LIST_AUTO_LOAD_MORE,
+)?.value;
+const videoItemShowPlatformLinksOnHover = Astro.cookies.get(
+    VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
+)?.value;
 const { htmlClassList = [] } = Astro.props;
 
 // ============================================================================
@@ -154,27 +156,28 @@ const { htmlClassList = [] } = Astro.props;
 
 <!doctype html>
 <html
-    lang={Astro.currentLocale || 'zh'}
+    lang={Astro.currentLocale || "zh"}
     data-content-type={Astro.props.contentType}
     class:list={[
-        forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : '',
-        videoItemShowPlatformLinksOnHover === '1'
-            ? 'option-video-item-show-platform-links-on-hover'
-            : '',
+        forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : "",
+        videoItemShowPlatformLinksOnHover === "1"
+            ? "option-video-item-show-platform-links-on-hover"
+            : "",
         ...htmlClassList,
-    ]}>
+    ]}
+>
     <head>
         <Fragment transition:persist="layout-global-header-elements">
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width" />
             <base target="_self" />
-            <link rel="icon" href="/favicon.ico" sizes="any">
-            <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-            <link rel="manifest" href="/manifest.json">
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+            <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+            <link rel="manifest" href="/manifest.json" />
             <link
                 rel="alternate"
                 type="application/rss+xml"
-                title={title + ' 最新模拟飞行视频'}
+                title={title + " 最新模拟飞行视频"}
                 href={new URL("/feed.xml", Astro.url)}
             />
             <link rel="sitemap" href="/sitemap-index.xml" />
@@ -204,30 +207,27 @@ const { htmlClassList = [] } = Astro.props;
     --dark-theme-color-p-90: ${themeColorDark}e6;
 }`}
             ></style>
-            <Font cssVariable='--font-helvetica-compressed' />
+            <Font cssVariable="--font-helvetica-compressed" />
         </Fragment>
-        {forcedColorScheme === 'dark'
-            ? <meta
-                name="theme-color"
-                content={themeColorDark}
-            />
-            : forcedColorScheme === 'light'
-            ? <meta
-                name="theme-color"
-                content={themeColorLight}
-            />
-            : (<Fragment>
+        {
+            forcedColorScheme === "dark" ? (
+                <meta name="theme-color" content={themeColorDark} />
+            ) : forcedColorScheme === "light" ? (
+                <meta name="theme-color" content={themeColorLight} />
+            ) : (
+                <Fragment>
                     <meta
-                    name="theme-color"
-                    content={themeColorLight}
-                    media="(prefers-color-scheme: light)"
-                />
-                <meta
-                    name="theme-color"
-                    content={themeColorDark}
-                    media="(prefers-color-scheme: dark)"
-                />
-            </Fragment>)
+                        name="theme-color"
+                        content={themeColorLight}
+                        media="(prefers-color-scheme: light)"
+                    />
+                    <meta
+                        name="theme-color"
+                        content={themeColorDark}
+                        media="(prefers-color-scheme: dark)"
+                    />
+                </Fragment>
+            )
         }
 
         <HeadPageInfos
@@ -240,42 +240,15 @@ const { htmlClassList = [] } = Astro.props;
             imageHeight={Astro.props.coverImageHeight}
         />
 
-        <!-- Google Tag Manager -->
-        {gtmId && (
-            <script is:inline async defer define:vars={{ gtmId }}>
-                (function (w, d, s, l, i) {
-                    w[l] = w[l] || [];
-                    w[l].push({
-                        "gtm.start": new Date().getTime(),
-                        event: "gtm.js",
-                    });
-                    var f = d.getElementsByTagName(s)[0],
-                        j = d.createElement(s),
-                        dl = l != "dataLayer" ? "&l=" + l : "";
-                    j.async = true;
-                    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-                    f.parentNode.insertBefore(j, f);
-                })(window, document, "script", "dataLayer", gtmId);
-            </script>
-        )}
-        <!-- End Google Tag Manager -->
-
-        {banner && <link rel="preload" as="image" href={bannerCoverImage.src} />}
+        {
+            banner && (
+                <link rel="preload" as="image" href={bannerCoverImage.src} />
+            )
+        }
 
         <ClientRouter />
     </head>
     <body>
-        <!-- Google Tag Manager (noscript) -->
-        {gtmId && (
-            <noscript>
-                <iframe
-                    src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
-                    height="0"
-                    width="0"
-                    style="display:none;visibility:hidden"></iframe>
-            </noscript>
-        )}
-        <!-- End Google Tag Manager (noscript) -->
         <script
             is:inline
             async
@@ -299,10 +272,17 @@ const { htmlClassList = [] } = Astro.props;
                 header={header}
                 originPathname={Astro.originPathname}
                 defaults={{
-                    videoSource: Astro.cookies.get(VIDEO_SOURCE)?.value as ValidVideoSourceType,
-                    forcedColorScheme: forcedColorScheme as 'dark' | 'light' | undefined,
-                    contentListAutoLoadMore: contentListAutoLoadMore as ValidContentListAutoLoadMoreType,
-                    videoItemShowPlatformLinksOnHover: (videoItemShowPlatformLinksOnHover || '0') as ValidVideoItemShowPlatformLinksOnHoverType,
+                    videoSource: Astro.cookies.get(VIDEO_SOURCE)
+                        ?.value as ValidVideoSourceType,
+                    forcedColorScheme: forcedColorScheme as
+                        | "dark"
+                        | "light"
+                        | undefined,
+                    contentListAutoLoadMore:
+                        contentListAutoLoadMore as ValidContentListAutoLoadMoreType,
+                    videoItemShowPlatformLinksOnHover:
+                        (videoItemShowPlatformLinksOnHover ||
+                            "0") as ValidVideoItemShowPlatformLinksOnHoverType,
                 }}
             >
                 <LogoSVG slot="logo" />
@@ -311,46 +291,55 @@ const { htmlClassList = [] } = Astro.props;
             <Announcements header={header} />
 
             <main>
-                {Astro.props.sideBar === true || Array.isArray(Astro.props.sideBar)
-                    ? (
-                        <MainBlockWithSidebar items={
-                            Array.isArray(Astro.props.sideBar)
-                                ? Astro.props.sideBar
-                                : undefined
-                        }>
+                {
+                    Astro.props.sideBar === true ||
+                    Array.isArray(Astro.props.sideBar) ? (
+                        <MainBlockWithSidebar
+                            items={
+                                Array.isArray(Astro.props.sideBar)
+                                    ? Astro.props.sideBar
+                                    : undefined
+                            }
+                        >
                             <slot />
-                            <slot name="sidebar-extra-items" slot="sidebar-extra-items" />
+                            <slot
+                                name="sidebar-extra-items"
+                                slot="sidebar-extra-items"
+                            />
                         </MainBlockWithSidebar>
+                    ) : (
+                        <slot />
                     )
-                    : <slot />
                 }
             </main>
 
-            {footer && (
-                <Footer>
-                    <LogoSVG slot="logo" />
-                </Footer>
-            )}
+            {
+                footer && (
+                    <Footer>
+                        <LogoSVG slot="logo" />
+                    </Footer>
+                )
+            }
 
-            <Navbar
-                header={header}
-                originPathname={Astro.originPathname}
-            />
-
+            <Navbar header={header} originPathname={Astro.originPathname} />
         </div>
 
         <PrepareClient
-            client:only 
+            client:only
             defaults={{
-                videoItemShowPlatformLinksOnHover: (videoItemShowPlatformLinksOnHover || '0') as ValidVideoItemShowPlatformLinksOnHoverType,
+                videoItemShowPlatformLinksOnHover:
+                    (videoItemShowPlatformLinksOnHover ||
+                        "0") as ValidVideoItemShowPlatformLinksOnHoverType,
             }}
         />
-        {Astro.props.blurredBackgroundImage && (
-            <BlurredBackgroundImage
-                client:idle
-                {...Astro.props.blurredBackgroundImage}
-            />
-        )}
+        {
+            Astro.props.blurredBackgroundImage && (
+                <BlurredBackgroundImage
+                    client:idle
+                    {...Astro.props.blurredBackgroundImage}
+                />
+            )
+        }
         <Fragment
             set:html={GlobalSymbolDefinitionsRaw}
             transition:persist="layout-global-symbol-definition"
@@ -358,7 +347,8 @@ const { htmlClassList = [] } = Astro.props;
         <div
             id={GLOBAL_PERSIST_RESOURCES_CONTAINER}
             transition:persist="layout-global-persist-resources-container"
-        />
+        >
+        </div>
     </body>
 </html>
 
