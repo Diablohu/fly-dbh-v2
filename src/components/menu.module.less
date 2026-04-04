@@ -55,12 +55,18 @@
         calc(100dvh - var(--position-top, 0px) - var(--menu-safe-edge))
     );
     max-width: min(
-        calc(100% - var(--position-left, 0px) + var(--position-right, 0px)),
-        calc(100% - var(--position-left, 0px))
+        calc(
+            100% - var(--position-left, 0px) + var(--position-right, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100% - var(--position-left, 0px) - var(--menu-safe-edge))
     );
     max-width: min(
-        calc(100vw - var(--position-left, 0px) + var(--position-right, 0px)),
-        calc(100vw - var(--position-left, 0px))
+        calc(
+            100vw - var(--position-left, 0px) + var(--position-right, 0px) -
+                var(--menu-safe-edge)
+        ),
+        calc(100vw - var(--position-left, 0px) - var(--menu-safe-edge))
     );
     overflow: auto;
     overscroll-behavior: contain;
