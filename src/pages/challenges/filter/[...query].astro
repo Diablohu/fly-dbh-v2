@@ -1,11 +1,13 @@
 ---
 import { actions, ActionError } from "astro:actions";
 
-import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
-import FormAndResult from "./_form-and-result.tsx";
-
+import { type ValidContentListAutoLoadMoreType } from "@/types";
+import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
 import { parseSearchParams } from "./_query";
 import { errorLog } from "@/utils/log";
+
+import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
+import FormAndResult from "./_form-and-result/index.tsx";
 
 // ============================================================================
 //
@@ -82,5 +84,8 @@ if (errorinitialResult) {
         initialHazards={initialConditions.hazards}
         initialResult={initialResult}
         noInitialCondition={!Astro.params.query}
+        defaultContentListAutoLoadMore={Astro.cookies.get(
+            CONTENT_LIST_AUTO_LOAD_MORE,
+        )?.value as ValidContentListAutoLoadMoreType}
     />
 </ChallengeListPage>

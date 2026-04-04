@@ -31,7 +31,7 @@ const Menu: FC<
         onOpen?: (elMenu: HTMLMenuElement) => unknown;
         onClose?: () => unknown;
         anchorPoint?: "topLeft" | "topRight" | "bottomRight" | "bottomLeft";
-        grow?: Array<"up" | "down" | "left" | "right">;
+        grow?: Array<"up" | "down" | "left" | "right" | "nowrap">;
         /**
          * 菜单的标题，会以 `sticky` 方式渲染，固定在菜单顶部，层级在所有菜单元素之上
          */
@@ -52,9 +52,12 @@ const Menu: FC<
     const AnchorRef = useRef<HTMLElement>(null);
     const AnchorProbeRef = useRef<HTMLSpanElement>(null);
     const ClickedOnMenuRef = useRef(false);
+    const LastRenderRef = useRef(false);
+    const AnchorPointRef = useRef(anchorPoint);
+    const GrowRef = useRef(grow);
 
     const [openState, setOpenState] = useState(_open);
-    const [render, setRender] = useState(false);
+    const [render, setRender] = useState(LastRenderRef.current);
 
     // const openMenu = useCallback(() => {
     //     setOpenState(true);
@@ -111,26 +114,38 @@ const Menu: FC<
     const repositionMenu = useCallback(() => {
         if (!MenuRef.current) return;
         if (!AnchorRef.current) return;
+
         const position = {
             top: "",
             right: "",
             bottom: "",
             left: "",
         };
+
+        // 如果菜单设置了 `nowrap`，每次都重置
+        if (GrowRef.current.includes("nowrap")) {
+            for (const [p, v] of Object.entries(position)) {
+                MenuRef.current.style.setProperty(
+                    `--position-${p}`,
+                    typeof v === "number" ? `${v}px` : v,
+                );
+            }
+        }
+
         const bodyRect = document.body.getBoundingClientRect();
         const rect = AnchorRef.current.getBoundingClientRect();
-        switch (anchorPoint) {
+        switch (AnchorPointRef.current) {
             case "topLeft": {
                 position.top = `${rect.top}px`;
                 position.left = `${rect.left}px`;
                 break;
             }
             case "topRight": {
-                if (grow.includes("up"))
+                if (GrowRef.current.includes("up"))
                     position.top = `${rect.top - MenuRef.current.offsetHeight}px`;
                 else position.top = `${rect.top}px`;
 
-                if (grow.includes("right"))
+                if (GrowRef.current.includes("right"))
                     position.left = `${rect.left + rect.width}px`;
                 else position.right = `${bodyRect.right - rect.right}px`;
 
@@ -138,17 +153,22 @@ const Menu: FC<
             }
             case "bottomLeft": {
                 position.top = `${rect.top + rect.height}px`;
-                position.left = `${rect.left}px`;
+                if (
+                    GrowRef.current.includes("nowrap") &&
+                    rect.left + MenuRef.current.offsetWidth > window.innerWidth
+                )
+                    position.left = `${window.innerWidth - MenuRef.current.offsetWidth}px`;
+                else position.left = `${rect.left}px`;
                 break;
             }
             case "bottomRight": {
-                if (grow.includes("up"))
+                if (GrowRef.current.includes("up"))
                     position.bottom = `max(var(--menu-safe-edge), ${
                         window.innerHeight - rect.top - rect.height
                     }px)`;
                 else position.top = `${rect.top + rect.height}px`;
 
-                if (grow.includes("right"))
+                if (GrowRef.current.includes("right"))
                     position.left = `${rect.left + rect.width}px`;
                 else position.right = `${bodyRect.right - rect.right}px`;
 
@@ -163,7 +183,7 @@ const Menu: FC<
                 typeof v === "number" ? `${v}px` : v,
             );
         }
-    }, [anchorPoint, grow]);
+    }, []);
 
     useWindow(repositionMenu, {
         resize: true,
@@ -203,11 +223,17 @@ const Menu: FC<
     // 1. 重新定位菜单位置
     // 2. 触发 `onOpen`
     useEffect(() => {
-        if (render) {
+        if (render && LastRenderRef.current !== render) {
             repositionMenu();
             if (MenuRef.current) onOpen?.(MenuRef.current);
         }
+        LastRenderRef.current = render;
     }, [render, repositionMenu, onOpen]);
+
+    useEffect(() => {
+        AnchorPointRef.current = anchorPoint;
+        GrowRef.current = grow;
+    }, [anchorPoint, grow]);
 
     return globalThis.window ? (
         <>
@@ -258,6 +284,23 @@ export const MenuItem: FC<HTMLAttributes<HTMLDivElement>> = memo(
         );
     },
 );
+
+export const MenuBlockItem: FC<
+    { isActive?: boolean } & HTMLAttributes<HTMLDivElement>
+> = memo(({ className, isActive = false, ...props }) => {
+    return (
+        <MenuItem
+            className={classNames([
+                styles["menu-block-item"],
+                className,
+                {
+                    [styles["is-active"]]: isActive,
+                },
+            ])}
+            {...props}
+        />
+    );
+});
 
 export const MenuTitleItem: FC<
     HTMLAttributes<HTMLHeadingElement> & {

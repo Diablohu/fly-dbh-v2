@@ -5,7 +5,7 @@ const useWindow = (
     options: {
         resize?: boolean;
         scroll?: boolean;
-    }
+    },
 ) => {
     const AnimateTickingRef = useRef(false);
     const AnimateRequestTick = useRef(() => {
@@ -18,19 +18,22 @@ const useWindow = (
 
     const listeningOnResize = useMemo(
         () => options?.resize || false,
-        [options]
+        [options],
     );
     const listeningOnScroll = useMemo(
         () => options?.scroll || false,
-        [options]
+        [options],
     );
 
-    const setStylesFunction = useCallback((force?: boolean) => {
-        // reset the tick so we can
-        // capture the next onScroll
-        AnimateTickingRef.current = false;
-        func(force);
-    }, [func]);
+    const setStylesFunction = useCallback(
+        (force?: boolean) => {
+            // reset the tick so we can
+            // capture the next onScroll
+            AnimateTickingRef.current = false;
+            func(force);
+        },
+        [func],
+    );
 
     const setStyles = useCallback(() => {
         if (!AnimateTickingRef.current) {
@@ -45,7 +48,7 @@ const useWindow = (
             if (window.ResizeObserver) {
                 if (!WindowResizeObserverRef.current) {
                     WindowResizeObserverRef.current = new ResizeObserver(() =>
-                        setStyles()
+                        setStyles(),
                     );
                     WindowResizeObserverRef.current.observe(document.body);
                 }

@@ -1,0 +1,203 @@
+@import "@/utils/mixins.less";
+
+.form {
+    --sticky-extra-top: calc(var(--hero-image-margin-bottom) * 0.6667);
+    --sticky-extend-padding: calc(var(--global-edge-safe-distance) * 0.5);
+
+    --background-color: transparent;
+    --border-color: transparent;
+    --border-radius: 0;
+    --backdrop-filter: none;
+    --padding-x: 0;
+    --box-shadow: none;
+
+    --filter-background-opacity: 0;
+
+    --actions-flex: 0;
+    --actions-border-top: none;
+
+    &.is-sticky {
+        --background-color: var(--global-header-background-color);
+        --border-color: var(--menu-border-color);
+        --border-radius: 0.6667em;
+        --backdrop-filter: var(--backdrop-filter-glass);
+        --padding-x: var(--sticky-extend-padding);
+        --box-shadow: var(--overlay-box-shadow);
+    }
+    .screen-sm({
+        --sticky-extra-top: calc(var(--hero-image-margin-bottom) * 0.6667 + 3em);
+    });
+    .screen-md-below({
+        --actions-flex: 1 0 100%;
+        --actions-border-top: 1px solid var(--menu-border-color);
+    });
+
+    position: sticky;
+    top: calc(var(--global-header-height) + var(--sticky-extra-top));
+    z-index: 100;
+
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-bottom-color: var(--menu-border-color);
+    border-radius: var(--border-radius);
+    // overflow: hidden;
+    backdrop-filter: var(--backdrop-filter);
+    // background: var(--menu-background-color);
+    // background: var(--theme-color-invert);
+
+    // margin-top: calc(var(--hero-image-margin-bottom) * -1);
+    margin-top: calc(
+        var(--hero-image-margin-bottom) - var(--global-edge-safe-distance)
+    );
+    margin-bottom: 1em;
+    margin-left: calc(var(--padding-x) * -1);
+    margin-right: calc(var(--padding-x) * -1);
+
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0 var(--padding-x);
+    gap: 0 0.5em;
+    // padding-top: var(--hero-image-margin-bottom);
+    // padding-bottom: 0.75em;
+
+    box-shadow: var(--box-shadow);
+    transition: none var(--base-transition-duration);
+    transition-property:
+        background-color, border-color, border-radius, margin, padding,
+        box-shadow;
+    will-change: margin, padding, box-shadow;
+
+    & > .filter {
+        flex: 1;
+        position: relative;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        min-height: 3em;
+        cursor: pointer;
+        & > .options {
+            display: none;
+            flex: none;
+        }
+        & > .label {
+            --arrow-size: 1em;
+            flex: 0 0 4.25em;
+            position: relative;
+            padding-left: calc(var(--arrow-size) + 0.75em);
+            color: var(--text-color-secondary);
+            & > svg {
+                width: var(--arrow-size);
+                height: var(--arrow-size);
+                position: absolute;
+                top: 50%;
+                left: 0.25em;
+                margin-top: calc(var(--arrow-size) * -0.5);
+            }
+        }
+        & > .current {
+            position: relative;
+            flex: 1;
+            color: var(--text-color-primary);
+            & > strong {
+                position: absolute;
+                top: 50%;
+                line-height: 1em;
+                width: 100%;
+                margin-top: -0.5em;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: calc(var(--sticky-extend-padding) * 0.6667);
+            bottom: calc(var(--sticky-extend-padding) * 0.6667);
+            left: calc(var(--sticky-extend-padding) * -0.3333);
+            right: 0;
+            background: var(--tag-background-color);
+            opacity: var(--filter-background-opacity);
+            transition: opacity var(--base-transition-duration);
+            border-radius: 0.3333em;
+        }
+        .styles-hover() {
+            --filter-background-opacity: 1;
+        }
+        &.is-menu-open {
+            .styles-hover();
+        }
+        .pointer-hover(.styles-hover());
+    }
+    & > .actions {
+        flex: var(--actions-flex);
+        padding: calc(var(--sticky-extend-padding) * 0.6667) 0;
+        white-space: nowrap;
+        text-align: center;
+        border-top: var(--actions-border-top);
+
+        button {
+            padding: 0.15em 1em;
+            & + button {
+                margin-left: calc(var(--sticky-extend-padding) * 0.5);
+            }
+        }
+    }
+}
+
+.option-in-menu {
+    & > .label {
+        cursor: pointer;
+        each(range(1, 10, 2), {
+            &[data-difficulty="@{value}"] {
+                --menu-item-text-color: var(--difficulty-color-@{value});
+            }
+        });
+    }
+}
+
+.option-in-menu-checked(@name, @index: -1) {
+    :global(body:has(#__challenge-filter-@{name}-@{index}:checked))
+        .option-in-menu
+        :global(label[for=~"__challenge-filter-@{name}-@{index}"]) {
+        --block-background-opacity: 1;
+    }
+}
+.option-in-menu-checked-loop(@name, @length) {
+    .option-in-menu-checked(@name, -1);
+    each(range(0, @length, 1), {
+        .option-in-menu-checked(@name, @value);
+    });
+}
+.option-in-menu-checked-loop(difficulties, 10);
+.option-in-menu-checked-loop(aircraftTypes, 10);
+.option-in-menu-checked-loop(hazards, 50);
+
+.no-result,
+.no-initial-condition {
+    margin: 0 auto;
+    width: auto;
+    text-align: center;
+    margin: 2em 0 4em 0;
+    & > strong {
+        font-size: 1.6667em;
+    }
+    & > p {
+        font-size: 1.25em;
+    }
+}
+.no-result {
+    & > strong {
+        color: var(--text-color-primary);
+    }
+}
+
+.loading-spinner {
+    .spinner-styles();
+    margin: 3em auto 4.5em auto;
+    padding: 0;
+    // transition-property:
+    //     background-color, border-color, border-width, transform, opacity,
+    //     padding;
+}

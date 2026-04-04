@@ -11,7 +11,10 @@ const keys = {
 // ============================================================================
 
 export const parseSearchParams = (searchParams: URLSearchParams) => {
-    const difficulties = (searchParams.get(keys.difficulties)?.split(",") ||
+    const difficulties = (searchParams
+        .get(keys.difficulties)
+        ?.split(",")
+        .map(Number) ||
         []) as unknown as ChallengeListQueryConditionType["difficulties"];
     const types = (searchParams.get(keys.types)?.split(",") ||
         []) as unknown as ChallengeListQueryConditionType["types"];

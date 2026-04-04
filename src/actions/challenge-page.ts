@@ -62,7 +62,7 @@ const getGroqFiltersChallengeList = ({
         (sort === "latest" ? "&& defined(airac_cyle)" : "") +
         // 筛选难度，方式：`OR`
         (Array.isArray(difficulties) && difficulties.length > 0
-            ? `(${difficulties.map((difficulty) => `difficulty == "${difficulty}"`).join(" || ")})`
+            ? `&& (${difficulties.map((difficulty) => `difficulty == ${Number(difficulty)}`).join(" || ")})`
             : "") +
         // 筛选机型，方式：`AND`
         (Array.isArray(types) && types.length > 0
@@ -70,8 +70,10 @@ const getGroqFiltersChallengeList = ({
             : "") +
         // 筛选难点灾害，方式：`AND`
         (Array.isArray(hazards) && hazards.length > 0
-            ? hazards.map((hazard) => `&& "${hazard}" in hazards[].hazard->_id`)
-            : [])
+            ? hazards
+                  .map((hazard) => `&& "${hazard}" in hazards[].hazard->_id`)
+                  .join("")
+            : "")
     }]`;
 
 export const getGroqQueryChallengeList = ({

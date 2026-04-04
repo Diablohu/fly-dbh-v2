@@ -48,6 +48,28 @@ type Props = {
      *      - 即，不显示按钮时，也能自动加载更多
      */
     showLoadMoreButton?: boolean;
+
+    /**
+     * 条件：难度
+     * - 没有表示**全部**
+     */
+    conditionDifficulties?: Parameters<
+        typeof actions.challengePage.fetchList
+    >[0]["difficulties"];
+    /**
+     * 条件：机型
+     * - 没有表示**全部**
+     */
+    conditionTypes?: Parameters<
+        typeof actions.challengePage.fetchList
+    >[0]["types"];
+    /**
+     * 条件：难点灾害
+     * - 没有表示**全部**
+     */
+    conditionHazards?: Parameters<
+        typeof actions.challengePage.fetchList
+    >[0]["hazards"];
 } & Pick<
     ComponentProps<typeof ChallengeItem>,
     "showMaxCategory" | "showAircraftTypes"
@@ -69,6 +91,9 @@ const ChallengeListGrid: FC<Props> = ({
     showLoadMoreButton = true,
     showMaxCategory = false,
     showAircraftTypes = false,
+    conditionDifficulties,
+    conditionTypes,
+    conditionHazards,
 }) => {
     if (
         infiniteScroll &&
@@ -88,14 +113,24 @@ const ChallengeListGrid: FC<Props> = ({
                     sort:
                         sort ??
                         (catalog === "latest" ? "latest" : "difficulty"),
-                    types:
-                        catalog === "latest" || catalog === "filter"
-                            ? undefined
-                            : [catalog],
+                    types: conditionTypes
+                        ? conditionTypes
+                        : catalog === "latest" || catalog === "filter"
+                          ? undefined
+                          : [catalog],
+                    difficulties: conditionDifficulties,
+                    hazards: conditionHazards,
                 })
                 .then((res) => res.data);
         },
-        [catalog, length, sort],
+        [
+            catalog,
+            length,
+            sort,
+            conditionDifficulties,
+            conditionTypes,
+            conditionHazards,
+        ],
     );
 
     const itemRender = useMemo<FC<ChallengeListItemType>>(

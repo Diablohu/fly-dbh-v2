@@ -18,7 +18,7 @@ import getVideoCategoryInfoFromRawTypeData, {
     type CategoryInfoType,
 } from "@/utils/get-video-category-info-from-raw-type-data";
 
-import Menu, { MenuItem } from "@/components/menu";
+import Menu, { MenuBlockItem } from "@/components/menu";
 
 import styles from "./explore.module.less";
 
@@ -71,8 +71,8 @@ const Explore: FC<
 
         setStatus("loading");
 
-        actions
-            .videoListPage.fetchTags({
+        actions.videoListPage
+            .fetchTags({
                 type: type === "tag" ? "tagSubCategory" : type,
             })
             .then((res) => {
@@ -90,7 +90,7 @@ const Explore: FC<
                                       name: item.title,
                                       route: getVideoListPageLink(
                                           type,
-                                          item.slug
+                                          item.slug,
                                       ),
                                       isActive:
                                           listType === type &&
@@ -99,12 +99,12 @@ const Explore: FC<
                                 : {
                                       ...getVideoCategoryInfoFromRawTypeData(
                                           type,
-                                          item
+                                          item,
                                       ),
                                       isActive:
                                           listType === type &&
                                           listSlug === item.slug,
-                                  }
+                                  },
                         )
                         .filter(Boolean);
                     setList(list as CategoryInfoType[]);
@@ -164,18 +164,14 @@ const Explore: FC<
                     stickyTitle={title}
                 >
                     {list.map((item) => (
-                        <MenuItem
+                        <MenuBlockItem
                             key={item.route}
                             className={styles["menu-link-wrapper"]}
+                            isActive={item.isActive}
                         >
                             <a
                                 href={item.route}
-                                className={classNames([
-                                    styles["menu-link"],
-                                    {
-                                        [styles["is-active"]]: item.isActive,
-                                    },
-                                ])}
+                                className={styles["menu-link"]}
                             >
                                 {item.prefix ? (
                                     <small className={styles["prefix"]}>
@@ -187,7 +183,7 @@ const Explore: FC<
                                 {item.name}
                                 {item.suffix ? ` (${item.suffix})` : ""}
                             </a>
-                        </MenuItem>
+                        </MenuBlockItem>
                     ))}
                 </Menu>
             </span>

@@ -11,8 +11,8 @@
     // --position-right: auto;
     --menu-safe-edge: 1em;
 
-    --item-min-height: 2.5em;
-    --item-line-height: 1.1em;
+    --menu-item-min-height: 2.5em;
+    --menu-item-line-height: 1.1em;
 
     --space-y: 0.5em;
 
@@ -35,38 +35,32 @@
     transition: opacity @base-transition-duration;
     max-height: min(
         calc(
-            100% + var(--position-top, 0px) - var(--position-bottom, 0px) -
+            100% - var(--position-top, 0px) - var(--position-bottom, 0px) -
                 var(--menu-safe-edge)
         ),
-        calc(100% + var(--position-top, 0px) - var(--menu-safe-edge))
+        calc(100% - var(--position-top, 0px) - var(--menu-safe-edge))
     );
     max-height: min(
         calc(
-            100vh + var(--position-top, 0px) - var(--position-bottom, 0px) -
+            100vh - var(--position-top, 0px) - var(--position-bottom, 0px) -
                 var(--menu-safe-edge)
         ),
-        calc(100vh + var(--position-top, 0px) - var(--menu-safe-edge))
+        calc(100vh - var(--position-top, 0px) - var(--menu-safe-edge))
     );
     max-height: min(
         calc(
-            100dvh + var(--position-top, 0px) - var(--position-bottom, 0px) -
+            100dvh - var(--position-top, 0px) - var(--position-bottom, 0px) -
                 var(--menu-safe-edge)
         ),
-        calc(100dvh + var(--position-top, 0px) - var(--menu-safe-edge))
+        calc(100dvh - var(--position-top, 0px) - var(--menu-safe-edge))
     );
     max-width: min(
-        calc(
-            100% - var(--position-left, 0px) + var(--position-right, 0px) -
-                var(--menu-safe-edge)
-        ),
-        calc(100% - var(--position-left, 0px) - var(--menu-safe-edge))
+        calc(100% - var(--position-left, 0px) + var(--position-right, 0px)),
+        calc(100% - var(--position-left, 0px))
     );
     max-width: min(
-        calc(
-            100vw - var(--position-left, 0px) + var(--position-right, 0px) -
-                var(--menu-safe-edge)
-        ),
-        calc(100vw - var(--position-left, 0px) - var(--menu-safe-edge))
+        calc(100vw - var(--position-left, 0px) + var(--position-right, 0px)),
+        calc(100vw - var(--position-left, 0px))
     );
     overflow: auto;
     overscroll-behavior: contain;
@@ -115,18 +109,77 @@
     --extra-padding-top: 0px;
     --extra-padding-bottom: 0px;
     display: block;
-    min-height: var(--item-min-height);
-    line-height: var(--item-line-height);
+    position: relative;
+    min-height: var(--menu-item-min-height);
+    line-height: var(--menu-item-line-height);
     padding: calc(
-            (var(--item-min-height) - var(--item-line-height)) / 2 +
+            (var(--menu-item-min-height) - var(--menu-item-line-height)) / 2 +
                 var(--extra-padding-top)
         )
         @global-edge-safe-distance-sm
         calc(
-            (var(--item-min-height) - var(--item-line-height)) / 2 +
+            (var(--menu-item-min-height) - var(--menu-item-line-height)) / 2 +
                 var(--extra-padding-bottom)
         )
         @global-edge-safe-distance-sm;
+
+    &.menu-block-item {
+        --block-background-opacity: 0;
+        --menu-item-text-color: var(--text-color-primary);
+        & > :first-child:last-child {
+            color: var(--menu-item-text-color);
+            display: block;
+            margin: calc(
+                    (
+                            var(--menu-item-min-height) -
+                                var(--menu-item-line-height)
+                        ) /
+                        -2
+                ) -1.2em;
+            padding: calc(
+                    (
+                            var(--menu-item-min-height) -
+                                var(--menu-item-line-height)
+                        ) /
+                        2
+                )
+                1.25em
+                calc(
+                    (
+                            var(--menu-item-min-height) -
+                                var(--menu-item-line-height)
+                        ) /
+                        2
+                )
+                1.25em;
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0.5em;
+                right: 0.5em;
+                z-index: -1;
+                background: var(--tag-background-color);
+                opacity: var(--block-background-opacity);
+                border-radius: 8px;
+                transition: opacity var(--base-transition-duration);
+            }
+            .styles-hover() {
+                --block-background-opacity: 1;
+            }
+            .pointer-hover(.styles-hover());
+        }
+        & > a:first-child:last-child {
+            text-decoration: none;
+        }
+        &.is-active {
+            --block-background-opacity: 1;
+        }
+        & + .menu-block-item {
+            margin-top: 0.25em;
+        }
+    }
 }
 .menu-title-item {
     margin: 0;
