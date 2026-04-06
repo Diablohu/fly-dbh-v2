@@ -167,7 +167,10 @@ const pageTitle = {
         Astro.props.catalog === "latest"
             ? "最新收录"
             : Astro.props.catalog === "filter"
-              ? "查询 / 抽选"
+              ? // TODO: unlock `抽选`
+                import.meta.env.DEV
+                  ? "查询 / 抽选"
+                  : "查询"
               : aircraftTypeString[Astro.props.catalog as AircraftTypes],
 };
 

@@ -86,6 +86,7 @@ const SearchFormAndResult: FC<{
 }) => {
     const FormContainerRef = useRef<HTMLFormElement>(null);
     const ScrollToRef = useRef<HTMLDivElement>(null);
+    const NeedScrollBackRef = useRef(false);
 
     const { isSticky, ProbeRef } = useSticky({
         ContainerRef: FormContainerRef,
@@ -200,6 +201,9 @@ const SearchFormAndResult: FC<{
 
     useEffect(() => {
         if (status === "loading" && isSticky) {
+            NeedScrollBackRef.current = true;
+        }
+        if (status === "ready" && NeedScrollBackRef.current) {
             // console.log(
             //     ScrollToRef.current?.offsetTop,
             //     ProbeRef.current?.offsetTop,
@@ -222,6 +226,7 @@ const SearchFormAndResult: FC<{
             //         FormContainerRef.current?.getBoundingClientRect()?.height!,
             //     behavior: "smooth",
             // });
+            NeedScrollBackRef.current = false;
         }
     }, [status, isSticky]);
 
