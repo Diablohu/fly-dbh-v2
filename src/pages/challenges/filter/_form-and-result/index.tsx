@@ -193,10 +193,7 @@ const SearchFormAndResult: FC<{
     }, []);
 
     useEffect(() => {
-        setQueryTimestamp((prev) => {
-            // if (prev > 0) onResultChangeAfterInit();
-            return Date.now();
-        });
+        setQueryTimestamp(Date.now());
     }, [results]);
 
     useEffect(() => {
