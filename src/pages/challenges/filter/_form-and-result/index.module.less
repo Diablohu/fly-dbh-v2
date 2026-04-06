@@ -9,12 +9,15 @@
     --border-radius: 0;
     --backdrop-filter: none;
     --padding-x: 0;
+    --padding-y: 0.6667em;
     --box-shadow: none;
 
     --filter-background-opacity: 0;
+    --filter-min-height: 3em;
 
     --actions-flex: 0;
     --actions-border-top: none;
+    --actions-margin-top: 0px;
 
     &.is-sticky {
         --background-color: var(--global-header-background-color);
@@ -30,6 +33,8 @@
     .screen-md-below({
         --actions-flex: 1 0 100%;
         --actions-border-top: 1px solid var(--menu-border-color);
+        --filter-min-height: calc(3.3em - var(--padding-y) / 2);
+        --actions-margin-top: calc(var(--padding-y) / 2);
     });
 
     position: sticky;
@@ -55,7 +60,7 @@
 
     display: flex;
     flex-flow: row wrap;
-    padding: 0 var(--padding-x);
+    padding: 0 var(--padding-x) calc(var(--padding-y) / 2) var(--padding-x);
     gap: 0 0.5em;
     // padding-top: var(--hero-image-margin-bottom);
     // padding-bottom: 0.75em;
@@ -73,7 +78,10 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        min-height: 3em;
+        min-height: var(--filter-min-height);
+        padding-top: var(--padding-y);
+        padding-bottom: calc(var(--padding-y) / 2);
+        // margin-bottom: -0.6667em;
         cursor: pointer;
         & > .options {
             display: none;
@@ -83,8 +91,11 @@
             --arrow-size: 1em;
             flex: 0 0 4.25em;
             position: relative;
+            // padding-top: calc(var(--sticky-extend-padding) * 0.6667);
+            // padding-bottom: calc(var(--sticky-extend-padding) * 0.6667);
             padding-left: calc(var(--arrow-size) + 0.75em);
             color: var(--text-color-secondary);
+            // line-height: 1.6667em;
             & > svg {
                 width: var(--arrow-size);
                 height: var(--arrow-size);
@@ -121,8 +132,10 @@
             content: "";
             position: absolute;
             z-index: -1;
-            top: calc(var(--sticky-extend-padding) * 0.6667);
-            bottom: calc(var(--sticky-extend-padding) * 0.6667);
+            top: var(--padding-y);
+            // bottom: calc(var(--sticky-extend-padding) * 0.6667);
+            bottom: calc(var(--padding-y) * 0.5);
+            // bottom: 0;
             left: calc(var(--sticky-extend-padding) * -0.3333);
             right: 0;
             background: var(--tag-background-color);
@@ -140,10 +153,12 @@
     }
     & > .actions {
         flex: var(--actions-flex);
-        padding: calc(var(--sticky-extend-padding) * 0.6667) 0;
+        padding-top: var(--padding-y);
+        padding-bottom: var(--actions-margin-top);
         white-space: nowrap;
         text-align: center;
         border-top: var(--actions-border-top);
+        margin-top: var(--actions-margin-top);
 
         button {
             padding: 0.15em 1em;
@@ -157,8 +172,8 @@
         content: "";
         position: absolute;
         z-index: -1;
-        top: calc(-0.5em - var(--sticky-extra-top));
-        bottom: 100%;
+        top: calc(-2px - var(--sticky-extra-top));
+        bottom: calc(100% + 1px);
         left: 0;
         right: 0;
         background: var(--global-header-background-color);
@@ -196,6 +211,7 @@
                 height: 100%;
                 top: 0;
                 left: 0;
+                margin-left: -0.2em;
             }
             &::before {
                 z-index: 1;
