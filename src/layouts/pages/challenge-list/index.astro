@@ -189,14 +189,15 @@ const pageTitle = {
             route: routeBase.challenges,
             isActive: Astro.props.catalog === "latest",
         },
+        {
+            type: "link" as const,
+            // TODO: unlock `抽选`
+            text: import.meta.env.DEV ? "查询 / 抽选" : "查询",
+            route: getChallengeCatalogPageLink("filter"),
+            isActive: Astro.props.catalog === "filter",
+        },
         ...(import.meta.env.DEV
             ? [
-                  {
-                      type: "link" as const,
-                      text: "查询 / 抽选",
-                      route: getChallengeCatalogPageLink("filter"),
-                      isActive: Astro.props.catalog === "filter",
-                  },
                   {
                       type: "link" as const,
                       text: "[DEV] 门户",
@@ -309,6 +310,7 @@ const pageTitle = {
         --hero-image-blur-from: 7em;
         --hero-image-blur-to: 33.3333%;
         --hero-image-margin-bottom: 1em;
+        --hero-image-z-index: 10;
         --container-padding-top: 1.25em;
         padding-top: var(--container-padding-top);
         padding-bottom: 4em;
@@ -329,7 +331,7 @@ const pageTitle = {
 
     .hero-image {
         position: relative;
-        z-index: 1;
+        z-index: var(--hero-image-z-index);
         height: var(--hero-image-height);
         background: var(--dark-theme-color);
         margin-bottom: var(--hero-image-margin-bottom);

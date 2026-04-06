@@ -84,11 +84,11 @@ const SearchFormAndResult: FC<{
 
     defaultContentListAutoLoadMore,
 }) => {
-    const ContainerRef = useRef<HTMLFormElement>(null);
+    const FormContainerRef = useRef<HTMLFormElement>(null);
     const ScrollToRef = useRef<HTMLDivElement>(null);
 
-    const { isSticky } = useSticky({
-        ContainerRef,
+    const { isSticky, ProbeRef } = useSticky({
+        ContainerRef: FormContainerRef,
         cssVariableNameExtraTop: "--sticky-extra-top",
     });
 
@@ -120,12 +120,11 @@ const SearchFormAndResult: FC<{
                   hazards: initialHazards,
               },
     );
-    const [queryTimestamp, setQueryTimestamp] = useState<number>(Date.now());
+    const [queryTimestamp, setQueryTimestamp] = useState<number>(-1);
 
     const onSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (evt) => {
             evt.preventDefault();
-            console.log(status);
             if (status === "pending") return;
             if (status === "loading") return;
 
@@ -162,10 +161,6 @@ const SearchFormAndResult: FC<{
             setError("");
             setStatus("loading");
             // console.log(ScrollToRef.current?.offsetTop);
-            // window.scrollTo({
-            //     top: ScrollToRef.current?.offsetTop,
-            //     behavior: "smooth",
-            // });
             fetchAction({ sort: "difficulty", ...newConditions }).then(
                 ({ data, error }) => {
                     // if (res.status !== 200) {
@@ -197,8 +192,38 @@ const SearchFormAndResult: FC<{
     }, []);
 
     useEffect(() => {
-        setQueryTimestamp(Date.now());
+        setQueryTimestamp((prev) => {
+            // if (prev > 0) onResultChangeAfterInit();
+            return Date.now();
+        });
     }, [results]);
+
+    useEffect(() => {
+        if (status === "loading" && isSticky) {
+            // console.log(
+            //     ScrollToRef.current?.offsetTop,
+            //     ProbeRef.current?.offsetTop,
+            //     ProbeRef.current?.getBoundingClientRect()?.top,
+            //     FormContainerRef.current?.getBoundingClientRect()?.top,
+            //     FormContainerRef.current?.getBoundingClientRect()?.height,
+            //     window.scrollY,
+            // );
+            window.scrollTo({
+                top:
+                    ScrollToRef.current?.offsetTop! +
+                    ProbeRef.current?.offsetTop! -
+                    FormContainerRef.current?.offsetHeight! / 2,
+                behavior: "smooth",
+            });
+            // window.scrollTo({
+            //     top:
+            //         ScrollToRef.current?.offsetTop! +
+            //         FormContainerRef.current?.getBoundingClientRect()?.top! -
+            //         FormContainerRef.current?.getBoundingClientRect()?.height!,
+            //     behavior: "smooth",
+            // });
+        }
+    }, [status, isSticky]);
 
     return (
         <>
@@ -208,7 +233,7 @@ const SearchFormAndResult: FC<{
                 })}
                 method="GET"
                 onSubmit={onSubmit}
-                ref={ContainerRef}
+                ref={FormContainerRef}
             >
                 <Filter
                     label="难度"
@@ -242,9 +267,10 @@ const SearchFormAndResult: FC<{
                     name="hazards"
                     options={
                         hazards?.map((hazard) => ({
-                            label: `${hazard.emoji} ${hazard.name}`,
+                            label: hazard.name,
                             value: hazard._id,
                             difficulty: hazard.difficulty,
+                            emoji: hazard.emoji,
                         })) || []
                     }
                     initialValue={initialHazards}
@@ -255,13 +281,16 @@ const SearchFormAndResult: FC<{
                     <TagButton type="submit" disabled={status === "loading"}>
                         查询
                     </TagButton>
-                    <TagButton
-                        type="button"
-                        disabled={status === "loading"}
-                        onClick={onDraw}
-                    >
-                        抽选
-                    </TagButton>
+                    {/* // TODO: unlock `抽选` */}
+                    {import.meta.env.DEV && (
+                        <TagButton
+                            type="button"
+                            disabled={status === "loading"}
+                            onClick={onDraw}
+                        >
+                            抽选
+                        </TagButton>
+                    )}
                 </section>
             </form>
             <div ref={ScrollToRef} />

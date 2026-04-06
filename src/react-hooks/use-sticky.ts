@@ -68,7 +68,7 @@ const useSticky = (
         };
     }, []);
 
-    return { isSticky };
+    return { isSticky, ProbeRef };
 };
 
 export default useSticky;

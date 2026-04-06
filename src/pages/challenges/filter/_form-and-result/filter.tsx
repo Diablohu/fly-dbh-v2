@@ -30,6 +30,7 @@ const Filter: FC<{
         label: string;
         value: string | number;
         difficulty?: ChallengeDifficultyType;
+        emoji?: string;
     }>;
     initialValue?: Array<string | number>;
     multiple?: boolean;
@@ -60,14 +61,27 @@ const Filter: FC<{
     );
     // console.log({ initialValue, options });
 
+    const getSelectedHtmlFromSelectedValues = useCallback(
+        (selectedOptions?: Array<string | number>) => {
+            return (
+                selectedOptions
+                    ?.map((value) => {
+                        const option = options.find(
+                            (option) => option.value === value,
+                        );
+                        return option
+                            ? `<span data-difficulty="${option.difficulty}">${option.label}</span>`
+                            : "";
+                    })
+                    .join(", ") || "全部"
+            );
+        },
+        [options],
+    );
+
     const [showMenu, setShowMenu] = useState(false);
-    const [selectedText, setSelectedText] = useState(
-        initialValue
-            ?.map((value) => {
-                const option = options.find((option) => option.value === value);
-                return option ? option.label : "";
-            })
-            .join(", ") || "全部",
+    const [selectedHtml, setSelectedHtml] = useState(
+        getSelectedHtmlFromSelectedValues(initialValue),
     );
 
     const onClick = useCallback(() => {
@@ -86,12 +100,14 @@ const Filter: FC<{
     >(
         (evt) => {
             if (inputType === "radio")
-                return setSelectedText(() => {
+                return setSelectedHtml(() => {
                     const option = options.find(
                         (option) =>
                             option.value.toString() === evt.target.value,
                     );
-                    return option ? option.label : "全部";
+                    return getSelectedHtmlFromSelectedValues(
+                        option ? [option.value] : [],
+                    );
                 });
 
             const isAllOption = !evt.target.value;
@@ -99,7 +115,7 @@ const Filter: FC<{
             // 对于 `checkbox` 类型，`全部` 选项被取消选中时，强制保持选中状态
             if (isAllOption && !evt.target.checked) {
                 evt.target.checked = true;
-                return setSelectedText("全部");
+                return setSelectedHtml(getSelectedHtmlFromSelectedValues());
             }
 
             // 对于 `checkbox` 类型，`全部` 选项被选中时，取消所有非 `全部` 选项的选中状态
@@ -111,14 +127,16 @@ const Filter: FC<{
                         ) as HTMLInputElement;
                     if (optionInput) optionInput.checked = false;
                 });
-                return setSelectedText("全部");
+                return setSelectedHtml(getSelectedHtmlFromSelectedValues());
             }
+
+            /** 全部 `checkbox` 选项 */
+            const allOption = OptionsContainerRef.current?.querySelector(
+                `#${optionIdAll}`,
+            ) as HTMLInputElement;
 
             // 对于 `checkbox` 类型，若有任何一个非 `全部` 选项被选中时，强制取消 `全部` 选项的选中状态
             if (!isAllOption && evt.target.checked) {
-                const allOption = OptionsContainerRef.current?.querySelector(
-                    `#${optionIdAll}`,
-                ) as HTMLInputElement;
                 if (allOption) allOption.checked = false;
             }
 
@@ -126,6 +144,7 @@ const Filter: FC<{
             if (
                 !isAllOption &&
                 evt.target.checked &&
+                allOption &&
                 options.every((option) => {
                     const optionInput =
                         OptionsContainerRef.current?.querySelector(
@@ -134,41 +153,58 @@ const Filter: FC<{
                     return optionInput ? optionInput.checked : false;
                 })
             ) {
-                const allOption = OptionsContainerRef.current?.querySelector(
-                    `#${optionIdAll}`,
-                ) as HTMLInputElement;
-                if (allOption) {
-                    allOption.checked = true;
-                    options.forEach((option) => {
-                        const optionInput =
-                            OptionsContainerRef.current?.querySelector(
-                                `#${option.id}`,
-                            ) as HTMLInputElement;
-                        if (optionInput) optionInput.checked = false;
-                    });
-                }
+                allOption.checked = true;
+                options.forEach((option) => {
+                    const optionInput =
+                        OptionsContainerRef.current?.querySelector(
+                            `#${option.id}`,
+                        ) as HTMLInputElement;
+                    if (optionInput) optionInput.checked = false;
+                });
             }
 
-            return setSelectedText(
-                OptionsContainerRef.current
-                    ? [
-                          ...OptionsContainerRef.current?.querySelectorAll(
-                              `input[name="${name}"]:checked`,
-                          ),
-                      ]
-                          .map((input) => {
+            // 对于 `checkbox` 类型，若所有非 `全部` 选项被取消选中时，强制选中 `全部` 选项
+            if (
+                !isAllOption &&
+                !evt.target.checked &&
+                allOption &&
+                options.every((option) => {
+                    const optionInput =
+                        OptionsContainerRef.current?.querySelector(
+                            `#${option.id}`,
+                        ) as HTMLInputElement;
+                    return optionInput ? !optionInput.checked : true;
+                })
+            ) {
+                allOption.checked = true;
+            }
+
+            return setSelectedHtml(
+                getSelectedHtmlFromSelectedValues(
+                    OptionsContainerRef.current
+                        ? [
+                              ...OptionsContainerRef.current?.querySelectorAll(
+                                  `input[name="${name}"]:checked`,
+                              ),
+                          ].map((input) => {
                               const option = options.find(
                                   (option) =>
                                       option.value.toString() ===
                                       input.getAttribute("value"),
                               );
-                              return option ? option.label : "";
+                              return option ? option.value : "";
                           })
-                          .join(", ") || "全部"
-                    : "全部",
+                        : undefined,
+                ),
             );
         },
-        [name, inputType, options, optionIdAll],
+        [
+            name,
+            inputType,
+            options,
+            optionIdAll,
+            getSelectedHtmlFromSelectedValues,
+        ],
     );
 
     return (
@@ -191,7 +227,7 @@ const Filter: FC<{
                     onChange={onValueChange}
                     onClick={onInputClick}
                 />
-                {options.map(({ id, value }) => (
+                {options.map(({ id, value, difficulty, emoji }) => (
                     <input
                         key={id}
                         id={id}
@@ -201,6 +237,8 @@ const Filter: FC<{
                         defaultChecked={initialValue?.includes(value)}
                         onChange={onValueChange}
                         onClick={onInputClick}
+                        data-difficulty={difficulty}
+                        data-emoji={emoji}
                     />
                 ))}
             </section>
@@ -211,7 +249,11 @@ const Filter: FC<{
                 }}
             ></span>
             <span className={styles["current"]}>
-                <strong>{selectedText}</strong>
+                <strong
+                    dangerouslySetInnerHTML={{
+                        __html: selectedHtml,
+                    }}
+                />
             </span>
             <Menu
                 open={showMenu}
@@ -222,26 +264,44 @@ const Filter: FC<{
                 // stickyTitle={title}
             >
                 <MenuBlockItem className={styles["option-in-menu"]}>
-                    <label htmlFor={optionIdAll} className={styles["label"]}>
+                    <label
+                        htmlFor={optionIdAll}
+                        className={classNames([
+                            styles["label"],
+                            styles["radio"],
+                        ])}
+                    >
                         <em className={styles["indicator"]} />
-                        全部
+                        <span className={styles["text"]}>全部</span>
                     </label>
                 </MenuBlockItem>
                 <MenuLineItem />
-                {options.map(({ id, label, value, difficulty }) => (
+                {options.map(({ id, label, value, difficulty, emoji }) => (
                     <MenuBlockItem
                         key={id}
                         className={styles["option-in-menu"]}
                     >
                         <label
                             htmlFor={id}
-                            className={styles["label"]}
+                            className={classNames([
+                                styles["label"],
+                                inputType === "radio"
+                                    ? styles["radio"]
+                                    : styles["checkbox"],
+                            ])}
                             data-difficulty={difficulty}
                             data-value={value}
                             data-name={name}
                         >
                             <em className={styles["indicator"]} />
-                            {label}
+                            <span className={styles["text"]}>
+                                {emoji && (
+                                    <span className={styles["emoji"]}>
+                                        {emoji}
+                                    </span>
+                                )}
+                                {label}
+                            </span>
                         </label>
                     </MenuBlockItem>
                 ))}
