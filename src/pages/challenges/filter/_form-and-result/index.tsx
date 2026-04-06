@@ -190,10 +190,13 @@ const SearchFormAndResult: FC<{
 
     const onDraw = useCallback(() => {
         if (!FormContainerRef.current) return;
+
         const formData = new FormData(FormContainerRef.current);
+
         setError("");
         setQueryType("random");
         setStatus("loading");
+
         actions.challengePage
             .fetchRandomItem({
                 difficulties: formData
@@ -211,10 +214,11 @@ const SearchFormAndResult: FC<{
             })
             .then(({ data, error }) => {
                 setQueryType("random");
+
                 if (!data || (error && "status" in error)) {
                     const err = error as ActionError;
                     setStatus("error");
-                    if (err.status === 404)
+                    if (err?.status === 404)
                         return setResults({
                             list: [],
                             total: 0,
@@ -223,17 +227,17 @@ const SearchFormAndResult: FC<{
                     setError(`${error?.status} ${error?.code}`);
                     return;
                 }
+
+                // 标记需要滚动到列表顶部
+                NeedScrollBackRef.current = true;
+
                 setResults({
                     list: [data],
                     total: 1,
                     page: 1,
                 });
                 setStatus("ready");
-            })
-            .catch((err) => {
-                console.log(err);
             });
-        // alert("开发中……");
     }, []);
 
     useEffect(() => {
@@ -244,6 +248,7 @@ const SearchFormAndResult: FC<{
         setQueryTimestamp(Date.now());
     }, [results]);
 
+    // 当 `status` 变化时，检查是否需要滚动到列表顶部
     useEffect(() => {
         if (status === "loading" && isSticky) {
             NeedScrollBackRef.current = true;

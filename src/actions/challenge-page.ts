@@ -95,7 +95,7 @@ export const getGroqQueryChallengeList = ({
             : sort === "difficulty"
               ? "difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa, aerodrome.designator asc"
               : ""
-    }) [${from}...${from + length}]`;
+    }) [${from}${length > 1 ? `...${from + length}` : ""}]`;
 
 export const getGroqLatestChallenges = (length = 10) =>
     getGroqQueryChallengeList({ from: 0, length, sort: "latest" });
@@ -391,12 +391,12 @@ const actions = {
                     difficulties,
                     types,
                     hazards,
-                    from: randomIndex,
+                    from: randomIndex - 1,
                     length: 1,
                 });
                 const res = await fetch<ChallengeItemType>(queryString);
                 // console.log({ total, randomIndex, queryString, res });
-                if (!res || res.length === 0) {
+                if (!res || (Array.isArray(res) && res.length === 0)) {
                     const err = new ActionError({
                         message: E60002,
                         code: "NOT_FOUND",
@@ -404,7 +404,7 @@ const actions = {
                     err.cause = { GROQ: queryString };
                     throw err;
                 }
-                return res[0];
+                return Array.isArray(res) ? res[0] : res;
             } catch (err) {
                 actionErrorHandler(err);
             }

@@ -2,7 +2,7 @@
 import { actions } from "astro:actions";
 
 // import log from "@/layouts/pages/index/_log.ts";
-import { routeBase } from "@/global";
+import { routeBase, getChallengeCatalogPageLink } from "@/global";
 import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/root-classnames";
 
 import Layout from "@/layouts/layout.astro";
@@ -117,6 +117,13 @@ const spotlightConfigString = collections?.config.find(
             <TagButton href={getVideoListPageLink()}>分类浏览更多视频</TagButton
             ><TagButton href={routeBase.search}>搜索视频</TagButton>
         </section>
+        <section class="check-more">
+            <TagButton href={getChallengeCatalogPageLink()}
+                >分类浏览更多着陆挑战</TagButton
+            ><TagButton href={getChallengeCatalogPageLink("filter")}
+                >查询挑战</TagButton
+            >
+        </section>
     </Block>
 </Layout>
 
@@ -146,6 +153,9 @@ const spotlightConfigString = collections?.config.find(
                 border-bottom-left-radius: 0;
                 padding-left: 1.3333em;
             }
+        }
+        & + .check-more {
+            margin-top: -2em;
         }
     }
 </style>

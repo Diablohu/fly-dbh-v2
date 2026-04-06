@@ -331,3 +331,100 @@
     //     background-color, border-color, border-width, transform, opacity,
     //     padding;
 }
+
+.random-result {
+    --max-width: calc(
+        var(--body-safe-min-width) + var(--global-edge-safe-distance) * 2
+    );
+    --font-size: 1.25em;
+    --padding-top: 6em;
+
+    .screen-sm({
+        --max-width: calc(
+            var(--body-safe-min-width) - var(--global-edge-safe-distance) * 2
+        );
+        --font-size: 1em;
+        --padding-top: 4em;
+    });
+    .screen-md({
+        --max-width: calc(
+            var(--body-safe-min-width) - var(--global-edge-safe-distance) * 2
+        );
+        // --font-size: 1.3333em;
+    });
+
+    position: relative;
+    z-index: 1;
+    margin: -6em calc(var(--global-edge-safe-distance) * -1);
+    padding-top: var(--padding-top);
+    padding-bottom: 6em;
+    margin-bottom: 0;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        box-shadow: inset 0 0 var(--global-edge-safe-distance)
+            calc(var(--global-edge-safe-distance) / 2) var(--theme-color);
+        .screen-sm({
+            display: none;
+        });
+    }
+
+    .item {
+        max-width: var(--max-width);
+        font-size: var(--font-size);
+        margin: 5dvh auto 0 auto;
+        animation: drop-in 0.75s linear backwards;
+        transform-origin: 50% 50%;
+        @keyframes drop-in {
+            0% {
+                opacity: 0;
+                transform: scale(2);
+            }
+
+            12% {
+                transform: scale(1.89);
+            }
+
+            24% {
+                transform: scale(1.56);
+            }
+
+            36% {
+                transform: scale(1.02);
+            }
+
+            54% {
+                opacity: 1;
+                transform: scale(1.25);
+            }
+
+            74% {
+                transform: scale(1.02);
+            }
+
+            82% {
+                transform: scale(1.06);
+            }
+
+            92% {
+                transform: scale(1.01);
+            }
+
+            96% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+}

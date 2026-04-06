@@ -1,6 +1,8 @@
 import { memo, type FC } from "react";
 import { actions } from "astro:actions";
 
+import ChallengeItem from "@/components/challenge-item";
+
 import styles from "./index.module.less";
 
 // ============================================================================
@@ -17,7 +19,15 @@ const ResultRandom: FC<{
     result: Awaited<ReturnType<typeof fetchAction>>["data"];
 }> = ({ result }) => {
     if (Array.isArray(result?.list) && result.list.length > 0)
-        return JSON.stringify(result.list[0]);
+        return (
+            <div className={styles["random-result"]}>
+                <ChallengeItem
+                    className={styles["item"]}
+                    item={result.list[0]}
+                    showAircraftTypes
+                />
+            </div>
+        );
 
     return (
         <div className={styles["no-result"]}>
