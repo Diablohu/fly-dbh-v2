@@ -167,10 +167,7 @@ const pageTitle = {
         Astro.props.catalog === "latest"
             ? "最新收录"
             : Astro.props.catalog === "filter"
-              ? // TODO: unlock `抽选`
-                import.meta.env.DEV
-                  ? "查询 / 抽选"
-                  : "查询"
+              ? "查询 / 抽选"
               : aircraftTypeString[Astro.props.catalog as AircraftTypes],
 };
 
@@ -194,8 +191,7 @@ const pageTitle = {
         },
         {
             type: "link" as const,
-            // TODO: unlock `抽选`
-            text: import.meta.env.DEV ? "查询 / 抽选" : "查询",
+            text: "查询 / 抽选",
             route: getChallengeCatalogPageLink("filter"),
             isActive: Astro.props.catalog === "filter",
         },

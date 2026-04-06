@@ -331,16 +331,13 @@ const SearchFormAndResult: FC<{
                     <TagButton type="submit" disabled={status === "loading"}>
                         查询
                     </TagButton>
-                    {/* // TODO: unlock `抽选` */}
-                    {import.meta.env.DEV && (
-                        <TagButton
-                            type="button"
-                            disabled={status === "loading"}
-                            onClick={onDraw}
-                        >
-                            抽选
-                        </TagButton>
-                    )}
+                    <TagButton
+                        type="button"
+                        disabled={status === "loading"}
+                        onClick={onDraw}
+                    >
+                        抽选
+                    </TagButton>
                 </section>
             </form>
             <div ref={ScrollToRef} />

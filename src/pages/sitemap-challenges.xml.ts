@@ -8,14 +8,17 @@ import { generateResponse } from "@/services/sitemap";
 dayjs.extend(minMax);
 
 export const GET: APIRoute = async ({ site, callAction }) => {
-    return generateResponse(
-        (
+    return generateResponse([
+        {
+            loc: `${site}${getChallengePageLink().slice(1)}`,
+        },
+        ...((
             await callAction(actions.sitemap.fetchChallenges, undefined)
         ).data?.map((item) => ({
             loc: `${site}${getChallengePageLink(item.slug || item._id).slice(1)}`,
             lastmod: `${dayjs
                 .max(dayjs(item._updatedAt), dayjs(item.aerodrome._updatedAt))
                 .format("YYYY-MM-DD")}`,
-        })) || []
-    );
+        })) || []),
+    ]);
 };

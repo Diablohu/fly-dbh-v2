@@ -2,7 +2,7 @@ export function generateResponse(
     items: {
         loc: string;
         lastmod?: string;
-    }[]
+    }[],
 ) {
     return new Response(
         `\
@@ -13,13 +13,13 @@ export function generateResponse(
             ({ loc, lastmod }) => `\
     <url>
         <loc>${loc}</loc>
-        ${lastmod && `<lastmod>${lastmod}</lastmod>`}
-    </url>`
+        ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}
+    </url>`,
         )
         .join("\n")}
 </urlset>`,
         {
             headers: { "Content-Type": "application/xml" },
-        }
+        },
     );
 }
