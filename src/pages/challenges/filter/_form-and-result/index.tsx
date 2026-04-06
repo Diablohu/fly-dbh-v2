@@ -6,7 +6,7 @@ import {
     type FC,
     type SubmitEventHandler,
 } from "react";
-import { actions } from "astro:actions";
+import { actions, type ActionError } from "astro:actions";
 import classNames from "classnames";
 
 import {
@@ -26,6 +26,7 @@ import TagButton from "@/components/tag-button";
 
 import Filter from "./filter.tsx";
 import Results from "./results.tsx";
+import ResultRandom from "./result-random.tsx";
 
 import { toString as conditionsToString } from "../_query";
 
@@ -95,6 +96,7 @@ const SearchFormAndResult: FC<{
 
     const [status, setStatus] = useState<StatusType>("pending");
     const [error, setError] = useState<string>();
+    const [queryType, setQueryType] = useState<"list" | "random">("list");
     const [results, setResults] =
         useState<Awaited<ReturnType<typeof fetchAction>>["data"]>(
             initialResult,
@@ -160,10 +162,12 @@ const SearchFormAndResult: FC<{
             );
 
             setError("");
+            setQueryType("list");
             setStatus("loading");
             // console.log(ScrollToRef.current?.offsetTop);
             fetchAction({ sort: "difficulty", ...newConditions }).then(
                 ({ data, error }) => {
+                    setQueryType("list");
                     // if (res.status !== 200) {
                     //     setStatus("error");
                     //     setError(`Error: ${res.status} ${res.statusText}`);
@@ -185,7 +189,51 @@ const SearchFormAndResult: FC<{
     );
 
     const onDraw = useCallback(() => {
-        alert("开发中……");
+        if (!FormContainerRef.current) return;
+        const formData = new FormData(FormContainerRef.current);
+        setError("");
+        setQueryType("random");
+        setStatus("loading");
+        actions.challengePage
+            .fetchRandomItem({
+                difficulties: formData
+                    .getAll("difficulties")
+                    .filter(Boolean)
+                    .map((value) =>
+                        Number(value),
+                    ) as Array<ChallengeDifficultyType>,
+                types: formData
+                    .getAll("aircraftTypes")
+                    .filter(Boolean) as Array<AircraftTypes>,
+                hazards: formData
+                    .getAll("hazards")
+                    .filter(Boolean) as Array<string>,
+            })
+            .then(({ data, error }) => {
+                setQueryType("random");
+                if (!data || (error && "status" in error)) {
+                    const err = error as ActionError;
+                    setStatus("error");
+                    if (err.status === 404)
+                        return setResults({
+                            list: [],
+                            total: 0,
+                            page: 1,
+                        });
+                    setError(`${error?.status} ${error?.code}`);
+                    return;
+                }
+                setResults({
+                    list: [data],
+                    total: 1,
+                    page: 1,
+                });
+                setStatus("ready");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        // alert("开发中……");
     }, []);
 
     useEffect(() => {
@@ -299,7 +347,7 @@ const SearchFormAndResult: FC<{
             {status === "error" && <div>{error}</div>}
             {status === "loading" ? (
                 <span className={styles["loading-spinner"]} />
-            ) : typeof results?.total === "number" ? (
+            ) : queryType === "list" && typeof results?.total === "number" ? (
                 <Results
                     key={queryTimestamp}
                     conditionDifficulties={conditions?.difficulties}
@@ -310,6 +358,8 @@ const SearchFormAndResult: FC<{
                         defaultContentListAutoLoadMore
                     }
                 />
+            ) : queryType === "random" && typeof results?.total === "number" ? (
+                <ResultRandom key={queryTimestamp} result={results} />
             ) : (
                 <div className={styles["no-initial-condition"]}>
                     <strong>请选择筛选条件</strong>

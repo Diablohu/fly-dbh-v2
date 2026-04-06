@@ -7,7 +7,7 @@ import {
     stringReplaceImagePath,
 } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
-import { E60000, E60001 } from "@/constants/error-codes";
+import { E60000, E60001, E60002 } from "@/constants/error-codes";
 import { EXTREME_AIRPORT } from "@/constants/video-tags";
 import {
     type ChallengeListItemType,
@@ -372,6 +372,39 @@ const actions = {
                     throw err;
                 }
                 return res;
+            } catch (err) {
+                actionErrorHandler(err);
+            }
+        },
+    }),
+
+    /** 获取一个随机条目 */
+    fetchRandomItem: defineAction({
+        input: z.custom<T>(),
+        handler: async ({ difficulties, types, hazards }) => {
+            try {
+                const total = (await fetch(
+                    `count(${getGroqFiltersChallengeList({ difficulties, types, hazards })})`,
+                )) as unknown as number;
+                const randomIndex = Math.floor(Math.random() * (total + 1));
+                const queryString = getGroqQueryChallengeList({
+                    difficulties,
+                    types,
+                    hazards,
+                    from: randomIndex,
+                    length: 1,
+                });
+                const res = await fetch<ChallengeItemType>(queryString);
+                // console.log({ total, randomIndex, queryString, res });
+                if (!res || res.length === 0) {
+                    const err = new ActionError({
+                        message: E60002,
+                        code: "NOT_FOUND",
+                    });
+                    err.cause = { GROQ: queryString };
+                    throw err;
+                }
+                return res[0];
             } catch (err) {
                 actionErrorHandler(err);
             }
