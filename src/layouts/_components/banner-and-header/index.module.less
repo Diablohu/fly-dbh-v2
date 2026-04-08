@@ -272,6 +272,7 @@
 
     & > .video-container {
         &,
+        & > img,
         & > video {
             position: absolute;
             top: 0;
@@ -281,12 +282,16 @@
             height: 100%;
         }
         z-index: 1;
-        background: no-repeat 50% 50%;
+        background: var(--dark-theme-color) no-repeat 50% 50%;
         background-size: cover;
         transform: translateY(var(--video-offset-y));
+        & > img,
         & > video {
             display: block;
             object-fit: cover;
+        }
+        & > video {
+            z-index: 2;
         }
     }
 

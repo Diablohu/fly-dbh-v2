@@ -14,6 +14,7 @@ import useWindow from "@/react-hooks/use-window";
 import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/root-classnames";
 
 import bannerVidMedWebm from "@/assets/banner-video/30fps/medium.webm";
+import bannerVidMediumWebmAV1 from "@/assets/banner-video/30fps/medium-av1.webm";
 import bannerVidLowMP4 from "@/assets/banner-video/30fps/low.mp4";
 
 import styles from "./index.module.less";
@@ -35,7 +36,7 @@ const Banner: FC<
     const VideoRef = useRef<HTMLVideoElement>(null);
 
     const [renderBanner, setRenderBanner] = useState(banner);
-    const [renderVideo, setRenderVideo] = useState(false);
+    const [playVideo, setPlayVideo] = useState(false);
     const [unmountedOnce, setUnmountedOnce] = useState(false);
 
     const onBannerTransitionEnd = useCallback<
@@ -97,7 +98,7 @@ const Banner: FC<
                             BannerRef.current?.classList.remove(
                                 styles["mod-not-in-view"],
                             );
-                            VideoRef.current?.play();
+                            setPlayVideo(true);
                             // console.log("Banner is in view");
                         } else {
                             // console.log(
@@ -112,7 +113,7 @@ const Banner: FC<
                             BannerRef.current?.classList.add(
                                 styles["mod-not-in-view"],
                             );
-                            VideoRef.current?.pause();
+                            setPlayVideo(false);
                             // console.log("Banner is out of view");
                         }
                     });
@@ -157,13 +158,18 @@ const Banner: FC<
     }, [banner]);
 
     useEffect(() => {
-        setRenderVideo(true);
+        setPlayVideo(true);
 
         return () => {
             Banner.observer?.disconnect();
             Banner.observer = undefined;
         };
     }, []);
+
+    useEffect(() => {
+        if (playVideo) VideoRef.current?.play();
+        else VideoRef.current?.pause();
+    }, [playVideo]);
 
     return (
         renderBanner && (
@@ -204,22 +210,29 @@ const Banner: FC<
                     //     backgroundImage: `url(${coverImage})`,
                     // }}
                 >
-                    {renderVideo && (
-                        <video
-                            // poster={require('@assets/banner/cover.jpg').default}
-                            poster={coverImage}
-                            crossOrigin="anonymous"
-                            preload="auto"
-                            playsInline
-                            autoPlay={false}
-                            loop
-                            muted
-                            ref={VideoRef}
-                        >
-                            <source type="video/webm" src={bannerVidMedWebm} />
-                            <source type="video/mp4" src={bannerVidLowMP4} />
-                        </video>
-                    )}
+                    <img
+                        src={coverImage}
+                        alt="fly-dbh.com"
+                        fetchPriority="high"
+                    />
+                    <video
+                        // poster={require('@assets/banner/cover.jpg').default}
+                        // poster={coverImage}
+                        crossOrigin="anonymous"
+                        preload="auto"
+                        playsInline
+                        autoPlay
+                        loop
+                        muted
+                        ref={VideoRef}
+                    >
+                        <source
+                            type="video/webm; codecs=av01.0.05M.08"
+                            src={bannerVidMediumWebmAV1}
+                        />
+                        <source type="video/webm" src={bannerVidMedWebm} />
+                        <source type="video/mp4" src={bannerVidLowMP4} />
+                    </video>
                 </section>
                 <div
                     className={styles["intersection-check"]}
