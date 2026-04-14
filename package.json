@@ -29,7 +29,7 @@
         "@react-oauth/google": "^0.13.5",
         "@sanity/client": "^7.21.0",
         "@sanity/image-url": "^2.1.1",
-        "astro": "^6.1.2",
+        "astro": "^6.1.6",
         "astro-portabletext": "^0.13.0",
         "axios": "^1.15.0",
         "cache-manager": "^7.2.8",
