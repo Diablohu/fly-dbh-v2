@@ -92,6 +92,7 @@ const TitleChild = titleLink ? "a" : Fragment;
             :global(h4) {
                 // margin-top: 1.5em;
                 margin-bottom: 0.6667em;
+                font-style: italic;
                 & ~ :global(h4) {
                     margin-top: 1.6667em;
                 }
@@ -171,6 +172,8 @@ const TitleChild = titleLink ? "a" : Fragment;
                 margin-right: 0.3333em;
                 font-size: 0.9em;
                 vertical-align: baseline;
+                user-select: all;
+                cursor: text;
                 &::after {
                     content: "";
                     position: absolute;

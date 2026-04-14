@@ -10,7 +10,14 @@ type Props = {
 };
 ---
 
-<section class="aerodrome-info">
+<section
+    class:list={[
+        "aerodrome-info",
+        {
+            "is-closed": Astro.props.aerodrome.is_closed,
+        },
+    ]}
+>
     {
         Astro.props.aerodrome.photo && (
             <figure class="photo">
@@ -54,7 +61,14 @@ type Props = {
     <dl data-info="codes">
         <dt>机场代码</dt>
         <dd>
-            <span data-org="ICAO">{Astro.props.aerodrome.icao || "-"}</span>
+            <span
+                data-org="ICAO"
+                class:list={[
+                    {
+                        "is-deleted": Astro.props.aerodrome.is_fake_icao,
+                    },
+                ]}>{Astro.props.aerodrome.icao || "-"}</span
+            >
             <span data-org="IATA">{Astro.props.aerodrome.iata || "-"}</span>
             {
                 !Astro.props.aerodrome.icao && Astro.props.aerodrome.faa && (
@@ -327,6 +341,9 @@ type Props = {
                 //     width: 3em;
                 // }
             }
+            &.is-deleted {
+                text-decoration: line-through;
+            }
         }
     }
 
@@ -395,6 +412,12 @@ type Props = {
                 font-size: 1.1em;
                 line-height: 1.5;
             }
+        }
+    }
+
+    .aerodrome-info.is-closed {
+        dl[data-info="codes"] dd > span {
+            text-decoration: line-through;
         }
     }
 </style>

@@ -16,6 +16,21 @@ function parseArrStr(string: string) {
         .map((part) => part.trim())
         .join(" / ");
 }
+
+function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
+    return [
+        aerodrome?.icao &&
+            (aerodrome?.is_fake_icao
+                ? `<del>${aerodrome.icao}</del>`
+                : aerodrome.icao),
+        aerodrome?.iata,
+        aerodrome?.faa && `${aerodrome.faa} (FAA)`,
+        aerodrome?.designator,
+    ]
+        .filter(Boolean)
+        .map((str) => (aerodrome?.is_closed ? `<del>${str}</del>` : str))
+        .join(" / ");
+}
 ---
 
 <InfoBlock
@@ -29,18 +44,7 @@ function parseArrStr(string: string) {
 >
     <dl>
         <dt>起飞</dt>
-        <dd class="code">
-            {
-                [
-                    route.origin?.icao,
-                    route.origin?.iata,
-                    route.origin?.faa && `${route.origin.faa} (FAA)`,
-                    route.origin?.designator,
-                ]
-                    .filter(Boolean)
-                    .join(" / ")
-            }
-        </dd>
+        <dd class="code" set:html={getAerodromeCodeHtml(route.origin)} />
     </dl>
     <dl>
         <dt>离场</dt>
@@ -82,18 +86,7 @@ function parseArrStr(string: string) {
     </dl>
     <dl>
         <dt>目的</dt>
-        <dd class="code">
-            {
-                [
-                    route.destination?.icao,
-                    route.destination?.iata,
-                    route.destination?.faa && `${route.destination.faa} (FAA)`,
-                    route.destination?.designator,
-                ]
-                    .filter(Boolean)
-                    .join(" / ")
-            }
-        </dd>
+        <dd class="code" set:html={getAerodromeCodeHtml(route.destination)} />
     </dl>
     <dl>
         <dt>进场</dt>
@@ -151,7 +144,7 @@ function parseArrStr(string: string) {
             route.cruise ? (
                 <dd class="highlight">{route.cruise}</dd>
             ) : (
-                <dd>无（保持 VFR）</dd>
+                <dd>无，保持 VFR</dd>
             )
         }
     </dl>

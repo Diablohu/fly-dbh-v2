@@ -39,12 +39,16 @@ export type AircraftTypes =
     | "large-wide-body";
 
 // ============================================================================
+//
+// #region 机场
 
 export type AerodromeItemType = {
     _id: string;
     slug: string;
     name: string;
+    is_closed: boolean;
     icao: string;
+    is_fake_icao: boolean;
     iata: string;
     faa: string;
     designator: string;
@@ -71,6 +75,8 @@ export type AerodromeItemType = {
     free_addons_scenery?: AerodromeItemType["free_addons"];
 };
 
+// #endregion
+//
 // ============================================================================
 //
 // #region 视频
@@ -186,7 +192,7 @@ export type ChallengeListQueryConditionType = {
      * 是否为完整文章
      * - 判断依据: 是否有 `airac_cycle` 字段
      * @default true
-    */
+     */
     isFullArticle: boolean;
 };
 export type ChallengeListItemType = Pick<
@@ -204,7 +210,9 @@ export type ChallengeListItemType = Pick<
         | "_id"
         | "slug"
         | "name"
+        | "is_closed"
         | "icao"
+        | "is_fake_icao"
         | "iata"
         | "faa"
         | "designator"
@@ -245,7 +253,9 @@ export type ChallengeItemType = {
         | "_id"
         | "slug"
         | "name"
+        | "is_closed"
         | "icao"
+        | "is_fake_icao"
         | "iata"
         | "faa"
         | "designator"
@@ -261,7 +271,15 @@ export type ChallengeItemType = {
     route: {
         origin?: Pick<
             AerodromeItemType,
-            "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "designator"
+            | "_id"
+            | "slug"
+            | "name"
+            | "is_closed"
+            | "icao"
+            | "is_fake_icao"
+            | "iata"
+            | "faa"
+            | "designator"
         >;
         sid?: {
             rwy: string;
@@ -270,7 +288,15 @@ export type ChallengeItemType = {
         enroute?: string;
         destination?: Pick<
             AerodromeItemType,
-            "_id" | "slug" | "name" | "icao" | "iata" | "faa" | "designator"
+            | "_id"
+            | "slug"
+            | "name"
+            | "is_closed"
+            | "icao"
+            | "is_fake_icao"
+            | "iata"
+            | "faa"
+            | "designator"
         >;
         star?: {
             rwy: string;

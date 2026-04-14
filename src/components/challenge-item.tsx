@@ -30,21 +30,34 @@ const ChallengeItem: FC<{
             key={item._id}
             data-difficulty={item.difficulty}
         >
-            <span className={styles["aerodrome-code"]}>
-                {item.aerodrome
-                    ? [
-                          item.aerodrome.icao || item.aerodrome.faa,
-                          item.aerodrome.iata,
-                          item.aerodrome.designator,
-                      ]
-                          .filter(Boolean)
-                          .join("/")
-                    : item.max_allowed_aircraft_category
-                      ? `CATEGORY ${item.max_allowed_aircraft_category.toUpperCase()}`
-                      : ""}
-            </span>
+            <span
+                className={styles["aerodrome-code"]}
+                dangerouslySetInnerHTML={{
+                    __html: item.aerodrome
+                        ? [
+                              (item.aerodrome.icao
+                                  ? item.aerodrome.is_fake_icao
+                                      ? `<del>${item.aerodrome.icao}</del>`
+                                      : item.aerodrome.icao
+                                  : "") || item.aerodrome.faa,
+                              item.aerodrome.iata,
+                              item.aerodrome.designator,
+                          ]
+                              .filter(Boolean)
+                              .map((str) =>
+                                  item.aerodrome?.is_closed
+                                      ? `<del>${str}</del>`
+                                      : str,
+                              )
+                              .join("/")
+                        : item.max_allowed_aircraft_category
+                          ? `CATEGORY ${item.max_allowed_aircraft_category.toUpperCase()}`
+                          : "",
+                }}
+            />
             {item.aerodrome?.name && (
                 <strong className={styles["aerodrome-name"]}>
+                    {item.aerodrome.is_closed && "（旧）"}
                     {item.aerodrome.name}
                 </strong>
             )}

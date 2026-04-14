@@ -150,18 +150,23 @@ const challengeRunways = runwayPairs
     ?.flat()
     .filter((runway) => runway.isChallengeRunway);
 
+const aerodromeName =
+    (challenge.aerodrome.is_closed ? "（旧）" : "") + challenge.aerodrome.name;
 // console.log(challengeRunways);
 // console.log(challenge)
 ---
 
 <Layout
-    title={challenge.aerodrome.name +
-        (Array.isArray(challenge.aerodrome.location) &&
+    title={[
+        aerodromeName,
+        Array.isArray(challenge.aerodrome.location) &&
         challenge.aerodrome.location.length > 0
-            ? ` (${challenge.aerodrome.location.join(" ")}) `
-            : "") +
-        `进近挑战 : ${challenge.name}` +
-        " | 模拟飞行挑战"}
+            ? `(${challenge.aerodrome.location.join(" ")})`
+            : "",
+        `进近挑战 : ${challenge.name}`,
+        "|",
+        "模拟飞行挑战",
+    ].join(" ")}
     header
     footer
     htmlClassList={["page-challenge-details"]}
@@ -170,7 +175,7 @@ const challengeRunways = runwayPairs
         <div class="wrapper">
             <Title
                 client:idle
-                aerodromeName={challenge.aerodrome.name}
+                aerodromeName={aerodromeName}
                 challengeName={challenge.name}
                 airacCycle={challenge.airac_cyle}
             />
@@ -201,6 +206,7 @@ const challengeRunways = runwayPairs
                 <Route route={challenge.route} data-info="route" />
                 <Briefing
                     briefing={challenge.briefing}
+                    aerodrome={challenge.aerodrome}
                     type={challenge.type}
                     urlBriefing={challenge.video_url_briefing}
                     videoExtremeAirport={challenge.video_this_aerodrome_extreme_airport}

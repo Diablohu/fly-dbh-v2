@@ -9,13 +9,19 @@ import Markdown from "@/components/markdown.astro";
 import MovieSVG from "@/assets/svg-symbols/movie.svg";
 import MonitorPlaySVG from "@/assets/svg-symbols/monitor-play.svg";
 
-type Props = Pick<ChallengeItemType, "briefing" | "type"> & {
+type Props = Pick<ChallengeItemType, "briefing" | "type" | "aerodrome"> & {
     urlBriefing?: ChallengeItemType["video_url_briefing"];
     videoExtremeAirport?: ChallengeItemType["video_this_aerodrome_extreme_airport"];
 } & astroHTML.JSX.HTMLAttributes;
 
-const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
-    Astro.props;
+const {
+    briefing,
+    type,
+    urlBriefing,
+    videoExtremeAirport,
+    aerodrome,
+    ...props
+} = Astro.props;
 ---
 
 <InfoBlock {...props} title="进近说明 & 航图" emoji="🗺️" isTodo={!briefing}>
@@ -92,6 +98,27 @@ const { briefing, type, urlBriefing, videoExtremeAirport, ...props } =
 * 确保飞机自动驾驶系统截获 \`航向道 LOC (Localizer)\`；
 * 之后按飞机的 VNAV 垂直导航指引，或目视自行控制下降。`
                                         : "",
+
+                        aerodrome.is_closed
+                            ? `#### 机场已停用
+
+在《微软模拟飞行》系列中，可使用 \`${[aerodrome.icao, aerodrome.iata, aerodrome.faa].filter(Boolean).join(" / ")}\` 代码使用该机场。
+`
+                            : "",
+
+                        aerodrome.icao && aerodrome.is_fake_icao
+                            ? `#### 关于机场代码
+在《微软模拟飞行》系列中，该机场被赋予了 \`${aerodrome.icao}\` 这个 ICAO 代码。
+但现实中这座机场并没有这个 ICAO 代码${!aerodrome.iata ? "，也没有 IATA 代码" : ""}，所以游戏自行添加了一个虚构的 ICAO 代码。${
+                                  aerodrome.designator
+                                      ? `
+
+这座机场有一个唯一识别码：\`${aerodrome.designator}\`。
+`
+                                      : ""
+                              }`
+                            : "",
+
                         briefing,
                     ]
                         .filter(Boolean)
