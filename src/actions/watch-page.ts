@@ -6,7 +6,7 @@ import { type VideoItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 import { E30000 } from "@/constants/error-codes";
 
-import { orderList } from "./challenge-page";
+import { orderList } from "./challenge";
 
 const fetchProjections = `{
     _id,

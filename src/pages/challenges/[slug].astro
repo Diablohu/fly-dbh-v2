@@ -24,7 +24,7 @@ import { errorLog } from "@/utils/log";
 // if (!Astro.params.slug) return Astro.redirect(routeBase.challenges, 301);
 
 const { data: challenge, error } = await Astro.callAction(
-    actions.challengePage.fetchChallenge,
+    actions.challenge.fetchItem,
     Astro.params.slug || "",
 );
 if ((error && error.code === "NOT_FOUND") || !challenge) {

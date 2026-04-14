@@ -47,19 +47,20 @@ const projectionListItem = `
   typical_aircraft_types,`;
 
 const getGroqFiltersChallengeList = ({
-    sort = "latest",
+    // sort = "latest",
     difficulties = [],
     types = [],
     hazards = [],
+    isFullArticle = true,
 }: Partial<
     Pick<
         ChallengeListQueryConditionType,
-        "sort" | "difficulties" | "types" | "hazards"
+        "sort" | "difficulties" | "types" | "hazards" | "isFullArticle"
     >
 > = {}) =>
     `*[_type == "approach_challenge" ${
-        // 按时间排序时，必须有 `airac_cyle` 字段
-        (sort === "latest" ? "&& defined(airac_cyle)" : "") +
+        // 查询完整文章时，添加条件：必须有 `airac_cyle` 字段
+        (isFullArticle ? "&& defined(airac_cyle)" : "") +
         // 筛选难度，方式：`OR`
         (Array.isArray(difficulties) && difficulties.length > 0
             ? `&& (${difficulties.map((difficulty) => `difficulty == ${Number(difficulty)}`).join(" || ")})`
@@ -83,12 +84,14 @@ export const getGroqQueryChallengeList = ({
     difficulties = [],
     types = [],
     hazards = [],
+    isFullArticle = true,
 }: Partial<ChallengeListQueryConditionType> = {}) =>
     `${getGroqFiltersChallengeList({
         sort,
         difficulties,
         types,
         hazards,
+        isFullArticle,
     })}{${projectionListItem}} | order(${
         sort === "latest"
             ? "airac_cyle desc, _createdAt desc"
@@ -102,10 +105,9 @@ export const getGroqLatestChallenges = (length = 10) =>
 
 // ============================================================================
 
-type T = Partial<ChallengeListQueryConditionType>;
 const actions = {
     fetchList: defineAction({
-        input: z.custom<T>(),
+        input: z.custom<Partial<ChallengeListQueryConditionType>>(),
         handler: async ({
             from = 0,
             length = 20,
@@ -113,11 +115,12 @@ const actions = {
             difficulties,
             types,
             hazards,
+            isFullArticle = true,
         }) => {
             try {
                 const queryString = `{
-'list': ${getGroqQueryChallengeList({ from, length, sort, difficulties, types, hazards })},
-'total': count(${getGroqFiltersChallengeList({ sort, difficulties, types, hazards })})
+'list': ${getGroqQueryChallengeList({ from, length, sort, difficulties, types, hazards, isFullArticle })},
+'total': count(${getGroqFiltersChallengeList({ sort, difficulties, types, hazards, isFullArticle })})
 }`;
                 const res = (await fetch(queryString, {
                     transform: (res, queryString) => {
@@ -202,7 +205,7 @@ const actions = {
     }),
 
     /** 获取挑战条目详情 */
-    fetchChallenge: defineAction({
+    fetchItem: defineAction({
         input: z.string(),
         handler: async (cmsIdOrSlug) => {
             try {
@@ -378,13 +381,20 @@ const actions = {
         },
     }),
 
-    /** 获取一个随机条目 */
+    /**
+     * 获取一个随机条目
+     */
     fetchRandomItem: defineAction({
-        input: z.custom<T>(),
-        handler: async ({ difficulties, types, hazards }) => {
+        input: z.custom<Partial<ChallengeListQueryConditionType>>(),
+        handler: async ({
+            difficulties,
+            types,
+            hazards,
+            isFullArticle = false,
+        }) => {
             try {
                 const total = (await fetch(
-                    `count(${getGroqFiltersChallengeList({ difficulties, types, hazards })})`,
+                    `count(${getGroqFiltersChallengeList({ difficulties, types, hazards, isFullArticle })})`,
                 )) as unknown as number;
                 const randomIndex = Math.floor(Math.random() * (total + 1));
                 const queryString = getGroqQueryChallengeList({

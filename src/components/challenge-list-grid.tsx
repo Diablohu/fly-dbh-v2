@@ -22,6 +22,10 @@ import styles from "./challenge-list-grid.module.less";
 
 // ============================================================================
 
+const actionFetchList = actions.challenge.fetchList;
+
+// ============================================================================
+
 type Props = {
     catalog: "latest" | "filter" | AircraftTypes;
     initialList?: ChallengeListItemType[];
@@ -54,22 +58,18 @@ type Props = {
      * - 没有表示**全部**
      */
     conditionDifficulties?: Parameters<
-        typeof actions.challengePage.fetchList
+        typeof actionFetchList
     >[0]["difficulties"];
     /**
      * 条件：机型
      * - 没有表示**全部**
      */
-    conditionTypes?: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["types"];
+    conditionTypes?: Parameters<typeof actionFetchList>[0]["types"];
     /**
      * 条件：难点灾害
      * - 没有表示**全部**
      */
-    conditionHazards?: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["hazards"];
+    conditionHazards?: Parameters<typeof actionFetchList>[0]["hazards"];
 } & Pick<
     ComponentProps<typeof ChallengeItem>,
     "showMaxCategory" | "showAircraftTypes"
@@ -106,22 +106,18 @@ const ChallengeListGrid: FC<Props> = ({
 
     const loadMore = useCallback(
         async ({ from }: { from: number }) => {
-            return actions.challengePage
-                .fetchList({
-                    from,
-                    length,
-                    sort:
-                        sort ??
-                        (catalog === "latest" ? "latest" : "difficulty"),
-                    types: conditionTypes
-                        ? conditionTypes
-                        : catalog === "latest" || catalog === "filter"
-                          ? undefined
-                          : [catalog],
-                    difficulties: conditionDifficulties,
-                    hazards: conditionHazards,
-                })
-                .then((res) => res.data);
+            return actionFetchList({
+                from,
+                length,
+                sort: sort ?? (catalog === "latest" ? "latest" : "difficulty"),
+                types: conditionTypes
+                    ? conditionTypes
+                    : catalog === "latest" || catalog === "filter"
+                      ? undefined
+                      : [catalog],
+                difficulties: conditionDifficulties,
+                hazards: conditionHazards,
+            }).then((res) => res.data);
         },
         [
             catalog,
@@ -151,7 +147,7 @@ const ChallengeListGrid: FC<Props> = ({
     return (
         <ListContainerGrid<
             ChallengeListItemType,
-            Awaited<ReturnType<typeof actions.challengePage.fetchList>>["data"]
+            Awaited<ReturnType<typeof actionFetchList>>["data"]
         >
             className={classNames(styles["challenge-list-grid"], className)}
             loadMore={loadMore}

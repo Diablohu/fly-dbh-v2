@@ -35,7 +35,7 @@ import styles from "./index.module.less";
 // ============================================================================
 
 type StatusType = "pending" | "ready" | "loading" | "error";
-const fetchAction = actions.challengePage.fetchList;
+const actionFetchList = actions.challenge.fetchList;
 
 // ============================================================================
 //
@@ -44,33 +44,25 @@ const fetchAction = actions.challengePage.fetchList;
 // ============================================================================
 
 const SearchFormAndResult: FC<{
-    hazards: Awaited<
-        ReturnType<typeof actions.challengePage.fetchHazards>
-    >["data"];
+    hazards: Awaited<ReturnType<typeof actions.challenge.fetchHazards>>["data"];
     length: number;
 
     /**
      * 初始条件：难度
      * - 没有表示**全部**
      */
-    initialDifficulties: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["difficulties"];
+    initialDifficulties: Parameters<typeof actionFetchList>[0]["difficulties"];
     /**
      * 初始条件：机型
      * - 没有表示**全部**
      */
-    initialTypes: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["types"];
+    initialTypes: Parameters<typeof actionFetchList>[0]["types"];
     /**
      * 初始条件：难点灾害
      * - 没有表示**全部**
      */
-    initialHazards: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["hazards"];
-    initialResult?: Awaited<ReturnType<typeof fetchAction>>["data"];
+    initialHazards: Parameters<typeof actionFetchList>[0]["hazards"];
+    initialResult?: Awaited<ReturnType<typeof actionFetchList>>["data"];
     noInitialCondition?: boolean;
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 }> = ({
@@ -98,20 +90,16 @@ const SearchFormAndResult: FC<{
     const [error, setError] = useState<string>();
     const [queryType, setQueryType] = useState<"list" | "random">("list");
     const [results, setResults] =
-        useState<Awaited<ReturnType<typeof fetchAction>>["data"]>(
+        useState<Awaited<ReturnType<typeof actionFetchList>>["data"]>(
             initialResult,
         );
     const [conditions, setConditions] = useState<
         | {
               difficulties: Parameters<
-                  typeof actions.challengePage.fetchList
+                  typeof actionFetchList
               >[0]["difficulties"];
-              types: Parameters<
-                  typeof actions.challengePage.fetchList
-              >[0]["types"];
-              hazards: Parameters<
-                  typeof actions.challengePage.fetchList
-              >[0]["hazards"];
+              types: Parameters<typeof actionFetchList>[0]["types"];
+              hazards: Parameters<typeof actionFetchList>[0]["hazards"];
           }
         | undefined
     >(
@@ -165,7 +153,7 @@ const SearchFormAndResult: FC<{
             setQueryType("list");
             setStatus("loading");
             // console.log(ScrollToRef.current?.offsetTop);
-            fetchAction({ sort: "difficulty", ...newConditions }).then(
+            actionFetchList({ sort: "difficulty", ...newConditions }).then(
                 ({ data, error }) => {
                     setQueryType("list");
                     // if (res.status !== 200) {
@@ -197,7 +185,7 @@ const SearchFormAndResult: FC<{
         setQueryType("random");
         setStatus("loading");
 
-        actions.challengePage
+        actions.challenge
             .fetchRandomItem({
                 difficulties: formData
                     .getAll("difficulties")

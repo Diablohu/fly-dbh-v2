@@ -69,7 +69,7 @@ export const routeBase = {
     watch: "/watch",
     live: "/live",
     challenges: "/challenges",
-    flightseeing: "/flightseeing",
+    tours: "/tours",
     donate: "/donate",
     search: "/search",
 };
@@ -113,8 +113,8 @@ export const navLinks = [
     //     : null,
     import.meta.env.DEV
         ? {
-              key: "flightseeing",
-              route: routeBase.flightseeing,
+              key: "tours",
+              route: routeBase.tours,
               name: "云旅游",
               icon: "",
           }

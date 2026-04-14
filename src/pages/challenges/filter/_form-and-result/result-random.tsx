@@ -7,7 +7,7 @@ import styles from "./index.module.less";
 
 // ============================================================================
 
-const fetchAction = actions.challengePage.fetchList;
+const actionFetchList = actions.challenge.fetchList;
 
 // ============================================================================
 //
@@ -16,7 +16,7 @@ const fetchAction = actions.challengePage.fetchList;
 // ============================================================================
 
 const ResultRandom: FC<{
-    result: Awaited<ReturnType<typeof fetchAction>>["data"];
+    result: Awaited<ReturnType<typeof actionFetchList>>["data"];
 }> = ({ result }) => {
     if (Array.isArray(result?.list) && result.list.length > 0)
         return (

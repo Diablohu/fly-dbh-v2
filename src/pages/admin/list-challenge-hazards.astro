@@ -3,8 +3,8 @@ import { actions } from "astro:actions";
 import AdminPage from "@/layouts/pages/admin/index.astro";
 
 const { data: list, error } = await Astro.callAction(
-    actions.challengePage.fetchHazards,
-    undefined
+    actions.challenge.fetchHazards,
+    undefined,
 );
 
 if (error) return Astro.rewrite("/500");

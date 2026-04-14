@@ -102,7 +102,7 @@ const length = 20;
 const { data: initialList, error } =
     Astro.props.catalog === "filter"
         ? { data: { initialList: [], total: 0 } }
-        : await Astro.callAction(actions.challengePage.fetchList, {
+        : await Astro.callAction(actions.challenge.fetchList, {
               length,
               sort:
                   Astro.props.sort ??

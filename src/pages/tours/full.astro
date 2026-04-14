@@ -12,8 +12,8 @@ import { errorLog } from "@/utils/log";
 // ============================================================================
 
 const { data: list, error } = await Astro.callAction(
-    actions.challengePage.fetchListAll,
-    undefined
+    actions.challenge.fetchListAll,
+    undefined,
 );
 if ((error && error.code === "NOT_FOUND") || !list) {
     if (error)
@@ -27,13 +27,13 @@ if ((error && error.code === "NOT_FOUND") || !list) {
                     : "",
             ]
                 .filter(Boolean)
-                .join(" | ")
+                .join(" | "),
         );
     else
         errorLog(
             [`${Astro.originPathname} -> 404`, "No challenge list"]
                 .filter(Boolean)
-                .join(" | ")
+                .join(" | "),
         );
     return Astro.rewrite("/404");
 }
@@ -49,7 +49,7 @@ if (error) {
                 : "",
         ]
             .filter(Boolean)
-            .join(" | ")
+            .join(" | "),
     );
     Astro.response.status = 500;
     Astro.props.error = error;

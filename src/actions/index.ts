@@ -5,18 +5,18 @@ import sitemap from "./sitemap";
 import search from "./search";
 import videoListPage from "./video-list-page";
 import watchPage from "./watch-page";
-import challengePage from "./challenge-page";
+import challenge from "./challenge";
 
 export const server = {
     admin,
 
+    search,
+    challenge,
+
     homePage,
     videoListPage,
     watchPage,
-    challengePage,
 
-    search,
     sitemap,
-
     rssFeed,
 };

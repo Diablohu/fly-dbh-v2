@@ -3,7 +3,7 @@ import { fetch } from "@/services/sanity";
 import { resolveAssetPath } from "@/services/sanity-helpers";
 import { type HomeVideoDocumentType, type HomeCollectionsType } from "@/types";
 import actionErrorHandler from "./_error-handler";
-import { getGroqLatestChallenges } from "./challenge-page";
+import { getGroqLatestChallenges } from "./challenge";
 
 const fetchSorting = ` | order( release desc )`;
 const getProjections = (collection: string) => `{

@@ -9,7 +9,7 @@ import styles from "./index.module.less";
 
 // ============================================================================
 
-const fetchAction = actions.challengePage.fetchList;
+const actionFetchList = actions.challenge.fetchList;
 
 // ============================================================================
 //
@@ -23,23 +23,19 @@ const Results: FC<{
      * - 没有表示**全部**
      */
     conditionDifficulties?: Parameters<
-        typeof actions.challengePage.fetchList
+        typeof actionFetchList
     >[0]["difficulties"];
     /**
      * 条件：机型
      * - 没有表示**全部**
      */
-    conditionTypes?: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["types"];
+    conditionTypes?: Parameters<typeof actionFetchList>[0]["types"];
     /**
      * 条件：难点灾害
      * - 没有表示**全部**
      */
-    conditionHazards?: Parameters<
-        typeof actions.challengePage.fetchList
-    >[0]["hazards"];
-    results: Awaited<ReturnType<typeof fetchAction>>["data"];
+    conditionHazards?: Parameters<typeof actionFetchList>[0]["hazards"];
+    results: Awaited<ReturnType<typeof actionFetchList>>["data"];
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 }> = ({
     conditionDifficulties,

@@ -34,14 +34,14 @@ const initialConditions = parseSearchParams(
 // ============================================================================
 
 const { data: hazards, error: errorHazards } = await Astro.callAction(
-    actions.challengePage.fetchHazards,
+    actions.challenge.fetchHazards,
     undefined,
 );
 if (errorHazards || !hazards) return Astro.rewrite("/500");
 
 const { data: initialResult, error: errorinitialResult } = !Astro.params.query
     ? { data: undefined }
-    : await Astro.callAction(actions.challengePage.fetchList, {
+    : await Astro.callAction(actions.challenge.fetchList, {
           length,
           sort: "difficulty",
           types: initialConditions.types,

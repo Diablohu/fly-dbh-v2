@@ -16,7 +16,7 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
 import { E20000, E20001 } from "@/constants/error-codes";
 
-import { orderList } from "./challenge-page";
+import { orderList } from "./challenge";
 
 // ============================================================================
 
