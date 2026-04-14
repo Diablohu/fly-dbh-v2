@@ -27,8 +27,9 @@ function logError(t, error) {
     if (error.cause) console.log(chalk.gray.italic(`   ${error.cause}`));
 }
 async function npmRun(cmd) {
-    return execSync(`npm run ${cmd}`, {
+    return spawn(`npm run ${cmd}`, {
         stdio: "inherit",
+        shell: true,
     });
 }
 
