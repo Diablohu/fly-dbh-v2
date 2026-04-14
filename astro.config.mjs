@@ -40,9 +40,11 @@ export default defineConfig({
                         "admin",
                         "api",
                         "homepage",
+                        "videos",
+                        "challenges",
+                        "tours",
                         "live", // TODO: unlock
                         "tools", // TODO: unlock
-                        "challenges",
                     ].join("|")})($|/)).)*$`,
                 ).test(page),
             customSitemaps: [
