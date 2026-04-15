@@ -1,4 +1,4 @@
-import { memo, useMemo, type FC } from "react";
+import { memo, type FC } from "react";
 import classNames from "classnames";
 
 import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
@@ -13,7 +13,7 @@ const ChallengeItem: FC<{
     className?: string;
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty"> &
-        Partial<Exclude<ChallengeItemType, "aerodrome">>;
+        Partial<Pick<ChallengeItemType, "hazards">>;
     /** 在难度行显示最大允许 Category */
     showMaxCategory?: boolean;
     /** 在难度下方显示飞机类型 */
