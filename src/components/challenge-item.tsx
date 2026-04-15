@@ -1,7 +1,7 @@
-import { memo, type FC } from "react";
+import { memo, useMemo, type FC } from "react";
 import classNames from "classnames";
 
-import { type ChallengeListItemType } from "@/types";
+import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
 import { challengeDifficultyString, aircraftTypeString } from "@/global";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 
@@ -12,16 +12,23 @@ import styles from "./challenge-item.module.less";
 const ChallengeItem: FC<{
     className?: string;
     item: Partial<ChallengeListItemType> &
-        Pick<ChallengeListItemType, "_id" | "name" | "difficulty">;
+        Pick<ChallengeListItemType, "_id" | "name" | "difficulty"> &
+        Partial<Exclude<ChallengeItemType, "aerodrome">>;
     /** 在难度行显示最大允许 Category */
     showMaxCategory?: boolean;
     /** 在难度下方显示飞机类型 */
     showAircraftTypes?: boolean;
+    /**
+     * 如果数据中有提供难点灾害，显示
+     * - 默认不显示
+     */
+    showHazards?: boolean;
 }> = ({
     item,
     className,
     showMaxCategory = false,
     showAircraftTypes = false,
+    showHazards = false,
 }) => {
     return (
         <a
@@ -112,6 +119,27 @@ const ChallengeItem: FC<{
                     loading="lazy"
                 />
             )}
+            {showHazards &&
+                Array.isArray(item.hazards) &&
+                item.hazards.length > 0 && (
+                    <span className={styles["hazards"]}>
+                        {item.hazards.map((hazard, index) => (
+                            <span
+                                key={index}
+                                className={styles["hazard"]}
+                                data-difficulty={hazard.difficulty}
+                            >
+                                <em
+                                    className={styles["icon"]}
+                                    aria-hidden="true"
+                                >
+                                    {hazard.emoji}
+                                </em>
+                                {hazard.name}
+                            </span>
+                        ))}
+                    </span>
+                )}
         </a>
     );
 };

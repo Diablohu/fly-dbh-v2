@@ -26,11 +26,61 @@ export type ChallengeListResponseDataType = {
 
 export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa, aerodrome.designator asc`;
 
-const projectionListItem = `
-  _id,
-  _createdAt,
-  'slug': slug.current,
-  'aerodrome': aerodrome->{
+const getGroqProjection = (
+    purpose:
+        | "details"
+        | "list-item"
+        | "random-item"
+        | {
+              aircraftsInfo?: boolean;
+              hazards?: boolean;
+              aerodromeDetails?: boolean;
+              route?: boolean;
+              briefing?: boolean;
+              otherChallenges?: boolean;
+              videos?: boolean;
+          },
+    { bracket = false } = {},
+) => {
+    const {
+        aircraftsInfo = false,
+        hazards = false,
+        aerodromeDetails = false,
+        route = false,
+        briefing = false,
+        otherChallenges = false,
+        videos = false,
+    } = purpose === "details"
+        ? {
+              aircraftsInfo: true,
+              hazards: true,
+              aerodromeDetails: true,
+              route: true,
+              briefing: true,
+              otherChallenges: true,
+              videos: true,
+          }
+        : purpose === "list-item"
+          ? {
+                aircraftsInfo: true,
+            }
+          : purpose === "random-item"
+            ? {
+                  aircraftsInfo: true,
+                  hazards: true,
+              }
+            : purpose;
+    return (
+        `${bracket ? "{" : ""}
+_id,
+_createdAt,
+'slug': slug.current,
+airac_cyle,
+name,
+type,
+difficulty,` +
+        [
+            `'aerodrome': aerodrome->{
     _id,
     'slug': slug.current,
     name,
@@ -41,12 +91,126 @@ const projectionListItem = `
     faa,
     designator,
     location,
-  },
-  name,
-  difficulty,
-  airac_cyle,
-  max_allowed_aircraft_category,
-  typical_aircraft_types,`;
+    ${
+        aerodromeDetails
+            ? `'runways': runways[]{
+        identifier,
+        bearing,
+        elevation,
+        length,
+        width,
+        slope,
+    },
+    'photo': photo.asset->path,
+    photo_credit,
+    photo_credit_url,
+    'free_addons': free_addons[]{
+        'platform': platform->name,
+        type,
+        msfs_package,
+        url,
+        extra,
+    },
+    'free_addons_scenery': free_addons_scenery[]{
+        'platform': platform->name,
+        type,
+        msfs_package,
+        url,
+        extra,
+    },`
+            : ""
+    }
+}`,
+            aerodromeDetails && "runways[]",
+            aircraftsInfo && "max_allowed_aircraft_category",
+            aircraftsInfo && "typical_aircraft_types",
+            aircraftsInfo && "typical_aircrafts",
+            hazards &&
+                `
+'hazards': hazards[]{
+    ...hazard->{
+        name,
+        emoji,
+        difficulty,
+        comment,
+    },
+    extra_comment,
+}`,
+            route &&
+                `
+'route': {
+    'origin': routeOrigin->{
+        _id,
+        'slug': slug.current,
+        name,
+        is_closed,
+        icao,
+        is_fake_icao,
+        iata,
+        faa,
+        designator,
+    },
+    'sid': routeSID[]{
+        rwy,
+        sid,
+    },
+    'enroute': routeEnroute,
+    'destination': routeDestination->{
+        _id,
+        'slug': slug.current,
+        name,
+        is_closed,
+        icao,
+        is_fake_icao,
+        iata,
+        faa,
+        designator,
+    },
+    'star': routeSTAR[]{
+        rwy,
+        star,
+    },
+    'app': routeAPP,
+    'distance': routeDistance,
+    'cruise': routeCruise,
+}`,
+            briefing && "briefing",
+            otherChallenges &&
+                `
+'other_challenges_this_aerodrome': *[_type == "approach_challenge" && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
+    _id,
+    'slug': slug.current,
+    name,
+    difficulty,
+    max_allowed_aircraft_category,
+    typical_aircraft_types,
+} | order(${orderList})`,
+            videos &&
+                `
+video_url_briefing,
+'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{
+    _id,
+    'slug': slug.current,
+    title,
+    release,
+    duration,
+    'cover': cover.asset->path,
+    'tags': tags[]->{
+        _id,
+        'slug': slug.current,
+        "value": name,
+        "name": title
+    },
+    links,
+}`,
+            bracket && "}",
+        ]
+            .filter(Boolean)
+            .join(",")
+    );
+};
+
+const projectionListItem = getGroqProjection("list-item");
 
 const getGroqFiltersChallengeList = ({
     // sort = "latest",
@@ -87,14 +251,15 @@ export const getGroqQueryChallengeList = ({
     types = [],
     hazards = [],
     isFullArticle = true,
-}: Partial<ChallengeListQueryConditionType> = {}) =>
+    projection = projectionListItem,
+}: Partial<ChallengeListQueryConditionType & { projection: string }> = {}) =>
     `${getGroqFiltersChallengeList({
         sort,
         difficulties,
         types,
         hazards,
         isFullArticle,
-    })}{${projectionListItem}} | order(${
+    })}{${projection}} | order(${
         sort === "latest"
             ? "airac_cyle desc, _createdAt desc"
             : sort === "difficulty"
@@ -211,124 +376,11 @@ const actions = {
         input: z.string(),
         handler: async (cmsIdOrSlug) => {
             try {
-                const queryString = `*[_type == "approach_challenge" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] {
-  _id,
-  name,
-  type,
-  airac_cyle,
-  typical_aircrafts,
-  difficulty,
-  'hazards': hazards[]{
-    ...hazard->{
-      name,
-      emoji,
-      difficulty,
-      comment,
-    },
-    extra_comment,
-  },
-  max_allowed_aircraft_category,
-  typical_aircraft_types,
-  'aerodrome': aerodrome->{
-    _id,
-    'slug': slug.current,
-    name,
-    is_closed,
-    icao,
-    is_fake_icao,
-    iata,
-    faa,
-    designator,
-    location,
-    'runways': runways[]{
-      identifier,
-      bearing,
-      elevation,
-      length,
-      width,
-      slope,
-    },
-    'photo': photo.asset->path,
-    photo_credit,
-    photo_credit_url,
-    'free_addons': free_addons[]{
-      'platform': platform->name,
-      type,
-      msfs_package,
-      url,
-      extra,
-    },
-    'free_addons_scenery': free_addons_scenery[]{
-      'platform': platform->name,
-      type,
-      msfs_package,
-      url,
-      extra,
-    },
-  },
-  runways[],
-  'route': {
-    'origin': routeOrigin->{
-      _id,
-      'slug': slug.current,
-      name,
-      is_closed,
-      icao,
-      is_fake_icao,
-      iata,
-      faa,
-      designator,
-    },
-    'sid': routeSID[]{
-      rwy,
-      sid,
-    },
-    'enroute': routeEnroute,
-    'destination': routeDestination->{
-      _id,
-      'slug': slug.current,
-      name,
-      is_closed,
-      icao,
-      is_fake_icao,
-      iata,
-      faa,
-      designator,
-    },
-    'star': routeSTAR[]{
-      rwy,
-      star,
-    },
-    'app': routeAPP,
-    'distance': routeDistance,
-    'cruise': routeCruise,
-  },
-  briefing,
-  'other_challenges_this_aerodrome': *[_type == "approach_challenge" && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
-      _id,
-      'slug': slug.current,
-      name,
-      difficulty,
-      max_allowed_aircraft_category,
-      typical_aircraft_types,
-  } | order(${orderList}),
-  video_url_briefing,
-  'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{
-      _id,
-      'slug': slug.current,
-      title,
-      release,
-      duration,
-      'cover': cover.asset->path,
-      'tags': tags[]->{
-          _id,
-          'slug': slug.current,
-          "value": name,
-          "name": title
-      },
-      links,
-  },
-} | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
+                const queryString = `*[_type == "approach_challenge" && ( _id == "${
+                    cmsIdOrSlug
+                }" || slug.current == "${
+                    cmsIdOrSlug
+                }")]${getGroqProjection("details", { bracket: true })} | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
                 const res = (await fetch<ChallengeItemType>(queryString, {
                     transform: (res, queryString) => {
                         if (!res[0]) {
@@ -402,15 +454,22 @@ const actions = {
         }) => {
             try {
                 const total = (await fetch(
-                    `count(${getGroqFiltersChallengeList({ difficulties, types, hazards, isFullArticle })})`,
+                    `count(${getGroqFiltersChallengeList({
+                        difficulties,
+                        types,
+                        hazards,
+                        isFullArticle,
+                    })})`,
                 )) as unknown as number;
                 const randomIndex = Math.floor(Math.random() * (total + 1));
                 const queryString = getGroqQueryChallengeList({
                     difficulties,
                     types,
                     hazards,
+                    isFullArticle,
                     from: randomIndex - 1,
                     length: 1,
+                    projection: getGroqProjection("random-item"),
                 });
                 const res = await fetch<ChallengeItemType>(queryString);
                 // console.log({ total, randomIndex, queryString, res });

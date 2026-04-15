@@ -25,6 +25,7 @@ const ResultRandom: FC<{
                     className={styles["item"]}
                     item={result.list[0]}
                     showAircraftTypes
+                    showHazards
                 />
             </div>
         );

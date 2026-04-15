@@ -134,4 +134,34 @@
         z-index: -5;
         opacity: 0.25;
     }
+
+    .hazards {
+        display: block;
+        margin-top: 1.5em;
+        position: relative;
+        &::before {
+            content: "";
+            position: absolute;
+            top: -0.75em;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--difficulty-color);
+            opacity: 0.3333;
+        }
+        .hazard {
+            .difficulty-variables();
+            display: block;
+            padding-left: 1.5em;
+            position: relative;
+            color: var(--difficulty-color);
+            .icon {
+                display: inline-block;
+                font-style: normal;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        }
+    }
 }
