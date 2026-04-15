@@ -135,7 +135,7 @@ difficulty,` +
         comment,
     },
     extra_comment,
-}`,
+}|order(difficulty desc)`,
             route &&
                 `
 'route': {
@@ -400,10 +400,6 @@ const actions = {
                             res[0].briefing = stringReplaceImagePath(
                                 res[0].briefing,
                             );
-                        // 按难度排序难点灾害，由难到易
-                        res[0].hazards.sort(
-                            (a, b) => b.difficulty - a.difficulty,
-                        );
                         // 处理机场相关视频的图片路径
                         if (Array.isArray(res[0].videos_this_aerodrome))
                             res[0].videos_this_aerodrome.forEach((post) => {
