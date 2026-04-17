@@ -177,7 +177,9 @@ difficulty,` +
             briefing && "briefing",
             otherChallenges &&
                 `
-'other_challenges_this_aerodrome': *[_type == "approach_challenge" && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
+'other_challenges_this_aerodrome': *[${getGroqFilterBase({
+                    isFullArticle: true,
+                })} && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
     _id,
     'slug': slug.current,
     name,
@@ -212,6 +214,11 @@ video_url_briefing,
 
 const projectionListItem = getGroqProjection("list-item");
 
+export const getGroqFilterBase = ({ isFullArticle = true } = {}) =>
+    `_type == "approach_challenge"${
+        // 查询完整文章时，添加条件：必须有 `airac_cyle` 字段
+        isFullArticle ? "&& defined(airac_cyle)" : ""
+    }`;
 const getGroqFiltersChallengeList = ({
     // sort = "latest",
     difficulties = [],
@@ -224,9 +231,8 @@ const getGroqFiltersChallengeList = ({
         "sort" | "difficulties" | "types" | "hazards" | "isFullArticle"
     >
 > = {}) =>
-    `*[_type == "approach_challenge" ${
-        // 查询完整文章时，添加条件：必须有 `airac_cyle` 字段
-        (isFullArticle ? "&& defined(airac_cyle)" : "") +
+    `*[${
+        getGroqFilterBase({ isFullArticle }) +
         // 筛选难度，方式：`OR`
         (Array.isArray(difficulties) && difficulties.length > 0
             ? `&& (${difficulties.map((difficulty) => `difficulty == ${Number(difficulty)}`).join(" || ")})`
@@ -334,7 +340,9 @@ const actions = {
     fetchListAll: defineAction({
         handler: async () => {
             try {
-                const queryString = `*[_type == "approach_challenge"] {${projectionListItem}} | order(${orderList})`;
+                const queryString = `*[${getGroqFilterBase({
+                    isFullArticle: false,
+                })}]{${projectionListItem}} | order(${orderList})`;
                 const res = await fetch<ChallengeListItemType>(queryString, {
                     transform: (res, queryString) => {
                         if (!res[0]) {
@@ -376,9 +384,9 @@ const actions = {
         input: z.string(),
         handler: async (cmsIdOrSlug) => {
             try {
-                const queryString = `*[_type == "approach_challenge" && ( _id == "${
-                    cmsIdOrSlug
-                }" || slug.current == "${
+                const queryString = `*[${getGroqFilterBase({
+                    isFullArticle: false,
+                })} && ( _id == "${cmsIdOrSlug}" || slug.current == "${
                     cmsIdOrSlug
                 }")]${getGroqProjection("details", { bracket: true })} | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
                 const res = (await fetch<ChallengeItemType>(queryString, {

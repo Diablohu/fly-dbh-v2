@@ -15,6 +15,7 @@ import { transformImagePath } from "@/services/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
 import { E20000, E20001 } from "@/constants/error-codes";
+import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
 
 import { orderList } from "./challenge";
 
@@ -201,7 +202,9 @@ ${
     icao,
     iata,
     location,
-    'challenges': *[_type == "approach_challenge" && aerodrome->_id == ^._id]{
+    'challenges': *[${getChallengeGroqFilterBase({
+        isFullArticle: true,
+    })} && aerodrome->_id == ^._id]{
         _id,
         'slug': slug.current,
         name,

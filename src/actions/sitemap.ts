@@ -1,6 +1,7 @@
 import { defineAction } from "astro:actions";
 import { fetch } from "@/services/sanity";
 import { type VideoItemType, type ChallengeItemType } from "@/types";
+import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
 import actionErrorHandler from "./_error-handler";
 
 const cacheOptions = {
@@ -39,13 +40,13 @@ const actions = {
      */
 
     /** 
-     // #region 全列表：挑战
+     // #region 全列表：挑战（完整文章）
      */
     fetchChallenges: defineAction({
         handler: async () => {
             try {
                 const queryString = `\
-*[_type == "approach_challenge"] {
+*[${getChallengeGroqFilterBase({ isFullArticle: true })}] {
     _id,
     'slug': slug.current,
     _updatedAt,

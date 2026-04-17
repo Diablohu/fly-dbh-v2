@@ -5,6 +5,7 @@ import { resolveAssetPath } from "@/services/sanity-helpers";
 import { type VideoItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 import { E30000 } from "@/constants/error-codes";
+import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
 
 import { orderList } from "./challenge";
 
@@ -46,7 +47,9 @@ const fetchProjections = `{
         name,
         icao,
         iata,
-        'challenges': *[_type == "approach_challenge" && aerodrome->_id == ^._id]{
+        'challenges': *[${getChallengeGroqFilterBase({
+            isFullArticle: true,
+        })} && aerodrome->_id == ^._id]{
             _id,
             'slug': slug.current,
             name,
