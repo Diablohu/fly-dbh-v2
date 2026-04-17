@@ -2,6 +2,7 @@ import { memo, type FC } from "react";
 import { actions } from "astro:actions";
 
 import ChallengeItem from "@/components/challenge-item";
+import getChallengePageLink from "@/utils/get-challenge-page-link";
 
 import styles from "./index.module.less";
 
@@ -23,10 +24,21 @@ const ResultRandom: FC<{
             <div className={styles["random-result"]}>
                 <ChallengeItem
                     className={styles["item"]}
+                    // classNameHazards={styles["hazards"]}
                     item={result.list[0]}
                     showAircraftTypes
                     showHazards
                 />
+                <section className={styles["extra-infos"]}>
+                    <a
+                        className={styles["hint-link"]}
+                        href={getChallengePageLink(
+                            result.list[0].slug || result.list[0]._id,
+                        )}
+                    >
+                        查阅：示例航线 & 航图解说
+                    </a>
+                </section>
             </div>
         );
 

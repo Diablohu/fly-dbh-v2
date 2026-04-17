@@ -11,6 +11,7 @@ import styles from "./challenge-item.module.less";
 
 const ChallengeItem: FC<{
     className?: string;
+    classNameHazards?: string;
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty"> &
         Partial<Pick<ChallengeItemType, "hazards">>;
@@ -26,6 +27,7 @@ const ChallengeItem: FC<{
 }> = ({
     item,
     className,
+    classNameHazards,
     showMaxCategory = false,
     showAircraftTypes = false,
     showHazards = false,
@@ -122,7 +124,12 @@ const ChallengeItem: FC<{
             {showHazards &&
                 Array.isArray(item.hazards) &&
                 item.hazards.length > 0 && (
-                    <span className={styles["hazards"]}>
+                    <span
+                        className={classNames([
+                            styles["hazards"],
+                            classNameHazards,
+                        ])}
+                    >
                         {item.hazards.map((hazard, index) => (
                             <span
                                 key={index}

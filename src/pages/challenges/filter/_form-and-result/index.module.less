@@ -333,18 +333,20 @@
 }
 
 .random-result {
+    // --max-width: calc(var(--body-safe-min-width) * 2);
     --max-width: calc(
         var(--body-safe-min-width) + var(--global-edge-safe-distance) * 2
     );
-    --font-size: 1.25em;
-    --padding-top: 6em;
+    --font-size: 1.13333em;
+    --padding-y: 5em;
+    --animation-drop-in-duration: 0.75s;
 
     .screen-sm({
         --max-width: calc(
             var(--body-safe-min-width) - var(--global-edge-safe-distance) * 2
         );
         --font-size: 1em;
-        --padding-top: 4em;
+        --padding-y: 4em;
     });
     .screen-md({
         --max-width: calc(
@@ -352,12 +354,17 @@
         );
         // --font-size: 1.3333em;
     });
+    // .screen-lg({
+    //     --max-width: calc(
+    //         var(--body-safe-min-width) + var(--global-edge-safe-distance) * 2
+    //     );
+    // });
 
     position: relative;
     z-index: 1;
     margin: -6em calc(var(--global-edge-safe-distance) * -1);
-    padding-top: var(--padding-top);
-    padding-bottom: 4em;
+    padding-top: var(--padding-y);
+    padding-bottom: var(--padding-y);
     margin-bottom: calc(var(--challenge-list-container-padding-bottom) * -1);
     overflow: hidden;
 
@@ -382,8 +389,8 @@
         max-width: var(--max-width);
         font-size: var(--font-size);
         margin: 5dvh auto 0 auto;
-        animation: drop-in 0.75s linear backwards;
-        transform-origin: 50% 50%;
+        animation: drop-in var(--animation-drop-in-duration) linear backwards;
+        transform-origin: 50% 25%;
         @keyframes drop-in {
             0% {
                 opacity: 0;
@@ -426,6 +433,35 @@
             100% {
                 transform: scale(1);
             }
+        }
+
+        // & > * {
+        //     float: left;
+        //     width: 50%;
+        // }
+        // & > .hazards {
+        //     float: right;
+        // }
+    }
+
+    .extra-infos {
+        max-width: var(--max-width);
+        font-size: var(--font-size);
+        margin: 1em auto 0 auto;
+        animation: fade-in 0.25s var(--animation-drop-in-duration) linear both;
+        text-align: right;
+        padding: 0 0.5em;
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        .hint-link {
+            .link-with-arrow-styles();
+            margin-right: 0.25em;
         }
     }
 }
