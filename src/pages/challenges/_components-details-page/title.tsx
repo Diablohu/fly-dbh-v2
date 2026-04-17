@@ -43,11 +43,22 @@ const TitleBlock: FC<{
                     {challengeName}
                 </small>
             </h1>
-            {airacCycle && (
-                <span className={styles["airac-cycle"]}>
-                    本文基于 AIRAC CYCLE <strong>{airacCycle}</strong>
-                </span>
-            )}
+            <span
+                className={classNames([
+                    styles["airac-cycle"],
+                    {
+                        [`${styles["is-unfinished"]}`]: !airacCycle,
+                    },
+                ])}
+            >
+                {airacCycle ? (
+                    <>
+                        本文基于 AIRAC CYCLE <strong>{airacCycle}</strong>
+                    </>
+                ) : (
+                    "本页内容正在完善中"
+                )}
+            </span>
         </section>
     );
 };
