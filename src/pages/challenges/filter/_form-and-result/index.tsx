@@ -279,6 +279,15 @@ const SearchFormAndResult: FC<{
                 ref={FormContainerRef}
             >
                 <Filter
+                    label="机型"
+                    name="aircraftTypes"
+                    options={Object.entries(aircraftTypeString).map(
+                        ([value, label]) => ({ label, value }),
+                    )}
+                    initialValue={initialTypes}
+                    disabled={status === "loading"}
+                />
+                <Filter
                     label="难度"
                     name="difficulties"
                     options={Object.keys(challengeDifficultyString)
@@ -291,18 +300,10 @@ const SearchFormAndResult: FC<{
                                 label: challengeDifficultyString[value],
                                 value: value,
                                 difficulty: value,
+                                emoji: "",
                             };
                         })}
                     initialValue={initialDifficulties}
-                    disabled={status === "loading"}
-                />
-                <Filter
-                    label="机型"
-                    name="aircraftTypes"
-                    options={Object.entries(aircraftTypeString).map(
-                        ([value, label]) => ({ label, value }),
-                    )}
-                    initialValue={initialTypes}
                     disabled={status === "loading"}
                 />
                 <Filter

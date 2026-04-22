@@ -190,11 +190,10 @@
     --indicator-checkbox-core-color: transparent;
     & > .label {
         cursor: pointer;
-        each(range(1, 10, 2), {
-            &[data-difficulty="@{value}"] {
-                --menu-item-text-color: var(--difficulty-color-@{value});
-            }
-        });
+        &[data-difficulty] {
+            .difficulty-variables();
+            --menu-item-text-color: var(--difficulty-color);
+        }
         & > .indicator {
             position: absolute;
             width: var(--indicator-size);
@@ -241,6 +240,11 @@
                 left: 0;
                 top: 0;
                 width: var(--menu-item-line-height);
+                &:empty {
+                    &::before {
+                        content: var(--difficulty-icon);
+                    }
+                }
             }
         }
         &.radio > .indicator {

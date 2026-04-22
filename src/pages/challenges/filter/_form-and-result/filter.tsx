@@ -295,11 +295,13 @@ const Filter: FC<{
                         >
                             <em className={styles["indicator"]} />
                             <span className={styles["text"]}>
-                                {emoji && (
+                                {emoji === "" ? (
+                                    <span className={styles["emoji"]} />
+                                ) : emoji ? (
                                     <span className={styles["emoji"]}>
                                         {emoji}
                                     </span>
-                                )}
+                                ) : null}
                                 {label}
                             </span>
                         </label>
