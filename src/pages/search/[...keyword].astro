@@ -9,6 +9,7 @@ import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 
 import FormAndResult from "./_form-and-result";
+import { getSearchPageTitle } from "./_helpers";
 
 if (Astro.params.keyword) {
 }
@@ -29,7 +30,7 @@ if (error) {
                 : "",
         ]
             .filter(Boolean)
-            .join(" | ")
+            .join(" | "),
     );
     Astro.response.status = 500;
     Astro.props.error = error;
@@ -37,18 +38,14 @@ if (error) {
 }
 ---
 
-<Layout
-    title={`搜索${Astro.params.keyword ? `: ${Astro.params.keyword}` : ""}`}
-    header
-    footer
->
+<Layout title={getSearchPageTitle(Astro.params.keyword)} header footer>
     <Block>
         <FormAndResult
             client:idle
             initialKeyword={Astro.params.keyword || ""}
             initialResults={initialResults}
             defaultContentListAutoLoadMore={Astro.cookies.get(
-                CONTENT_LIST_AUTO_LOAD_MORE
+                CONTENT_LIST_AUTO_LOAD_MORE,
             )?.value as ValidContentListAutoLoadMoreType}
         />
     </Block>

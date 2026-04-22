@@ -1,6 +1,7 @@
 ---
 import { type ValidPageContentType } from "@/types";
 import { title as siteTitle, slogan } from "@/global";
+import getPageTitle from "@/utils/get-page-title";
 
 type Props = {
     title?: string;
@@ -34,9 +35,7 @@ url.protocol = "https:";
 ---
 
 <Fragment>
-    <title>
-        {title === siteTitle ? title : `${title} | FLY-DBH.com`}
-    </title>
+    <title>{getPageTitle(title)}</title>
     {
         description && (
             <>

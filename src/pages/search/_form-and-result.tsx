@@ -21,6 +21,9 @@ import ChallengeListGrid from "@/components/challenge-list-grid";
 import TagButton from "@/components/tag-button";
 import iconSearch from "@/assets/svg-symbols/search.svg?raw";
 
+import { getSearchPageTitle } from "./_helpers";
+import getPageTitle from "@/utils/get-page-title";
+
 import styles from "./_form-and-result.module.less";
 
 // ============================================================================
@@ -69,6 +72,7 @@ const SearchFormAndResult: FC<{
             "",
             `${routeBase.search}/${keyword}`,
         );
+        document.title = getPageTitle(getSearchPageTitle(keyword));
 
         setError("");
         setStatus("loading");
