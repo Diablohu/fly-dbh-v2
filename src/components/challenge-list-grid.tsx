@@ -11,7 +11,6 @@ import { actions } from "astro:actions";
 import {
     type ChallengeListItemType,
     type ChallengeListQueryConditionType,
-    type ValidContentListAutoLoadMoreType,
     type AircraftTypes,
 } from "@/types";
 

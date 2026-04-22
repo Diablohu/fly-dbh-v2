@@ -6,11 +6,7 @@ import {
     type ComponentProps,
 } from "react";
 import { actions } from "astro:actions";
-import {
-    type VideoListPageTypesType,
-    type VideoItemType,
-    type ValidContentListAutoLoadMoreType,
-} from "@/types";
+import { type VideoListPageTypesType, type VideoItemType } from "@/types";
 
 import ListContainerGrid from "@/components/list-container-grid";
 import VideoItem from "@/components/video-item";
