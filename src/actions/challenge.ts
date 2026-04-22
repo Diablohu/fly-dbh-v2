@@ -26,7 +26,7 @@ export type ChallengeListResponseDataType = {
 
 export const orderList = `max_allowed_aircraft_category asc, difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa, aerodrome.designator asc`;
 
-const getGroqProjection = (
+export const getGroqProjection = (
     purpose:
         | "details"
         | "list-item"
@@ -219,7 +219,7 @@ export const getGroqFilterBase = ({ isFullArticle = true } = {}) =>
         // 查询完整文章时，添加条件：必须有 `airac_cyle` 字段
         isFullArticle ? "&& defined(airac_cyle)" : ""
     }`;
-const getGroqFiltersChallengeList = ({
+export const getGroqFiltersChallengeList = ({
     // sort = "latest",
     difficulties = [],
     types = [],

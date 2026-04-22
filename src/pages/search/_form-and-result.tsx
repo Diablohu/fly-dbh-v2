@@ -17,6 +17,7 @@ import { type ValidContentListAutoLoadMoreType } from "@/types";
 import { search as logSearch } from "@/utils/log";
 
 import VideoListGrid from "@/components/video-list-grid";
+import ChallengeListGrid from "@/components/challenge-list-grid";
 import TagButton from "@/components/tag-button";
 import iconSearch from "@/assets/svg-symbols/search.svg?raw";
 
@@ -150,19 +151,24 @@ const Results: FC<{
     results: Awaited<ReturnType<typeof searchAction>>["data"];
     defaultContentListAutoLoadMore: ValidContentListAutoLoadMoreType;
 }> = ({ keyword, results, defaultContentListAutoLoadMore }) => {
-    const matched = useMemo(
+    const isMatchedAircraftOrDevice = useMemo(
         () => results && "tutorialsForMatchedAircraftOrDevice" in results,
+        [results],
+    );
+    const totalResultCount = useMemo(
+        () =>
+            (results?.total || 0) + (results?.approachChallenges?.length || 0),
         [results],
     );
 
     return (
         <>
-            {!!matched &&
+            {!!isMatchedAircraftOrDevice &&
                 results?.tutorialsForMatchedAircraftOrDevice?.list && (
                     <dl
                         className={classNames([
                             styles["list"],
-                            styles["matched-list"],
+                            styles["isMatchedAircraftOrDevice-list"],
                         ])}
                     >
                         <dt>
@@ -212,7 +218,7 @@ const Results: FC<{
                         </dd>
                     </dl>
                 )}
-            {!matched &&
+            {!isMatchedAircraftOrDevice &&
                 Array.isArray(results?.aircraftFamilies) &&
                 results?.aircraftFamilies.length > 0 && (
                     <dl
@@ -237,7 +243,7 @@ const Results: FC<{
                         </dd>
                     </dl>
                 )}
-            {!matched &&
+            {!isMatchedAircraftOrDevice &&
                 Array.isArray(results?.aircraftOnboardDevices) &&
                 results?.aircraftOnboardDevices.length > 0 && (
                     <dl
@@ -262,36 +268,68 @@ const Results: FC<{
                         </dd>
                     </dl>
                 )}
-            {Array.isArray(results?.list) && results?.list.length > 0 && (
-                <dl
-                    className={classNames([
-                        styles["list"],
-                        styles["video-list"],
-                    ])}
-                >
-                    <dt>
-                        <h3>{matched && "其他"}相关视频内容</h3>
-                    </dt>
-                    <dd>
-                        <VideoListGrid
-                            type="search"
-                            slug={keyword}
-                            initialList={results.list}
-                            infiniteScroll
-                            initialListIsComplete={
-                                results.list.length >= results.total
-                            }
-                            defaultContentListAutoLoadMore={
-                                defaultContentListAutoLoadMore
-                            }
-                            showLoadMoreButton
-                            tagPurpose="search-result"
-                            allowAssetPriorityHigh
-                        />
-                    </dd>
-                </dl>
-            )}
-            {results?.total === 0 && (
+            {
+                // 固定翼着陆挑战内容
+                Array.isArray(results?.approachChallenges) &&
+                    results?.approachChallenges.length > 0 && (
+                        <dl
+                            className={classNames([
+                                styles["list"],
+                                styles["video-list"],
+                            ])}
+                        >
+                            <dt>
+                                <h3>相关固定翼飞机挑战</h3>
+                            </dt>
+                            <dd>
+                                <ChallengeListGrid
+                                    catalog="filter"
+                                    showAircraftTypes
+                                    initialList={results.approachChallenges}
+                                    infiniteScroll={false}
+                                    initialListIsComplete
+                                    showCompleteText={false}
+                                />
+                            </dd>
+                        </dl>
+                    )
+            }
+            {
+                // 视频内容
+                Array.isArray(results?.list) && results?.list.length > 0 && (
+                    <dl
+                        className={classNames([
+                            styles["list"],
+                            styles["video-list"],
+                        ])}
+                    >
+                        <dt>
+                            <h3>
+                                {isMatchedAircraftOrDevice && "其他"}
+                                相关视频内容
+                            </h3>
+                        </dt>
+                        <dd>
+                            <VideoListGrid
+                                type="search"
+                                slug={keyword}
+                                initialList={results.list}
+                                infiniteScroll
+                                initialListIsComplete={
+                                    results.list.length >= results.total
+                                }
+                                defaultContentListAutoLoadMore={
+                                    defaultContentListAutoLoadMore
+                                }
+                                showLoadMoreButton
+                                tagPurpose="search-result"
+                                allowAssetPriorityHigh
+                            />
+                        </dd>
+                    </dl>
+                )
+            }
+            {totalResultCount === 0 && (
                 <div className={styles["no-result"]}>
                     <strong>查询无结果</strong>
                     <p>请尝试其他关键字</p>

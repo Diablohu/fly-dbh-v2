@@ -23,35 +23,16 @@ import styles from "./challenge-list-grid.module.less";
 // ============================================================================
 
 const actionFetchList = actions.challenge.fetchList;
+const ListContainer = ListContainerGrid<
+    ChallengeListItemType,
+    Awaited<ReturnType<typeof actionFetchList>>["data"]
+>;
 
 // ============================================================================
 
 type Props = {
     catalog: "latest" | "filter" | AircraftTypes;
     initialList?: ChallengeListItemType[];
-    /**
-     * 初始列表是否已完成（已没有更多内容）
-     * @default false
-     */
-    initialListIsComplete?: boolean;
-    /**
-     * 是否启用无限滚动（自动加载更多内容）功能
-     *  - 注！如需启用，则 **必须** 传入 `defaultContentListAutoLoadMore`
-     * @default false
-     */
-    infiniteScroll?: boolean;
-    /**
-     * 如果需要无限滚动（自动加载更多内容）功能，
-     * 则 **必须** 传入 Astro SSR Cookie 值
-     */
-    defaultContentListAutoLoadMore?: ValidContentListAutoLoadMoreType;
-    /**
-     * 是否显示【加载更多】按钮
-     *  - 默认值: 显示 `true`
-     *  - 是否启用无限滚动（自动加载更多内容），与这个开关不相关
-     *      - 即，不显示按钮时，也能自动加载更多
-     */
-    showLoadMoreButton?: boolean;
 
     /**
      * 条件：难度
@@ -75,6 +56,14 @@ type Props = {
     "showMaxCategory" | "showAircraftTypes"
 > &
     Partial<ChallengeListQueryConditionType> &
+    Pick<
+        ComponentProps<typeof ListContainer>,
+        | "initialListIsComplete"
+        | "infiniteScroll"
+        | "defaultContentListAutoLoadMore"
+        | "showLoadMoreButton"
+        | "showCompleteText"
+    > &
     Pick<HTMLAttributes<HTMLDivElement>, "className">;
 
 // ============================================================================
@@ -89,6 +78,7 @@ const ChallengeListGrid: FC<Props> = ({
     infiniteScroll = false,
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
+    showCompleteText,
     showMaxCategory = false,
     showAircraftTypes = false,
     conditionDifficulties,
@@ -145,10 +135,7 @@ const ChallengeListGrid: FC<Props> = ({
     );
 
     return (
-        <ListContainerGrid<
-            ChallengeListItemType,
-            Awaited<ReturnType<typeof actionFetchList>>["data"]
-        >
+        <ListContainer
             className={classNames(styles["challenge-list-grid"], className)}
             loadMore={loadMore}
             itemRender={itemRender}
@@ -158,6 +145,7 @@ const ChallengeListGrid: FC<Props> = ({
             infiniteScroll={infiniteScroll}
             defaultContentListAutoLoadMore={defaultContentListAutoLoadMore}
             showLoadMoreButton={showLoadMoreButton}
+            showCompleteText={showCompleteText}
         />
     );
 };

@@ -31,7 +31,10 @@ type Props<T extends {}, R extends {} | undefined> = {
     length?: number;
     /** 初始列表内容 */
     initialList?: T[];
-    /** 初始列表是否已完成（已没有更多内容） */
+    /**
+     * 初始列表是否已完成（已没有更多内容）
+     * @default false
+     */
     initialListIsComplete?: boolean;
     /**
      * 是否启用无限滚动（自动加载更多内容）功能
@@ -48,8 +51,15 @@ type Props<T extends {}, R extends {} | undefined> = {
      *  - 默认值: 显示 `true`
      *  - 是否启用无限滚动（自动加载更多内容），与这个开关不相关
      *      - 即，不显示按钮时，也能自动加载更多
+     * @default true
      */
     showLoadMoreButton?: boolean;
+    /**
+     * 是否显示【没有更多啦】文字
+     *  - 默认值: 显示 `true`
+     * @default true
+     */
+    showCompleteText?: boolean;
 } & Pick<HTMLAttributes<HTMLDivElement>, "className">;
 
 // ============================================================================
@@ -73,6 +83,7 @@ const ListContainerGrid = <
     infiniteScroll: _infiniteScroll = false,
     defaultContentListAutoLoadMore,
     showLoadMoreButton = true,
+    showCompleteText = true,
 }: Props<T, R>) => {
     const ListContainerRef = useRef<HTMLDivElement>(null);
     const InfiniteScrollProbeRef = useRef<HTMLDivElement>(null);
@@ -112,8 +123,11 @@ const ListContainerGrid = <
      * 是否允许自动加载更多内容，或称“无限滚动”
      */
     const infiniteScroll = useMemo(
-        () => _infiniteScroll && contentListAutoLoadMore === "1",
-        [_infiniteScroll, contentListAutoLoadMore],
+        () =>
+            _infiniteScroll &&
+            contentListAutoLoadMore === "1" &&
+            !initialListIsComplete,
+        [_infiniteScroll, contentListAutoLoadMore, initialListIsComplete],
     );
 
     /**
@@ -257,13 +271,19 @@ const ListContainerGrid = <
             ))}
 
             <section className={styles["block"]}>
-                <span
-                    ref={InfiniteScrollProbeRef}
-                    className={styles["infinite-scroll-probe"]}
-                />
+                {infiniteScroll && (
+                    <span
+                        ref={InfiniteScrollProbeRef}
+                        className={styles["infinite-scroll-probe"]}
+                    />
+                )}
                 {showLoadMoreButton &&
                     (status === "complete" ? (
-                        <span className={styles["completed"]}>没有更多啦~</span>
+                        showCompleteText && (
+                            <span className={styles["completed"]}>
+                                没有更多啦~
+                            </span>
+                        )
                     ) : (
                         <button
                             type="button"

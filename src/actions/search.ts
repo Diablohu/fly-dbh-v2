@@ -2,7 +2,12 @@ import { defineAction, ActionError } from "astro:actions";
 import { z } from "astro/zod";
 import type { SanityDocument } from "@sanity/client";
 
-import { type VideoItemType, type VideoListPageTypesType } from "@/types";
+import {
+    type VideoItemType,
+    type VideoListPageTypesType,
+    type AerodromeCodeType,
+    type ChallengeItemType,
+} from "@/types";
 import { commonAircraftNameSuffix } from "@/global";
 
 import { fetch } from "@/services/sanity";
@@ -10,28 +15,39 @@ import fetchAllTutorialVideosForSubject from "@/services/queries/fetch-all-tutor
 import { transformImagePath } from "@/services/sanity-helpers";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
+import {
+    getGroqFilterBase as getChallengesGroqFilterBase,
+    getGroqQueryChallengeList,
+} from "./challenge";
 import { E50000 } from "@/constants/error-codes";
 
 // ============================================================================
 
 const defaultLength = 10;
-const getKeywords = (keyword: string, split = false) => [
-    ...new Set([
-        ...(split ? keyword.trim().toLowerCase().split(/\s+/g) : [keyword]),
+const getKeywords = (keyword: string, split = false) =>
+    [
+        ...new Set([
+            ...(split ? keyword.trim().toLowerCase().split(/\s+/g) : [keyword]),
 
-        // 变换机型名称
-        keyword.replace(/([a-z])([0-9])/gi, "$1-$2"),
-        keyword.replace(/^[a-z]{1}([0-9a-z]{3})/gi, "$1"),
-        keyword.replace(/[^\s^0-9^a-z]+([0-9a-z])/gi, "$1"),
-        keyword.replace(
-            new RegExp(`(\\d+)(${commonAircraftNameSuffix.join("|")})`, "gi"),
-            "$1 $2",
-        ),
+            // 变换机型名称
+            keyword.replace(/([a-z])([0-9])/gi, "$1-$2"),
+            keyword.replace(/^[a-z]{1}([0-9a-z]{3})/gi, "$1"),
+            keyword.replace(/[^\s^0-9^a-z]+([0-9a-z])/gi, "$1"),
+            keyword.replace(
+                new RegExp(
+                    `(\\d+)(${commonAircraftNameSuffix.join("|")})`,
+                    "gi",
+                ),
+                "$1 $2",
+            ),
 
-        // 变换 [X]U[数字] -> [X]U0[数字]
-        keyword.replace(/(\w)u([0-9])([^0-9]|$)/gi, "$1u0$2$3"),
-    ]),
-];
+            // 处理 Unicode 错误：变换 [X]U[数字] -> [X]U0[数字]
+            keyword.replace(/(\w)u([0-9])([^0-9]|$)/gi, "$1u0$2$3"),
+
+            // 如果关键字包含“机场”二字，移除
+            keyword.replace(/机场/gi, ""),
+        ]),
+    ].filter((seg) => Boolean(seg) && !/^\s+$/.test(seg));
 const projection = `{
     _id,
     "slug": slug.current,
@@ -92,6 +108,8 @@ type ResultType = {
             [type: string]: SanityDocument<ReturnVideoItemType>[];
         };
     };
+
+    approachChallenges?: SanityDocument<ChallengeItemType>[];
 };
 
 const keywordRegex = {
@@ -99,7 +117,7 @@ const keywordRegex = {
     review: /评测|测评|试飞|体验|简评/,
 };
 
-function getValues(keyword: string) {
+function getGroqAndFilters(keyword: string) {
     const isTutorial = keywordRegex.tutorial.test(keyword);
     const isReview = keywordRegex.review.test(keyword);
 
@@ -107,6 +125,7 @@ function getValues(keyword: string) {
     if (isReview) keyword = keyword.replace(keywordRegex.review, "");
     keyword = keyword.trim();
 
+    /** 拆分后的关键字 */
     const keywords = getKeywords(keyword);
     const getKeywordFilter = (name: string) =>
         `(${keywords.map((keyword) => `${name} match "*${keyword}*"`).join(" || ")})`;
@@ -120,15 +139,59 @@ function getValues(keyword: string) {
         return ` && (${checkTags.map((slug) => `"${slug}" in tags[]->slug.current`).join(" || ")})`;
     };
 
+    /** GROQ: 查询视频内容 */
     const groqVideos = `
 *[_type == "video" && ${getKeywordFilter("title")}${getKeywordFilterTags()}]
 ${projection}
 | order( release desc )`;
 
+    /** GROQ: 查询固定翼挑战内容 */
+    const groqFilterChallenges = (() => {
+        // 以所有关键字来查询机场名称和机场位置
+        const filters: string[] = keywords
+            .map((kw) => {
+                return [
+                    `aerodrome->name match "*${kw}*"`,
+                    `aerodrome->location[] match "*${kw}*"`,
+                ];
+            })
+            .flat();
+
+        /**
+         * 机场代码关键字
+         *  - 以仅包含字母、数字和横线的关键字来查询机场代码
+         */
+        const codeKeywords = keywords.filter((kw) => /^[a-z0-9-]+$/i.test(kw));
+        if (codeKeywords.length) {
+            const types: AerodromeCodeType[] = [
+                "icao",
+                "iata",
+                "faa",
+                "designator",
+            ];
+            types.forEach((t) => {
+                filters.push(
+                    `lower(aerodrome->${t}) in [${codeKeywords.map((kw) => `lower('${kw}')`)}]`,
+                );
+            });
+        }
+
+        if (filters.length)
+            return (
+                "*[" +
+                getChallengesGroqFilterBase({ isFullArticle: true }) +
+                "&&(" +
+                filters.join("||") +
+                ")]"
+            );
+        return "";
+    })();
+
     return {
         keywords,
         getKeywordFilter,
         groqVideos,
+        groqFilterChallenges,
     };
 }
 
@@ -151,13 +214,15 @@ const actions = {
                 throw err;
             }
             try {
-                const { getKeywordFilter, groqVideos } = getValues(keyword);
+                const { getKeywordFilter, groqVideos, groqFilterChallenges } =
+                    getGroqAndFilters(keyword);
                 const res = (await fetch(
                     `{
 'list': ${groqVideos}[${from}...${from + length}],
 'total' : count(${groqVideos}),` +
                         (from === 0
-                            ? `
+                            ? // 第一页：连带查询其他内容
+                              `
 'aircraftFamilies': *[
     _type == "${getVideoListPageTypeInfo("aircraftFamily").type}" && (
         ${getKeywordFilter("name")} ||
@@ -192,7 +257,13 @@ const actions = {
         'tagsId': tags[]->_id,
         'maker': maker->name_zh_cn,
     }
-    [0...10],`
+    [0...10],
+
+'approachChallenges': ${getGroqQueryChallengeList({
+                                  filter: groqFilterChallenges,
+                                  sort: "difficulty",
+                                  isFullArticle: true,
+                              })}`
                             : "") +
                         "}",
                     {

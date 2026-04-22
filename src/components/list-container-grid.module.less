@@ -15,6 +15,9 @@
         position: relative;
         text-align: center;
         margin-top: var(--list-container-grid-more-margin-top);
+        &:empty {
+            display: none;
+        }
     }
 
     .infinite-scroll-probe {

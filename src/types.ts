@@ -42,16 +42,13 @@ export type AircraftTypes =
 //
 // #region 机场
 
+export type AerodromeCodeType = "icao" | "iata" | "faa" | "designator";
 export type AerodromeItemType = {
     _id: string;
     slug: string;
     name: string;
     is_closed: boolean;
-    icao: string;
     is_fake_icao: boolean;
-    iata: string;
-    faa: string;
-    designator: string;
     location: string[];
     runways: {
         identifier: string;
@@ -73,7 +70,7 @@ export type AerodromeItemType = {
         extra: string;
     }[];
     free_addons_scenery?: AerodromeItemType["free_addons"];
-};
+} & Record<AerodromeCodeType, string>;
 
 // #endregion
 //
