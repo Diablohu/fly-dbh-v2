@@ -158,6 +158,16 @@ const aerodromeName =
 
 <Layout
     title={[
+        [
+            ...new Set([
+                challenge.aerodrome?.icao,
+                challenge.aerodrome?.iata,
+                challenge.aerodrome?.faa,
+                challenge.aerodrome?.designator,
+            ]),
+        ]
+            .filter(Boolean)
+            .join("/"),
         aerodromeName,
         Array.isArray(challenge.aerodrome.location) &&
         challenge.aerodrome.location.length > 0
