@@ -19,6 +19,14 @@ import getVideoItemTopTags from "@/utils/get-video-item-top-tags";
 
 // ============================================================================
 
+const ListContainer = ListContainerGrid<
+    ItemType,
+    | Awaited<ReturnType<typeof actions.search.query>>["data"]
+    | Awaited<ReturnType<typeof actions.videoListPage.fetchList>>["data"]
+>;
+
+// ============================================================================
+
 type ItemType = Partial<VideoItemType> &
     Pick<VideoItemType, "_id" | "title" | "release" | "cover">;
 type Props = {
@@ -36,29 +44,6 @@ type Props = {
     length?: number;
     initialList?: ItemType[];
     /**
-     * 初始列表是否已完成（已没有更多内容）
-     * @default false
-     */
-    initialListIsComplete?: boolean;
-    /**
-     * 是否启用无限滚动（自动加载更多内容）功能
-     *  - 注！如需启用，则 **必须** 传入 `defaultContentListAutoLoadMore`
-     * @default false
-     */
-    infiniteScroll?: boolean;
-    /**
-     * 如果需要无限滚动（自动加载更多内容）功能，
-     * 则 **必须** 传入 Astro SSR Cookie 值
-     */
-    defaultContentListAutoLoadMore?: ValidContentListAutoLoadMoreType;
-    /**
-     * 是否显示【加载更多】按钮
-     *  - 默认值: 显示 `true`
-     *  - 是否启用无限滚动（自动加载更多内容），与这个开关不相关
-     *      - 即，不显示按钮时，也能自动加载更多
-     */
-    showLoadMoreButton?: boolean;
-    /**
      * **强制** 指定是否显示标签，如果显示，确定显示的“目的”类型
      */
     tagPurpose?: Parameters<typeof getVideoItemTopTags>[1];
@@ -67,12 +52,13 @@ type Props = {
      * - 如果传入 `true`，默认 N 值为 10
      */
     allowAssetPriorityHigh?: number | boolean;
-};
-
-const ListContainer = ListContainerGrid<
-    ItemType,
-    | Awaited<ReturnType<typeof actions.search.query>>["data"]
-    | Awaited<ReturnType<typeof actions.videoListPage.fetchList>>["data"]
+} & Pick<
+    ComponentProps<typeof ListContainer>,
+    | "initialListIsComplete"
+    | "infiniteScroll"
+    | "defaultContentListAutoLoadMore"
+    | "showLoadMoreButton"
+    | "showCompleteText"
 >;
 
 // ============================================================================
@@ -89,6 +75,7 @@ const VideoListGrid: FC<Props> = ({
     showLoadMoreButton = true,
     tagPurpose,
     allowAssetPriorityHigh = false,
+    showCompleteText,
 }) => {
     if (
         infiniteScroll &&
@@ -235,6 +222,7 @@ const VideoListGrid: FC<Props> = ({
             infiniteScroll={infiniteScroll}
             defaultContentListAutoLoadMore={defaultContentListAutoLoadMore}
             showLoadMoreButton={showLoadMoreButton}
+            showCompleteText={showCompleteText}
         />
     );
 };

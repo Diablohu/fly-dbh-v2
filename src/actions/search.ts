@@ -263,7 +263,7 @@ const actions = {
                                   filter: groqFilterChallenges,
                                   sort: "difficulty",
                                   isFullArticle: true,
-                              })}`
+                              })},`
                             : "") +
                         "}",
                     {
