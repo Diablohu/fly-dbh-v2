@@ -244,7 +244,66 @@ const getGroqFiltersChallengeList = ({
         // 筛选难点灾害，方式：`AND`
         (Array.isArray(hazards) && hazards.length > 0
             ? hazards
-                  .map((hazard) => `&& "${hazard}" in hazards[].hazard->_id`)
+                  .map((hazard) => {
+                      let amend: string[] | undefined = undefined;
+                      /*
+                        SPECIAL AMENDMENT
+                        选择较低难度的灾害，自动带上对应的更高难度的灾害
+                        这些自动带入的条件，采用“或”查询
+                        */
+                      if (
+                          [
+                              [
+                                  "6234459e-393d-40ca-b89e-264549262502", // 较大坡度跑道
+                                  "4bd67840-b34c-4f1e-80f6-98e695c64184", // 甚大坡度跑道
+                                  "3004c572-edf8-4664-a121-e2b7f6abb212", // 极大坡度跑道
+                              ],
+                              [
+                                  "4bd67840-b34c-4f1e-80f6-98e695c64184", // 甚大坡度跑道
+                                  "3004c572-edf8-4664-a121-e2b7f6abb212", // 极大坡度跑道
+                              ],
+                              [
+                                  "59fe3bd7-b1c8-433e-a8ba-2bb8c8336812", // 低空大坡度转向
+                                  "a0bd153b-49bb-4796-888c-fac91e4aaab8", // 超低空大坡度转向
+                              ],
+                              [
+                                  "cbca20c8-b49e-4199-9ccb-49191c741210", // 仪表程序有航向道偏移
+                                  "26f19839-80c3-4590-9c18-a0faf8c2b6e4", // 仪表程序航向道偏移甚大
+                              ],
+                              [
+                                  "ca424c39-1458-475b-b34f-ee2213392d74", // 短第五边
+                                  "48491080-a1cc-430d-82a5-ff3ba43c6378", // 极短第五边
+                              ],
+                              [
+                                  "a7b92c63-e75b-4a10-93c8-9667ef74a4da", // 短跑道
+                                  "3be66f43-a39a-4baf-8269-bc6215d35221", // 极短跑道
+                              ],
+                              [
+                                  "c3f6a338-87b9-4418-bee3-c7e8730e83a0", // 较大下滑角
+                                  "65ab3041-e6c2-4a00-97ce-c387a0f91cc4", // 甚大下滑角
+                              ],
+                              [
+                                  "25a51939-b0da-4839-b3ed-c741e46f428e", // 高原机场
+                                  "7be03766-484a-489b-9da8-eb44658f9c31", // 高高原机场
+                              ],
+                          ].some((arr) => {
+                              if (hazard === arr[0]) {
+                                  amend = arr;
+                                  return true;
+                              }
+                              return false;
+                          }) &&
+                          Array.isArray(amend)
+                      ) {
+                          return `&&(${(amend as string[])
+                              ?.map(
+                                  (hazardId) =>
+                                      `"${hazardId}" in hazards[].hazard->_id`,
+                              )
+                              .join("||")})`;
+                      }
+                      return `&& "${hazard}" in hazards[].hazard->_id`;
+                  })
                   .join("")
             : "")
     }]`;
@@ -258,14 +317,20 @@ export const getGroqQueryChallengeList = ({
     hazards = [],
     isFullArticle = true,
     projection = projectionListItem,
-}: Partial<ChallengeListQueryConditionType & { projection: string }> = {}) =>
-    `${getGroqFiltersChallengeList({
-        sort,
-        difficulties,
-        types,
-        hazards,
-        isFullArticle,
-    })}{${projection}} | order(${
+    filter,
+}: Partial<
+    ChallengeListQueryConditionType & { projection: string; filter: string }
+> = {}) =>
+    `${
+        filter ||
+        getGroqFiltersChallengeList({
+            sort,
+            difficulties,
+            types,
+            hazards,
+            isFullArticle,
+        })
+    }{${projection}} | order(${
         sort === "latest"
             ? "airac_cyle desc, _createdAt desc"
             : sort === "difficulty"
@@ -291,9 +356,15 @@ const actions = {
             isFullArticle = true,
         }) => {
             try {
+                const groqQueryFilter = getGroqFiltersChallengeList({
+                    difficulties,
+                    types,
+                    hazards,
+                    isFullArticle,
+                });
                 const queryString = `{
-'list': ${getGroqQueryChallengeList({ from, length, sort, difficulties, types, hazards, isFullArticle })},
-'total': count(${getGroqFiltersChallengeList({ sort, difficulties, types, hazards, isFullArticle })})
+'list': ${getGroqQueryChallengeList({ filter: groqQueryFilter, from, length, sort })},
+'total': count(${groqQueryFilter})
 }`;
                 const res = (await fetch(queryString, {
                     transform: (res, queryString) => {
