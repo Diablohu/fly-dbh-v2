@@ -136,11 +136,17 @@ const actions = {
                                     ")"
                           }`
                         : ""
-                }] ${getProjections(filters?.[0].type, filters?.[0].slug)} | order( release desc )`;
+                }] ${getProjections(filters?.[0].type, filters?.[0].slug)}`;
                 // console.log({ query });
                 return (await fetch(
                     `{
-'list' : ${query}${filters?.some((filter) => filter.type === "aircraftFamily") ? "" : `[${from}...${from + length}]`},
+'list' : ${query} | order( release desc ) ${
+                        filters?.some(
+                            (filter) => filter.type === "aircraftFamily",
+                        )
+                            ? ""
+                            : `[${from}...${from + length}]`
+                    },
 'total' : count(${query}),
 ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
 }`,
