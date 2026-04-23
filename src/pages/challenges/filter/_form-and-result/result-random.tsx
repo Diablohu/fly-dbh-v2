@@ -32,7 +32,7 @@ const ResultRandom: FC<{
                 <section className={styles["extra-infos"]}>
                     {!result.list[0].airac_cyle && (
                         <span className={styles["article-is-wip"]}>
-                            上述内容正在完善中……
+                            该条目内容正在完善中……
                         </span>
                     )}
                     <a
