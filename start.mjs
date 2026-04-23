@@ -27,9 +27,27 @@ function logError(t, error) {
     if (error.cause) console.log(chalk.gray.italic(`   ${error.cause}`));
 }
 async function npmRun(cmd) {
-    return spawn(`npm run ${cmd}`, {
-        stdio: "inherit",
-        shell: true,
+    return new Promise((resolve, reject) => {
+        const child = spawn(`npm run ${cmd}`, {
+            stdio: "inherit",
+            shell: true,
+        });
+        child.on("close", () => {
+            resolve(true);
+        });
+        child.on("error", (error) => {
+            reject(error);
+        });
+        child.on("exit", (exitCode) => {
+            switch (exitCode) {
+                case 0:
+                    return resolve(true);
+                default:
+                    return reject(exitCode);
+            }
+        });
+
+        return child;
     });
 }
 
