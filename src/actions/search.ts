@@ -153,6 +153,7 @@ ${projection}
                 return [
                     `aerodrome->name match "*${kw}*"`,
                     `aerodrome->location[] match "*${kw}*"`,
+                    `aerodrome->keywords[] match "*${kw}*"`,
                 ];
             })
             .flat();

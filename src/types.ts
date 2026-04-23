@@ -50,6 +50,7 @@ export type AerodromeItemType = {
     is_closed: boolean;
     is_fake_icao: boolean;
     location: string[];
+    keywords: string[];
     runways: {
         identifier: string;
         bearing: string;
