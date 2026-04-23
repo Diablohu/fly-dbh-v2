@@ -187,6 +187,15 @@ export function getChallengeCatalogPageLink(
         (sort ? `/sort-${sort}` : "")
     );
 }
+/** 生成路由: 挑战详情页 */
+export const getChallengePageLink = (idOrSlug?: string) => {
+    if (!idOrSlug) return routeBase.challenges;
+    return (
+        routeBase.challenges + "/" + idOrSlug
+        // + "/" +
+        // challenge.replace(new RegExp(`^${aerodrome}-`), "")
+    );
+};
 
 // ============================================================================
 //

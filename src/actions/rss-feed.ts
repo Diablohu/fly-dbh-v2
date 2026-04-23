@@ -1,9 +1,10 @@
 import { defineAction, ActionError } from "astro:actions";
 
-import { type VideoItemType } from "@/types";
+import { type VideoItemType, type ChallengeListItemType } from "@/types";
+import { getGroqProjection } from "@/actions/challenge";
 
 import { fetch } from "@/services/sanity";
-import { transformImagePath } from "@/services/sanity-helpers";
+// import { transformImagePath } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
 import { E40000 } from "@/constants/error-codes";
 
@@ -11,7 +12,9 @@ import { E40000 } from "@/constants/error-codes";
 
 const getProjections = () => `{
     _id,
+    _createdAt,
     'slug': slug.current,
+
     title,
     'tags': tags[]->{
         _id,
@@ -19,19 +22,18 @@ const getProjections = () => `{
         "name": title
     },
     release,
-    duration,
-    "cover": cover.asset->path,
-    "cover_dimensions": cover.asset->{
-        'width': metadata.dimensions.width,
-        'height': metadata.dimensions.height
-    },
     description,
-    links,
+
+    ${getGroqProjection("list-item")}
 }`;
-type ReturnVideoItemType = Partial<VideoItemType> &
+type ReturnVideoItemType = {
+    _id: string;
+    _createdAt: string;
+    slug: string;
+} & Pick<VideoItemType, "title" | "tags" | "release" | "description"> &
     Pick<
-        VideoItemType,
-        "_id" | "title" | "release" | "cover" | "tags" | "description"
+        ChallengeListItemType,
+        "name" | "difficulty" | "aerodrome" | "typical_aircraft_types"
     >;
 
 // ============================================================================
@@ -42,7 +44,7 @@ const actions = {
             try {
                 // console.log({ query });
                 return await fetch<ReturnVideoItemType>(
-                    `*[_type == "video"] ${getProjections()} | order( release desc ) [0...10]`,
+                    `*[_type == "video" || (_type == "approach_challenge" && defined(airac_cyle))] ${getProjections()} | order( _createdAt desc ) [0...20]`,
                     {
                         transform: (res, queryString) => {
                             if (!res || !Array.isArray(res) || !res.length) {
@@ -53,12 +55,13 @@ const actions = {
                                 err.cause = { GROQ: queryString };
                                 throw err;
                             }
-                            res.forEach((post) => {
-                                post.cover = transformImagePath(post.cover);
-                            });
+                            // res.forEach((post) => {
+                            //     if (post.cover)
+                            //         post.cover = transformImagePath(post.cover);
+                            // });
                             return res;
                         },
-                    }
+                    },
                 );
             } catch (err) {
                 actionErrorHandler(err);
