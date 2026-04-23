@@ -286,6 +286,10 @@ export const getGroqFiltersChallengeList = ({
                                   "25a51939-b0da-4839-b3ed-c741e46f428e", // 高原机场
                                   "7be03766-484a-489b-9da8-eb44658f9c31", // 高高原机场
                               ],
+                              [
+                                  "58d203b4-1b48-4282-892d-2afedffa6db8", // 地形风险
+                                  "507b1ca5-e112-4f17-b566-4b2eeedcd728", // 地容错地形风险
+                              ],
                           ].some((arr) => {
                               if (hazard === arr[0]) {
                                   amend = arr;
