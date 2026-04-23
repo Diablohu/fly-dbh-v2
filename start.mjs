@@ -150,7 +150,7 @@ async function main() {
         case "publish":
             try {
                 await new Promise((resolve, reject) => {
-                    const child = spawn("astro", `check`.split(" "), {
+                    const child = spawn("astro check", {
                         stdio: "inherit",
                         shell: true,
                     });
