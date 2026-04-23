@@ -22,8 +22,7 @@ const actions = {
     'slug': slug.current,
     release,
     _updatedAt,
-} | order( release desc ) [0...1000]
-`;
+} | order( release desc )`;
                 return await fetch<
                     Pick<VideoItemType, "_id" | "slug"> & {
                         _updatedAt: string;
@@ -38,6 +37,24 @@ const actions = {
     /** 
      // #region TODO: 全列表：视频分类
      */
+    fetchVideoCategories: defineAction({
+        handler: async () => {
+            try {
+                const queryString = `\
+*[_type == "tag"] {
+    _id,
+    'slug': slug.current,
+} | order( sort asc )`;
+                return await fetch<
+                    Pick<VideoItemType, "_id" | "slug"> & {
+                        _updatedAt: string;
+                    }
+                >(queryString, { ...cacheOptions });
+            } catch (err) {
+                actionErrorHandler(err);
+            }
+        },
+    }),
 
     /** 
      // #region 全列表：挑战（完整文章）
@@ -53,8 +70,7 @@ const actions = {
     'aerodrome': aerodrome->{
         _updatedAt
     }
-} | order( aerodrome._updatedAt desc, _updatedAt desc ) [0...1000]
-`;
+} | order( aerodrome._updatedAt desc, _updatedAt desc )`;
                 return await fetch<
                     Pick<ChallengeItemType, "_id" | "slug"> & {
                         _updatedAt: string;
