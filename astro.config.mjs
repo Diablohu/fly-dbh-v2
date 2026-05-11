@@ -1,6 +1,6 @@
 // @ts-check
 import path from "node:path";
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, fontProviders, svgoOptimizer } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
@@ -147,6 +147,8 @@ export default defineConfig({
     },
 
     // #region 试验选项
-    experimental: {},
+    experimental: {
+        svgOptimizer: svgoOptimizer(),
+    },
 });
 // #endregion Astro Config
