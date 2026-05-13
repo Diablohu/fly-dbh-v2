@@ -78,7 +78,7 @@ if (error) {
 
 // console.log(video);
 if (video.slug && video.slug !== Astro.params.slug)
-    return Astro.redirect(getVideoPageLink(video.slug), 301);
+    return Astro.redirect(encodeURI(getVideoPageLink(video.slug)), 301);
 
 const relatedChallenges = video.aerodromes
     ?.flatMap((aerodrome) =>
