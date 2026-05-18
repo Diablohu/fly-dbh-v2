@@ -197,28 +197,29 @@ export type ChallengeListQueryConditionType = {
 export type ChallengeListItemType = Pick<
     ChallengeItemType,
     | "_id"
+    | "slug"
     | "name"
     | "difficulty"
     | "max_allowed_aircraft_category"
     | "typical_aircraft_types"
     | "airac_cyle"
-> & {
-    slug: string;
-    aerodrome: Pick<
-        AerodromeItemType,
-        | "_id"
-        | "slug"
-        | "name"
-        | "is_closed"
-        | "icao"
-        | "is_fake_icao"
-        | "iata"
-        | "faa"
-        | "designator"
-        | "location"
-    > &
-        Partial<Pick<AerodromeItemType, "photo">>;
-};
+> &
+    Partial<{
+        aerodrome: Pick<
+            AerodromeItemType,
+            | "_id"
+            | "slug"
+            | "name"
+            | "is_closed"
+            | "icao"
+            | "is_fake_icao"
+            | "iata"
+            | "faa"
+            | "designator"
+            | "location"
+        > &
+            Pick<AerodromeItemType, "photo">;
+    }>;
 export type ChallengeItemType = {
     _id: string;
     _updatedAt: string;
@@ -316,7 +317,6 @@ export type ChallengeItemType = {
             | "max_allowed_aircraft_category"
             | "typical_aircraft_types"
             | "airac_cyle"
-            | 'aerodrome'
         > & {
             slug: string;
         }

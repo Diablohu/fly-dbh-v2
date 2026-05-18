@@ -52,8 +52,8 @@ export const GET: APIRoute = async (context) => {
                                 .filter(Boolean)
                                 .join("/") +
                             " " +
-                            (post.aerodrome.is_closed ? "（旧）" : "") +
-                            post.aerodrome.name +
+                            (post.aerodrome?.is_closed ? "（旧）" : "") +
+                            post.aerodrome?.name +
                             "：" +
                             post.name,
                         link: getChallengePageLink(post.slug || post._id),
