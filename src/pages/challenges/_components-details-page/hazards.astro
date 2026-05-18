@@ -10,7 +10,6 @@ type Props = {
 } & astroHTML.JSX.HTMLAttributes;
 
 const { hazards, challengeRunways, ...props } = Astro.props;
-console.log({ challengeRunways });
 ---
 
 <InfoBlock {...props} title="难点灾害" emoji="🥵">
