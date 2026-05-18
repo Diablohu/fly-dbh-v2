@@ -5,9 +5,14 @@ import {
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
 import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
-import { extraAviationKnowledgeTitle } from "@/global";
+import {
+    extraAviationKnowledgeTitle,
+    getChallengeCatalogPageLink,
+} from "@/global";
 
 import VideoListGrid from "@/components/video-list-grid";
+import ChallengeListHorizontal from "@/components/challenge-list-horizontal.tsx";
+import Collection from "@/pages/homepage/_collection.astro";
 
 type FilterType = {
     type?: VideoListPageTypesType;
@@ -115,113 +120,134 @@ if (error) {
         !data ? (
             "暂无内容"
         ) : Astro.props.type === "aircraftFamily" ? (
-            Object.entries(
-                data.list.reduce(
-                    (listByCategory, currentPost) => {
-                        // 如果 `相关航空知识` 额外类别中包含该视频
-                        // 则不在主要类别（如 `教程`）中显示
-                        if (
-                            Array.isArray(
-                                data?.[extraAviationKnowledgeTitle],
-                            ) &&
-                            data?.[extraAviationKnowledgeTitle].some(
-                                ({ _id }) => _id === currentPost._id,
+            <>
+                {Object.entries(
+                    data.list.reduce(
+                        (listByCategory, currentPost) => {
+                            // 如果 `相关航空知识` 额外类别中包含该视频
+                            // 则不在主要类别（如 `教程`）中显示
+                            if (
+                                Array.isArray(
+                                    data?.[extraAviationKnowledgeTitle],
+                                ) &&
+                                data?.[extraAviationKnowledgeTitle].some(
+                                    ({ _id }) => _id === currentPost._id,
+                                )
                             )
-                        )
-                            return listByCategory;
+                                return listByCategory;
 
-                        if (!listByCategory[currentPost.tags[0]._id])
-                            listByCategory[currentPost.tags[0]._id] = {
-                                name: currentPost.tags[0].name,
-                                slug: currentPost.tags[0].slug,
+                            if (!listByCategory[currentPost.tags[0]._id])
+                                listByCategory[currentPost.tags[0]._id] = {
+                                    name: currentPost.tags[0].name,
+                                    slug: currentPost.tags[0].slug,
+                                    list: [],
+                                };
+                            listByCategory[currentPost.tags[0]._id].list.push(
+                                currentPost,
+                            );
+                            return listByCategory;
+                        },
+                        {
+                            "a8c9106d-729d-4ef0-8856-2427033a3fb7": {
+                                name: "教程攻略",
+                                slug: "tutorial",
                                 list: [],
+                            },
+                            "04d17ab0-b28e-4132-9418-3fc2b85bbf4f": {
+                                name: "评测",
+                                slug: "review",
+                                list: [],
+                            },
+                            "acc16e01-9854-4270-9a13-1626c080a2e8": {
+                                name: "飞行实况",
+                                slug: "gameplay",
+                                list: [],
+                            },
+                        } as {
+                            [category: string]: {
+                                name: string;
+                                slug?: string;
+                                list: List;
                             };
-                        listByCategory[currentPost.tags[0]._id].list.push(
-                            currentPost,
-                        );
-                        return listByCategory;
-                    },
-                    {
-                        "a8c9106d-729d-4ef0-8856-2427033a3fb7": {
-                            name: "教程攻略",
-                            slug: "tutorial",
-                            list: [],
                         },
-                        "04d17ab0-b28e-4132-9418-3fc2b85bbf4f": {
-                            name: "评测",
-                            slug: "review",
-                            list: [],
-                        },
-                        "acc16e01-9854-4270-9a13-1626c080a2e8": {
-                            name: "飞行实况",
-                            slug: "gameplay",
-                            list: [],
-                        },
-                    } as {
-                        [category: string]: {
-                            name: string;
-                            slug?: string;
-                            list: List;
-                        };
-                    },
-                ),
-            )
-                // .filter(
-                //     ([_id, { name, list }]) =>
-                //         Array.isArray(list) && list.length > 0
-                // )
-                .map(([_id, { name, list, slug }] /*, index, arr*/) => (
-                    <Fragment>
-                        {Array.isArray(list) && list.length > 0 && (
-                            <Fragment>
-                                <h3>{name}</h3>
-                                <VideoListGrid
-                                    type="aircraftFamily"
-                                    initialList={list}
-                                    initialListIsComplete
-                                    showLoadMoreButton={false}
-                                    tagPurpose={
-                                        slug === "review"
-                                            ? "review"
-                                            : slug === "preview"
-                                              ? "preview"
-                                              : undefined
-                                    }
-                                />
-                            </Fragment>
-                        )}
-                        {/* 遍历到 `评测` 类别，追加请求结果中的 `extra` 内容 */}
-                        {slug === "review" &&
-                            extra.map(({ name }) =>
-                                Array.isArray(data[name]) &&
-                                data[name].length > 0 ? (
-                                    <Fragment>
-                                        <h3>{name}</h3>
-                                        <VideoListGrid
-                                            type="aircraftFamily"
-                                            initialList={
-                                                name ===
-                                                extraAviationKnowledgeTitle
-                                                    ? data[name]
-                                                    : data[name].filter(
-                                                          (post) =>
-                                                              data?.[
-                                                                  extraAviationKnowledgeTitle
-                                                              ].every(
-                                                                  ({ _id }) =>
-                                                                      _id !==
-                                                                      post._id,
-                                                              ),
-                                                      )
-                                            }
-                                            initialListIsComplete
-                                            showLoadMoreButton={false}
-                                        />
-                                    </Fragment>
-                                ) : null,
+                    ),
+                )
+                    // .filter(
+                    //     ([_id, { name, list }]) =>
+                    //         Array.isArray(list) && list.length > 0
+                    // )
+                    .map(([_id, { name, list, slug }] /*, index, arr*/) => (
+                        <Fragment>
+                            {Array.isArray(list) && list.length > 0 && (
+                                <Fragment>
+                                    <h3>{name}</h3>
+                                    <VideoListGrid
+                                        type="aircraftFamily"
+                                        initialList={list}
+                                        initialListIsComplete
+                                        showLoadMoreButton={false}
+                                        tagPurpose={
+                                            slug === "review"
+                                                ? "review"
+                                                : slug === "preview"
+                                                  ? "preview"
+                                                  : undefined
+                                        }
+                                    />
+                                </Fragment>
                             )}
-                    </Fragment>
-                ))
+                            {/* 遍历到 `评测` 类别，追加请求结果中的 `extra` 内容 */}
+                            {slug === "review" &&
+                                extra.map(({ name }) =>
+                                    Array.isArray(data[name]) &&
+                                    data[name].length > 0 ? (
+                                        <Fragment>
+                                            <h3>{name}</h3>
+                                            <VideoListGrid
+                                                type="aircraftFamily"
+                                                initialList={
+                                                    name ===
+                                                    extraAviationKnowledgeTitle
+                                                        ? data[name]
+                                                        : data[name].filter(
+                                                              (post) =>
+                                                                  data?.[
+                                                                      extraAviationKnowledgeTitle
+                                                                  ].every(
+                                                                      ({
+                                                                          _id,
+                                                                      }) =>
+                                                                          _id !==
+                                                                          post._id,
+                                                                  ),
+                                                          )
+                                                }
+                                                initialListIsComplete
+                                                showLoadMoreButton={false}
+                                            />
+                                        </Fragment>
+                                    ) : null,
+                                )}
+                        </Fragment>
+                    ))}
+                {Array.isArray(Astro.props.info?.challenges) && (
+                    <Collection
+                        class="aircraft-family-challenges"
+                        name="latest-challenges"
+                        title="适合挑战"
+                        route={getChallengeCatalogPageLink(
+                            Astro.props.info?.types?.[0],
+                        )}
+                        showMore={`更多 (${Astro.props.info?.challenge_count} 已收录)`}
+                        titleMore
+                    >
+                        <ChallengeListHorizontal
+                            client:idle
+                            challenges={Astro.props.info.challenges}
+                        />
+                    </Collection>
+                )}
+            </>
         ) : Astro.props.type === "aircraftOnboardDevice" ? (
             Object.entries(
                 data.list.reduce(
@@ -335,11 +361,16 @@ if (error) {
             margin-top: 1em;
             margin-bottom: 0.6667em;
         }
-        // h3 ~ h3 {
-        //     margin-top: 1em;
-        // }
+        h3 ~ h3 {
+            margin-top: 2em;
+        }
         &:has(> h3) {
             margin-top: 1.3333em;
+        }
+
+        .aircraft-family-challenges {
+            margin-top: 3em;
+            margin-bottom: 0.6667em;
         }
     }
 </style>

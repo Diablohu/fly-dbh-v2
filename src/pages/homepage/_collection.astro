@@ -16,59 +16,66 @@ type Props = {
             undefined
         >
     >;
-    showMore?: boolean;
+    showMore?: boolean | string;
     titleMore?: boolean;
     backgroundColor?: "teal" | "red";
     allowAssetPriorityHigh?: boolean;
-};
-const { showMore = true, titleMore = true } = Astro.props;
+} & astroHTML.JSX.DefinedIntrinsicElements["dl"];
+const {
+    class: className,
+    name,
+    route,
+    link,
+    title,
+    videos,
+    showMore = true,
+    titleMore = true,
+    backgroundColor,
+    allowAssetPriorityHigh,
+    ...props
+} = Astro.props;
+
 const moreLink =
-    Astro.props.link ??
-    (Astro.props.route?.[0] === "/"
-        ? Astro.props.route
-        : `${getVideoListPageLink()}${Astro.props.route ? `/${Astro.props.route}` : ""}`);
+    link ??
+    (route?.[0] === "/"
+        ? route
+        : `${getVideoListPageLink()}${route ? `/${route}` : ""}`);
 ---
 
 <dl
     class:list={[
         "collection",
+        className,
         {
-            "mod-highlight": Boolean(Astro.props.backgroundColor),
-            [`mod-highlight-${Astro.props.backgroundColor}`]: Boolean(
-                Astro.props.backgroundColor,
-            ),
+            "mod-highlight": Boolean(backgroundColor),
+            [`mod-highlight-${backgroundColor}`]: Boolean(backgroundColor),
         },
     ]}
-    data-collection={Astro.props.name}
+    data-collection={name}
+    {...props}
 >
     <dt class="collection-title">
         <h3>
-            {
-                titleMore ? (
-                    <a href={moreLink}>{Astro.props.title}</a>
-                ) : (
-                    Astro.props.title
-                )
-            }
+            {titleMore ? <a href={moreLink}>{title}</a> : title}
         </h3>
         {
             showMore && (
                 <span class="link-more">
-                    <a href={moreLink}>更多</a>
+                    <a href={moreLink}>
+                        {showMore === true ? "更多" : showMore}
+                    </a>
                 </span>
             )
         }
     </dt>
     <dd class="collection-list">
         {
-            !Astro.props.videos ||
-            !Array.isArray(Astro.props.videos) ||
-            Astro.props.videos.length < 1 ? (
+            !videos || !Array.isArray(videos) || videos.length < 1 ? (
                 <slot />
             ) : (
                 <VideoListHorizontal
                     client:idle
-                    videos={Astro.props.videos.map((post) => ({
+                    videos={videos.map((post) => ({
                         _id: post._id,
                         slug: post.slug,
                         title: post.title,
@@ -79,11 +86,11 @@ const moreLink =
                             [
                                 ...(getVideoItemTopTags(
                                     post,
-                                    Astro.props.name === "tutorials"
+                                    name === "tutorials"
                                         ? "tutorial"
-                                        : Astro.props.name === "reviews"
+                                        : name === "reviews"
                                           ? "review"
-                                          : (Astro.props.name as Parameters<
+                                          : (name as Parameters<
                                                 typeof getVideoItemTopTags
                                             >[1]),
                                 ) || []),
@@ -91,7 +98,7 @@ const moreLink =
                             ].filter(Boolean),
                         ],
                     }))}
-                    allowAssetPriorityHigh={Astro.props.allowAssetPriorityHigh}
+                    allowAssetPriorityHigh={allowAssetPriorityHigh}
                 />
             )
         }
@@ -112,14 +119,16 @@ const moreLink =
         margin-top: 0;
         margin-bottom: var(--margin-bottom);
 
-        &::after {
-            content: "";
-            position: absolute;
-            bottom: calc(var(--margin-bottom) / -2);
-            height: var(--homepage-collection-divider-height);
-            left: 0;
-            right: 0;
-            background: var(--homepage-collection-divider-color);
+        &:has(+ .collection:not(.mod-highlight)) {
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: calc(var(--margin-bottom) / -2);
+                height: var(--homepage-collection-divider-height);
+                left: 0;
+                right: 0;
+                background: var(--homepage-collection-divider-color);
+            }
         }
 
         & > .collection-title,
@@ -164,9 +173,9 @@ const moreLink =
 
     .collection:has(+ .mod-highlight) {
         margin-bottom: calc(var(--margin-bottom) / 1.5);
-        &::after {
-            display: none;
-        }
+        // &::after {
+        //     display: none;
+        // }
     }
 
     .collection.mod-highlight {

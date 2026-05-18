@@ -7,6 +7,7 @@ import {
     type VideoItemType,
     type AerodromeItemType,
     type ChallengeItemType,
+    type AircraftTypes,
 } from "@/types";
 import { allLevel2Tags, defaultCacheTtl } from "@/global";
 
@@ -234,7 +235,32 @@ ${
     'tags': tags[]->{
         name,
         _id,
-    }
+    },
+    types,
+    'challenges': *[${getChallengeGroqFilterBase({
+        isFullArticle: true,
+    })} && array::intersects(^.types, typical_aircraft_types)]{
+        _id,
+        'slug': slug.current,
+        name,
+        difficulty,
+        airac_cyle,
+        'aerodrome': aerodrome->{
+            _id,
+            'slug': slug.current,
+            name,
+            is_closed,
+            icao,
+            is_fake_icao,
+            iata,
+            faa,
+            designator,
+            location,
+        }
+    } | order(${orderList}) [0...10],
+    'challenge_count': count(*[${getChallengeGroqFilterBase({
+        isFullArticle: true,
+    })} && array::intersects(^.types, typical_aircraft_types)]),
 `
             : type === "aircraftOnboardDevice"
               ? `
@@ -323,6 +349,7 @@ ${
                         name: string;
                         _id: string;
                     }[];
+                    types: AircraftTypes[];
                     links?: { [key: string]: string };
                     logo?: string;
                     developers?: {
@@ -339,6 +366,7 @@ ${
                     type?: string;
 
                     challenges?: ChallengeItemType["other_challenges_this_aerodrome"];
+                    challenge_count?: number;
                 } & Partial<
                     Pick<AerodromeItemType, "icao" | "iata" | "location">
                 >;

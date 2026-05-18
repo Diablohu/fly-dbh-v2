@@ -22,18 +22,20 @@ const VideoListHorizontal: FC<
     showMore,
     showMaxCategory = false,
     showAircraftTypes = false,
-}) => (
-    <ListContainerHorizontal showMore={showMore}>
-        {challenges.map((v) => (
-            <ChallengeItem
-                key={v._id}
-                className={classNameItem}
-                item={v}
-                showMaxCategory={showMaxCategory}
-                showAircraftTypes={showAircraftTypes}
-            />
-        ))}
-    </ListContainerHorizontal>
-);
+}) => {
+    return (
+        <ListContainerHorizontal showMore={showMore}>
+            {challenges.map((v) => (
+                <ChallengeItem
+                    key={v._id}
+                    className={classNameItem}
+                    item={v}
+                    showMaxCategory={showMaxCategory}
+                    showAircraftTypes={showAircraftTypes}
+                />
+            ))}
+        </ListContainerHorizontal>
+    );
+};
 
 export default memo(VideoListHorizontal);

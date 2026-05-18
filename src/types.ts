@@ -315,6 +315,8 @@ export type ChallengeItemType = {
             | "difficulty"
             | "max_allowed_aircraft_category"
             | "typical_aircraft_types"
+            | "airac_cyle"
+            | 'aerodrome'
         > & {
             slug: string;
         }

@@ -1,10 +1,16 @@
 ---
 import { actions } from "astro:actions";
 import dayjs from "dayjs";
+
 import { type VideoListPageTypesType } from "@/types";
-import { level2TagsMap, challengeDifficultyString } from "@/global";
+import {
+    level2TagsMap,
+    challengeDifficultyString,
+    aircraftTypeString,
+} from "@/global";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
+
 import TagButton from "@/components/tag-button.astro";
 import InfoExtraFilters from "./info-extra-filters.astro";
 
@@ -131,30 +137,47 @@ type Props = {
                                 </dl>
                             )}
                     </>
-                ) : Astro.props.type === "aircraftFamily" &&
-                  Array.isArray(Astro.props.info?.aircrafts) &&
-                  Astro.props.info.aircrafts.length > 0 ? (
-                    <dl>
-                        <dt>机型</dt>
-                        <dd>
-                            {Astro.props.info.aircrafts.map(
-                                (aircraft: {
-                                    icao_code: unknown;
-                                    name: unknown;
-                                }) => (
-                                    <span class="aircraft-type">
-                                        {aircraft.icao_code && (
-                                            <span class="icao-code">
-                                                {aircraft.icao_code}
+                ) : Astro.props.type === "aircraftFamily" ? (
+                    <Fragment>
+                        {Array.isArray(Astro.props.info?.types) &&
+                            Astro.props.info.types.length > 0 && (
+                                <dl>
+                                    <dt>类型</dt>
+                                    <dd>
+                                        {Astro.props.info.types.map((type) => (
+                                            <span class="tag">
+                                                {aircraftTypeString[type]}
                                             </span>
-                                        )}
-                                        {aircraft.icao_code !== aircraft.name &&
-                                            aircraft.name}
-                                    </span>
-                                ),
+                                        ))}
+                                    </dd>
+                                </dl>
                             )}
-                        </dd>
-                    </dl>
+                        {Array.isArray(Astro.props.info?.aircrafts) &&
+                            Astro.props.info.aircrafts.length > 0 && (
+                                <dl>
+                                    <dt>机型</dt>
+                                    <dd>
+                                        {Astro.props.info.aircrafts.map(
+                                            (aircraft: {
+                                                icao_code: unknown;
+                                                name: unknown;
+                                            }) => (
+                                                <span class="aircraft-type">
+                                                    {aircraft.icao_code && (
+                                                        <span class="icao-code">
+                                                            {aircraft.icao_code}
+                                                        </span>
+                                                    )}
+                                                    {aircraft.icao_code !==
+                                                        aircraft.name &&
+                                                        aircraft.name}
+                                                </span>
+                                            ),
+                                        )}
+                                    </dd>
+                                </dl>
+                            )}
+                    </Fragment>
                 ) : Astro.props.type === "developer" ? (
                     <Fragment>
                         {Astro.props.info?.logo && (
@@ -391,9 +414,9 @@ type Props = {
                     position: relative;
                     .icao-code {
                         // margin-top: calc(-1px - 0.125em);
-                        margin-top: -0.125em;
+                        // margin-top: -0.125em;
                         margin-right: 0.5em;
-                        padding: 0.125em 0.5em;
+                        padding: 0em 0.5em;
                         // border: 1px solid var(--border-color);
                         border-radius: 0.3333em;
                         background: var(--border-color);
