@@ -10,6 +10,7 @@ type Props = {
 } & astroHTML.JSX.HTMLAttributes;
 
 const { hazards, challengeRunways, ...props } = Astro.props;
+console.log({ challengeRunways });
 ---
 
 <InfoBlock {...props} title="难点灾害" emoji="🥵">
@@ -28,18 +29,23 @@ const { hazards, challengeRunways, ...props } = Astro.props;
                           ? null
                           : hazard.name.includes("大坡度跑道") &&
                               challengeRunways[0]
-                            ? // 如果挑战跑道有多个，这里显示的坡度取绝对值
-                              challengeRunways.length > 0
-                                ? `${Math.abs(
-                                      challengeRunways[0].slopePercentage,
-                                  ).toFixed(2)}% / ${Math.abs(
-                                      challengeRunways[0].slopeDegrees,
-                                  ).toFixed(2)}°`
-                                : `${challengeRunways[0].slopePercentage.toFixed(
-                                      2,
-                                  )}% / ${challengeRunways[0].slopeDegrees.toFixed(
-                                      2,
-                                  )}°`
+                            ? `${
+                                  // 如果所有跑道的坡度统一为上坡或下坡，显示对应的文字
+                                  challengeRunways.every(
+                                      (runway) => runway.slopePercentage > 0,
+                                  )
+                                      ? "上坡 "
+                                      : challengeRunways.every(
+                                              (runway) =>
+                                                  runway.slopePercentage < 0,
+                                          )
+                                        ? "下坡 "
+                                        : ""
+                              }${Math.abs(
+                                  challengeRunways[0].slopePercentage,
+                              ).toFixed(2)}% / ${Math.abs(
+                                  challengeRunways[0].slopeDegrees,
+                              ).toFixed(2)}°`
                             : null,
                 ]
                     .filter(Boolean)
