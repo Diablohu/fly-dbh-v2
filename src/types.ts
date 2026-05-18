@@ -100,6 +100,7 @@ export type VideoTagType = {
 
 export type VideoItemType = {
     _id: string;
+    _updatedAt: string;
     slug?: string;
     title: string;
     release: string;

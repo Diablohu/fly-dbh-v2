@@ -11,6 +11,7 @@ import { orderList } from "./challenge";
 
 const fetchProjections = `{
     _id,
+    _updatedAt,
     'slug': slug.current,
     title,
     'tags': tags[]->{
