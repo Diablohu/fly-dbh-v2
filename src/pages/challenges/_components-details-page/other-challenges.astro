@@ -13,7 +13,7 @@ const { list, ...props } = Astro.props;
 
 {
     Array.isArray(list) && list.length > 0 && (
-        <InfoBlock {...props} title="本机场的其他挑战">
+        <InfoBlock {...props} title="本机场的其他挑战" emoji="🛬">
             <div class="list">
                 {list.map((item) => (
                     <ChallengeItem item={item} showAircraftTypes />

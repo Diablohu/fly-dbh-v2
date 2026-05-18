@@ -74,6 +74,7 @@ export const getGroqProjection = (
         `${bracket ? "{" : ""}
 _id,
 _createdAt,
+_updatedAt,
 'slug': slug.current,
 airac_cyle,
 name,

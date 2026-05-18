@@ -220,6 +220,7 @@ export type ChallengeListItemType = Pick<
 };
 export type ChallengeItemType = {
     _id: string;
+    _updatedAt: string;
     slug: string;
     name: string;
     type:

@@ -1,6 +1,6 @@
 ---
 type Props = {
-    title: string;
+    title?: string;
     titleLink?: string;
     emoji?: string;
     isTodo?: boolean;
@@ -21,9 +21,14 @@ const TitleChild = titleLink ? "a" : Fragment;
 
 <section class="info-block" {...props}>
     <h3 class="title">
-        <TitleChild href={titleLink}>
-            {emoji && <span class="emoji">{emoji}</span>}{title}</TitleChild
-        >
+        {
+            title && (
+                <TitleChild href={titleLink}>
+                    {emoji && <span class="emoji">{emoji}</span>}
+                    {title}
+                </TitleChild>
+            )
+        }
     </h3>
     <section
         class:list={[

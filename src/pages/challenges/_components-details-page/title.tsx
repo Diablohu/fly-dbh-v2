@@ -56,7 +56,7 @@ const TitleBlock: FC<{
                         本文基于 AIRAC CYCLE <strong>{airacCycle}</strong>
                     </>
                 ) : (
-                    "本页内容正在完善中"
+                    "本文内容正在完善中"
                 )}
             </span>
         </section>

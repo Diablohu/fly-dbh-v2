@@ -1,6 +1,7 @@
 ---
 import { actions, ActionError } from "astro:actions";
 import { type RunwayType } from "./_types";
+import dayjs from "dayjs";
 
 import Layout from "@/layouts/layout.astro";
 
@@ -237,7 +238,25 @@ const aerodromeName =
                     data-info="videos"
                 />
 
-                <!-- <section>TODO: Back to List & Latest Items</section> -->
+                <section class="update-info">
+                    {
+                        challenge.airac_cyle ? (
+                            <>
+                                本文基于 AIRAC CYCLE{" "}
+                                <strong>{challenge.airac_cyle}</strong>{" "}
+                                导航数据编写
+                            </>
+                        ) : (
+                            <span class="is-unfinished">
+                                本文内容正在完善中
+                            </span>
+                        )
+                    }<br />最后更新于 {
+                        dayjs(challenge._updatedAt).format(
+                            "YYYY 年 M 月 D 日 HH:mm",
+                        )
+                    }
+                </section>
             </section>
         </div>
     </div>
@@ -342,6 +361,21 @@ const aerodromeName =
         & > [data-info="route"],
         & > [data-info="free-addons"] {
             flex-basis: var(--body-safe-min-width);
+        }
+        & > .update-info {
+            text-align: right;
+            margin-top: 1em;
+            // font-size: smaller;
+            // line-height: 1.5;
+            .is-unfinished {
+                display: inline-block;
+                color: var(--accent-color-red);
+                background: var(--accent-color-red-p-20);
+                border: 1px solid var(--accent-color-red);
+                border-radius: 0.5em;
+                padding: 0em 0.6667em;
+                margin-bottom: 0.3333em;
+            }
         }
     }
 

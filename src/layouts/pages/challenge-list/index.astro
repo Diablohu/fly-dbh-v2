@@ -195,16 +195,16 @@ const pageTitle = {
             route: getChallengeCatalogPageLink("filter"),
             isActive: Astro.props.catalog === "filter",
         },
-        ...(import.meta.env.DEV
-            ? [
-                  {
-                      type: "link" as const,
-                      text: "[DEV] 门户",
-                      route: routeBase.challenges + "/portal",
-                      isActive: false,
-                  },
-              ]
-            : []),
+        // ...(import.meta.env.DEV
+        //     ? [
+        //           {
+        //               type: "link" as const,
+        //               text: "[DEV] 门户",
+        //               route: routeBase.challenges + "/portal",
+        //               isActive: false,
+        //           },
+        //       ]
+        //     : []),
         { type: "divider" },
         ...Object.entries(aircraftTypeStringShort).map(([key, value]) => {
             const route = getChallengeCatalogPageLink(key as AircraftTypes);
