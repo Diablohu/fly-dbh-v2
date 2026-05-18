@@ -46,9 +46,11 @@ E：166 ~ 210
         <dt>适合机型</dt>
         <dd>
             {
-                typicalAircraftTypes
-                    .map((type) => aircraftTypeString[type])
-                    .join("、")
+                Array.isArray(typicalAircraftTypes)
+                    ? typicalAircraftTypes
+                          .map((type) => aircraftTypeString[type])
+                          .join("、")
+                    : "--"
             }
         </dd>
     </dl>
