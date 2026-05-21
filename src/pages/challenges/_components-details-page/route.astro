@@ -59,7 +59,14 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
                                     <span class="rwy">跑道</span> ＞
                                 </>
                             )}
-                            <em>{parseArrStr(sid)}</em>
+                            <em>
+                                {sid.split(" ").map((part) => (
+                                    <span
+                                        class={part === "DCT" ? "dct" : null}
+                                        set:text={`${part} `}
+                                    />
+                                ))}
+                            </em>
                         </span>
                     ))}
                 </dd>
