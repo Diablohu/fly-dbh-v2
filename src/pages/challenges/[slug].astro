@@ -238,7 +238,7 @@ const aerodromeName =
                     data-info="videos"
                 />
 
-                <section class="update-info">
+                <section class="doc-info">
                     {
                         challenge.airac_cyle ? (
                             <>
@@ -362,7 +362,7 @@ const aerodromeName =
         & > [data-info="free-addons"] {
             flex-basis: var(--body-safe-min-width);
         }
-        & > .update-info {
+        & > .doc-info {
             text-align: right;
             margin-top: 1em;
             // font-size: smaller;
@@ -376,6 +376,9 @@ const aerodromeName =
                 padding: 0em 0.6667em;
                 margin-bottom: 0.3333em;
             }
+            .screen-sm({
+                text-align: center;
+            });
         }
     }
 
