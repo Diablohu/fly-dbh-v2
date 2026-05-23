@@ -215,10 +215,16 @@ video_url_briefing,
 
 const projectionListItem = getGroqProjection("list-item");
 
-export const getGroqFilterBase = ({ onlyFullArticle = true } = {}) =>
+export const getGroqFilterBase = ({
+    onlyFullArticle = true,
+}: Partial<Pick<ChallengeListQueryConditionType, "onlyFullArticle">> = {}) =>
     `_type == "approach_challenge"${
         // 查询完整文章时，添加条件：必须有 `airac_cyle` 字段
-        onlyFullArticle ? "&& defined(airac_cyle)" : ""
+        onlyFullArticle === true
+            ? "&& defined(airac_cyle)"
+            : onlyFullArticle === "no-airac"
+              ? "&& !defined(airac_cyle)"
+              : ""
     }`;
 export const getGroqFiltersChallengeList = ({
     // sort = "latest",
@@ -368,6 +374,7 @@ const actions = {
                     hazards,
                     onlyFullArticle,
                 });
+                // console.log({ onlyFullArticle, groqQueryFilter });
                 const queryString = `{
 'list': ${getGroqQueryChallengeList({ filter: groqQueryFilter, from, length, sort })},
 'total': count(${groqQueryFilter})

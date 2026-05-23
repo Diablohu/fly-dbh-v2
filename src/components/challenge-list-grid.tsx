@@ -30,7 +30,7 @@ const ListContainer = ListContainerGrid<
 // ============================================================================
 
 type Props = {
-    catalog: "latest" | "filter" | AircraftTypes;
+    catalog: "latest" | "filter" | "no-airac" | AircraftTypes;
     initialList?: ChallengeListItemType[];
 
     /**
@@ -101,7 +101,9 @@ const ChallengeListGrid: FC<Props> = ({
                 sort: sort ?? (catalog === "latest" ? "latest" : "difficulty"),
                 types: conditionTypes
                     ? conditionTypes
-                    : catalog === "latest" || catalog === "filter"
+                    : catalog === "latest" ||
+                        catalog === "filter" ||
+                        catalog === "no-airac"
                       ? undefined
                       : [catalog],
                 difficulties: conditionDifficulties,

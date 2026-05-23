@@ -190,9 +190,10 @@ export type ChallengeListQueryConditionType = {
     /**
      * 是否仅查询完整文章
      * - 判断依据: 是否有 `airac_cycle` 字段
+     * - `no-airac`: 仅查询不完整文章（即缺少 `airac_cycle` 字段的文章）
      * @default true
      */
-    onlyFullArticle: boolean;
+    onlyFullArticle: boolean | "no-airac";
 };
 export type ChallengeListItemType = Pick<
     ChallengeItemType,

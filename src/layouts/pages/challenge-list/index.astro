@@ -20,7 +20,7 @@ import Layout from "@/layouts/layout.astro";
 import ChallengeListGrid from "@/components/challenge-list-grid";
 import TagButton from "@/components/tag-button.astro";
 
-import { errorLog } from "@/utils/log";
+import logError from "@/utils/log-error";
 
 // ============================================================================
 //
@@ -46,6 +46,7 @@ type Props = {
 const heroImage: Record<Props["catalog"], string> = {
     latest: "dc8c90a5e20183a9e3713e460593908e325a0170-2560x1440.png",
     filter: "72652ccf561caabf581c6ca18450ab69ad1823ef-2560x1440.jpg",
+    "no-airac": "3f7ee853ae4865f894adc85474422039e6062413-2560x1440.png",
 
     bush: "e955577ad3939d29c3ffbc33a002cb99111bdd22-2560x1440.png",
     "luxury-private": "6098c0f600461bc27680128b8c321b169f3a6b8e-2560x1440.png",
@@ -61,6 +62,7 @@ const heroImage: Record<Props["catalog"], string> = {
 const exampleAircrafts: Record<Props["catalog"], string[]> = {
     latest: [],
     filter: [],
+    "no-airac": [],
 
     bush: ["DHC-6“双水獭”", "塞斯纳 208"],
     "luxury-private": ["钻石 DA-42", "西瑞 VisionJet"],
@@ -108,46 +110,35 @@ const { data: initialList, error } =
                   Astro.props.sort ??
                   (Astro.props.catalog === "latest" ? "latest" : "difficulty"),
               types:
-                  Astro.props.catalog === "latest"
+                  Astro.props.catalog === "latest" ||
+                  Astro.props.catalog === "no-airac"
                       ? undefined
                       : [Astro.props.catalog as AircraftTypes],
+              onlyFullArticle:
+                  Astro.props.catalog === "no-airac" ? "no-airac" : true,
           });
 if ((error && error.code === "NOT_FOUND") || !initialList) {
     if (error)
-        errorLog(
-            [
-                `${Astro.originPathname} -> 404`,
-                error.code,
-                error.message,
-                (error.cause as any)?.GROQ
-                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
-                    : "",
-            ]
-                .filter(Boolean)
-                .join(" | "),
-        );
+        logError(error, {
+            pathname: Astro.originPathname,
+        });
     else
-        errorLog(
-            [`${Astro.originPathname} -> 404`, "No challenge list"]
-                .filter(Boolean)
-                .join(" | "),
+        logError(
+            new ActionError({
+                code: "NOT_FOUND",
+                message: "No challenge list",
+            }),
+            {
+                pathname: Astro.originPathname,
+            },
         );
     return Astro.rewrite("/404");
 }
 if (error) {
     const err = error as unknown as ActionError;
-    errorLog(
-        [
-            `${Astro.originPathname} -> 500`,
-            err.code,
-            err.message,
-            (err.cause as any)?.GROQ
-                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
-                : "",
-        ]
-            .filter(Boolean)
-            .join(" | "),
-    );
+    logError(err, {
+        pathname: Astro.originPathname,
+    });
     Astro.response.status = 500;
     Astro.props.error = error;
     return Astro.rewrite("/500");
@@ -168,7 +159,9 @@ const pageTitle = {
             ? "最新收录"
             : Astro.props.catalog === "filter"
               ? "查询 / 抽选"
-              : aircraftTypeString[Astro.props.catalog as AircraftTypes],
+              : Astro.props.catalog === "no-airac"
+                ? "未完成文章"
+                : aircraftTypeString[Astro.props.catalog as AircraftTypes],
 };
 
 // ============================================================================
@@ -195,16 +188,22 @@ const pageTitle = {
             route: getChallengeCatalogPageLink("filter"),
             isActive: Astro.props.catalog === "filter",
         },
-        // ...(import.meta.env.DEV
-        //     ? [
-        //           {
-        //               type: "link" as const,
-        //               text: "[DEV] 门户",
-        //               route: routeBase.challenges + "/portal",
-        //               isActive: false,
-        //           },
-        //       ]
-        //     : []),
+        ...(import.meta.env.DEV
+            ? [
+                  //   {
+                  //       type: "link" as const,
+                  //       text: "[DEV] 门户",
+                  //       route: routeBase.challenges + "/portal",
+                  //       isActive: false,
+                  //   },
+                  {
+                      type: "link" as const,
+                      text: "[DEV] 整理中",
+                      route: getChallengeCatalogPageLink("no-airac"),
+                      isActive: Astro.props.catalog === "no-airac",
+                  },
+              ]
+            : []),
         { type: "divider" },
         ...Object.entries(aircraftTypeStringShort).map(([key, value]) => {
             const route = getChallengeCatalogPageLink(key as AircraftTypes);
@@ -228,7 +227,11 @@ const pageTitle = {
                 Astro.props.catalog !== "filter" && (
                     <span class="total">
                         <strong>{initialList.total}</strong>
-                        <small>已收录</small>
+                        <small>
+                            {Astro.props.catalog === "no-airac"
+                                ? "缺少 AIRAC Cycle"
+                                : "已收录"}
+                        </small>
                     </span>
                 )
             }

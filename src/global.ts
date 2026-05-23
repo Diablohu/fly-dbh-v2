@@ -174,7 +174,7 @@ export function getChallengeCatalogPageLink(
      * 飞机 Category
      * - 不传入则生成“最新收录”列表
      */
-    aircraftCategory?: "filter" | AircraftTypes,
+    aircraftCategory?: "filter" | "no-airac" | AircraftTypes,
     sort?: ChallengeListSortType,
 ) {
     return (
