@@ -1,4 +1,4 @@
-import dayjs from "@/utils/dayjs";
+import dayjs from "./dayjs";
 
 /**
  * 获取日期字符串
