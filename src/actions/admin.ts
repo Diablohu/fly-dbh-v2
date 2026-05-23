@@ -7,7 +7,7 @@ import {
 } from "astro:actions";
 import { z } from "astro/zod";
 import { createTOTPKeyURI, verifyTOTPWithGracePeriod } from "@oslojs/otp";
-import dayjs from "dayjs";
+import dayjs from "@/utils/dayjs";
 import { title } from "@/global";
 import {
     adminTOTP,

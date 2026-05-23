@@ -1,5 +1,5 @@
 import { actions } from "astro:actions";
-import dayjs from "dayjs";
+import dayjs from "@/utils/dayjs";
 import { type VideoListPageTypesType } from "@/types";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getGameUpdateName from "@/utils/get-game-update-name";

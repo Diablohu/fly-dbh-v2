@@ -1,5 +1,5 @@
 import { type SerializeOptions } from "cookie";
-import dayjs from "dayjs";
+import dayjs from "@/utils/dayjs";
 
 // ============================================================================
 

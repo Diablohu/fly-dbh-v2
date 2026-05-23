@@ -1,12 +1,9 @@
 import type { APIRoute } from "astro";
 import { actions } from "astro:actions";
-import dayjs from "dayjs";
-import minMax from "dayjs/plugin/minMax";
+import dayjs from "@/utils/dayjs";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
 import { generateResponse } from "@/services/sitemap";
 import { aircraftTypeString, getChallengeCatalogPageLink } from "@/global";
-
-dayjs.extend(minMax);
 
 export const GET: APIRoute = async ({ site, callAction }) => {
     return generateResponse([

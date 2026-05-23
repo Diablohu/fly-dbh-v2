@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { actions } from "astro:actions";
-import dayjs from "dayjs";
+import dayjs from "@/utils/dayjs";
 import { routeBase, getVideoPageLink, getVideoListPageLink } from "@/global";
 import { generateResponse } from "@/services/sitemap";
 

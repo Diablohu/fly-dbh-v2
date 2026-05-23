@@ -1,7 +1,7 @@
 ---
 import { actions, ActionError } from "astro:actions";
 import { type RunwayType } from "./_types";
-import dayjs from "dayjs";
+import dayjs from "@/utils/dayjs";
 
 import Layout from "@/layouts/layout.astro";
 
@@ -252,9 +252,9 @@ const aerodromeName =
                             </span>
                         )
                     }<br />最后更新于 {
-                        dayjs(challenge._updatedAt).format(
-                            "YYYY 年 M 月 D 日 HH:mm",
-                        )
+                        dayjs(challenge._updatedAt)
+                            .tz("Asia/Shanghai")
+                            .format("YYYY 年 M 月 D 日 HH:mm")
                     }
                 </section>
             </section>
