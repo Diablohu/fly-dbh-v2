@@ -49,7 +49,7 @@ const fetchProjections = `{
         icao,
         iata,
         'challenges': *[${getChallengeGroqFilterBase({
-            isFullArticle: true,
+            onlyFullArticle: true,
         })} && aerodrome->_id == ^._id]{
             _id,
             'slug': slug.current,

@@ -210,7 +210,7 @@ ${
     iata,
     location,
     'challenges': *[${getChallengeGroqFilterBase({
-        isFullArticle: true,
+        onlyFullArticle: true,
     })} && aerodrome->_id == ^._id]{
         _id,
         'slug': slug.current,
@@ -238,7 +238,7 @@ ${
     },
     types,
     'challenges': *[${getChallengeGroqFilterBase({
-        isFullArticle: true,
+        onlyFullArticle: true,
     })} && array::intersects(^.types, typical_aircraft_types)]{
         _id,
         'slug': slug.current,
@@ -259,7 +259,7 @@ ${
         }
     } | order(${orderList}) [0...10],
     'challenge_count': count(*[${getChallengeGroqFilterBase({
-        isFullArticle: true,
+        onlyFullArticle: true,
     })} && array::intersects(^.types, typical_aircraft_types)]),
 `
             : type === "aircraftOnboardDevice"

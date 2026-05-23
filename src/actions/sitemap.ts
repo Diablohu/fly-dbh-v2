@@ -63,7 +63,7 @@ const actions = {
         handler: async () => {
             try {
                 const queryString = `\
-*[${getChallengeGroqFilterBase({ isFullArticle: true })}] {
+*[${getChallengeGroqFilterBase({ onlyFullArticle: true })}] {
     _id,
     'slug': slug.current,
     _updatedAt,

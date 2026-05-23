@@ -188,11 +188,11 @@ export type ChallengeListQueryConditionType = {
     types: AircraftTypes[];
     hazards: string[];
     /**
-     * 是否为完整文章
+     * 是否仅查询完整文章
      * - 判断依据: 是否有 `airac_cycle` 字段
      * @default true
      */
-    isFullArticle: boolean;
+    onlyFullArticle: boolean;
 };
 export type ChallengeListItemType = Pick<
     ChallengeItemType,

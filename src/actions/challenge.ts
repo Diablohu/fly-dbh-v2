@@ -179,7 +179,7 @@ difficulty,` +
             otherChallenges &&
                 `
 'other_challenges_this_aerodrome': *[${getGroqFilterBase({
-                    isFullArticle: true,
+                    onlyFullArticle: true,
                 })} && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
     _id,
     'slug': slug.current,
@@ -215,25 +215,25 @@ video_url_briefing,
 
 const projectionListItem = getGroqProjection("list-item");
 
-export const getGroqFilterBase = ({ isFullArticle = true } = {}) =>
+export const getGroqFilterBase = ({ onlyFullArticle = true } = {}) =>
     `_type == "approach_challenge"${
         // 查询完整文章时，添加条件：必须有 `airac_cyle` 字段
-        isFullArticle ? "&& defined(airac_cyle)" : ""
+        onlyFullArticle ? "&& defined(airac_cyle)" : ""
     }`;
 export const getGroqFiltersChallengeList = ({
     // sort = "latest",
     difficulties = [],
     types = [],
     hazards = [],
-    isFullArticle = true,
+    onlyFullArticle = true,
 }: Partial<
     Pick<
         ChallengeListQueryConditionType,
-        "sort" | "difficulties" | "types" | "hazards" | "isFullArticle"
+        "sort" | "difficulties" | "types" | "hazards" | "onlyFullArticle"
     >
 > = {}) =>
     `*[${
-        getGroqFilterBase({ isFullArticle }) +
+        getGroqFilterBase({ onlyFullArticle }) +
         // 筛选难度，方式：`OR`
         (Array.isArray(difficulties) && difficulties.length > 0
             ? `&& (${difficulties.map((difficulty) => `difficulty == ${Number(difficulty)}`).join(" || ")})`
@@ -320,8 +320,9 @@ export const getGroqQueryChallengeList = ({
     difficulties = [],
     types = [],
     hazards = [],
-    isFullArticle = true,
+    onlyFullArticle = true,
     projection = projectionListItem,
+    /** 优先使用传入的 GROQ 查询 filter */
     filter,
 }: Partial<
     ChallengeListQueryConditionType & { projection: string; filter: string }
@@ -333,7 +334,7 @@ export const getGroqQueryChallengeList = ({
             difficulties,
             types,
             hazards,
-            isFullArticle,
+            onlyFullArticle,
         })
     }{${projection}} | order(${
         sort === "latest"
@@ -358,14 +359,14 @@ const actions = {
             difficulties,
             types,
             hazards,
-            isFullArticle = true,
+            onlyFullArticle = true,
         }) => {
             try {
                 const groqQueryFilter = getGroqFiltersChallengeList({
                     difficulties,
                     types,
                     hazards,
-                    isFullArticle,
+                    onlyFullArticle,
                 });
                 const queryString = `{
 'list': ${getGroqQueryChallengeList({ filter: groqQueryFilter, from, length, sort })},
@@ -417,7 +418,7 @@ const actions = {
         handler: async () => {
             try {
                 const queryString = `*[${getGroqFilterBase({
-                    isFullArticle: false,
+                    onlyFullArticle: false,
                 })}]{${projectionListItem}} | order(${orderList})`;
                 const res = await fetch<ChallengeListItemType>(queryString, {
                     transform: (res, queryString) => {
@@ -461,7 +462,7 @@ const actions = {
         handler: async (cmsIdOrSlug) => {
             try {
                 const queryString = `*[${getGroqFilterBase({
-                    isFullArticle: false,
+                    onlyFullArticle: false,
                 })} && ( _id == "${cmsIdOrSlug}" || slug.current == "${
                     cmsIdOrSlug
                 }")]${getGroqProjection("details", { bracket: true })} | order( max_allowed_aircraft_category asc, aerodrome.icao asc )`;
@@ -530,7 +531,7 @@ const actions = {
             difficulties,
             types,
             hazards,
-            isFullArticle = false,
+            onlyFullArticle = false,
         }) => {
             try {
                 const total = (await fetch(
@@ -538,7 +539,7 @@ const actions = {
                         difficulties,
                         types,
                         hazards,
-                        isFullArticle,
+                        onlyFullArticle,
                     })})`,
                 )) as unknown as number;
                 const randomIndex = Math.floor(Math.random() * (total + 1));
@@ -546,7 +547,7 @@ const actions = {
                     difficulties,
                     types,
                     hazards,
-                    isFullArticle,
+                    onlyFullArticle,
                     from: randomIndex - 1,
                     length: 1,
                     projection: getGroqProjection("random-item"),

@@ -180,7 +180,7 @@ ${projection}
         if (filters.length)
             return (
                 "*[" +
-                getChallengesGroqFilterBase({ isFullArticle: true }) +
+                getChallengesGroqFilterBase({ onlyFullArticle: true }) +
                 "&&(" +
                 filters.join("||") +
                 ")]"
@@ -263,7 +263,7 @@ const actions = {
 'approachChallenges': ${getGroqQueryChallengeList({
                                   filter: groqFilterChallenges,
                                   sort: "difficulty",
-                                  isFullArticle: true,
+                                  onlyFullArticle: true,
                               })},`
                             : "") +
                         "}",
