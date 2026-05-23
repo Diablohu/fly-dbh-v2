@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import dayjs from "@/utils/dayjs";
+import dayjs from "./dayjs";
 import getDateString from "./get-date-string";
 
 [
