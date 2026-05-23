@@ -6,7 +6,6 @@ import { type VideoListPageTypesType } from "@/types";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getGameUpdateName from "@/utils/get-game-update-name";
 import getAircraftFamilyName from "@/utils/get-aircraft-family-name";
-import { errorLog } from "@/utils/log";
 
 // import log from "@/layouts/pages/index/_log.ts";
 
@@ -16,6 +15,8 @@ import Page404 from "@/pages/404.astro";
 import VideoListInfo from "./_components/list/info.astro";
 import VideoList from "./_components/list/list.astro";
 import VideoCategories from "./_components/categories/index.astro";
+
+import logError from "@/utils/log-error";
 
 export type FilterType = {
     type?:
@@ -30,7 +31,7 @@ type Props = FilterType & {
 };
 
 function transformTypeName(
-    type: FilterType["type"]
+    type: FilterType["type"],
 ): VideoListPageTypesType | undefined {
     return type === "aircraftfamily"
         ? "aircraftFamily"
@@ -43,7 +44,7 @@ function transformTypeName(
 
 const isIndex = !Astro.props.type;
 const type: VideoListPageTypesType | undefined = transformTypeName(
-    Astro.props.type
+    Astro.props.type,
 );
 
 const { data: currentCategoryInfo, error } = isIndex
@@ -53,21 +54,11 @@ const { data: currentCategoryInfo, error } = isIndex
           slug: Astro.props.slug as Required<Props>["slug"],
       });
 if (error) {
+    logError(error, {
+        pathname: Astro.originPathname,
+    });
     if (error.code === "NOT_FOUND") {
-        errorLog(
-            [
-                `${Astro.originPathname} -> 404`,
-                error.code,
-                error.message,
-                (error.cause as any)?.GROQ
-                    ? `GROQ: "${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
-                    : "",
-            ]
-                .filter(Boolean)
-                .join(" | ")
-        );
     } else {
-        console.error(error);
         throw error;
     }
     // Astro.response.status = 500;
@@ -91,12 +82,12 @@ const title = {
                 : type === "aircraftFamily"
                   ? getAircraftFamilyName(
                         currentCategoryInfo?.name || "",
-                        currentCategoryInfo?.maker || ""
+                        currentCategoryInfo?.maker || "",
                     )
                   : type === "aircraftOnboardDevice"
                     ? `${currentCategoryInfo?.maker} ${currentCategoryInfo?.name?.replace(
                           new RegExp(`^${currentCategoryInfo?.maker}(-|$)`),
-                          ""
+                          "",
                       )}`
                     : type === "developer" ||
                         type === "platform" ||

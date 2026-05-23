@@ -3,7 +3,7 @@ import { actions, ActionError } from "astro:actions";
 
 import { type ValidContentListAutoLoadMoreType } from "@/types";
 import { CONTENT_LIST_AUTO_LOAD_MORE } from "@/constants/cookies";
-import { errorLog } from "@/utils/log";
+import logError from "@/utils/log-error";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
@@ -20,18 +20,9 @@ const { data: initialResults, error } = !Astro.params.keyword
       });
 if (error) {
     const err = error as unknown as ActionError;
-    errorLog(
-        [
-            `${Astro.originPathname} -> 500`,
-            err.code,
-            err.message,
-            (err.cause as any)?.GROQ
-                ? `GROQ: "${(err.cause as any)?.GROQ.replace(/\n\s+/gm, " ")}"`
-                : "",
-        ]
-            .filter(Boolean)
-            .join(" | "),
-    );
+    logError(err, {
+        pathname: Astro.originPathname,
+    });
     Astro.response.status = 500;
     Astro.props.error = error;
     return Astro.rewrite("/500");

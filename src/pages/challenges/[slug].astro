@@ -29,20 +29,16 @@ const { data: challenge, error } = await Astro.callAction(
     Astro.params.slug || "",
 );
 if ((error && error.code === "NOT_FOUND") || !challenge) {
-    if (error)
-        logError(error, {
-            pathname: Astro.originPathname,
-        });
-    else
-        logError(
+    logError(
+        error ||
             new ActionError({
                 code: "NOT_FOUND",
                 message: "No challenge found",
             }),
-            {
-                pathname: Astro.originPathname,
-            },
-        );
+        {
+            pathname: Astro.originPathname,
+        },
+    );
     return Astro.rewrite("/404");
 }
 if (error) {

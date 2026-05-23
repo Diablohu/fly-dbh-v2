@@ -118,20 +118,16 @@ const { data: initialList, error } =
                   Astro.props.catalog === "no-airac" ? "no-airac" : true,
           });
 if ((error && error.code === "NOT_FOUND") || !initialList) {
-    if (error)
-        logError(error, {
-            pathname: Astro.originPathname,
-        });
-    else
-        logError(
+    logError(
+        error ||
             new ActionError({
                 code: "NOT_FOUND",
                 message: "No challenge list",
             }),
-            {
-                pathname: Astro.originPathname,
-            },
-        );
+        {
+            pathname: Astro.originPathname,
+        },
+    );
     return Astro.rewrite("/404");
 }
 if (error) {
