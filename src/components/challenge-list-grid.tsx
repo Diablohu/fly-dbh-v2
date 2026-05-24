@@ -108,6 +108,7 @@ const ChallengeListGrid: FC<Props> = ({
                       : [catalog],
                 difficulties: conditionDifficulties,
                 hazards: conditionHazards,
+                onlyFullArticle: catalog === "no-airac" ? "no-airac" : true,
             }).then((res) => res.data);
         },
         [

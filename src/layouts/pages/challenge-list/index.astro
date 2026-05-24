@@ -275,9 +275,11 @@ const pageTitle = {
                     catalog={Astro.props.catalog}
                     length={length}
                     sort={Astro.props.sort}
-                    showAircraftTypes={["latest", "filter"].includes(
-                        Astro.props.catalog,
-                    )}
+                    showAircraftTypes={[
+                        "latest",
+                        "filter",
+                        "no-airac",
+                    ].includes(Astro.props.catalog)}
                     initialList={initialList.list}
                     initialListIsComplete={
                         initialList.list.length >= initialList.total
