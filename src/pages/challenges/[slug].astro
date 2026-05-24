@@ -21,6 +21,10 @@ import calculateRunwaySlope, {
 import logError from "@/utils/log-error";
 
 // ============================================================================
+//
+// MARK: Data
+//
+// ============================================================================
 
 // if (!Astro.params.slug) return Astro.redirect(routeBase.challenges, 301);
 
@@ -51,6 +55,10 @@ if (error) {
     return Astro.rewrite("/500");
 }
 
+// ============================================================================
+//
+// MARK: RUNWAY PARSING
+//
 // ============================================================================
 
 /**
@@ -137,6 +145,12 @@ const aerodromeName =
     (challenge.aerodrome.is_closed ? "（旧）" : "") + challenge.aerodrome.name;
 // console.log(challengeRunways);
 // console.log(challenge)
+
+// ============================================================================
+//
+// MARK: Astro Template
+//
+// ============================================================================
 ---
 
 <Layout
@@ -245,6 +259,12 @@ const aerodromeName =
 </Layout>
 
 <style lang="less">
+    // ========================================================================
+    //
+    // MARK: LESS Module
+    //
+    // ========================================================================
+
     @import "@/utils/mixins.less";
 
     // :global(:root.page-challenge-details) {
