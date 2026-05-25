@@ -18,7 +18,7 @@ import Markdown from "@/components/markdown.astro";
 import Player from "./_components/player";
 import SelectPlatform from "./_components/select-platform";
 
-import { getVideoPageLink } from "@/global";
+import { getVideoPageLink as _getVideoPageLink } from "@/global";
 import prettifyTitle from "@/utils/prettify-title";
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
 import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
@@ -56,7 +56,7 @@ if (error || !video) {
 
 // console.log(video);
 if (video.slug && video.slug !== Astro.params.slug)
-    return Astro.redirect(encodeURI(getVideoPageLink(video.slug)), 301);
+    return Astro.redirect(encodeURI(_getVideoPageLink(video.slug)), 301);
 
 const relatedChallenges = video.aerodromes
     ?.flatMap((aerodrome) =>
