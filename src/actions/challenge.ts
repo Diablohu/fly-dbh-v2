@@ -15,6 +15,7 @@ import {
     type ChallengeDifficultyType,
     type ChallengeListQueryConditionType,
 } from "@/types";
+import getCmsIdOrSlug from "@/utils/get-cms-id-or-slug";
 
 // ============================================================================
 
@@ -466,7 +467,8 @@ const actions = {
     /** 获取挑战条目详情 */
     fetchItem: defineAction({
         input: z.string(),
-        handler: async (cmsIdOrSlug) => {
+        handler: async (_cmsIdOrSlug) => {
+            const cmsIdOrSlug = getCmsIdOrSlug(_cmsIdOrSlug);
             try {
                 const queryString = `*[${getGroqFilterBase({
                     onlyFullArticle: false,

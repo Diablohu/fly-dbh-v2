@@ -20,7 +20,7 @@ import Layout from "@/layouts/layout.astro";
 import ChallengeListGrid from "@/components/challenge-list-grid";
 import TagButton from "@/components/tag-button.astro";
 
-import logError from "@/utils/log-error";
+import pageDataErrorHandler from "@/utils/page-data-error-handler";
 
 // ============================================================================
 //
@@ -117,27 +117,23 @@ const { data: initialList, error } =
               onlyFullArticle:
                   Astro.props.catalog === "no-airac" ? "no-airac" : true,
           });
-if ((error && error.code === "NOT_FOUND") || !initialList) {
-    logError(
+if (error || !initialList) {
+    const { rewrite, redirect } = pageDataErrorHandler(
         error ||
             new ActionError({
                 code: "NOT_FOUND",
-                message: "No challenge list",
+                message: "No Challenge List Received",
             }),
-        {
-            pathname: Astro.originPathname,
-        },
+        Astro,
     );
-    return Astro.rewrite("/404");
-}
-if (error) {
-    const err = error as unknown as ActionError;
-    logError(err, {
-        pathname: Astro.originPathname,
-    });
-    Astro.response.status = 500;
-    Astro.props.error = error;
-    return Astro.rewrite("/500");
+    if (redirect) return Astro.redirect(redirect);
+    if (rewrite === "/500") {
+        Astro.response.status = 500;
+        Astro.props.error = error;
+    } else if (rewrite === "/404") {
+        Astro.response.status = 404;
+    }
+    return Astro.rewrite(rewrite);
 }
 
 // console.log(initialList)

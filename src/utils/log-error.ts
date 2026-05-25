@@ -14,7 +14,10 @@ function logError(
     if ("code" in error)
         errorLog(
             [
-                [context?.pathname, error.code === "NOT_FOUND" ? "404" : "500"]
+                [
+                    context?.pathname,
+                    error.status || error.code === "NOT_FOUND" ? "404" : "500",
+                ]
                     .filter(Boolean)
                     .join(" -> "),
                 error.code,
@@ -25,7 +28,8 @@ function logError(
         );
     else errorLog([error.message].filter(Boolean).join(" | "));
 
-    if ((error.cause as any)?.GROQ)
+    if (typeof error.cause === "string") errorLog(`^^ CAUSE ^^ ${error.cause}`);
+    else if ((error.cause as any)?.GROQ)
         errorLog(
             `^^ GROQ Query ^^ ${(error.cause as any)?.GROQ.replace(/\n\s+/gm, " ").replace(/\n/g, "")}`,
         );

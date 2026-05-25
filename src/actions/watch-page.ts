@@ -6,6 +6,7 @@ import { type VideoItemType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 import { E30000 } from "@/constants/error-codes";
 import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
+import getCmsIdOrSlug from "@/utils/get-cms-id-or-slug";
 
 import { orderList } from "./challenge";
 
@@ -90,7 +91,8 @@ const fetchProjections = `{
 const actions = {
     fetch: defineAction({
         input: z.string(),
-        handler: async (cmsIdOrSlug /*, context*/) => {
+        handler: async (_cmsIdOrSlug /*, context*/) => {
+            const cmsIdOrSlug = getCmsIdOrSlug(_cmsIdOrSlug);
             try {
                 const queryString = `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`;
                 const res = (

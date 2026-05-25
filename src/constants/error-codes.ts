@@ -1,4 +1,6 @@
 // _XXXX 综合错误
+/** 应自动返回上一级页面 */
+export const E_0000 = "查询 ID 或 Slug 无效";
 
 // 1XXXX 首页
 

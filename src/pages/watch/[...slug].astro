@@ -25,7 +25,7 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import getVideoCategoryInfoFromRawTypeData, {
     type CategoryInfoType,
 } from "@/utils/get-video-category-info-from-raw-type-data";
-import logError from "@/utils/log-error";
+import pageDataErrorHandler from "@/utils/page-data-error-handler";
 
 // ============================================================================
 
@@ -35,27 +35,23 @@ const { data: video, error } = await Astro.callAction(
     actions.watchPage.fetch,
     Astro.params.slug,
 );
-if ((error && error.code === "NOT_FOUND") || !video) {
-    logError(
+if (error || !video) {
+    const { rewrite, redirect } = pageDataErrorHandler(
         error ||
             new ActionError({
                 code: "NOT_FOUND",
-                message: "No video info",
+                message: "No Video Found",
             }),
-        {
-            pathname: Astro.originPathname,
-        },
+        Astro,
     );
-    return Astro.rewrite("/404");
-}
-if (error) {
-    const err = error as unknown as ActionError;
-    logError(err, {
-        pathname: Astro.originPathname,
-    });
-    Astro.response.status = 500;
-    Astro.props.error = error;
-    return Astro.rewrite("/500");
+    if (redirect) return Astro.redirect(redirect);
+    if (rewrite === "/500") {
+        Astro.response.status = 500;
+        Astro.props.error = error;
+    } else if (rewrite === "/404") {
+        Astro.response.status = 404;
+    }
+    return Astro.rewrite(rewrite);
 }
 
 // console.log(video);
