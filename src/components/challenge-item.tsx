@@ -1,4 +1,4 @@
-import { memo, type FC } from "react";
+import { memo, useMemo, type FC } from "react";
 import classNames from "classnames";
 
 import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
@@ -14,7 +14,7 @@ const ChallengeItem: FC<{
     classNameHazards?: string;
     item: Partial<ChallengeListItemType> &
         Pick<ChallengeListItemType, "_id" | "name" | "difficulty"> &
-        Partial<Pick<ChallengeItemType, "hazards">>;
+        Partial<Pick<ChallengeItemType, "hazards" | "airac_cyle">>;
     /** 在难度行显示最大允许 Category */
     showMaxCategory?: boolean;
     /** 在难度下方显示飞机类型 */
@@ -32,45 +32,69 @@ const ChallengeItem: FC<{
     showAircraftTypes = false,
     showHazards = false,
 }) => {
+    const showAerodromeCode = useMemo(
+        () =>
+            item.aerodrome ||
+            (showMaxCategory && item.max_allowed_aircraft_category),
+        [item, showMaxCategory],
+    );
+    const showAerodromeName = useMemo(
+        () => Boolean(item.aerodrome?.name),
+        [item],
+    );
     return (
         <a
-            className={classNames(styles["challenge-item"], className)}
+            className={classNames(styles["challenge-item"], className, {
+                [styles["is-no-airac"]]: !item.airac_cyle,
+            })}
             href={getChallengePageLink(item.slug || item._id)}
             key={item._id}
             data-difficulty={item.difficulty}
         >
-            <span
-                className={styles["aerodrome-code"]}
-                dangerouslySetInnerHTML={{
-                    __html: item.aerodrome
-                        ? [
-                              (item.aerodrome.icao
-                                  ? item.aerodrome.is_fake_icao
-                                      ? `<del>${item.aerodrome.icao}</del>`
-                                      : item.aerodrome.icao
-                                  : "") || item.aerodrome.faa,
-                              item.aerodrome.iata,
-                              item.aerodrome.designator,
-                          ]
-                              .filter(Boolean)
-                              .map((str) =>
-                                  item.aerodrome?.is_closed
-                                      ? `<del>${str}</del>`
-                                      : str,
-                              )
-                              .join("/")
-                        : item.max_allowed_aircraft_category
-                          ? `CATEGORY ${item.max_allowed_aircraft_category.toUpperCase()}`
-                          : "",
-                }}
-            />
-            {item.aerodrome?.name && (
-                <strong className={styles["aerodrome-name"]}>
-                    {item.aerodrome.is_closed && "（旧）"}
-                    {item.aerodrome.name}
+            {showAerodromeCode && (
+                <span
+                    className={styles["aerodrome-code"]}
+                    dangerouslySetInnerHTML={{
+                        __html: item.aerodrome
+                            ? [
+                                  (item.aerodrome.icao
+                                      ? item.aerodrome.is_fake_icao
+                                          ? `<del>${item.aerodrome.icao}</del>`
+                                          : item.aerodrome.icao
+                                      : "") || item.aerodrome.faa,
+                                  item.aerodrome.iata,
+                                  item.aerodrome.designator,
+                              ]
+                                  .filter(Boolean)
+                                  .map((str) =>
+                                      item.aerodrome?.is_closed
+                                          ? `<del>${str}</del>`
+                                          : str,
+                                  )
+                                  .join("/")
+                            : item.max_allowed_aircraft_category
+                              ? `CATEGORY ${item.max_allowed_aircraft_category.toUpperCase()}`
+                              : "",
+                    }}
+                />
+            )}
+            <strong className={styles["aerodrome-name"]}>
+                {showAerodromeName
+                    ? `${item.aerodrome?.is_closed ? "（旧）" : ""}${item.aerodrome?.name}`
+                    : item.name}
+            </strong>
+            {showAerodromeName && (
+                <strong className={styles["challenge-name"]}>
+                    {item.name}
                 </strong>
             )}
-            <strong className={styles["challenge-name"]}>{item.name}</strong>
+            {!item.airac_cyle && (
+                <strong
+                    className={classNames([styles["line"], styles["no-airac"]])}
+                >
+                    该内容正在完善中
+                </strong>
+            )}
             {
                 // [1, 3, 5].includes(item.difficulty)
                 item.difficulty && (

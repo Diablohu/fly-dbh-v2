@@ -180,7 +180,7 @@ difficulty,` +
             otherChallenges &&
                 `
 'other_challenges_this_aerodrome': *[${getGroqFilterBase({
-                    onlyFullArticle: true,
+                    onlyFullArticle: false,
                 })} && aerodrome->_id == ^.aerodrome->_id && _id != ^._id]{
     _id,
     'slug': slug.current,
@@ -188,6 +188,7 @@ difficulty,` +
     difficulty,
     max_allowed_aircraft_category,
     typical_aircraft_types,
+    airac_cyle,
 } | order(${orderList})`,
             videos &&
                 `

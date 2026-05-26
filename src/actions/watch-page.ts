@@ -58,6 +58,7 @@ const fetchProjections = `{
             difficulty,
             max_allowed_aircraft_category,
             typical_aircraft_types,
+            airac_cyle,
         } | order(${orderList}),
     },
     'developers': developers[]->{

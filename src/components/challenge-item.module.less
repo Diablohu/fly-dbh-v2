@@ -3,8 +3,12 @@
 .challenge-item {
     // --tag-background-color: transparent;
     --menu-background-color-highlight: var(--tag-background-color);
+    --code-gradient-start: var(--text-color-primary);
+    --code-gradient-end: var(--theme-color-invert-p-30);
+
     .tag-styles();
     .difficulty-variables();
+
     position: relative;
     display: block;
     // border-color: var(--difficulty-color, var(--tag-background-color));
@@ -28,8 +32,8 @@
         color: transparent;
         background: linear-gradient(
             to bottom,
-            var(--text-color-primary),
-            var(--theme-color-invert-p-30) 75%
+            var(--code-gradient-start),
+            var(--code-gradient-end) 75%
         );
         background-clip: text;
         // -webkit-text-fill-color: transparent;
@@ -48,7 +52,7 @@
         );
         padding-top: 0.13333em;
     }
-    .challenge-name {
+    .aerodrome-name ~ .challenge-name {
         // font-size: unit(
         //     (@base-font-size-number-h5 / @base-font-size-number),
         //     em
@@ -65,6 +69,9 @@
         display: block;
         line-height: 1.2;
         margin-top: 0.3em;
+    }
+    .no-airac {
+        color: var(--accent-color-red);
     }
     .challenge-difficulty {
         color: var(--difficulty-color);
@@ -164,4 +171,9 @@
             }
         }
     }
+}
+
+.challenge-item.is-no-airac {
+    --code-gradient-start: var(--accent-color-red);
+    --code-gradient-end: var(--accent-color-red-p-50);
 }

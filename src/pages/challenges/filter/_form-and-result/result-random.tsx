@@ -30,11 +30,11 @@ const ResultRandom: FC<{
                     showHazards
                 />
                 <section className={styles["extra-infos"]}>
-                    {!result.list[0].airac_cyle && (
+                    {/* {!result.list[0].airac_cyle && (
                         <span className={styles["article-is-wip"]}>
                             该条目内容正在完善中……
                         </span>
-                    )}
+                    )} */}
                     <a
                         className={styles["hint-link"]}
                         href={getChallengePageLink(

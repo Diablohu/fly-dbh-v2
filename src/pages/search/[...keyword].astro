@@ -11,13 +11,12 @@ import Block from "@/components/block.astro";
 import FormAndResult from "./_form-and-result";
 import { getSearchPageTitle } from "./_helpers";
 
-if (Astro.params.keyword) {
-}
 const { data: initialResults, error } = !Astro.params.keyword
     ? {}
     : await Astro.callAction(actions.search.query, {
           keyword: Astro.params.keyword,
       });
+// console.log(Astro.params.keyword, initialResults);
 if (error) {
     const err = error as unknown as ActionError;
     logError(err, {
