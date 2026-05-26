@@ -36,7 +36,7 @@ const { data: video, error } = await Astro.callAction(
     Astro.params.slug,
 );
 if (error || !video) {
-    const { rewrite, redirect } = pageDataErrorHandler(
+    const res = pageDataErrorHandler(
         error ||
             new ActionError({
                 code: "NOT_FOUND",
@@ -44,14 +44,8 @@ if (error || !video) {
             }),
         Astro,
     );
-    if (redirect) return Astro.redirect(redirect);
-    if (rewrite === "/500") {
-        Astro.response.status = 500;
-        Astro.props.error = error;
-    } else if (rewrite === "/404") {
-        Astro.response.status = 404;
-    }
-    return Astro.rewrite(rewrite);
+    if (res.redirect) return Astro.redirect(res.redirect);
+    return Astro.rewrite(res.rewrite);
 }
 
 // console.log(video);

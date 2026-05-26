@@ -1,3 +1,4 @@
+import { type AstroGlobal } from "astro";
 import {
     ActionError,
     type ActionAPIContext,
@@ -8,7 +9,7 @@ import logError from "@/utils/log-error";
 
 function pageDataErrorHandler(
     error: ActionError | ActionErrorCode,
-    context: ActionAPIContext,
+    context: AstroGlobal | ActionAPIContext,
 ): {
     redirect?: string;
     rewrite?: string;
@@ -20,8 +21,11 @@ function pageDataErrorHandler(
         pathname: context?.originPathname,
     });
 
+    if ("response" in context) context.response.status = error.status;
+
     if ((error.status + "").startsWith("4")) return { rewrite: "/404" };
 
+    if ("props" in context) context.props.error = error;
     return { rewrite: "/500" };
 }
 

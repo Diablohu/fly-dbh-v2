@@ -57,10 +57,10 @@ if (error) {
     logError(error, {
         pathname: Astro.originPathname,
     });
-    if (error.code === "NOT_FOUND") {
-    } else {
-        throw error;
-    }
+    // if (error.code === "NOT_FOUND") {
+    // } else {
+    //     throw error;
+    // }
     // Astro.response.status = 500;
     // Astro.props.error =error
     // Astro.response.statusText = (error.cause || error.message || "") as string;
