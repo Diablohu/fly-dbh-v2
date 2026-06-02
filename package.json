@@ -54,11 +54,11 @@
         "normalize.css": "^8.0.1",
         "numeral": "^2.0.6",
         "qrcode": "^1.5.4",
-        "react": "^19.2.6",
-        "react-dom": "^19.2.6",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
         "react-dropzone": "^15.0.0",
         "react-inlinesvg": "^4.4.1",
-        "react-is": "^19.2.6",
+        "react-is": "^19.2.7",
         "styled-components": "^6.4.2",
         "toastify-js": "^1.12.0",
         "viewerjs": "^1.11.7",
@@ -67,7 +67,7 @@
     },
     "devDependencies": {
         "@astrojs/check": "^0.9.9",
-        "@inquirer/prompts": "^8.5.0",
+        "@inquirer/prompts": "^8.5.2",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
         "@types/less": "^3.0.8",
@@ -75,15 +75,15 @@
         "@types/node": "^25.9.1",
         "@types/numeral": "^2.0.5",
         "@types/qrcode": "^1.5.6",
-        "@types/react": "^19.2.15",
+        "@types/react": "^19.2.16",
         "@types/react-dom": "^19.2.3",
         "@types/toastify-js": "^1.12.4",
-        "baseline-browser-mapping": "^2.10.32",
+        "baseline-browser-mapping": "^2.10.33",
         "chalk": "^5.6.2",
         "cross-env": "^10.1.0",
         "rollup-plugin-visualizer": "^7.0.1",
         "typescript": "^5.9.3",
         "vite-plugin-static-copy": "^4.1.0",
-        "vitest": "^4.1.7"
+        "vitest": "^4.1.8"
     }
 }
