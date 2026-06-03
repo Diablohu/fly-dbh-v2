@@ -48,10 +48,23 @@ const Menu: FC<
     children,
     className,
 }) => {
+    /**
+     * 菜单容器元素 Ref
+     * - 以 `createPortal` 方式渲染到 `document.body`
+     */
     const MenuRef = useRef<HTMLMenuElement>(null);
+    /**
+     * 交互锚点元素 Ref
+     * - 菜单会根据这个元素的位置进行对齐
+     * - 实际为 `AnchorProbeRef` 的父元素
+     */
     const AnchorRef = useRef<HTMLElement>(null);
     const AnchorProbeRef = useRef<HTMLSpanElement>(null);
-    const ClickedOnMenuRef = useRef(false);
+    /**
+     * 是否在菜单内部进行了点击操作的 Flag
+     * - 用于判断点击事件是否发生在菜单内部，如果是，不进行隐藏菜单
+     */
+    const ClickInsideMenuRef = useRef(false);
     const LastRenderRef = useRef(false);
     const AnchorPointRef = useRef(anchorPoint);
     const GrowRef = useRef(grow);
@@ -71,12 +84,12 @@ const Menu: FC<
     const onDocumentBodyClick = useCallback(
         (evt: MouseEvent) => {
             if (
-                ClickedOnMenuRef.current ||
+                ClickInsideMenuRef.current ||
                 (MenuRef.current &&
                     evt.target instanceof Element &&
                     MenuRef.current.contains(evt.target))
             ) {
-                ClickedOnMenuRef.current = false;
+                ClickInsideMenuRef.current = false;
                 return;
             }
 
@@ -87,10 +100,10 @@ const Menu: FC<
 
     const onMenuClick = useCallback<MouseEventHandler<HTMLMenuElement>>(
         (evt) => {
-            ClickedOnMenuRef.current = true;
+            ClickInsideMenuRef.current = true;
             evt.stopPropagation();
             setTimeout(() => {
-                ClickedOnMenuRef.current = false;
+                ClickInsideMenuRef.current = false;
             });
         },
         [],
