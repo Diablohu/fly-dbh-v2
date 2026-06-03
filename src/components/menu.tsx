@@ -133,9 +133,12 @@ const Menu: FC<
     const onMenuOpen = useEffectEvent(() => {
         if (!MenuRef.current) return;
         onOpen?.(MenuRef.current);
-        MenuRef.current.querySelector(`[aria-current="true"]`)?.scrollIntoView({
-            block: "center",
-        });
+        if (activeItemScrollIntoView)
+            MenuRef.current
+                .querySelector(`[aria-current="true"]`)
+                ?.scrollIntoView({
+                    block: "center",
+                });
     });
 
     const repositionMenu = useCallback(() => {

@@ -119,15 +119,6 @@ const Explore: FC<
             });
     }, [type, listType, listSlug]);
 
-    const onMenuOpen = useCallback<
-        Exclude<Parameters<typeof Menu>[0]["onOpen"], undefined>
-    >((elMenu) => {
-        console.log({ elMenu }, styles["is-active"]);
-        elMenu.querySelector(`.${styles["is-active"]}`)?.scrollIntoView({
-            block: "center",
-        });
-    }, []);
-
     // 同步 `StatusRef` 和 _State_ `status`
     useEffect(() => {
         StatusRef.current = status;
@@ -161,7 +152,6 @@ const Explore: FC<
                     setOpenState={setShowMenu}
                     anchorPoint="bottomRight"
                     grow={["up", "right"]}
-                    onOpen={onMenuOpen}
                     stickyTitle={title}
                     activeItemScrollIntoView
                 >
