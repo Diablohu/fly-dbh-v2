@@ -2,6 +2,7 @@ import {
     useState,
     useCallback,
     useEffect,
+    useEffectEvent,
     useRef,
     memo,
     type FC,
@@ -36,6 +37,10 @@ const Menu: FC<
          * 菜单的标题，会以 `sticky` 方式渲染，固定在菜单顶部，层级在所有菜单元素之上
          */
         stickyTitle?: ReactNode;
+        /**
+         * 是否在打开菜单时将 `[aria-current="true"]` 的菜单项滚动到可视区域
+         */
+        activeItemScrollIntoView?: boolean;
     } & Pick<MenuHTMLAttributes<HTMLMenuElement>, "children" | "className">
 > = ({
     open: _open = false,
@@ -45,6 +50,7 @@ const Menu: FC<
     anchorPoint = "topLeft",
     grow = [],
     stickyTitle,
+    activeItemScrollIntoView = false,
     children,
     className,
 }) => {
@@ -123,6 +129,14 @@ const Menu: FC<
         },
         [],
     );
+
+    const onMenuOpen = useEffectEvent(() => {
+        if (!MenuRef.current) return;
+        onOpen?.(MenuRef.current);
+        MenuRef.current.querySelector(`[aria-current="true"]`)?.scrollIntoView({
+            block: "center",
+        });
+    });
 
     const repositionMenu = useCallback(() => {
         if (!MenuRef.current) return;
@@ -238,10 +252,10 @@ const Menu: FC<
     useEffect(() => {
         if (render && LastRenderRef.current !== render) {
             repositionMenu();
-            if (MenuRef.current) onOpen?.(MenuRef.current);
+            onMenuOpen();
         }
         LastRenderRef.current = render;
-    }, [render, repositionMenu, onOpen]);
+    }, [render, repositionMenu]);
 
     useEffect(() => {
         AnchorPointRef.current = anchorPoint;
@@ -310,6 +324,7 @@ export const MenuBlockItem: FC<
                     [styles["is-active"]]: isActive,
                 },
             ])}
+            aria-current={isActive ? true : undefined}
             {...props}
         />
     );

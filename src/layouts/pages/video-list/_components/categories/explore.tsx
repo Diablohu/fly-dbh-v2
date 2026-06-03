@@ -122,6 +122,7 @@ const Explore: FC<
     const onMenuOpen = useCallback<
         Exclude<Parameters<typeof Menu>[0]["onOpen"], undefined>
     >((elMenu) => {
+        console.log({ elMenu }, styles["is-active"]);
         elMenu.querySelector(`.${styles["is-active"]}`)?.scrollIntoView({
             block: "center",
         });
@@ -162,6 +163,7 @@ const Explore: FC<
                     grow={["up", "right"]}
                     onOpen={onMenuOpen}
                     stickyTitle={title}
+                    activeItemScrollIntoView
                 >
                     {list.map((item) => (
                         <MenuBlockItem
