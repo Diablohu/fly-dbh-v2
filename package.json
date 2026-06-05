@@ -21,7 +21,7 @@
         "astro:check": "astro check",
         "astro:upgrade": "npx @astrojs/upgrade",
         "test": "vitest watch",
-        "up": "npm run astro:upgrade && npx --yes npm-check-updates -i"
+        "up": "npm run astro:upgrade && npx --yes npm-check-updates -i --format group"
     },
     "dependencies": {
         "@astrojs/node": "^10.1.3",
