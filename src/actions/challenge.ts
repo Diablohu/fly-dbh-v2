@@ -346,7 +346,7 @@ export const getGroqQueryChallengeList = ({
         })
     }{${projection}} | order(${
         sort === "latest"
-            ? "airac_cyle desc, _createdAt desc"
+            ? "airac_cyle desc, _updatedAt desc"
             : sort === "difficulty"
               ? "difficulty desc, aerodrome.icao asc, aerodrome.iata asc, aerodrome.faa, aerodrome.designator asc"
               : ""
