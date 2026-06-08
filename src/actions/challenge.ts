@@ -13,7 +13,6 @@ import {
     type ChallengeListItemType,
     type ChallengeItemType,
     type ChallengeDifficultyType,
-    type ChallengeListCatalogType,
     type ChallengeListQueryConditionType,
 } from "@/types";
 import getCmsIdOrSlug from "@/utils/get-cms-id-or-slug";
