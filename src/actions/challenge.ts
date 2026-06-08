@@ -13,6 +13,7 @@ import {
     type ChallengeListItemType,
     type ChallengeItemType,
     type ChallengeDifficultyType,
+    type ChallengeListCatalogType,
     type ChallengeListQueryConditionType,
 } from "@/types";
 import getCmsIdOrSlug from "@/utils/get-cms-id-or-slug";
@@ -363,13 +364,29 @@ const actions = {
         handler: async ({
             from = 0,
             length = 20,
-            sort,
+            catalog,
+            // sort,
             difficulties,
-            types,
+            // types,
             hazards,
-            onlyFullArticle = true,
+            // onlyFullArticle = true,
+            ...params
         }) => {
             try {
+                const defaults = {
+                    sort: catalog === "latest" ? "latest" : "difficulty",
+                    types:
+                        catalog === "latest" ||
+                        catalog === "filter" ||
+                        catalog === "wip"
+                            ? undefined
+                            : [catalog],
+                    onlyFullArticle: catalog === "wip" ? "no-airac" : true,
+                } as Partial<ChallengeListQueryConditionType>;
+                const sort = params.sort || defaults.sort;
+                const types = params.types || defaults.types;
+                const onlyFullArticle =
+                    params.onlyFullArticle ?? defaults.onlyFullArticle;
                 const groqQueryFilter = getGroqFiltersChallengeList({
                     difficulties,
                     types,

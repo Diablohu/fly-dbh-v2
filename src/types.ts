@@ -180,9 +180,19 @@ export type VideoItemType = {
 
 export type ChallengeDifficultyType = 1 | 3 | 5 | 7;
 export type ChallengeListSortType = "latest" | "difficulty";
+export type ChallengeListCatalogType =
+    | "latest"
+    | "filter"
+    | "wip"
+    | AircraftTypes;
 export type ChallengeListQueryConditionType = {
     from: number;
     length: number;
+    /**
+     * 若传入列表类型，会生成默认的 `sort` `types` 和 `onlyFullArticle` 条件
+     *  - 若也传入了上述参数，则以传入的参数为准
+     */
+    catalog?: ChallengeListCatalogType;
     sort: ChallengeListSortType;
     difficulties: ChallengeDifficultyType[];
     types: AircraftTypes[];

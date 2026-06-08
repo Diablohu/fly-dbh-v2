@@ -11,6 +11,7 @@ import {
 } from "@/global";
 import {
     type ChallengeListQueryConditionType,
+    type ChallengeListCatalogType,
     type AircraftTypes,
     type ValidContentListAutoLoadMoreType,
 } from "@/types";
@@ -32,7 +33,7 @@ type Props = {
     /**
      * - 如果为 `filter`，为查询页，需在页面模板中自行实现数据查询方法
      */
-    catalog: ComponentProps<typeof ChallengeListGrid>["catalog"];
+    catalog: ChallengeListCatalogType;
     query?: string;
     error?: ActionError | null;
 } & Partial<Pick<ChallengeListQueryConditionType, "sort">>;
@@ -46,7 +47,7 @@ type Props = {
 const heroImage: Record<Props["catalog"], string> = {
     latest: "dc8c90a5e20183a9e3713e460593908e325a0170-2560x1440.png",
     filter: "72652ccf561caabf581c6ca18450ab69ad1823ef-2560x1440.jpg",
-    "no-airac": "3f7ee853ae4865f894adc85474422039e6062413-2560x1440.png",
+    wip: "3f7ee853ae4865f894adc85474422039e6062413-2560x1440.png",
 
     bush: "e955577ad3939d29c3ffbc33a002cb99111bdd22-2560x1440.png",
     "luxury-private": "6098c0f600461bc27680128b8c321b169f3a6b8e-2560x1440.png",
@@ -62,7 +63,7 @@ const heroImage: Record<Props["catalog"], string> = {
 const exampleAircrafts: Record<Props["catalog"], string[]> = {
     latest: [],
     filter: [],
-    "no-airac": [],
+    wip: [],
 
     bush: ["DHC-6“双水獭”", "塞斯纳 208"],
     "luxury-private": ["钻石 DA-42", "西瑞 VisionJet"],
@@ -106,16 +107,8 @@ const { data: initialList, error } =
         ? { data: { initialList: [], total: 0 } }
         : await Astro.callAction(actions.challenge.fetchList, {
               length,
-              sort:
-                  Astro.props.sort ??
-                  (Astro.props.catalog === "latest" ? "latest" : "difficulty"),
-              types:
-                  Astro.props.catalog === "latest" ||
-                  Astro.props.catalog === "no-airac"
-                      ? undefined
-                      : [Astro.props.catalog as AircraftTypes],
-              onlyFullArticle:
-                  Astro.props.catalog === "no-airac" ? "no-airac" : true,
+              catalog: Astro.props.catalog,
+              sort: Astro.props.sort,
           });
 if (error || !initialList) {
     const res = pageDataErrorHandler(
@@ -145,7 +138,7 @@ const pageTitle = {
             ? "最新收录"
             : Astro.props.catalog === "filter"
               ? "查询 / 抽选"
-              : Astro.props.catalog === "no-airac"
+              : Astro.props.catalog === "wip"
                 ? "未完成文章"
                 : aircraftTypeString[Astro.props.catalog as AircraftTypes],
 };
@@ -174,22 +167,22 @@ const pageTitle = {
             route: getChallengeCatalogPageLink("filter"),
             isActive: Astro.props.catalog === "filter",
         },
-        ...(import.meta.env.DEV
-            ? [
-                  //   {
-                  //       type: "link" as const,
-                  //       text: "[DEV] 门户",
-                  //       route: routeBase.challenges + "/portal",
-                  //       isActive: false,
-                  //   },
-                  {
-                      type: "link" as const,
-                      text: "[DEV] 整理中",
-                      route: getChallengeCatalogPageLink("no-airac"),
-                      isActive: Astro.props.catalog === "no-airac",
-                  },
-              ]
-            : []),
+        // ...(import.meta.env.DEV
+        //     ? [
+        //             {
+        //                 type: "link" as const,
+        //                 text: "[DEV] 门户",
+        //                 route: routeBase.challenges + "/portal",
+        //                 isActive: false,
+        //             },
+        //           {
+        //               type: "link" as const,
+        //               text: "[DEV] 整理中",
+        //               route: getChallengeCatalogPageLink("wip"),
+        //               isActive: Astro.props.catalog === "wip",
+        //           },
+        //       ]
+        //     : []),
         { type: "divider" },
         ...Object.entries(aircraftTypeStringShort).map(([key, value]) => {
             const route = getChallengeCatalogPageLink(key as AircraftTypes);
@@ -201,6 +194,13 @@ const pageTitle = {
                 isActive: Astro.props.catalog === key,
             };
         }),
+        { type: "divider" },
+        {
+            type: "link" as const,
+            text: "整理中",
+            route: getChallengeCatalogPageLink("wip"),
+            isActive: Astro.props.catalog === "wip",
+        },
     ]}
 >
     <section class="list">
@@ -214,8 +214,8 @@ const pageTitle = {
                     <span class="total">
                         <strong>{initialList.total}</strong>
                         <small>
-                            {Astro.props.catalog === "no-airac"
-                                ? "缺少 AIRAC Cycle"
+                            {Astro.props.catalog === "wip"
+                                ? "整理中"
                                 : "已收录"}
                         </small>
                     </span>
@@ -265,11 +265,9 @@ const pageTitle = {
                     catalog={Astro.props.catalog}
                     length={length}
                     sort={Astro.props.sort}
-                    showAircraftTypes={[
-                        "latest",
-                        "filter",
-                        "no-airac",
-                    ].includes(Astro.props.catalog)}
+                    showAircraftTypes={["latest", "filter", "wip"].includes(
+                        Astro.props.catalog,
+                    )}
                     initialList={initialList.list}
                     initialListIsComplete={
                         initialList.list.length >= initialList.total

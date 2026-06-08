@@ -10,8 +10,8 @@ import classNames from "classnames";
 import { actions } from "astro:actions";
 import {
     type ChallengeListItemType,
+    type ChallengeListCatalogType,
     type ChallengeListQueryConditionType,
-    type AircraftTypes,
 } from "@/types";
 
 import ListContainerGrid from "@/components/list-container-grid";
@@ -30,7 +30,7 @@ const ListContainer = ListContainerGrid<
 // ============================================================================
 
 type Props = {
-    catalog: "latest" | "filter" | "no-airac" | AircraftTypes;
+    catalog: ChallengeListCatalogType;
     initialList?: ChallengeListItemType[];
 
     /**
@@ -98,17 +98,11 @@ const ChallengeListGrid: FC<Props> = ({
             return actionFetchList({
                 from,
                 length,
-                sort: sort ?? (catalog === "latest" ? "latest" : "difficulty"),
-                types: conditionTypes
-                    ? conditionTypes
-                    : catalog === "latest" ||
-                        catalog === "filter" ||
-                        catalog === "no-airac"
-                      ? undefined
-                      : [catalog],
+                catalog,
+                sort: sort,
+                types: conditionTypes,
                 difficulties: conditionDifficulties,
                 hazards: conditionHazards,
-                onlyFullArticle: catalog === "no-airac" ? "no-airac" : true,
             }).then((res) => res.data);
         },
         [
