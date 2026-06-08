@@ -1,7 +1,6 @@
 ---
 import { actions, ActionError } from "astro:actions";
 
-import { type ComponentProps } from "react";
 import {
     urlPrefixSanityImageCdn,
     getChallengeCatalogPageLink,
@@ -299,10 +298,18 @@ const pageTitle = {
         --hero-image-blur-to: 33.3333%;
         --hero-image-margin-bottom: 1em;
         --hero-image-z-index: 10;
+        // --sidebar-height: calc(
+        //     100vh - var(--global-header-height) -
+        //         var(--challenge-list-container-padding-top)
+        // );
         --challenge-list-container-padding-top: 1.25em;
-        --challenge-list-container-padding-bottom: 4em;
+        // --challenge-list-container-padding-bottom: 2.5em;
         padding-top: var(--challenge-list-container-padding-top);
-        padding-bottom: var(--challenge-list-container-padding-bottom);
+        // padding-bottom: var(--challenge-list-container-padding-bottom);
+        min-height: calc(
+            var(--hero-image-height) + var(--rt-global-sidebar-height)
+        );
+        // background: #800;
         .screen-lg({
             --hero-image-height: 14em;
         });
@@ -315,6 +322,7 @@ const pageTitle = {
             --hero-image-blur-from: 5em;
             --hero-image-blur-to: 50%;
             --challenge-list-container-padding-top: 1.75em;
+            min-height: 0;
         });
     }
 

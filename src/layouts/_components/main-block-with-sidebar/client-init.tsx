@@ -1,10 +1,14 @@
 import { useRef, useEffect, useCallback, type FC } from "react";
 import { MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN } from "@/constants/element-ids";
+import updateRootCssVariable from "@/utils/update-root-css-variable";
 
 // ============================================================================
 
 const CategoriesClientInit: FC = () => {
     const ProbeRef = useRef<HTMLSpanElement>(null);
+    const SidebarContainerRef = useRef<HTMLDivElement>(null);
+    const SidebarResizeObserverRef = useRef<ResizeObserver>(null);
+
     const AnimateTickingRef = useRef(false);
     const AnimateRequestTick = useRef(() => {
         if (!AnimateTickingRef.current) {
@@ -35,7 +39,7 @@ const CategoriesClientInit: FC = () => {
             ProbeRef.current.parentElement;
         let checkbox: HTMLInputElement | null | undefined =
             parent?.querySelector(
-                `input#${MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN}`
+                `input#${MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN}`,
             );
 
         if (!parent) return;
@@ -45,8 +49,36 @@ const CategoriesClientInit: FC = () => {
             if (parent === document.body) break;
 
             checkbox = parent?.querySelector(
-                `input#${MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN}`
+                `input#${MAIN_BLOCK_WITH_SIDEBAR_SIDE_SWITCH_SMALL_SCREEN}`,
             );
+        }
+
+        // 获取侧边栏元素，并监听其尺寸变化以更新全局 CSS 变量
+        if (checkbox && !SidebarContainerRef.current) {
+            SidebarContainerRef.current =
+                checkbox.parentElement as HTMLDivElement;
+            if (!SidebarResizeObserverRef.current) {
+                SidebarResizeObserverRef.current = new ResizeObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.target === SidebarContainerRef.current) {
+                                // console.log(
+                                //     "sidebarResizeObserverCallback (ResizeObserver)",
+                                //     entry.target.offsetHeight,
+                                //     entry.target.clientHeight,
+                                // );
+                                updateRootCssVariable(
+                                    "--rt-global-sidebar-height",
+                                    entry.target.clientHeight,
+                                );
+                            }
+                        });
+                    },
+                );
+                SidebarResizeObserverRef.current.observe(
+                    SidebarContainerRef.current,
+                );
+            }
         }
 
         if (thisLevel) {
@@ -73,6 +105,10 @@ const CategoriesClientInit: FC = () => {
         return () => {
             if (thisLevel)
                 thisLevel.removeEventListener("scroll", triggerWindowScroll);
+            if (SidebarResizeObserverRef.current) {
+                SidebarResizeObserverRef.current.disconnect();
+                SidebarResizeObserverRef.current = null;
+            }
         };
     }, [triggerWindowScroll]);
     return <span ref={ProbeRef} />;

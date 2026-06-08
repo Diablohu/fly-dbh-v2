@@ -366,10 +366,11 @@
 
     position: relative;
     z-index: 1;
-    margin: -6em calc(var(--global-edge-safe-distance) * -1);
+    margin: -6em calc(var(--global-edge-safe-distance) * -1) -2em
+        calc(var(--global-edge-safe-distance) * -1);
     padding-top: var(--padding-y);
     padding-bottom: var(--padding-y);
-    margin-bottom: calc(var(--challenge-list-container-padding-bottom) * -1);
+    // margin-bottom: calc(var(--challenge-list-container-padding-bottom) * -1);
     overflow: hidden;
 
     &::before {
