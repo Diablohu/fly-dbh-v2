@@ -16,7 +16,8 @@ function logError(
             [
                 [
                     context?.pathname,
-                    error.status || (error.code === "NOT_FOUND" ? "404" : "500"),
+                    error.status ||
+                        (error.code === "NOT_FOUND" ? "404" : "500"),
                 ]
                     .filter(Boolean)
                     .join(" -> "),

@@ -214,6 +214,11 @@ const actions = {
                 err.cause = { reason: "no keyword" };
                 throw err;
             }
+            keyword = keyword
+                .trim()
+                .replace(/\\/g, "\\\\")
+                .replace(/\"/g, '\\"');
+            // console.log({ keyword });
             try {
                 const { getKeywordFilter, groqVideos, groqFilterChallenges } =
                     getGroqAndFilters(keyword);
