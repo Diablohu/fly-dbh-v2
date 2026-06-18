@@ -249,5 +249,9 @@ async function main() {
 }
 
 await main().catch((err) => {
-    console.trace(err);
+    if (err instanceof Error && err.name === "ExitPromptError") {
+        // `Inquirer.js` ctrl+C; silence this error
+    } else {
+        console.trace(err);
+    }
 });
