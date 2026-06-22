@@ -68,6 +68,7 @@
     "devDependencies": {
         "@astrojs/check": "^0.9.9",
         "@inquirer/prompts": "^8.5.2",
+        "@types/debug": "^4.1.13",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
         "@types/less": "^3.0.8",
