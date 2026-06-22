@@ -4,7 +4,7 @@ import {
     defineConfig,
     fontProviders,
     svgoOptimizer,
-    memoryCache,
+    // memoryCache,
 } from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
@@ -109,17 +109,17 @@ export default defineConfig({
             },
         ],
     },
-    cache: {
-        provider: memoryCache(),
-    },
-    routeRules: {
-        "/videos": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/videos/[...filters]": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/watch/[...slug]": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/challenges": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/challenges/catalog/[type]": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/challenges/[slug]": { maxAge: 60 * 60, swr: 1 * 60 },
-    },
+    // cache: {
+    //     provider: memoryCache(),
+    // },
+    // routeRules: {
+    //     "/videos": { maxAge: 60 * 60, swr: 1 * 60 },
+    //     "/videos/[...filters]": { maxAge: 60 * 60, swr: 1 * 60 },
+    //     "/watch/[...slug]": { maxAge: 60 * 60, swr: 1 * 60 },
+    //     "/challenges": { maxAge: 60 * 60, swr: 1 * 60 },
+    //     "/challenges/catalog/[type]": { maxAge: 60 * 60, swr: 1 * 60 },
+    //     "/challenges/[slug]": { maxAge: 60 * 60, swr: 1 * 60 },
+    // },
 
     // #region 开发环境
     devToolbar: {
