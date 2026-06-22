@@ -16,6 +16,7 @@ import {
     type ChallengeListQueryConditionType,
 } from "@/types";
 import getCmsIdOrSlug from "@/utils/get-cms-id-or-slug";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 // ============================================================================
 
@@ -193,7 +194,7 @@ difficulty,` +
             videos &&
                 `
 video_url_briefing,
-'videos_this_aerodrome':  *[_type == "video" && references(^.aerodrome->_id)]{
+'videos_this_aerodrome': ${getGroqFilterVideo(`references(^.aerodrome->_id)`)}{
     _id,
     'slug': slug.current,
     title,

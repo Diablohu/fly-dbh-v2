@@ -4,6 +4,7 @@ import { resolveAssetPath } from "@/services/sanity-helpers";
 import { type HomeVideoDocumentType, type HomeCollectionsType } from "@/types";
 import actionErrorHandler from "./_error-handler";
 import { getGroqLatestChallenges } from "./challenge";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 const fetchSorting = ` | order( release desc )`;
 const getProjections = (collection: string) => `{
@@ -79,15 +80,15 @@ ${(
             CONTAIN ONE TAG
                 "${s}" in tags[]->slug.current
         */
-        return `'${name}': *[_type == "video"${
+        return `'${name}': ${getGroqFilterVideo(
             Array.isArray(tagSlug)
                 ? ` && (${tagSlug
                       .map((s) => getFilterTag(s, filterType))
                       .join(" || ")})`
                 : tagSlug
                   ? ` && ${getFilterTag(tagSlug, filterType)}`
-                  : ""
-        }] ${fetchSorting} ${getProjections(name)} [0...${count}]`;
+                  : "",
+        )} ${fetchSorting} ${getProjections(name)} [0...${count}]`;
     })
     .join(",")},
     'config': *[_id == 'db0caed0-d756-4162-953b-f96a65a731e9']{config[]{key,'value':value.code}},

@@ -3,6 +3,7 @@ import { fetch } from "@/services/sanity";
 import { type VideoItemType, type ChallengeItemType } from "@/types";
 import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
 import actionErrorHandler from "./_error-handler";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 const cacheOptions = {
     ttl: 1 * 24 * 60 * 60_000, // 1 day
@@ -17,7 +18,7 @@ const actions = {
         handler: async () => {
             try {
                 const queryString = `\
-*[_type == "video"] {
+${getGroqFilterVideo("")} {
     _id,
     'slug': slug.current,
     release,

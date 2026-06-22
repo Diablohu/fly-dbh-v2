@@ -7,6 +7,7 @@ import actionErrorHandler from "./_error-handler";
 import { E30000 } from "@/constants/error-codes";
 import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
 import getCmsIdOrSlug from "@/utils/get-cms-id-or-slug";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 import { orderList } from "./challenge";
 
@@ -95,7 +96,9 @@ const actions = {
         handler: async (_cmsIdOrSlug /*, context*/) => {
             const cmsIdOrSlug = getCmsIdOrSlug(_cmsIdOrSlug);
             try {
-                const queryString = `*[_type == "video" && ( _id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")] ${fetchProjections}`;
+                const queryString = `${getGroqFilterVideo(
+                    `(_id == "${cmsIdOrSlug}" || slug.current == "${cmsIdOrSlug}")`,
+                )}${fetchProjections}`;
                 const res = (
                     await fetch<VideoItemType>(queryString, {
                         transform: (res, queryString) => {

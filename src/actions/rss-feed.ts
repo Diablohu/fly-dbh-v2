@@ -7,6 +7,7 @@ import { fetch } from "@/services/sanity";
 // import { transformImagePath } from "@/services/sanity-helpers";
 import actionErrorHandler from "./_error-handler";
 import { E40000 } from "@/constants/error-codes";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 // ============================================================================
 
@@ -44,7 +45,9 @@ const actions = {
             try {
                 // console.log({ query });
                 return await fetch<ReturnVideoItemType>(
-                    `*[_type == "video" || (_type == "approach_challenge" && defined(airac_cyle))] ${getProjections()} | order( _createdAt desc ) [0...20]`,
+                    `*[${getGroqFilterVideo("", {
+                        noBracket: true,
+                    })} || (_type == "approach_challenge" && defined(airac_cyle))] ${getProjections()} | order( _createdAt desc ) [0...20]`,
                     {
                         transform: (res, queryString) => {
                             if (!res || !Array.isArray(res) || !res.length) {

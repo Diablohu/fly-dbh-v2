@@ -17,6 +17,7 @@ import getVideoListPageTypeInfo from "@/utils/get-video-list-page-type-info";
 import actionErrorHandler from "./_error-handler";
 import { E20000, E20001 } from "@/constants/error-codes";
 import { getGroqFilterBase as getChallengeGroqFilterBase } from "@/actions/challenge";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 import { orderList } from "./challenge";
 
@@ -119,7 +120,7 @@ const actions = {
         }>(),
         handler: async ({ filters, from = 0, length = 20, extra = [] }) => {
             try {
-                const query = `*[_type == "video"${
+                const query = `${getGroqFilterVideo(
                     Array.isArray(filters)
                         ? ` && ${
                               filters.length === 1
@@ -136,8 +137,8 @@ const actions = {
                                         .join(" && ") +
                                     ")"
                           }`
-                        : ""
-                }] ${getProjections(filters?.[0].type, filters?.[0].slug)}`;
+                        : "",
+                )} ${getProjections(filters?.[0].type, filters?.[0].slug)}`;
                 // console.log({ query });
                 return (await fetch(
                     `{
@@ -416,11 +417,13 @@ ${
 *[_type == "${currentType}"${
                         type === "aircraftFamily"
                             ? ` && (
-    count(*[_type == 'video' && references(^._id)]) > 0
-    || (defined(onboard_devices) && count(*[_type == 'video' && references(^.onboard_devices[]->_id)]) > 0)
+    count(${getGroqFilterVideo("references(^._id)")}) > 0
+    || (defined(onboard_devices) && count(${getGroqFilterVideo(
+        "references(^.onboard_devices[]->_id)",
+    )}) > 0)
 )`
                             : type
-                              ? ` && count(*[_type == 'video' && references(^._id)]) > 0`
+                              ? ` && count(${getGroqFilterVideo("references(^._id)")}) > 0`
                               : ""
                     }${
                         type === "tagSubCategory"

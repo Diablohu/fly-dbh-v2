@@ -20,6 +20,7 @@ import {
     getGroqQueryChallengeList,
 } from "./challenge";
 import { E50000 } from "@/constants/error-codes";
+import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 // ============================================================================
 
@@ -140,8 +141,9 @@ function getGroqAndFilters(keyword: string) {
     };
 
     /** GROQ: 查询视频内容 */
-    const groqVideos = `
-*[_type == "video" && ${getKeywordFilter("title")}${getKeywordFilterTags()}]
+    const groqVideos = `${getGroqFilterVideo(
+        getKeywordFilter("title") + getKeywordFilterTags(),
+    )}
 ${projection}
 | order( release desc )`;
 
