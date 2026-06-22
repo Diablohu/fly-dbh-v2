@@ -37,25 +37,27 @@ type SpotlightListType = Array<
 let spotlights: SpotlightListType = [];
 
 try {
-    spotlights = (eval(Astro.props.configString) as SpotlightListType).map(
-        ({ href, ...l }) => ({
-            href: href
-                ? getVideoListPageLink(
-                      href[0] as unknown as VideoListPageTypesType,
-                      href[1],
-                      href[2] && href[3]
-                          ? [
-                                {
-                                    type: href[2] as unknown as VideoListPageTypesType,
-                                    slug: href[3],
-                                },
-                            ]
-                          : undefined,
-                  )
-                : undefined,
-            ...l,
-        }),
-    );
+    spotlights = (
+        new Function(
+            `return ${Astro.props.configString}`,
+        )() as SpotlightListType
+    ).map(({ href, ...l }) => ({
+        href: href
+            ? getVideoListPageLink(
+                  href[0] as unknown as VideoListPageTypesType,
+                  href[1],
+                  href[2] && href[3]
+                      ? [
+                            {
+                                type: href[2] as unknown as VideoListPageTypesType,
+                                slug: href[3],
+                            },
+                        ]
+                      : undefined,
+              )
+            : undefined,
+        ...l,
+    }));
 } catch (e) {
     // TODO: error logging
     // console.trace(e);

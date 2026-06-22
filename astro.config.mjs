@@ -120,6 +120,11 @@ export default defineConfig({
         //     ssr: true,
         //     ssrEmitAssets: true,
         // },
+        resolve: {
+            alias: {
+                "@": normalizePath(path.resolve("./src")),
+            },
+        },
         plugins: [
             isAnalyze
                 ? visualizer({
