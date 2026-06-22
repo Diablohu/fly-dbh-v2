@@ -8,8 +8,9 @@ function getFilterVideo(
     opt: { noBracket?: boolean } = {},
 ) {
     filterString = filterString.trim();
-    if (filterString && !/^\&\&/.test(filterString))
-        filterString = ` && ${filterString}`;
+    if (filterString !== "")
+        filterString =
+            " " + (/^\&\&/.test(filterString) ? "" : "&& ") + filterString;
 
     return `${
         opt.noBracket ? "" : "*["
