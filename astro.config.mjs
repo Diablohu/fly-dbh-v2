@@ -113,9 +113,12 @@ export default defineConfig({
         provider: memoryCache(),
     },
     routeRules: {
-        "/videos/[...path]": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/watch/[...path]": { maxAge: 60 * 60, swr: 1 * 60 },
-        "/challenges/[...path]": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/videos": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/videos/[...filters]": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/watch/[...slug]": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/challenges": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/challenges/catalog/[type]": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/challenges/[slug]": { maxAge: 60 * 60, swr: 1 * 60 },
     },
 
     // #region 开发环境
