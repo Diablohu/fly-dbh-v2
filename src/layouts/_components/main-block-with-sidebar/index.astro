@@ -176,24 +176,27 @@ export type Props = {
                 );
             }
 
-            & > :global(.item),
+            :global(& > .item),
             & > .screen-sm-button-collapse-categories,
-            & > :global(hr) {
+            :global(& > hr) {
                 display: block;
             }
-            & > :global(.item),
+            :global(& > .item),
             & > .screen-sm-button-collapse-categories {
                 position: relative;
-                color: inherit;
+                // color: inherit;
                 font-weight: normal;
                 min-height: var(--item-min-height);
                 line-height: var(--item-line-height);
-                padding: calc(
-                        (var(--item-min-height) - var(--item-line-height)) / 2
-                    )
-                    var(--layout-aside-link-item-padding-x);
+                padding-top: calc(
+                    (var(--item-min-height) - var(--item-line-height)) / 2
+                );
+                padding-bottom: calc(
+                    (var(--item-min-height) - var(--item-line-height)) / 2
+                );
+                padding-right: var(--layout-aside-link-item-padding-x);
                 border-radius: 8px;
-                & > :global(svg) {
+                :global(& > svg) {
                     position: absolute;
                     display: block;
                     width: var(--layout-aside-link-item-icon-size);
@@ -210,7 +213,7 @@ export type Props = {
                         var(--layout-aside-link-item-icon-size) * -0.5
                     );
                     color: var(--text-color-secondary);
-                    &.right-arrow {
+                    &:global(.right-arrow) {
                         --layout-aside-link-item-icon-size: 0.75em;
                         position: relative;
                         top: 0.225em;
@@ -227,12 +230,12 @@ export type Props = {
                     margin-top: var(--item-gap);
                 }
             }
-            & > :global(button.item) {
+            :global(& > button.item) {
                 appearance: none;
             }
-            & > :global(.item.link),
-            & > :global(.item.button),
-            & > :global(button.item) {
+            :global(& > .item.link),
+            :global(& > .item.button),
+            :global(& > button.item) {
                 color: var(--text-color-primary);
                 transition-property: transform, background-color;
                 padding-left: var(
@@ -242,8 +245,8 @@ export type Props = {
                     --item-sub-text-color: var(--text-color-primary);
                     background: var(--tag-background-color);
                 }
-                &.is-active,
-                &:has(.is-menu-open) {
+                &:global(.is-active),
+                &:global(:has(.is-menu-open)) {
                     .styles-hover();
                 }
                 .pointer-hover(.styles-hover());
@@ -278,11 +281,11 @@ export type Props = {
                     transition: inherit;
                     transition-property: border-color, background-color;
                 }
-                &:not(:has(> svg))::before,
-                &:has(> svg.right-arrow)::before {
+                &:global(:not(:has(> svg)))::before,
+                &:global(:has(> svg.right-arrow))::before {
                     content: "";
                 }
-                & > :global(.sub-text) {
+                :global(& > .sub-text) {
                     display: block;
                     // margin-left: -1.75em;
                     margin-top: 0.3333em;
@@ -294,9 +297,9 @@ export type Props = {
                     }
                 }
             }
-            & > :global(.item.link) {
+            :global(& > .item.link) {
                 text-decoration: none;
-                &.is-active {
+                &:global(.is-active) {
                     &::before {
                         // background-color: var(--accent-color-purple);
                         border-color: var(--text-color-secondary);
@@ -306,7 +309,7 @@ export type Props = {
                         color: var(--text-color-primary);
                     }
                 }
-                &.is-level-2 {
+                &:global(.is-level-2) {
                     &::after {
                         position: absolute;
                         content: "";
@@ -411,14 +414,14 @@ export type Props = {
                     }
                     */
             }
-            & > :global(.item.button),
-            & > :global(button.item) {
+            :global(& > .item.button),
+            :global(& > button.item) {
                 appearance: none;
                 width: 100%;
                 text-align: left;
                 border: 0;
                 background: transparent;
-                &.is-active {
+                &:global(.is-active) {
                     &::before {
                         // background-color: var(--accent-color);
                         background-color: var(--text-color-secondary);
@@ -434,7 +437,7 @@ export type Props = {
                 //     pointer-events: none;
                 // }
             }
-            & > :global(hr) {
+            :global(& > hr) {
                 margin: 0.6667em auto;
                 border-top-width: 0;
             }

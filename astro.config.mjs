@@ -1,6 +1,11 @@
 // @ts-check
 import path from "node:path";
-import { defineConfig, fontProviders, svgoOptimizer } from "astro/config";
+import {
+    defineConfig,
+    fontProviders,
+    svgoOptimizer,
+    memoryCache,
+} from "astro/config";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
@@ -103,6 +108,14 @@ export default defineConfig({
                 hostname: "localhost",
             },
         ],
+    },
+    cache: {
+        provider: memoryCache(),
+    },
+    routeRules: {
+        "/videos/[...path]": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/watch/[...path]": { maxAge: 60 * 60, swr: 1 * 60 },
+        "/challenges/[...path]": { maxAge: 60 * 60, swr: 1 * 60 },
     },
 
     // #region 开发环境
