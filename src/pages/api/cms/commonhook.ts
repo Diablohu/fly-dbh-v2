@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({
         // console.log("CMS Webhook", { body });
 
         const cacheId =
-            body?.type === "approach_challenge"
+            body?._type === "approach_challenge"
                 ? getCacheId(["challenges-details", body?.slug || body?._id])
                 : undefined;
 
