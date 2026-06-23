@@ -19,18 +19,23 @@ export const POST: APIRoute = async ({
                 : undefined;
 
         if (cacheId) {
-            console.log("CMS Webhook", { body, cacheId });
             try {
                 await cache.del(cacheId);
-            } catch (e) {}
-            return new Response(
-                JSON.stringify({
-                    message: `Cleared cache "${cacheId}"`,
-                }),
-                {
-                    status: 200,
-                },
-            );
+                console.log("CMS Webhook received, cleared target cache", {
+                    body,
+                    cacheId,
+                });
+                return new Response(
+                    JSON.stringify({
+                        message: `Webhook received, cleared cache "${cacheId}"`,
+                    }),
+                    {
+                        status: 200,
+                    },
+                );
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         // return new Response("TODO");
