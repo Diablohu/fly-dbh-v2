@@ -1,6 +1,6 @@
 import { createClient, type SanityDocument } from "@sanity/client";
 import { defaultCacheMaxAge, defaultCacheStaleWhileRevalidate } from "@/global";
-import cache, { getCacheId } from "./cache";
+import sanityCache, { getCacheKey } from "./sanity-cache";
 
 // console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
 // ============================================================================
@@ -30,30 +30,20 @@ export const fetch = async <
             query: string,
         ) => SanityDocument<T>[];
         cache?: {
-            id?: Parameters<typeof getCacheId>[0];
+            id?: Parameters<typeof getCacheKey>[0];
             maxAge?: number;
             staleWhileRevalidate?: number;
         };
     } = {},
 ) => {
-    const cacheId =
-        typeof options.cache?.id === "string"
-            ? options.cache?.id
-            : Array.isArray(options.cache?.id)
-              ? options.cache.id
-                    .map((segment) =>
-                        typeof segment === "object"
-                            ? JSON.stringify(segment)
-                            : segment,
-                    )
-                    .join(":")
-              : `SANITY:${queryString}`;
+    const key =
+        (typeof options.cache?.id !== "undefined"
+            ? getCacheKey(options.cache.id)
+            : undefined) ?? `SANITY:${queryString}`;
 
-    // console.log(cacheId, new Date((await cache.ttl(cacheId)) ?? ""));
-
-    return await cache.wrap(
+    return await sanityCache.wrap(
         // cache id
-        cacheId,
+        key,
 
         // cache data
         async () => {

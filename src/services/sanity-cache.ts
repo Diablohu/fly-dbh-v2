@@ -1,7 +1,13 @@
 import { createCache } from "cache-manager";
+import debug from "debug";
 import { defaultCacheMaxAge, defaultCacheStaleWhileRevalidate } from "@/global";
 
+const log = debug("Sanity Cache");
+log.namespace = "Sanity Cache";
+log.enabled = true;
+
 const cache = createCache({
+    cacheId: "sanity-request",
     /**
      * 缓存存活的最长时间
      *  - 只有超过这个时长才会被清理
@@ -20,6 +26,18 @@ const cache = createCache({
      * 该选项决定了，需要刷新缓存时，是否优先返回已有的缓存结果
      */
     nonBlocking: true,
+});
+
+cache.on("del", ({ key, error }) => {
+    log(`Removing "${key}"`);
+    if (error) log(`^^ Error ^^ ${error}`);
+});
+// cache.on("set", ({ key, error }) => {
+//     log(`Storing ${key}: ${error ?? "Done"}`);
+// });
+cache.on("refresh", ({ key, error }) => {
+    log(`Revalidating "${key}"`);
+    if (error) log(`^^ Error ^^ ${error}`);
 });
 
 // console.log({
@@ -47,7 +65,7 @@ export default cache;
 
 // ============================================================================
 
-export const getCacheId = (
+export const getCacheKey = (
     input:
         | string
         | ["home-page"]

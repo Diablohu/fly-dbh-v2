@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import cache, { getCacheId } from "@/services/cache";
+import sanityCache, { getCacheKey } from "@/services/sanity-cache";
 
 /**
  * 接收 Sanity CMS 发来的 webhook
@@ -15,16 +15,16 @@ export const POST: APIRoute = async ({
 
         const cacheId =
             body?._type === "approach_challenge"
-                ? getCacheId(["challenges-details", body?.slug || body?._id])
+                ? getCacheKey(["challenges-details", body?.slug || body?._id])
                 : undefined;
 
         if (cacheId) {
             try {
-                await cache.del(cacheId);
-                console.log("CMS Webhook received, cleared target cache", {
-                    body,
-                    cacheId,
-                });
+                await sanityCache.del(cacheId);
+                // console.log("CMS Webhook received, cleared target cache", {
+                //     body,
+                //     cacheId,
+                // });
                 return new Response(
                     JSON.stringify({
                         message: `Webhook received, cleared cache "${cacheId}"`,
