@@ -8,8 +8,21 @@ export const POST: APIRoute = async ({
     request,
     // cache
 }) => {
+    if (request.headers.get("Content-Type") === "application/json") {
+        const body = await request.json();
+        console.log("CMS Webhook", { body });
+
+        return new Response("TODO");
+        // return new Response(
+        //     JSON.stringify({
+        //         message: "Your name was: " + name,
+        //     }),
+        //     {
+        //         status: 200,
+        //     },
+        // );
+    }
     // const data = await request.formData();
-    console.log("CMS Webhook", request.body);
     // const { slug } = await request.json();
 
     // // Invalidate every response tagged 'products'...
@@ -21,5 +34,7 @@ export const POST: APIRoute = async ({
     // // ...or purge a single path directly.
     // await cache.invalidate({ path: `/products/${slug}` });
 
-    return new Response("TODO");
+    return new Response(
+        'Request Content-Type Error: Required "application/json"',
+    );
 };
