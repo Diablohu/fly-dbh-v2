@@ -1,5 +1,9 @@
 import type { APIRoute } from "astro";
 
+/**
+ * 接收 Sanity CMS 发来的 webhook
+ *  - 任何文档在 create、update 和 delete 时都会发送该 webhook
+ */
 export const POST: APIRoute = async ({ request, cache }) => {
     // const data = await request.formData();
     console.log({ request, cache });
