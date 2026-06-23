@@ -75,6 +75,9 @@ export const getCacheKey = (
         | ["video-tag-list", string]
         | ["challenges-details", string]
         | ["challenges-catalog", string, { from: number; length: number }]
+        | ["challenges-random", string, { index: number }]
+        | ["challenges-random-count"]
+        | ["challenges-hazard-list"]
         | ["search", string, { from: number; length: number }]
         | ["rss-feed"]
         | ["sitemap", string],

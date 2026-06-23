@@ -583,6 +583,11 @@ const actions = {
                         hazards,
                         onlyFullArticle,
                     })})`,
+                    {
+                        cache: {
+                            id: ["challenges-random-count"],
+                        },
+                    },
                 )) as unknown as number;
                 const randomIndex = Math.floor(Math.random() * (total + 1));
                 const queryString = getGroqQueryChallengeList({
@@ -594,7 +599,22 @@ const actions = {
                     length: 1,
                     projection: getGroqProjection("random-item"),
                 });
-                const res = await fetch<ChallengeItemType>(queryString);
+                const res = await fetch<ChallengeItemType>(queryString, {
+                    cache: {
+                        id: [
+                            "challenges-random",
+                            JSON.stringify({
+                                difficulties,
+                                types,
+                                hazards,
+                                onlyFullArticle,
+                            }),
+                            {
+                                index: randomIndex,
+                            },
+                        ],
+                    },
+                });
                 // console.log({ total, randomIndex, queryString, res });
                 if (!res || (Array.isArray(res) && res.length === 0)) {
                     const err = new ActionError({
@@ -628,7 +648,11 @@ const actions = {
                     difficulty: ChallengeDifficultyType;
                     comment: string;
                     emoji: string;
-                }>(queryString);
+                }>(queryString, {
+                    cache: {
+                        id: ["challenges-hazard-list"],
+                    },
+                });
                 return res;
             } catch (err) {
                 actionErrorHandler(err);
