@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 
-export const POST: APIRoute = async (/*{ request, cache }*/) => {
+export const POST: APIRoute = async ({ request, cache }) => {
+    const data = await request.formData();
+    console.log({ request, cache, data });
     // const { slug } = await request.json();
 
     // // Invalidate every response tagged 'products'...
@@ -12,5 +14,5 @@ export const POST: APIRoute = async (/*{ request, cache }*/) => {
     // // ...or purge a single path directly.
     // await cache.invalidate({ path: `/products/${slug}` });
 
-    return new Response('TODO');
+    return new Response("TODO");
 };
