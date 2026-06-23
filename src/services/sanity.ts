@@ -1,6 +1,10 @@
 import { createClient, type SanityDocument } from "@sanity/client";
 import { defaultCacheMaxAge, defaultCacheStaleWhileRevalidate } from "@/global";
-import sanityCache, { getCacheKey } from "./sanity-cache";
+import sanityCache, {
+    getCacheKey,
+    ttl,
+    refreshThreshold,
+} from "./sanity-cache";
 
 // console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
 // ============================================================================
@@ -62,9 +66,9 @@ export const fetch = async <
               ? options.cache.maxAge + defaultCacheStaleWhileRevalidate
               : options.cache?.staleWhileRevalidate
                 ? defaultCacheMaxAge + options.cache.staleWhileRevalidate
-                : undefined,
+                : ttl,
 
         // refreshThreshold
-        options.cache?.staleWhileRevalidate,
+        options.cache?.staleWhileRevalidate ?? refreshThreshold,
     );
 };
