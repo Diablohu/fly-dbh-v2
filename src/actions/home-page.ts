@@ -137,7 +137,7 @@ ${(
                             ) as unknown as HomeVideoDocumentType[];
                         },
                         cache: {
-                            id: ["home-page"],
+                            key: ["home-page"],
                         },
                     },
                 )) as unknown as HomeCollectionsType;

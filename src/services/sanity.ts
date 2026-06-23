@@ -30,15 +30,15 @@ export const fetch = async <
             query: string,
         ) => SanityDocument<T>[];
         cache?: {
-            id?: Parameters<typeof getCacheKey>[0];
+            key?: Parameters<typeof getCacheKey>[0];
             maxAge?: number;
             staleWhileRevalidate?: number;
         };
     } = {},
 ) => {
     const key =
-        (typeof options.cache?.id !== "undefined"
-            ? getCacheKey(options.cache.id)
+        (typeof options.cache?.key !== "undefined"
+            ? getCacheKey(options.cache.key)
             : undefined) ?? `SANITY:${queryString}`;
 
     return await sanityCache.wrap(

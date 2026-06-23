@@ -423,7 +423,7 @@ const actions = {
                         return r as unknown as SanityDocument<ChallengeListResponseDataType>[];
                     },
                     cache: {
-                        id: [
+                        key: [
                             "challenges-catalog",
                             JSON.stringify({
                                 catalog,
@@ -545,7 +545,7 @@ const actions = {
                         return res[0] as unknown as SanityDocument<ChallengeItemType>[];
                     },
                     cache: {
-                        id: ["challenges-details", _cmsIdOrSlug],
+                        key: ["challenges-details", _cmsIdOrSlug],
                     },
                 })) as unknown as ChallengeItemType;
 
@@ -585,7 +585,7 @@ const actions = {
                     })})`,
                     {
                         cache: {
-                            id: ["challenges-random-count"],
+                            key: ["challenges-random-count"],
                         },
                     },
                 )) as unknown as number;
@@ -601,7 +601,7 @@ const actions = {
                 });
                 const res = await fetch<ChallengeItemType>(queryString, {
                     cache: {
-                        id: [
+                        key: [
                             "challenges-random",
                             JSON.stringify({
                                 difficulties,
@@ -650,7 +650,7 @@ const actions = {
                     emoji: string;
                 }>(queryString, {
                     cache: {
-                        id: ["challenges-hazard-list"],
+                        key: ["challenges-hazard-list"],
                     },
                 });
                 return res;

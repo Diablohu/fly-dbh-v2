@@ -175,7 +175,7 @@ ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
                             return r as unknown as SanityDocument<ReturnVideoItemType>[];
                         },
                         cache: {
-                            id: [
+                            key: [
                                 "video-list",
                                 filters
                                     ?.map(({ type, slug }) => type + "_" + slug)
@@ -334,7 +334,7 @@ ${
                             },
                             // ttl: defaultCacheTtl * 3,
                             cache: {
-                                id: [
+                                key: [
                                     "video-list-info",
                                     type + "_" + cmsIdOrSlug,
                                 ],
@@ -516,7 +516,7 @@ ${
                     {
                         // ttl: defaultCacheTtl * 3,
                         cache: {
-                            id: ["video-tag-list", type ?? "_"],
+                            key: ["video-tag-list", type ?? "_"],
                         },
                     },
                 );

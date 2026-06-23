@@ -298,7 +298,7 @@ const actions = {
                             return res;
                         },
                         cache: {
-                            id: ["search", keyword, { from, length }],
+                            key: ["search", keyword, { from, length }],
                         },
                     },
                 )) as unknown as ResultType;

@@ -114,7 +114,7 @@ const actions = {
                             return res;
                         },
                         cache: {
-                            id: ["video-details", _cmsIdOrSlug],
+                            key: ["video-details", _cmsIdOrSlug],
                         },
                     })
                 )[0];

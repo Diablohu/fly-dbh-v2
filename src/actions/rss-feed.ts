@@ -65,7 +65,7 @@ const actions = {
                             return res;
                         },
                         cache: {
-                            id: ["rss-feed"],
+                            key: ["rss-feed"],
                         },
                     },
                 );

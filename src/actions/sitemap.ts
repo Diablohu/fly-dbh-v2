@@ -29,7 +29,7 @@ ${getGroqFilterVideo("")} {
                         _updatedAt: string;
                     }
                 >(queryString, {
-                    cache: { id: ["sitemap", "videos"], ...cacheOptions },
+                    cache: { key: ["sitemap", "videos"], ...cacheOptions },
                 });
             } catch (err) {
                 actionErrorHandler(err);
@@ -54,7 +54,7 @@ ${getGroqFilterVideo("")} {
                     }
                 >(queryString, {
                     cache: {
-                        id: ["sitemap", "video-categories"],
+                        key: ["sitemap", "video-categories"],
                         ...cacheOptions,
                     },
                 });
@@ -87,7 +87,7 @@ ${getGroqFilterVideo("")} {
                         };
                     }
                 >(queryString, {
-                    cache: { id: ["sitemap", "challenges"], ...cacheOptions },
+                    cache: { key: ["sitemap", "challenges"], ...cacheOptions },
                 });
             } catch (err) {
                 actionErrorHandler(err);
