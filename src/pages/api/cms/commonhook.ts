@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({
         // console.log("CMS Webhook", { body });
 
         const cacheId =
-            body?.type === "challenge"
+            body?.type === "approach_challenge"
                 ? getCacheId(["challenges-details", body?.slug || body?._id])
                 : undefined;
 
@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({
         // return new Response("TODO");
         return new Response(
             JSON.stringify({
-                message: "Webhook received with no action required",
+                message: "Webhook received, no action executed on server-side.",
             }),
             {
                 status: 200,
