@@ -113,6 +113,9 @@ const actions = {
                             res[0].cover = resolveAssetPath(res[0].cover);
                             return res;
                         },
+                        cache: {
+                            id: ["video-details", _cmsIdOrSlug],
+                        },
                     })
                 )[0];
 

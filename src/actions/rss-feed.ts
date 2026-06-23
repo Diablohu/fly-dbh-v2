@@ -64,6 +64,9 @@ const actions = {
                             // });
                             return res;
                         },
+                        cache: {
+                            id: ["rss-feed"],
+                        },
                     },
                 );
             } catch (err) {

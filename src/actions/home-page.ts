@@ -136,6 +136,9 @@ ${(
                                 { config: [], challenges: [] },
                             ) as unknown as HomeVideoDocumentType[];
                         },
+                        cache: {
+                            id: ["home-page"],
+                        },
                     },
                 )) as unknown as HomeCollectionsType;
             } catch (err) {

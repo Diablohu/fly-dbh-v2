@@ -1,5 +1,6 @@
 import { createClient, type SanityDocument } from "@sanity/client";
-import cache from "./_cache";
+import { defaultCacheMaxAge, defaultCacheStaleWhileRevalidate } from "@/global";
+import cache, { getCacheId } from "./cache";
 
 // console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
 // ============================================================================
@@ -23,15 +24,38 @@ export const fetch = async <
     T extends Record<string, any> = Record<string, any>,
 >(
     queryString: string,
-    options?: {
+    options: {
         transform?: (
             res: SanityDocument<T>[],
             query: string,
         ) => SanityDocument<T>[];
-    } & Partial<Parameters<typeof cache.wrap>[2]>,
-) =>
-    await cache.wrap(
-        `SANITY:${queryString}`,
+        cache?: {
+            id?: Parameters<typeof getCacheId>[0];
+            maxAge?: number;
+            staleWhileRevalidate?: number;
+        };
+    } = {},
+) => {
+    const cacheId =
+        typeof options.cache?.id === "string"
+            ? options.cache?.id
+            : Array.isArray(options.cache?.id)
+              ? options.cache.id
+                    .map((segment) =>
+                        typeof segment === "object"
+                            ? JSON.stringify(segment)
+                            : segment,
+                    )
+                    .join(":")
+              : `SANITY:${queryString}`;
+
+    // console.log(cacheId, new Date((await cache.ttl(cacheId)) ?? ""));
+
+    return await cache.wrap(
+        // cache id
+        cacheId,
+
+        // cache data
         async () => {
             const posts = await client.fetch<SanityDocument<T>[]>(queryString);
 
@@ -40,6 +64,17 @@ export const fetch = async <
 
             return posts;
         },
-        options?.ttl,
-        options?.refreshThreshold,
+
+        // ttl
+        options.cache?.maxAge && options.cache?.staleWhileRevalidate
+            ? options.cache.maxAge + options.cache.staleWhileRevalidate
+            : options.cache?.maxAge
+              ? options.cache.maxAge + defaultCacheStaleWhileRevalidate
+              : options.cache?.staleWhileRevalidate
+                ? defaultCacheMaxAge + options.cache.staleWhileRevalidate
+                : undefined,
+
+        // refreshThreshold
+        options.cache?.staleWhileRevalidate,
     );
+};

@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import cache, { getCacheId } from "@/services/cache";
 
 /**
  * 接收 Sanity CMS 发来的 webhook
@@ -10,17 +11,37 @@ export const POST: APIRoute = async ({
 }) => {
     if (request.headers.get("Content-Type") === "application/json") {
         const body = await request.json();
-        console.log("CMS Webhook", { body });
+        // console.log("CMS Webhook", { body });
 
-        return new Response("TODO");
-        // return new Response(
-        //     JSON.stringify({
-        //         message: "Your name was: " + name,
-        //     }),
-        //     {
-        //         status: 200,
-        //     },
-        // );
+        const cacheId =
+            body?.type === "challenge"
+                ? getCacheId(["challenges-details", body?.slug || body?._id])
+                : undefined;
+
+        if (cacheId) {
+            console.log("CMS Webhook", { body, cacheId });
+            try {
+                await cache.del(cacheId);
+            } catch (e) {}
+            return new Response(
+                JSON.stringify({
+                    message: `Cleared cache "${cacheId}"`,
+                }),
+                {
+                    status: 200,
+                },
+            );
+        }
+
+        // return new Response("TODO");
+        return new Response(
+            JSON.stringify({
+                message: "Webhook received with no action required",
+            }),
+            {
+                status: 200,
+            },
+        );
     }
     // const data = await request.formData();
     // const { slug } = await request.json();

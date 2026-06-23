@@ -9,7 +9,7 @@ import {
     type ChallengeItemType,
     type AircraftTypes,
 } from "@/types";
-import { allLevel2Tags, defaultCacheTtl } from "@/global";
+import { allLevel2Tags } from "@/global";
 
 import { fetch } from "@/services/sanity";
 import { transformImagePath } from "@/services/sanity-helpers";
@@ -174,6 +174,15 @@ ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
                             r.page = Math.floor(from / length) + 1;
                             return r as unknown as SanityDocument<ReturnVideoItemType>[];
                         },
+                        cache: {
+                            id: [
+                                "video-list",
+                                filters
+                                    ?.map(({ type, slug }) => type + "_" + slug)
+                                    .join("+") || "_",
+                                { from, length },
+                            ],
+                        },
                     },
                 )) as unknown as ResponseDataType;
             } catch (err) {
@@ -323,7 +332,13 @@ ${
                                 if (r.logo) r.logo = transformImagePath(r.logo);
                                 return [r];
                             },
-                            ttl: defaultCacheTtl * 3,
+                            // ttl: defaultCacheTtl * 3,
+                            cache: {
+                                id: [
+                                    "video-list-info",
+                                    type + "_" + cmsIdOrSlug,
+                                ],
+                            },
                         },
                     )
                 )[0];
@@ -499,7 +514,10 @@ ${
 }
                 `,
                     {
-                        ttl: defaultCacheTtl * 3,
+                        // ttl: defaultCacheTtl * 3,
+                        cache: {
+                            id: ["video-tag-list", type ?? "_"],
+                        },
                     },
                 );
             } catch (err) {

@@ -422,6 +422,18 @@ const actions = {
                         r.page = Math.floor(from / length) + 1;
                         return r as unknown as SanityDocument<ChallengeListResponseDataType>[];
                     },
+                    cache: {
+                        id: [
+                            "challenges-catalog",
+                            JSON.stringify({
+                                catalog,
+                                difficulties,
+                                hazards,
+                                ...params,
+                            }),
+                            { from, length },
+                        ],
+                    },
                 })) as unknown as ChallengeListResponseDataType;
 
                 if (!res) {
@@ -531,6 +543,9 @@ const actions = {
                                 post.cover = transformImagePath(post.cover);
                             });
                         return res[0] as unknown as SanityDocument<ChallengeItemType>[];
+                    },
+                    cache: {
+                        id: ["challenges-details", _cmsIdOrSlug],
                     },
                 })) as unknown as ChallengeItemType;
 

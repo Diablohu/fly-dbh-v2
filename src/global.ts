@@ -200,16 +200,23 @@ export const getChallengePageLink = (idOrSlug?: string) => {
 // ============================================================================
 //
 // #region 缓存
-// 详见 `@/src/services/_cache.ts`
 //
 // ============================================================================
 
-export const defaultCacheTtl = 60 * 60_1000; // 1 hour
-export const defaultCacheRefreshThreshold =
-    defaultCacheTtl -
-    (import.meta.env.DEV
-        ? 5_000 // elapsed: 5 seconds
-        : 5 * 60_000); // elapsed: 5 minutes
+/**
+ * 缓存持续这段时间后失效
+ *  - 对应 [`Cache-Control` Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control) 的 `max-age`
+ */
+export const defaultCacheMaxAge = import.meta.env.DEV
+    ? 5_000 // 5 seconds
+    : 5 * 60_000; // 5 minutes
+/**
+ * 尝试调用缓存内容时，如果已经过 `max-age` 存活时间，且又在该追加的时间范围内：
+ *  1. 直接返回缓存结果
+ *  2. 后台获取新的数据，刷新缓存，重新计时
+ *  - 对应 [`Cache-Control` Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control) 的 `stale-while-revalidate`
+ */
+export const defaultCacheStaleWhileRevalidate = 60 * 60_000; // 1 hour
 
 // #endregion
 // ============================================================================

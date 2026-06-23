@@ -6,8 +6,8 @@ import actionErrorHandler from "./_error-handler";
 import getGroqFilterVideo from "@/utils/groq/get-filter-video";
 
 const cacheOptions = {
-    ttl: 1 * 24 * 60 * 60_000, // 1 day
-    refreshThreshold: 1 * 24 * 60 * 60_000 - 30 * 60_000, // elapsed: 30 min
+    maxAge: 1 * 24 * 60 * 60_000 - 30 * 60_000, // elapsed: 30 min
+    staleWhieRevalidate: 1 * 24 * 60 * 60_000, // 1 day
 };
 
 const actions = {
@@ -28,7 +28,9 @@ ${getGroqFilterVideo("")} {
                     Pick<VideoItemType, "_id" | "slug"> & {
                         _updatedAt: string;
                     }
-                >(queryString, { ...cacheOptions });
+                >(queryString, {
+                    cache: { id: ["sitemap", "videos"], ...cacheOptions },
+                });
             } catch (err) {
                 actionErrorHandler(err);
             }
@@ -50,7 +52,12 @@ ${getGroqFilterVideo("")} {
                     Pick<VideoItemType, "_id" | "slug"> & {
                         _updatedAt: string;
                     }
-                >(queryString, { ...cacheOptions });
+                >(queryString, {
+                    cache: {
+                        id: ["sitemap", "video-categories"],
+                        ...cacheOptions,
+                    },
+                });
             } catch (err) {
                 actionErrorHandler(err);
             }
@@ -79,7 +86,9 @@ ${getGroqFilterVideo("")} {
                             _updatedAt: string;
                         };
                     }
-                >(queryString, { ...cacheOptions });
+                >(queryString, {
+                    cache: { id: ["sitemap", "challenges"], ...cacheOptions },
+                });
             } catch (err) {
                 actionErrorHandler(err);
             }
