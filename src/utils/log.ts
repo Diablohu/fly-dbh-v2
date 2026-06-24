@@ -1,4 +1,5 @@
 import dbg from "debug";
+import getRuntimeEnv from "@/utils/get-runtime-env";
 
 // ============================================================================
 
@@ -42,7 +43,7 @@ challenge.namespace = names.CHALLENGE;
 
 // ============================================================================
 
-if (import.meta.env.DEV || import.meta.env.MODE === "test") {
+if (getRuntimeEnv() === "development") {
     debug.enabled = true;
     cookie.enabled = true;
     search.enabled = true;

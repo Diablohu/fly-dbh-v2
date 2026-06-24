@@ -1,9 +1,10 @@
 import type { APIRoute } from "astro";
+import getRuntimeEnv from "@/utils/get-runtime-env";
 
 const getRobotsTxt = (site: URL) => `\
 User-agent: *
 ${
-    import.meta.env.FLYDBH_BUILD_MODE === "next"
+    getRuntimeEnv() === "next"
         ? "Disallow: /"
         : `${["/includes/", "/admin/"]
               .map((path) => `Disallow: ${path}`)

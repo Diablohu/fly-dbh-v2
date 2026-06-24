@@ -21,8 +21,6 @@ const Header: FC<
                     styles["header"],
                     {
                         [styles["mod-hidden"]]: !header,
-                        [styles[`mod-mode-${import.meta.env.MODE}`]]:
-                            import.meta.env.MODE !== "production",
                     },
                 ])}
             >
@@ -48,7 +46,7 @@ const Header: FC<
                                         [styles["is-active"]]: isRouteActive(
                                             route,
                                             originPathname,
-                                            extraChecks
+                                            extraChecks,
                                         ),
                                     },
                                 ])}

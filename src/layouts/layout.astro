@@ -2,6 +2,14 @@
 import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
 
+import { type ComponentProps } from "react";
+import {
+    type ValidVideoSourceType,
+    type ValidContentListAutoLoadMoreType,
+    type ValidPageContentType,
+    type ValidVideoItemShowPlatformLinksOnHoverType,
+} from "@/types";
+
 import { gtag as gtagId } from "@/constants/google-analytics";
 import {
     VIDEO_SOURCE,
@@ -10,12 +18,6 @@ import {
     VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
 } from "@/constants/cookies";
 import { GLOBAL_PERSIST_RESOURCES_CONTAINER } from "@/constants/element-ids";
-import {
-    type ValidVideoSourceType,
-    type ValidContentListAutoLoadMoreType,
-    type ValidPageContentType,
-    type ValidVideoItemShowPlatformLinksOnHoverType,
-} from "@/types";
 
 import LogoSVG from "@/assets/logo.svg";
 import bannerCoverImage from "@/assets/banner-video/cover-low.webp";
@@ -33,8 +35,9 @@ import BlurredBackgroundImage from "./_components/blurred-background-image";
 import GlobalSymbolDefinitionsRaw from "@/assets/symbol-defs.svg?raw";
 
 import { themeColorLight, themeColorDark, title } from "@/global";
+import getRuntimeEnv from "@/utils/get-runtime-env";
+
 import "@/global.less";
-import type React from "react";
 
 export { type MainBlockWithSidebarProps };
 
@@ -112,9 +115,7 @@ interface Props {
      * 渲染模糊的背景图
      *  - 需传入 Sanity CMS 图片文件名或 Sanity 图片链接
      */
-    blurredBackgroundImage?: React.ComponentProps<
-        typeof BlurredBackgroundImage
-    >;
+    blurredBackgroundImage?: ComponentProps<typeof BlurredBackgroundImage>;
 }
 
 // ============================================================================
@@ -158,6 +159,7 @@ const { htmlClassList = [] } = Astro.props;
 <html
     lang={Astro.currentLocale || "zh"}
     data-content-type={Astro.props.contentType}
+    data-runtime-env={getRuntimeEnv()}
     class:list={[
         forcedColorScheme ? `force-color-scheme-${forcedColorScheme}` : "",
         videoItemShowPlatformLinksOnHover === "1"

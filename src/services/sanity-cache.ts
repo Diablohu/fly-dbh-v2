@@ -1,10 +1,11 @@
 import { createCache } from "cache-manager";
 import debug from "debug";
 import { defaultCacheMaxAge, defaultCacheStaleWhileRevalidate } from "@/global";
+import getRuntimeEnv from "@/utils/get-runtime-env";
 
 const log = debug("Sanity Cache");
 log.namespace = "Sanity Cache";
-log.enabled = true;
+log.enabled = ["next", "development"].includes(getRuntimeEnv());
 
 // ============================================================================
 
