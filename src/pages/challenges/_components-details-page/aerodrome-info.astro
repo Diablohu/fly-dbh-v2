@@ -316,7 +316,10 @@ type Props = {
 
     dl[data-info="codes"] dd {
         font-family: var(--font-family-monospace);
+        display: flex;
+        flex-flow: row wrap;
         & > span {
+            flex: 1;
             display: inline-block;
             position: relative;
             padding-left: 2.75em;
