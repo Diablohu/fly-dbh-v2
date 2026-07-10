@@ -154,7 +154,7 @@ if (error) {
                                 list: [],
                             },
                             "04d17ab0-b28e-4132-9418-3fc2b85bbf4f": {
-                                name: "评测",
+                                name: "测评",
                                 slug: "review",
                                 list: [],
                             },
@@ -196,7 +196,7 @@ if (error) {
                                     />
                                 </Fragment>
                             )}
-                            {/* 遍历到 `评测` 类别，追加请求结果中的 `extra` 内容 */}
+                            {/* 遍历到 `测评` 类别，追加请求结果中的 `extra` 内容 */}
                             {slug === "review" &&
                                 extra.map(({ name }) =>
                                     Array.isArray(data[name]) &&
@@ -315,7 +315,7 @@ if (error) {
                                 />
                             </Fragment>
                         )}
-                        {/* 遍历到 `评测` 类别，追加请求结果中的 `extra` 内容 */}
+                        {/* 遍历到 `测评` 类别，追加请求结果中的 `extra` 内容 */}
                         {slug === "tutorial" &&
                             extra.map(({ name }) =>
                                 Array.isArray(data[name]) &&

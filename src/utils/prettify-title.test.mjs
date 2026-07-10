@@ -31,8 +31,8 @@ import prettifyTitle from "./prettify-title";
         "教你在微软模拟飞行的客舱里“走动” & 定制舱外视角",
     ],
     [
-        "iniBuilds “5APU” A340-300 评测・上手建议 @ 微软模拟飞行2024",
-        "iniBuilds “5APU” A340-300 评测・上手建议 @ 微软模拟飞行 2024",
+        "iniBuilds “5APU” A340-300 测评・上手建议 @ 微软模拟飞行2024",
+        "iniBuilds “5APU” A340-300 测评・上手建议 @ 微软模拟飞行 2024",
     ],
     [
         "LPV进近是啥怎么操作？导航精度堪比盲降？ #模拟飞行小知识",
