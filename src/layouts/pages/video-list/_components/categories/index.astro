@@ -22,6 +22,8 @@ import ClockHollow from "@/assets/svg-symbols/clock-hollow.svg?raw";
 import ClockFill from "@/assets/svg-symbols/clock-fill.svg?raw";
 import TagsHollow from "@/assets/svg-symbols/tags-hollow.svg?raw";
 import TagsFill from "@/assets/svg-symbols/tags-fill.svg?raw";
+import HappyHollow from "@/assets/svg-symbols/mask-happy.svg?raw";
+import HappyFill from "@/assets/svg-symbols/mask-happy-fill.svg?raw";
 // import ArrowLeftSvg from "@/assets/arrow/left3.svg";
 import ArrowRightSvg from "@/assets/arrow/right3.svg";
 
@@ -110,6 +112,11 @@ sidebarInfos?.forEach((tag) => {
             case "short": {
                 item.iconHtml = MovieHollow;
                 item.iconHtmlActive = MovieFill;
+                break;
+            }
+            case "fun": {
+                item.iconHtml = HappyHollow;
+                item.iconHtmlActive = HappyFill;
                 break;
             }
         }
