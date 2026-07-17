@@ -93,7 +93,13 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
     </dl>
     <dl>
         <dt>目的</dt>
-        <dd class="code" set:html={getAerodromeCodeHtml(route.destination)} />
+        <dd
+            class="code"
+            set:html={getAerodromeCodeHtml(route.destination) +
+                (route.origin?._id === route.destination?._id
+                    ? "<span class='text'>（本场起降）</span>"
+                    : "")}
+        />
     </dl>
     <dl>
         <dt>进场</dt>
@@ -102,7 +108,7 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
                 <dd class="procedures">
                     {route.star.map(({ rwy, star }) => (
                         <span>
-                            <em>{parseArrStr(star)}</em>
+                            <em>{parseArrStr(star)} </em>
                             {rwy && (
                                 <>
                                     ＞ <em>{parseArrStr(rwy)}</em>{" "}
@@ -182,6 +188,14 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
                 & > span {
                     display: inline-block;
                     white-space: nowrap;
+                }
+                :global(.text) {
+                    font-family: var(--global-font-family);
+                    color: var(--text-color-secondary);
+                }
+                :global(.slash) {
+                    color: var(--text-color-secondary);
+                    padding: 0 0.3333em;
                 }
             }
             &.procedures {
