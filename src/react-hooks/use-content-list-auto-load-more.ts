@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { atom } from "nanostores";
 import { useStore } from "@nanostores/react";
-import { parse as parseCookie, serialize as serializeCookie } from "cookie";
+import { parseCookie, stringifySetCookie } from "cookie";
 
 import {
     CONTENT_LIST_AUTO_LOAD_MORE,
@@ -27,11 +27,11 @@ if (globalThis.window) {
     // 监听 `contentListAutoLoadMore` 变化，将最新值写入 cookie
     contentListAutoLoadMore.listen((newValue /*, oldValue*/) => {
         const v = !newValue ? "0" : newValue;
-        document.cookie = serializeCookie(
-            CONTENT_LIST_AUTO_LOAD_MORE,
-            v,
-            getGeneralCookieOptions(),
-        );
+        document.cookie = stringifySetCookie({
+            name: CONTENT_LIST_AUTO_LOAD_MORE,
+            value: v,
+            ...getGeneralCookieOptions(),
+        });
         logCookie(`set CONTENT_LIST_AUTO_LOAD_MORE to ${v}`);
     });
 }

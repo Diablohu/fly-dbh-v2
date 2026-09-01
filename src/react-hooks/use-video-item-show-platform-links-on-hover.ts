@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { atom } from "nanostores";
 import { useStore } from "@nanostores/react";
-import { parse as parseCookie, serialize as serializeCookie } from "cookie";
+import { parseCookie, stringifySetCookie } from "cookie";
 
 import {
     VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
@@ -27,11 +27,11 @@ if (globalThis.window) {
     // 监听 `contentListAutoLoadMore` 变化，将最新值写入 cookie
     videoItemShowPlatformLinksOnHover.listen((newValue /*, oldValue*/) => {
         const v = !newValue ? "0" : newValue;
-        document.cookie = serializeCookie(
-            VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
-            v,
-            getGeneralCookieOptions(),
-        );
+        document.cookie = stringifySetCookie({
+            name: VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER,
+            value: v,
+            ...getGeneralCookieOptions(),
+        });
         logCookie(`set VIDEO_ITEM_SHOW_PLATFORM_LINKS_ON_HOVER to ${v}`);
     });
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { atom } from "nanostores";
 import { useStore } from "@nanostores/react";
-import { parse as parseCookie, serialize as serializeCookie } from "cookie";
+import { parseCookie, stringifySetCookie } from "cookie";
 
 import {
     VIDEO_SOURCE,
@@ -25,11 +25,11 @@ if (globalThis.window) {
     // 客户端中
     // 监听 `videoSource` 变化，将最新值写入 cookie
     videoSource.listen((newValue /*, oldValue*/) => {
-        document.cookie = serializeCookie(
-            VIDEO_SOURCE,
-            newValue,
-            getGeneralCookieOptions(),
-        );
+        document.cookie = stringifySetCookie({
+            name: VIDEO_SOURCE,
+            value: newValue,
+            ...getGeneralCookieOptions(),
+        });
         logCookie(`set VIDEO_SOURCE to ${newValue}`);
     });
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { atom } from "nanostores";
 import { useStore } from "@nanostores/react";
-import { parse as parseCookie, serialize as serializeCookie } from "cookie";
+import { parseCookie, stringifySetCookie } from "cookie";
 
 import {
     FORCE_COLOR_SCHEME,
@@ -28,17 +28,19 @@ if (globalThis.window) {
         document.documentElement.classList.remove("force-color-scheme-light");
 
         if (!newValue) {
-            document.cookie = serializeCookie(FORCE_COLOR_SCHEME, "", {
+            document.cookie = stringifySetCookie({
+                name: FORCE_COLOR_SCHEME,
+                value: "",
                 ...getGeneralCookieOptions(),
                 expires: new Date(),
             });
             logCookie("removed FORCE_COLOR_SCHEME");
         } else {
-            document.cookie = serializeCookie(
-                FORCE_COLOR_SCHEME,
-                newValue,
-                getGeneralCookieOptions(),
-            );
+            document.cookie = stringifySetCookie({
+                name: FORCE_COLOR_SCHEME,
+                value: newValue,
+                ...getGeneralCookieOptions(),
+            });
             document.documentElement.classList.add(
                 `force-color-scheme-${newValue}`,
             );
