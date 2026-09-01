@@ -1,5 +1,5 @@
 import { htmlAttributeImageViewer } from "@/global";
-// import md5 from "md5";
+import md5 from "md5";
 import loadResources from "@/utils/load-resources";
 
 // ============================================================================
@@ -37,13 +37,13 @@ export async function openImageViewer(opener: HTMLElement, src: string) {
         {
             type: "style",
             src: "/libs/viewerjs/viewer.min.css",
-            // id: "i" + md5("styleTagIdViewerCss"),
+            id: "i" + md5("styleTagIdViewerCss"),
             // options: { persist: true },
         },
         {
             type: "style",
             src: "/styles/override-viewer.css",
-            // id: "i" + md5("idStyleOverrideCss"),
+            id: "i" + md5("idStyleOverrideCss"),
             // options: { persist: true },
         },
         {
