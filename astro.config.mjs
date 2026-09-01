@@ -109,6 +109,7 @@ export default defineConfig({
             },
         ],
     },
+    session: false,
     // cache: {
     //     provider: memoryCache(),
     // },
