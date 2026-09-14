@@ -109,7 +109,11 @@
 
     & > .image,
     & > .glossy-overlay {
-        background: no-repeat 50% calc(50% + var(--global-header-height) / 2) /
+        background: no-repeat 50%
+            calc(
+                50% + var(--global-header-height) / 2 +
+                    var(--custom-image-position-offset-y, 0%)
+            ) /
             cover;
         transform: translateY(var(--hero-image-offset-y));
     }

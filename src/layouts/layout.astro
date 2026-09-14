@@ -190,6 +190,7 @@ const { htmlClassList = [] } = Astro.props;
                 is:inline
                 set:html={`:root {
     --light-theme-color: ${themeColorLight};
+    --light-theme-color-p-0: ${themeColorLight}00;
     --light-theme-color-p-20: ${themeColorLight}33;
     --light-theme-color-p-30: ${themeColorLight}4d;
     --light-theme-color-p-40: ${themeColorLight}66;
@@ -199,6 +200,7 @@ const { htmlClassList = [] } = Astro.props;
     --light-theme-color-p-80: ${themeColorLight}cc;
     --light-theme-color-p-90: ${themeColorLight}e6;
     --dark-theme-color: ${themeColorDark};
+    --dark-theme-color-p-0: ${themeColorDark}00;
     --dark-theme-color-p-20: ${themeColorDark}33;
     --dark-theme-color-p-30: ${themeColorDark}4d;
     --dark-theme-color-p-40: ${themeColorDark}66;
@@ -210,6 +212,8 @@ const { htmlClassList = [] } = Astro.props;
 }`}
             ></style>
             <Font cssVariable="--font-helvetica-compressed" />
+            <Font cssVariable="--font-airbus-rtpi" />
+            <Font cssVariable="--font-fbw-display-eis-a380-slashed-zero" />
         </Fragment>
         {
             forcedColorScheme === "dark" ? (

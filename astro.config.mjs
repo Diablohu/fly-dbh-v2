@@ -79,6 +79,32 @@ export default defineConfig({
                 ],
             },
         },
+        {
+            provider: fontProviders.local(),
+            name: "AirbusRTPI",
+            cssVariable: "--font-airbus-rtpi",
+            fallbacks: ["sans-serif"],
+            options: {
+                variants: [
+                    {
+                        src: ["./src/assets/fonts/AirbusRTPI.ttf"],
+                    },
+                ],
+            },
+        },
+        {
+            provider: fontProviders.local(),
+            name: "FBW Display EIS A380 Slashed Zero",
+            cssVariable: "--font-fbw-display-eis-a380-slashed-zero",
+            fallbacks: ["sans-serif"],
+            options: {
+                variants: [
+                    {
+                        src: ["./src/assets/fonts/FBW-Display-EIS-A380-SlashedZero.ttf"],
+                    },
+                ],
+            },
+        },
     ],
 
     // #region 多语言

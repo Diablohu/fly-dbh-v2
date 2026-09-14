@@ -29,6 +29,7 @@ const HeroImage: FC<
         expandedHeight?: number;
         sticky?: boolean;
         parallax?: boolean;
+        imagePositionOffsetY?: string;
     } & HTMLAttributes<HTMLDivElement>
 > & {
     observer?: IntersectionObserver;
@@ -42,6 +43,7 @@ const HeroImage: FC<
     expandedHeight,
     sticky = false,
     parallax = false,
+    imagePositionOffsetY = 0,
     children,
 }) => {
     const ContainerRef = useRef<HTMLDivElement>(null);
@@ -59,10 +61,10 @@ const HeroImage: FC<
     const resetCssVariables = useCallback(() => {
         document.documentElement.style.removeProperty("--hero-image-offset-y");
         document.documentElement.style.removeProperty(
-            "--hero-image-glossy-opacity"
+            "--hero-image-glossy-opacity",
         );
         document.documentElement.style.removeProperty(
-            "--hero-image-stiky-height"
+            "--hero-image-stiky-height",
         );
     }, []);
 
@@ -72,14 +74,14 @@ const HeroImage: FC<
         if (!HeroImage.isInViewport) {
             document.documentElement.style.setProperty(
                 "--hero-image-glossy-opacity",
-                `1`
+                `1`,
             );
         } else if (ProbeRef.current) {
             const targetHeight = ProbeRef.current.offsetHeight;
             const headerHeight = parseInt(
                 window
                     .getComputedStyle(document.documentElement)
-                    .getPropertyValue("--global-header-height")
+                    .getPropertyValue("--global-header-height"),
             );
             document.documentElement.style.setProperty(
                 "--hero-image-glossy-opacity",
@@ -90,15 +92,15 @@ const HeroImage: FC<
                         Math.max(
                             0,
                             (targetHeight - window.scrollY - headerHeight) /
-                                targetHeight
-                        )
+                                targetHeight,
+                        ),
                     )
-                }`
+                }`,
             );
             document.documentElement.style.setProperty(
                 "--hero-image-offset-y",
                 // `${Math.min(targetHeight - headerHeight, (Math.max(window.scrollY, 0) * 4) / 5)}px`
-                `${(Math.min(window.scrollY, targetHeight - headerHeight) * 2) / 3}px`
+                `${(Math.min(window.scrollY, targetHeight - headerHeight) * 2) / 3}px`,
             );
         }
     }, [parallax]);
@@ -112,14 +114,14 @@ const HeroImage: FC<
         if (!HeroImage.isInViewport) {
             document.documentElement.style.setProperty(
                 "--hero-image-glossy-opacity",
-                `1`
+                `1`,
             );
         } else if (WrapperRef.current) {
             // --hero-image-stiky-height
             const targetHeight = WrapperRef.current.offsetHeight;
             document.documentElement.style.setProperty(
                 "--hero-image-stiky-height",
-                `${targetHeight}px`
+                `${targetHeight}px`,
             );
         }
     }, []);
@@ -142,7 +144,7 @@ const HeroImage: FC<
                             // );
                             HeroImage.isInViewport = true;
                             ContainerRef.current?.classList.remove(
-                                styles["mod-not-in-view"]
+                                styles["mod-not-in-view"],
                             );
                             // console.log("HeroImage is in view");
                         } else {
@@ -153,13 +155,13 @@ const HeroImage: FC<
                             // );
                             HeroImage.isInViewport = false;
                             ContainerRef.current?.classList.add(
-                                styles["mod-not-in-view"]
+                                styles["mod-not-in-view"],
                             );
                             // console.log("HeroImage is out of view");
                         }
                     });
                 },
-                { threshold: 0 }
+                { threshold: 0 },
             );
         }
 
@@ -188,6 +190,9 @@ const HeroImage: FC<
                 {
                     "--custom-expanded-height": expandedHeight
                         ? `${expandedHeight}px`
+                        : undefined,
+                    "--custom-image-position-offset-y": imagePositionOffsetY
+                        ? imagePositionOffsetY
                         : undefined,
                 } as unknown as React.CSSProperties
             }

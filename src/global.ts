@@ -72,6 +72,7 @@ export const routeBase = {
     tours: "/tours",
     donate: "/donate",
     search: "/search",
+    sponsors: "/sponsors",
 };
 
 export const navLinks = [
@@ -195,6 +196,11 @@ export const getChallengePageLink = (idOrSlug?: string) => {
         // + "/" +
         // challenge.replace(new RegExp(`^${aerodrome}-`), "")
     );
+};
+/** 生成路由: 赞助商页 */
+export const getSponsorPageLink = (name: string) => {
+    if (!name) return routeBase.sponsors;
+    return routeBase.sponsors + "/" + name;
 };
 
 // ============================================================================
