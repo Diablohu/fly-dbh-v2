@@ -7,10 +7,61 @@ import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 // import HeroImage from "@/components/hero-image";
 import Card from "./_card.astro";
+import TagButton from "@/components/tag-button.astro";
 
-const cards: ComponentProps<typeof Card>[] = [];
 const bannerImageFilename =
     "def7240d06fe76f40b3df3e572e5e733dd6256b8-2278x1280.jpg";
+const footerImageFilename =
+    "479516569ac67b1f05246c41bff7833d7647bd33-4032x1758.png";
+const cards: ComponentProps<typeof Card>[] = [
+    {
+        title: "百万元级专业模拟机",
+        description: `现场设有 3 台 EASA 认证的专业 A320 静态模拟机。
+1:1 完全拟真的驾驶舱布局，配备全套航空电子设备和飞行仪表，所有按钮均可操作。`,
+        remarks: ["小桌板不可用"],
+        sanityImageFilename:
+            "f040970cbfb5b2d1260320f5ea79b11d4f97118a-3840x1672.png",
+    },
+    {
+        title: "全球机场随意起降",
+        description: `基于最新真实的专业导航数据，可选择在全球数万座机场进行起降。
+家乡机场、世界级航空枢纽、高难度进近挑战，任你选择。`,
+        remarks: ["受限于公开的导航数据，部分机场可能无法选择"],
+        sanityImageFilename:
+            "b8383f74d74a138d7b66cca0cb9c93f0237f0d7c-2524x1520.png",
+    },
+    {
+        title: "真实视景震撼体验",
+        description: `基于《微软模拟飞行2024》，提供全球范围的真实卫星影像和地形数据，部分地区还有超清城市景观，满足目视进近和低空飞行的需求。
+配备超清无缝球幕投影，带来震撼的沉浸式飞行体验。`,
+        remarks: ["受限于各地法律法规，部分地区可能无法提供真实视景"],
+        sanityImageFilename:
+            "8b75ef0d504510632881c4bf3f1b295b68a12ef4-3840x2160.png",
+    },
+    {
+        title: "实时气象",
+        description: `基于《微软模拟飞行2024》，在全球范围内提供实时的气象数据，还能回溯过去 24 小时内的历史气象。
+更可定制各种气象场景，满足各类飞行训练需求。`,
+        remarks: [],
+        sanityImageFilename:
+            "58c7f7548d85d3537c1e1f8f0ed15e0ea34971ba-4032x2418.png",
+    },
+    {
+        title: "专业带飞",
+        description: `由专业教员带飞，提供专业的飞行指导和培训，帮助你快速掌握飞行技能。`,
+        remarks: ["带飞服务需提前预约"],
+        sanityImageFilename:
+            "de07a5b6c3ef0b7d1278b0f1185be6d045c84d59-2856x2160.png",
+    },
+    {
+        title: "真人空管",
+        description: `由专业空管人员提供实时的空中交通管制服务，无论是目视规则还是仪表规则，都能体验完整的飞行流程。`,
+        remarks: ["空管服务使用 VATSIM 网络"],
+        sanityImageFilename:
+            "72109eeb1dc6ce6bd49eb3f3d049dcd5cd9841f1-3840x1708.png",
+    },
+];
+const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
 ---
 
 <Layout title="VHF 123.45 维铄飞航空实训基地" header footer>
@@ -27,7 +78,7 @@ const bannerImageFilename =
     <section
         class="banner"
         style={{
-            backgroundImage: `url(${urlPrefixSanityImageCdn}/${bannerImageFilename}?auto=format&w=1280&q=60)`,
+            backgroundImage: `url(${urlPrefixSanityImageCdn}/${bannerImageFilename}?fm=webp&w=1280&q=50)`,
         }}
     >
         <!-- TODO: Banner图改为视频 -->
@@ -38,6 +89,8 @@ const bannerImageFilename =
                     <span class="numeral">123.45</span>
                 </h2>
                 <h3>维铄飞航空实训基地</h3>
+                <p class="slogan"><strong>Very Happy Flight!</strong></p>
+                <p class="slogan">专业真实模拟体验，普通人也能享受飞行乐趣！</p>
             </section>
         </Block>
         <!-- <img
@@ -49,137 +102,45 @@ const bannerImageFilename =
         <span class="mask"></span>
     </section>
 
-    <section class="article">
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-        <Block
-            >Enim in in amet eu eu aliquip non magna quis do officia mollit
-            labore.</Block
-        >
-        <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
+    <Block class="article">
+        <section class="cards">
+            {cards.map((card) => <Card {...card} />)}
+        </section>
+    </Block>
+
+    <section class="footer">
+        <span
+            class="photo"
+            style={{
+                backgroundImage: `url(${urlPrefixSanityImageCdn}/${footerImageFilename}?fm=webp&w=1280&q=50)`,
+            }}></span>
+
+        <section class="infos">
+            <Block>
+                <dl>
+                    <dt>价格</dt>
+                    <dd>球幕屏：RMB ￥1000 / 小时</dd>
+                    <dd>三连屏：RMB ￥800 / 小时</dd>
+                    <dd class="remark">仅为屏幕区别，模拟机硬件一致</dd>
+                </dl>
+                <dl>
+                    <dt>地址</dt>
+                    <dd>伟鑫科技</dd>
+                    <dd>江苏省苏州市昆山市淀山湖镇北苑路36号</dd>
+                </dl>
+            </Block>
+        </section>
+
+        <section class="actions">
+            <TagButton
+                class="button"
+                href={linkReserve}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                立即预约体验
+            </TagButton>
+        </section>
     </section>
 </Layout>
 
@@ -194,6 +155,11 @@ const bannerImageFilename =
             (2.5 * @base-font-size-number-h1 / @base-font-size-number),
             em
         );
+        --title-font-size-secondary: unit(
+            (1 * @base-font-size-number-h1 / @base-font-size-number),
+            em
+        );
+        --title-gap: 0;
 
         position: relative;
         z-index: 1;
@@ -211,6 +177,11 @@ const bannerImageFilename =
                 (1.75 * @base-font-size-number-h1 / @base-font-size-number),
                 em
             );
+            --title-font-size-secondary: unit(
+                (0.8 * @base-font-size-number-h1 / @base-font-size-number),
+                em
+            );
+            --title-gap: 0.15em;
         });
 
         .content {
@@ -219,12 +190,13 @@ const bannerImageFilename =
             bottom: var(--banner-expanded-height);
             color: var(--dark-text-color-primary);
             // font-weight: 900;
-            text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
-            padding-bottom: 2em;
+            padding-bottom: 1em;
             h2 {
                 color: inherit;
                 font-size: var(--title-font-size);
                 font-family: var(--font-fbw-display-eis-a380-slashed-zero);
+                margin: 0 0 var(--title-gap) 0;
+                text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
                 // font-style: italic;
                 .vhf {
                     //     font-family: var(--font-fbw-display-eis-a380-slashed-zero);
@@ -235,6 +207,22 @@ const bannerImageFilename =
                     //     font-family: var(--font-airbus-rtpi);
                     //     font-size: 1.1em;
                 }
+            }
+            h3 {
+                color: var(--dark-theme-color);
+                background: var(--dark-text-color-primary);
+                font-size: var(--title-font-size-secondary);
+                margin: 0 0 0.33333em 0;
+                display: inline-block;
+                padding: 0.25em 0.75em;
+                border-radius: 1em;
+                letter-spacing: 0.1em;
+            }
+            .slogan {
+                color: inherit;
+                font-size: calc(var(--title-font-size-secondary) * 0.9);
+                margin: 0.5em 0 0 0;
+                text-shadow: 0 0.05em 0.15em var(--dark-theme-color-p-80);
             }
             // &::after {
             //     position: absolute;
@@ -308,5 +296,111 @@ const bannerImageFilename =
     section.article {
         position: relative;
         z-index: 2;
+
+        .cards {
+            --card-grid-item-min-width: 30%;
+            .screen-lg({
+                --card-grid-item-min-width: 300px;
+            });
+            .screen-md-below({
+                --card-grid-item-min-width: 300px;
+            });
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(var(--card-grid-item-min-width), 1fr)
+            );
+            gap: 2em 2em;
+            margin: 3em auto;
+        }
+    }
+
+    section.footer {
+        position: relative;
+
+        .photo {
+            display: block;
+            position: absolute;
+            z-index: 1;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 66.6667%;
+            background: no-repeat 50% 50% / cover;
+            &::before,
+            &::after {
+                position: absolute;
+                content: "";
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                left: 0;
+            }
+            &::before {
+                z-index: 2;
+                .pixel-dots-styles();
+            }
+            &::after {
+                z-index: 3;
+                background: linear-gradient(
+                    to top,
+                    var(--theme-color-p-60) 0%,
+                    var(--theme-color-p-80) 20%,
+                    var(--theme-color) 100%
+                );
+            }
+        }
+
+        & > section {
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid var(--tag-border-color);
+
+            &.infos {
+                padding-bottom: 3em;
+                dl {
+                    display: inline-block;
+                    margin: 3em 0 0 0;
+                    width: 50%;
+                    vertical-align: top;
+                    padding: 0 1em;
+                    user-select: text;
+                    dt {
+                        .title-styles();
+                        font-size: unit(
+                            (
+                                @base-font-size-number-h3 /
+                                    @base-font-size-number
+                            ),
+                            em
+                        );
+                        margin: 0 0 0.75em 0;
+                    }
+                    dd {
+                        margin: 0.5em 0 0 0;
+                        color: var(--text-color-primary);
+                        &.remark {
+                            color: var(--text-color-secondary);
+                        }
+                    }
+                    .screen-md-below({
+                    width: 100%;
+                });
+                }
+            }
+
+            &.actions {
+                position: relative;
+                text-align: center;
+                padding: 3em 0 10em 0;
+                .button {
+                    position: relative;
+                    z-index: 2;
+                    font-size: 1.33333em;
+                    border-radius: 100em;
+                    padding: 0.3333em 1.6667em;
+                }
+            }
+        }
     }
 </style>
