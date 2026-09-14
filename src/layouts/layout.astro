@@ -255,20 +255,26 @@ const { htmlClassList = [] } = Astro.props;
         <ClientRouter />
     </head>
     <body>
-        <script
-            is:inline
-            async
-            defer
-            src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
-        ></script>
-        <script is:inline defer define:vars={{ id: gtagId }}>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
-            gtag("config", id);
-        </script>
+        {
+            !import.meta.env.DEV && gtagId && (
+                <>
+                    <script
+                        is:inline
+                        async
+                        defer
+                        src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
+                    />
+                    <script is:inline defer define:vars={{ id: gtagId }}>
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag() {
+                            dataLayer.push(arguments);
+                        }
+                        gtag("js", new Date());
+                        gtag("config", id);
+                    </script>
+                </>
+            )
+        }
 
         <div class="root">
             <BannerAndHeader
