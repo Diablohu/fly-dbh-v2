@@ -78,6 +78,7 @@ export async function openImageViewer(opener: HTMLElement, src: string) {
         hidden: () => {
             viewer.destroy();
         },
+        rotateOnTouch: false,
     });
     viewer.show();
 }
