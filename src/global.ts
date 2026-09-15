@@ -72,7 +72,7 @@ export const routeBase = {
     tours: "/tours",
     donate: "/donate",
     search: "/search",
-    sponsors: "/sponsors",
+    partners: "/partners",
 };
 
 export const navLinks = [
@@ -197,10 +197,10 @@ export const getChallengePageLink = (idOrSlug?: string) => {
         // challenge.replace(new RegExp(`^${aerodrome}-`), "")
     );
 };
-/** 生成路由: 赞助商页 */
-export const getSponsorPageLink = (name: string) => {
-    if (!name) return routeBase.sponsors;
-    return routeBase.sponsors + "/" + name;
+/** 生成路由: 合作伙伴页 */
+export const getPartnerPageLink = (name: string) => {
+    if (!name) return routeBase.partners;
+    return routeBase.partners + "/" + name;
 };
 
 // ============================================================================
