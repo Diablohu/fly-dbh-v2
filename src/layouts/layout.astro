@@ -110,6 +110,7 @@ interface Props {
     coverImageHeight?: number;
 
     htmlClassList?: string[];
+    mainClassList?: string[];
 
     /**
      * 渲染模糊的背景图
@@ -302,7 +303,7 @@ const { htmlClassList = [] } = Astro.props;
 
             <Announcements header={header} />
 
-            <main>
+            <main class:list={Astro.props.mainClassList}>
                 {
                     Astro.props.sideBar === true ||
                     Array.isArray(Astro.props.sideBar) ? (

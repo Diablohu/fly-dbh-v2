@@ -81,7 +81,7 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         imagePositionOffsetY="-15%"
     /> -->
     <section
-        class="banner"
+        class="page-variables banner"
         style={{
             backgroundImage: `url(${urlPrefixSanityImageCdn}/${bannerImageFilename}?fm=webp&w=1280&q=50)`,
         }}
@@ -107,13 +107,13 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         <span class="mask"></span>
     </section>
 
-    <Block class="article">
+    <Block class="page-variables article">
         <section class="cards">
             {cards.map((card) => <Card {...card} />)}
         </section>
     </Block>
 
-    <section class="footer">
+    <section class="page-variables footer">
         <span
             class="photo"
             style={{
@@ -121,7 +121,7 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
             }}></span>
 
         <section class="infos">
-            <Block>
+            <Block wrapperClass="infos-wrapper">
                 <dl>
                     <dt>价格</dt>
                     <dd>球幕屏：RMB ￥1000 / 小时</dd>
@@ -156,7 +156,7 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    section.banner {
+    .page-variables {
         --banner-min-height: 300px;
         --banner-height: 50vh;
         --banner-expanded-height: 10em;
@@ -169,15 +169,15 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
             em
         );
         --title-gap: 0;
+        --card-grid-item-min-width: 350px;
 
-        position: relative;
-        z-index: 1;
-        background: no-repeat 77.5% 30% / cover;
-        height: calc(var(--banner-height) + var(--banner-expanded-height));
-        min-height: var(--banner-min-height);
-        margin-top: calc(var(--global-header-height) * -1);
-        margin-bottom: calc(var(--banner-expanded-height) * -1);
-        padding-top: var(--global-header-height);
+        .screen-xl-above({
+            --card-grid-item-min-width: 30%;
+        });
+
+        .screen-lg-below({
+            --card-grid-item-min-width: 310px;
+        });
 
         .screen-sm({
             --banner-min-height: 250px;
@@ -192,6 +192,17 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
             );
             --title-gap: 0.15em;
         });
+    }
+
+    section.banner {
+        position: relative;
+        z-index: 1;
+        background: no-repeat 77.5% 30% / cover;
+        height: calc(var(--banner-height) + var(--banner-expanded-height));
+        min-height: var(--banner-min-height);
+        margin-top: calc(var(--global-header-height) * -1);
+        margin-bottom: calc(var(--banner-expanded-height) * -1);
+        padding-top: var(--global-header-height);
 
         .content {
             position: absolute;
@@ -307,16 +318,6 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         z-index: 2;
 
         .cards {
-            --card-grid-item-min-width: 350px;
-            .screen-xl-above({
-                --card-grid-item-min-width: 30%;
-            });
-            .screen-lg({
-                --card-grid-item-min-width: 300px;
-            });
-            .screen-md-below({
-                --card-grid-item-min-width: 300px;
-            });
             display: grid;
             grid-template-columns: repeat(
                 auto-fill,
@@ -370,35 +371,41 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
             border-top: 1px solid var(--tag-border-color);
 
             &.infos {
-                padding-bottom: 3em;
-                dl {
-                    display: inline-block;
-                    margin: 3em 0 0 0;
-                    width: 50%;
-                    vertical-align: top;
-                    padding: 0 1em;
-                    user-select: text;
-                    dt {
-                        .title-styles();
-                        font-size: unit(
-                            (
-                                @base-font-size-number-h3 /
-                                    @base-font-size-number
-                            ),
-                            em
-                        );
-                        margin: 0 0 0.75em 0;
-                    }
-                    dd {
-                        margin: 0.5em 0 0 0;
-                        color: var(--text-color-primary);
-                        &.remark {
-                            color: var(--text-color-secondary);
+                padding: 3em 0;
+                :global(.infos-wrapper) {
+                    display: flex;
+                    flex-flow: row wrap;
+                    gap: 4em 1.5em;
+                    dl {
+                        display: block;
+                        flex: var(--card-grid-item-min-width) 1 0;
+                        margin: 0;
+                        width: 50%;
+                        vertical-align: top;
+                        padding: 0 1em;
+                        user-select: text;
+                        dt {
+                            .title-styles();
+                            font-size: unit(
+                                (
+                                    @base-font-size-number-h3 /
+                                        @base-font-size-number
+                                ),
+                                em
+                            );
+                            margin: 0 0 0.75em 0;
                         }
+                        dd {
+                            margin: 0.5em 0 0 0;
+                            color: var(--text-color-primary);
+                            &.remark {
+                                color: var(--text-color-secondary);
+                            }
+                        }
+                        // .screen-md-below({
+                        //     width: 100%;
+                        // });
                     }
-                    .screen-md-below({
-                    width: 100%;
-                });
                 }
             }
 
