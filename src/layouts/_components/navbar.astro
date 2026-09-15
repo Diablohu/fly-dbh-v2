@@ -9,6 +9,8 @@ import LivestreamHollow from "@/assets/svg-symbols/livestream-hollow.svg";
 import LivestreamFill from "@/assets/svg-symbols/livestream-fill.svg";
 import ChallengesHollow from "@/assets/svg-symbols/challenges-hollow.svg";
 import ChallengesFill from "@/assets/svg-symbols/challenges-fill.svg";
+import AirplaneHollow from "@/assets/svg-symbols/airplane-hollow.svg";
+import AirplaneFill from "@/assets/svg-symbols/airplane-fill.svg";
 
 import isRouteActive from "@/utils/is-route-active";
 
@@ -62,6 +64,12 @@ type Props = {
                                         <ChallengesFill />
                                     ) : (
                                         <ChallengesHollow />
+                                    )
+                                ) : key === "vhf123.45" ? (
+                                    isActive ? (
+                                        <AirplaneFill />
+                                    ) : (
+                                        <AirplaneHollow />
                                     )
                                 ) : null}
                             </span>

@@ -75,67 +75,6 @@ export const routeBase = {
     partners: "/partners",
 };
 
-export const navLinks = [
-    {
-        key: "home",
-        route: routeBase.home,
-        name: "首页",
-        icon: "",
-    },
-    {
-        key: "videos",
-        route: getVideoListPageLink(),
-        name: import.meta.env.DEV ? "视频" : "模拟飞行视频",
-        icon: "",
-        extraChecks: [/^\/watch\//],
-    },
-    import.meta.env.DEV
-        ? {
-              key: "live",
-              route: routeBase.live,
-              name: "直播",
-              icon: "",
-              extraChecks: [/^\/vod\//],
-          }
-        : null,
-    {
-        key: "challenges",
-        route: routeBase.challenges,
-        name: import.meta.env.DEV ? "挑战" : "着陆挑战",
-        icon: "",
-    },
-    // import.meta.env.DEV
-    //     ? {
-    //           key: "activities",
-    //           route: "/activities",
-    //           name: "活动",
-    //           icon: "",
-    //       }
-    //     : null,
-    import.meta.env.DEV
-        ? {
-              key: "tours",
-              route: routeBase.tours,
-              name: "云旅游",
-              icon: "",
-          }
-        : null,
-    // import.meta.env.DEV
-    //     ? {
-    //           key: "donate",
-    //           route: routeBase.donate,
-    //           name: "资助",
-    //           icon: "",
-    //       }
-    //     : null,
-].filter((v) => !!v) as {
-    key: "home" | "videos" | "live" | "activities" | "challenges" | "donate";
-    route: string;
-    name: string;
-    icon: string;
-    extraChecks?: RegExp[];
-}[];
-
 /** 生成路由: 视频列表页 */
 export function getVideoListPageLink(
     type?: VideoListPageTypesType,
@@ -202,6 +141,73 @@ export const getPartnerPageLink = (name: string) => {
     if (!name) return routeBase.partners;
     return routeBase.partners + "/" + name;
 };
+
+export const navLinks = [
+    {
+        key: "home",
+        route: routeBase.home,
+        name: "首页",
+        icon: "",
+    },
+    {
+        key: "videos",
+        route: getVideoListPageLink(),
+        name: import.meta.env.DEV ? "视频" : "模拟飞行视频",
+        icon: "",
+        extraChecks: [/^\/watch\//],
+    },
+    // import.meta.env.DEV
+    //     ? {
+    //           key: "live",
+    //           route: routeBase.live,
+    //           name: "直播",
+    //           icon: "",
+    //           extraChecks: [/^\/vod\//],
+    //       }
+    //     : null,
+    {
+        key: "challenges",
+        route: routeBase.challenges,
+        name: import.meta.env.DEV ? "挑战" : "着陆挑战",
+        icon: "",
+    },
+    // import.meta.env.DEV
+    //     ? {
+    //           key: "activities",
+    //           route: "/activities",
+    //           name: "活动",
+    //           icon: "",
+    //       }
+    //     : null,
+    import.meta.env.DEV
+        ? {
+              key: "tours",
+              route: routeBase.tours,
+              name: "云旅游",
+              icon: "",
+          }
+        : null,
+    // import.meta.env.DEV
+    //     ? {
+    //           key: "donate",
+    //           route: routeBase.donate,
+    //           name: "资助",
+    //           icon: "",
+    //       }
+    //     : null,
+    {
+        key: "vhf123.45",
+        route: getPartnerPageLink("vhf123.45"),
+        name: "模拟机",
+        icon: "",
+    },
+].filter((v) => !!v) as {
+    key: "home" | "videos" | "live" | "activities" | "challenges" | "donate" | 'vhf123.45';
+    route: string;
+    name: string;
+    icon: string;
+    extraChecks?: RegExp[];
+}[];
 
 // ============================================================================
 //
