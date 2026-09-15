@@ -19,7 +19,7 @@ type Props = {
         set:html={generateHtmlImageViewer({
             containerClass: "image",
             src: `${urlPrefixSanityImageCdn}/${Astro.props.sanityImageFilename}?fm=webp&w=640&q=50`,
-            srcOriginal: `${urlPrefixSanityImageCdn}/${Astro.props.sanityImageFilename}?auto=format`,
+            srcOriginal: `${urlPrefixSanityImageCdn}/${Astro.props.sanityImageFilename}?fm=webp&q=80`,
             alt: Astro.props.title,
         })}
     />
