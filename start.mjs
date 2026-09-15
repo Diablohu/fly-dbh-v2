@@ -183,7 +183,6 @@ async function main() {
             logSuccess("Astro", "类型检查通过");
 
             const test = await startVitest(
-                "test",
                 [], // CLI filters
                 {
                     run: true,
