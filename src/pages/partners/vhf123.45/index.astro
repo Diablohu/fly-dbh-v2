@@ -25,7 +25,7 @@ const cards: ComponentProps<typeof Card>[] = [
     {
         title: "全球机场随意起降",
         description: `基于最新真实的专业导航数据，可选择在全球数万座机场进行起降。
-家乡机场、世界级航空枢纽、高难度进近挑战，任你选择。`,
+家乡机场、世界级航空枢纽、高难度[进近挑战](/challenges)，任你选择。`,
         remarks: ["受限于公开的导航数据，部分机场可能无法选择"],
         sanityImageFilename:
             "b8383f74d74a138d7b66cca0cb9c93f0237f0d7c-2524x1520.png",
@@ -303,7 +303,10 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         z-index: 2;
 
         .cards {
-            --card-grid-item-min-width: 30%;
+            --card-grid-item-min-width: 350px;
+            .screen-xl-above({
+                --card-grid-item-min-width: 30%;
+            });
             .screen-lg({
                 --card-grid-item-min-width: 300px;
             });
@@ -315,13 +318,14 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
                 auto-fill,
                 minmax(var(--card-grid-item-min-width), 1fr)
             );
-            gap: 2em 2em;
+            gap: 2em 1.5em;
             margin: 3em auto;
         }
     }
 
     section.footer {
         position: relative;
+        margin-top: 1em;
 
         .photo {
             display: block;
