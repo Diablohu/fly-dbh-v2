@@ -70,7 +70,7 @@ function generateSrcset(photo: string, width = baseImageWidth) {
                                 ? ` (${Astro.props.aerodrome.location.join(" ")})`
                                 : ""
                         }`,
-                        // loading: "eager",
+                        loading: "eager",
                         fetchpriority: "high",
                     })}
                 />
