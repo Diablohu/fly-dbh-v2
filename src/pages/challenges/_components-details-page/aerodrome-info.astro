@@ -40,7 +40,29 @@ type Props = {
                                 ? ` (${Astro.props.aerodrome.location.join(" ")})`
                                 : ""
                         }`,
-                        loading: "eager",
+                        // loading: "eager",
+                        fetchpriority: "high",
+                    })}
+                />
+                <Fragment
+                    set:html={generateHtmlImageViewer({
+                        containerClass: "aspect-ratio-box sm",
+                        src: getSanityImageUrl(Astro.props.aerodrome.photo, {
+                            fm: "auto",
+                            w: 750,
+                            q: 60,
+                        }),
+                        srcOriginal: getSanityImageUrl(
+                            Astro.props.aerodrome.photo,
+                            { fm: "auto" },
+                        ),
+                        alt: `${Astro.props.aerodrome.name}${
+                            Array.isArray(Astro.props.aerodrome.location) &&
+                            Astro.props.aerodrome.location.length > 0
+                                ? ` (${Astro.props.aerodrome.location.join(" ")})`
+                                : ""
+                        }`,
+                        // loading: "eager",
                         fetchpriority: "high",
                     })}
                 />
@@ -253,6 +275,15 @@ type Props = {
                 left: 0;
                 object-fit: cover;
             }
+            &:global(.sm) {
+                display: none;
+            }
+            .screen-sm({
+                display: none;
+                &:global(.sm) {
+                    display: block;
+                }
+            });
         }
         & > .credit {
             display: block;
