@@ -3,6 +3,7 @@ import { type ValidPageContentType } from "@/types";
 import { title as siteTitle, slogan, urlPrefixSanityImageCdn } from "@/global";
 import getPageTitle from "@/utils/get-page-title";
 import getSanityImageUrl from "@/utils/get-sanity-image-url";
+import { undefined } from "astro:schema";
 
 type Props = {
     title?: string;
@@ -18,7 +19,7 @@ type Props = {
      */
     description?: string;
     /** 用于社交分享 */
-    image?: string;
+    image?: string | URL;
     imageWidth?: number;
     imageHeight?: number;
 };
@@ -29,9 +30,23 @@ const {
 } = Astro.props;
 
 let image = "";
-console.log({ urlPrefixSanityImageCdn }, Astro.props.image);
-if (Astro.props.image) {
+if (Astro.props.image instanceof URL) {
+    image = new URL(
+        getSanityImageUrl(
+            Astro.props.image,
+            {
+                fm: "auto",
+                w: 960,
+                q: 60,
+            },
+            [],
+            { filenameIsValidUrl: true },
+        ),
+        Astro.url.origin,
+    ).href;
+} else if (Astro.props.image) {
     let isValidUrl = false;
+
     try {
         const url = new URL(Astro.props.image);
         image = Astro.props.image;
@@ -46,11 +61,16 @@ if (Astro.props.image) {
         (!isValidUrl && !/^\//.test(Astro.props.image))
     ) {
         image = new URL(
-            getSanityImageUrl(Astro.props.image, {
-                fm: "auto",
-                w: 960,
-                q: 60,
-            }),
+            getSanityImageUrl(
+                Astro.props.image,
+                {
+                    fm: "auto",
+                    w: 960,
+                    q: 60,
+                },
+                [],
+                { filenameIsValidUrl: isValidUrl },
+            ),
             Astro.url.origin,
         ).href;
     }

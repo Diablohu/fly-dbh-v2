@@ -23,22 +23,34 @@ function floorNumberToString(input: number | string) {
 }
 
 function getUrl(
-    filename: string,
+    _filename: string | URL,
     options: FullOptions = {},
     removeAttributes: (keyof FullOptions)[] = [],
+    settings?: {
+        /** 如果传入，无论为何值，本函数内将不再检查传入的 `filename` 是否为 URL */
+        filenameIsValidUrl?: boolean;
+    },
 ) {
     let url;
     let isFilenameUrl = false;
+    const filename = _filename instanceof URL ? _filename.href : _filename;
 
     /**
      * 仅使用改 URL 变量操作 URL Search
      * - 由于不同环境 URL 前缀不同，输出最终结果时，再拼装
      */
-    try {
-        url = new URL(filename);
+    if (settings?.filenameIsValidUrl === true) {
+        url = _filename instanceof URL ? _filename : new URL(filename);
         isFilenameUrl = true;
-    } catch (e) {
+    } else if (settings?.filenameIsValidUrl === false) {
         url = new URL(`${urlPrefixSanityImageCdn}/${filename}`, urlBase);
+    } else {
+        try {
+            url = new URL(filename);
+            isFilenameUrl = true;
+        } catch (e) {
+            url = new URL(`${urlPrefixSanityImageCdn}/${filename}`, urlBase);
+        }
     }
     const params = url.searchParams;
 
@@ -71,13 +83,10 @@ function getUrl(
     parseParam(["blur"]);
 
     return `${
-        // 如果 `filanme` 以 `/` 为前缀，判断为 URL，不添加前缀
-        /^\//.test(filename)
+        // 如果 `filanme` 是 URL，或以 `/` 为前缀，不添加前缀
+        isFilenameUrl || /^\//.test(filename)
             ? ""
-            : // 如果 `filanme` 是 URL，不添加前缀
-              isFilenameUrl
-              ? ""
-              : urlPrefixSanityImageCdn + "/"
+            : urlPrefixSanityImageCdn + "/"
     }${filename.split("?")[0]}${url.search}`;
 }
 
