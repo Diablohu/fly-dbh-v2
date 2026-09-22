@@ -8,6 +8,11 @@ import {
     type AircraftTypes,
 } from "@/types";
 
+import { domain } from "../vars.mjs";
+
+export { domain };
+export const urlBase = `https://${domain}`;
+
 export const themeColorLight = "#ffffff";
 export const themeColorDark = "#0f0f0f";
 
@@ -202,7 +207,14 @@ export const navLinks = [
         icon: "",
     },
 ].filter((v) => !!v) as {
-    key: "home" | "videos" | "live" | "activities" | "challenges" | "donate" | 'vhf123.45';
+    key:
+        | "home"
+        | "videos"
+        | "live"
+        | "activities"
+        | "challenges"
+        | "donate"
+        | "vhf123.45";
     route: string;
     name: string;
     icon: string;

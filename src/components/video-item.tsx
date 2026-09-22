@@ -13,6 +13,7 @@ import { type VideoTagType, type VideoItemType } from "@/types";
 
 import prettifyTitle from "@/utils/prettify-title";
 import getDateString from "@/utils/get-date-string";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 // import Menu, { MenuItem } from "@/components/menu";
 import Symbol from "@/components/symbol";
@@ -37,6 +38,9 @@ export type Props = Pick<Required<VideoItemType>, "_id" | "title" | "cover"> &
          */
         assetPriority?: "high" | false;
     };
+
+const thumbnailWidthBase = 450;
+const thumbnailQuality = 60;
 
 // ============================================================================
 
@@ -92,13 +96,35 @@ const VideoItem: FC<Props & AnchorHTMLAttributes<HTMLAnchorElement>> & {
                     >
                         <source
                             srcSet={[
-                                `${cover}?fm=webp&w=400&q=60`,
-                                `${cover}?fm=webp&w=${400 * 1.5}&q=60 1.5x`,
+                                getSanityImageUrl(cover, {
+                                    fm: "webp",
+                                    w: thumbnailWidthBase,
+                                    q: thumbnailQuality,
+                                }),
+                                `${getSanityImageUrl(cover, {
+                                    fm: "webp",
+                                    w: thumbnailWidthBase * 1.25,
+                                    q: thumbnailQuality,
+                                })} 1.25x`,
+                                `${getSanityImageUrl(cover, {
+                                    fm: "webp",
+                                    w: thumbnailWidthBase * 1.5,
+                                    q: thumbnailQuality,
+                                })} 1.5x`,
+                                `${getSanityImageUrl(cover, {
+                                    fm: "webp",
+                                    w: thumbnailWidthBase * 1.75,
+                                    q: thumbnailQuality,
+                                })} 1.75x`,
                             ].join(", ")}
                             type="image/webp"
                         />
                         <img
-                            src={cover + "?auto=format&w=400&q=60"}
+                            src={getSanityImageUrl(cover, {
+                                fm: "webp",
+                                w: thumbnailWidthBase,
+                                q: thumbnailQuality,
+                            })}
                             alt={prettifiedTitle}
                             loading={
                                 assetPriority === "high" ? undefined : "lazy"

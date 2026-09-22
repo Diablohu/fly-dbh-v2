@@ -10,6 +10,7 @@ import {
 import classNames from "classnames";
 
 import { urlPrefixSanityImageCdn } from "@/global";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 import useWindow from "@/react-hooks/use-window";
 
@@ -55,7 +56,11 @@ const HeroImage: FC<
             ? `${urlPrefixSanityImageCdn}/${sanityImageFilename}`
             : sanityImageUri;
         if (!uri) return "";
-        return `${uri}?auto=format&w=1280&q=60`;
+        return getSanityImageUrl(uri, {
+            fm: "auto",
+            w: 1280,
+            q: 60,
+        });
     }, [sanityImageFilename, sanityImageUri]);
 
     const resetCssVariables = useCallback(() => {
@@ -211,7 +216,12 @@ const HeroImage: FC<
             {/* <div
                 className={styles["glossy-overlay"]}
                 style={{
-                    backgroundImage: `url(${urlPrefixSanityImageCdn}/${sanityImageFilename}?auto=format&w=640&blur=100&q=60)`,
+                    backgroundImage: `url(${getSanityImageUrl(sanityImageFilename, {
+                        fm: 'auto',
+                        w: 640,
+                        q: 60,
+                        blur: 100
+                    })`,
                 }}
             /> */}
             <div

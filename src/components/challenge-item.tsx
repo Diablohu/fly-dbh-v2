@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { type ChallengeListItemType, type ChallengeItemType } from "@/types";
 import { challengeDifficultyString, aircraftTypeString } from "@/global";
 import getChallengePageLink from "@/utils/get-challenge-page-link";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 import styles from "./challenge-item.module.less";
 
@@ -141,7 +142,12 @@ const ChallengeItem: FC<{
             {item.aerodrome?.photo && (
                 <img
                     className={styles["aerodrome-photo"]}
-                    src={`${item.aerodrome.photo}?auto=format&w=400&blur=5&q=60`}
+                    src={getSanityImageUrl(item.aerodrome.photo, {
+                        fm: "auto",
+                        w: 400,
+                        q: 50,
+                        blur: 50,
+                    })}
                     loading="lazy"
                 />
             )}

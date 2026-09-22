@@ -8,6 +8,7 @@ import {
 } from "react";
 import classNames from "classnames";
 import { urlPrefixSanityImageCdn } from "@/global";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 import styles from "./blurred-background-image.module.less";
 
@@ -24,7 +25,7 @@ const BlurredBackgroundImage: FC<{
     const ImageRef = useRef<HTMLImageElement>(null);
 
     const [state, setState] = useState<"loading" | "loaded" | "error">(
-        "loading"
+        "loading",
     );
 
     const imageSrc = useMemo(() => {
@@ -32,7 +33,12 @@ const BlurredBackgroundImage: FC<{
             ? `${urlPrefixSanityImageCdn}/${sanityImageFilename}`
             : sanityImageUri;
         if (!uri) return "";
-        return `${uri}?auto=format&w=960&blur=50&q=60`;
+        return `${getSanityImageUrl(uri, {
+            fm: "auto",
+            w: 960,
+            q: 60,
+            blur: 50,
+        })}`;
     }, [sanityImageFilename, sanityImageUri]);
 
     const onImageLoad = useCallback(() => {

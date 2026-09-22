@@ -4,6 +4,7 @@ import { type ValidVideoSourceType, type VideoItemType } from "@/types";
 import useWindow from "@/react-hooks/use-window";
 import useVideoSource from "@/react-hooks/use-video-source";
 import getPlatformName from "@/utils/get-platform-name";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 import SelectPlatform from "./select-platform";
 
 import styles from "./player.module.less";
@@ -76,7 +77,12 @@ const Player: FC<Props> = ({
                     <section
                         className={styles["no-valid-link"]}
                         style={{
-                            backgroundImage: `url(${cover}?auto=format&w=960&blur=100&q=60)`,
+                            backgroundImage: `url(${getSanityImageUrl(cover, {
+                                fm: "auto",
+                                w: 960,
+                                q: 60,
+                                blur: 100,
+                            })})`,
                         }}
                     >
                         <p>

@@ -1,7 +1,7 @@
 ---
 import type { ComponentProps } from "astro/types";
 
-import { urlPrefixSanityImageCdn } from "@/global";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
@@ -67,6 +67,7 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
 <Layout
     title="VHF 123.45 维铄飞航空实训基地"
     description="Very Happy Flight! 在这里，可以体验专业真实的飞行模拟，普通人也能享受飞行乐趣！"
+    coverImage={bannerImageFilename}
     header
     footer
 >
@@ -83,7 +84,11 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
     <section
         class="page-variables banner"
         style={{
-            backgroundImage: `url(${urlPrefixSanityImageCdn}/${bannerImageFilename}?fm=webp&w=1280&q=50)`,
+            backgroundImage: `url(${getSanityImageUrl(bannerImageFilename, {
+                format: "webp",
+                width: 1280,
+                quality: 50,
+            })})`,
         }}
     >
         <!-- TODO: Banner图改为视频 -->
@@ -101,7 +106,11 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         <!-- <img
             class="cover"
             alt="VHF 123.45 飞行体验馆"
-            src={`${urlPrefixSanityImageCdn}/${bannerImageFilename}?fm=webp&w=1280&q=50`}
+            src={getSanityImageUrl(bannerImageFilename, {
+                format: "webp",
+                width: 1280,
+                quality: 50,
+            })}
             fetchpriority="high"
         /> -->
         <span class="mask"></span>
@@ -117,7 +126,11 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         <span
             class="photo"
             style={{
-                backgroundImage: `url(${urlPrefixSanityImageCdn}/${footerImageFilename}?fm=webp&w=1280&q=50)`,
+                backgroundImage: `url(${getSanityImageUrl(footerImageFilename, {
+                    format: "webp",
+                    width: 1280,
+                    quality: 40,
+                })}`,
             }}></span>
 
         <section class="infos">

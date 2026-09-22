@@ -2,7 +2,6 @@
 import { actions, ActionError } from "astro:actions";
 
 import {
-    urlPrefixSanityImageCdn,
     getChallengeCatalogPageLink,
     routeBase,
     aircraftTypeString,
@@ -21,6 +20,7 @@ import ChallengeListGrid from "@/components/challenge-list-grid";
 import TagButton from "@/components/tag-button.astro";
 
 import pageDataErrorHandler from "@/utils/page-data-error-handler";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 // ============================================================================
 //
@@ -225,9 +225,11 @@ const pageTitle = {
                     alt={[pageTitle.catalog.join(""), pageTitle.name].join(
                         " : ",
                     )}
-                    src={`${urlPrefixSanityImageCdn}/${
-                        heroImage[Astro.props.catalog]
-                    }?fm=webp&w=1280&q=50`}
+                    src={getSanityImageUrl(heroImage[Astro.props.catalog], {
+                        fm: "webp",
+                        w: 1280,
+                        q: 50,
+                    })}
                     fetchpriority="high"
                 />
             </div>

@@ -1,7 +1,8 @@
 ---
 import { type ValidPageContentType } from "@/types";
-import { title as siteTitle, slogan } from "@/global";
+import { title as siteTitle, slogan, urlPrefixSanityImageCdn } from "@/global";
 import getPageTitle from "@/utils/get-page-title";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 type Props = {
     title?: string;
@@ -26,9 +27,34 @@ const {
     keywords = "fly-simming, fly-sim, 飞行模拟, 飞行模拟器, 模拟飞行, 模拟飞行教程, 飞行模拟器教程, 飞行模拟器插件, 飞行模拟器飞机, 飞行模拟器机场, 飞行模拟器教学",
     description = slogan,
 } = Astro.props;
-const image = Astro.props.image
-    ? `${new URL(Astro.props.image, Astro.url).href}?auto=format&w=960&q=60`
-    : "";
+
+let image = "";
+console.log({ urlPrefixSanityImageCdn }, Astro.props.image);
+if (Astro.props.image) {
+    let isValidUrl = false;
+    try {
+        const url = new URL(Astro.props.image);
+        image = Astro.props.image;
+        isValidUrl = true;
+    } catch (e) {}
+
+    // 如果是以 `urlPrefixSanityImageCdn` 开头
+    // 或不以 "/" 开头同时也不是合法 URL
+    // 如果判断通过，判断为 Sanity 图片文件名
+    if (
+        new RegExp(`^${urlPrefixSanityImageCdn}\/`).test(Astro.props.image) ||
+        (!isValidUrl && !/^\//.test(Astro.props.image))
+    ) {
+        image = new URL(
+            getSanityImageUrl(Astro.props.image, {
+                fm: "auto",
+                w: 960,
+                q: 60,
+            }),
+            Astro.url.origin,
+        ).href;
+    }
+}
 
 const url = Astro.url;
 url.protocol = "https:";
