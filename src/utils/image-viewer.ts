@@ -14,20 +14,34 @@ export function generateHtmlImageViewer({
     srcOriginal,
     alt,
     loading = "lazy",
+    sources,
     ...attributes
 }: {
     containerClass?: string;
     srcOriginal?: string;
     caption?: string;
+    /** 如果传入，`<a>` 下一级为 `<picture> */
+    sources?: { media: string; srcset: string }[];
 } & astroHTML.JSX.ImgHTMLAttributes): string {
-    return `<a href="${srcOriginal ?? src}" class="${[
-        containerClass,
-        "image-viewer-container",
-    ].join(" ")}"><img src="${
+    const htmlImg = `<img src="${
         src
     }" alt="${alt}" loading="${loading}" ${Object.entries(attributes)
         .map(([key, value]) => `${key}="${value}"`)
-        .join(" ")} ${htmlAttributeImageViewer}="${srcOriginal ?? src}" /></a>`;
+        .join(" ")} ${htmlAttributeImageViewer}="${srcOriginal ?? src}" />`;
+
+    return `<a href="${srcOriginal ?? src}" class="${[
+        containerClass,
+        "image-viewer-container",
+    ].join(" ")}">${
+        Array.isArray(sources)
+            ? `<picture>${sources
+                  .map(
+                      ({ media, srcset }) =>
+                          `<source srcset="${srcset}" media="${media}" />`,
+                  )
+                  .join("")}${htmlImg}</picture>`
+            : htmlImg
+    }</a>`;
 }
 
 export async function openImageViewer(opener: HTMLElement, src: string) {

@@ -1,6 +1,7 @@
 ---
 import { type ChallengeItemType } from "@/types";
 import { type RunwayType } from "../_types";
+import { cssWidthBreakpoints } from "@/global";
 import { generateHtmlImageViewer } from "@/utils/image-viewer";
 import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
@@ -9,6 +10,20 @@ type Props = {
     targetRunways: ChallengeItemType["runways"];
     runwayPairs: [RunwayType, RunwayType][];
 };
+
+const baseImageWidth = 225;
+function generateSrcset(photo: string, width = baseImageWidth) {
+    return [1, 1.25, 1.5, 1.75, 2]
+        .map(
+            (scale) =>
+                `${getSanityImageUrl(photo, {
+                    fm: "auto",
+                    w: width * scale,
+                    q: 60,
+                })}${scale === 1 ? "" : ` ${scale}x`}`,
+        )
+        .join(", ");
+}
 ---
 
 <section
@@ -27,31 +42,24 @@ type Props = {
                         containerClass: "aspect-ratio-box",
                         src: getSanityImageUrl(Astro.props.aerodrome.photo, {
                             fm: "auto",
-                            w: 480,
+                            w: baseImageWidth,
                             q: 60,
                         }),
-                        srcOriginal: getSanityImageUrl(
-                            Astro.props.aerodrome.photo,
-                            { fm: "auto" },
-                        ),
-                        alt: `${Astro.props.aerodrome.name}${
-                            Array.isArray(Astro.props.aerodrome.location) &&
-                            Astro.props.aerodrome.location.length > 0
-                                ? ` (${Astro.props.aerodrome.location.join(" ")})`
-                                : ""
-                        }`,
-                        // loading: "eager",
-                        fetchpriority: "high",
-                    })}
-                />
-                <Fragment
-                    set:html={generateHtmlImageViewer({
-                        containerClass: "aspect-ratio-box sm",
-                        src: getSanityImageUrl(Astro.props.aerodrome.photo, {
-                            fm: "auto",
-                            w: 750,
-                            q: 60,
-                        }),
+                        sources: [
+                            {
+                                srcset: generateSrcset(
+                                    Astro.props.aerodrome.photo,
+                                    cssWidthBreakpoints.sm,
+                                ),
+                                media: `(width <= ${cssWidthBreakpoints.sm}px)`,
+                            },
+                            {
+                                srcset: generateSrcset(
+                                    Astro.props.aerodrome.photo,
+                                ),
+                                media: `(width > ${cssWidthBreakpoints.sm}px)`,
+                            },
+                        ],
                         srcOriginal: getSanityImageUrl(
                             Astro.props.aerodrome.photo,
                             { fm: "auto" },
@@ -266,24 +274,18 @@ type Props = {
             position: relative;
             padding-top: percentage((2/3));
             overflow: hidden;
-            & > :global(img) {
-                display: block;
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-                object-fit: cover;
-            }
-            &:global(.sm) {
-                display: none;
-            }
-            .screen-sm({
-                display: none;
-                &:global(.sm) {
+            & > :global(picture) {
+                &,
+                & > :global(img) {
                     display: block;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    object-fit: cover;
                 }
-            });
+            }
         }
         & > .credit {
             display: block;
