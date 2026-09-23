@@ -161,15 +161,15 @@ export const navLinks = [
         icon: "",
         extraChecks: [/^\/watch\//],
     },
-    // import.meta.env.DEV
-    //     ? {
-    //           key: "live",
-    //           route: routeBase.live,
-    //           name: "直播",
-    //           icon: "",
-    //           extraChecks: [/^\/vod\//],
-    //       }
-    //     : null,
+    import.meta.env.DEV
+        ? {
+              key: "live",
+              route: routeBase.live,
+              name: "直播",
+              icon: "",
+              extraChecks: [/^\/vod\//],
+          }
+        : null,
     {
         key: "challenges",
         route: routeBase.challenges,

@@ -6,6 +6,7 @@ import getSanityImageUrl from "@/utils/get-sanity-image-url";
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
 // import HeroImage from "@/components/hero-image";
+import CopyButton from "@/components/copy-button";
 import Card from "./_card.astro";
 import TagButton from "@/components/tag-button.astro";
 
@@ -13,6 +14,9 @@ const bannerImageFilename =
     "def7240d06fe76f40b3df3e572e5e733dd6256b8-2278x1280.jpg";
 const footerImageFilename =
     "479516569ac67b1f05246c41bff7833d7647bd33-4032x1758.png";
+
+const address = "江苏省苏州市昆山市淀山湖镇北苑路36号";
+
 const cards: ComponentProps<typeof Card>[] = [
     {
         title: "百万元级专业模拟机",
@@ -144,7 +148,16 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
                 <dl>
                     <dt>地址</dt>
                     <dd>伟鑫科技</dd>
-                    <dd>江苏省苏州市昆山市淀山湖镇北苑路36号</dd>
+                    <dd>
+                        {address}
+                    </dd>
+                    <dd>
+                        <CopyButton
+                            className="copy-button"
+                            copyText={address}
+                            client:idle>复制地址</CopyButton
+                        >
+                    </dd>
                 </dl>
             </Block>
         </section>
@@ -419,6 +432,9 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
                         //     width: 100%;
                         // });
                     }
+                }
+                :global(.copy-button) {
+                    // margin: 0 0.5em;
                 }
             }
 
