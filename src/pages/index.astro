@@ -2,7 +2,11 @@
 import { actions } from "astro:actions";
 
 // import log from "@/layouts/pages/index/_log.ts";
-import { routeBase, getChallengeCatalogPageLink } from "@/global";
+import {
+    routeBase,
+    getChallengeCatalogPageLink,
+    getPartnerPageLink,
+} from "@/global";
 import { homeBannerVisible as rootClassNameBannerVisible } from "@/constants/root-classnames";
 
 import Layout from "@/layouts/layout.astro";
@@ -10,6 +14,7 @@ import Block from "@/components/block.astro";
 import TagButton from "@/components/tag-button.astro";
 
 import getVideoListPageLink from "@/utils/get-video-list-page-link";
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 import Collection from "@/components/collection.astro";
 import CollectionSpotlight from "./homepage/_collection-spotlight.astro";
@@ -71,6 +76,9 @@ if (error) {
 const spotlightConfigString = collections?.config.find(
     ({ key }) => key === "Spotlight",
 )?.value;
+
+const footerImageFilename =
+    "def7240d06fe76f40b3df3e572e5e733dd6256b8-2278x1280.jpg";
 ---
 
 <Layout header banner footer htmlClassList={[rootClassNameBannerVisible]}>
@@ -112,7 +120,17 @@ const spotlightConfigString = collections?.config.find(
                 </Collection>
             ))
         }
-
+    </Block>
+    <section class="home-page-footer">
+        <span
+            class="photo"
+            style={{
+                backgroundImage: `url(${getSanityImageUrl(footerImageFilename, {
+                    format: "webp",
+                    width: 1280,
+                    quality: 40,
+                })}`,
+            }}></span>
         <section class="check-more">
             <TagButton href={getVideoListPageLink()}>分类浏览更多视频</TagButton
             ><TagButton href={routeBase.search}>搜索视频</TagButton>
@@ -124,7 +142,12 @@ const spotlightConfigString = collections?.config.find(
                 >查询挑战</TagButton
             >
         </section>
-    </Block>
+        <section class="check-more">
+            <TagButton href={getPartnerPageLink("vhf123.45")}
+                >预约模拟机</TagButton
+            >
+        </section>
+    </section>
 </Layout>
 
 <style lang="less">
@@ -133,29 +156,71 @@ const spotlightConfigString = collections?.config.find(
     .home-page {
         // .font-size-clamp-with-line-height(40px, 60px);
         padding-top: 2rem;
-        padding-bottom: 2em;
+        position: relative;
+        z-index: 5;
     }
 
-    .check-more {
-        text-align: center;
-        margin-bottom: 3em;
-        a {
-            font-size: 1.133333em;
-            border-radius: 100em;
-            padding: 0.3333em 1.6667em;
-            &:has(+ a) {
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-                padding-right: 1.3333em;
+    .home-page-footer {
+        position: relative;
+        z-index: 1;
+        margin-top: -13em;
+        padding-top: 15em;
+        padding-bottom: 5em;
+        .photo {
+            display: block;
+            position: absolute;
+            z-index: 1;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: no-repeat 77.5% 15% / cover;
+            &::before,
+            &::after {
+                position: absolute;
+                content: "";
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                left: 0;
             }
-            & + a {
-                border-top-left-radius: 0;
-                border-bottom-left-radius: 0;
-                padding-left: 1.3333em;
+            &::before {
+                z-index: 2;
+                .pixel-dots-styles();
+            }
+            &::after {
+                z-index: 3;
+                background: linear-gradient(
+                    to top,
+                    var(--theme-color-p-70) 0%,
+                    var(--theme-color-p-80) 20%,
+                    var(--theme-color) 100%
+                );
             }
         }
-        & + .check-more {
-            margin-top: -2em;
+        .check-more {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            margin-bottom: 3em;
+            a {
+                font-size: 1.133333em;
+                border-radius: 100em;
+                padding: 0.3333em 1.6667em;
+                &:has(+ a) {
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                    padding-right: 1.3333em;
+                }
+                & + a {
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                    padding-left: 1.3333em;
+                }
+            }
+            & + .check-more {
+                margin-top: -2em;
+            }
         }
     }
 </style>
