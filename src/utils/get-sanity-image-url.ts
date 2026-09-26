@@ -1,17 +1,21 @@
+import { type ImageFormat, type FitMode } from "@sanity/image-url";
 import { urlBase, urlPrefixSanityImageCdn } from "@/global";
 
 // ============================================================================
 
 interface Options {
-    format?: "auto" | "webp";
+    format?: "auto" | ImageFormat;
     quality?: number | string;
     width?: number | string;
+    height?: number | string;
     blur?: number | string;
+    fit?: FitMode;
 }
 interface FullOptions extends Options {
     fm?: Options["format"];
     q?: Options["quality"];
     w?: Options["width"];
+    h?: Options["height"];
 }
 
 // ============================================================================
@@ -70,17 +74,29 @@ function getUrl(
         params.delete("fm");
     }
 
-    function parseParam(checkParams: (keyof FullOptions)[], key?: string) {
+    function parseParam(
+        checkParams: (keyof FullOptions)[],
+        key?: string,
+        valueIsString?: boolean,
+    ) {
         if (!key) key = checkParams[0];
         checkParams.forEach((p) => {
-            if (options[p]) params.set(key, floorNumberToString(options[p]));
+            if (options[p])
+                params.set(
+                    key,
+                    valueIsString && typeof options[p] === "string"
+                        ? options[p]
+                        : floorNumberToString(options[p]),
+                );
             if (removeAttributes.includes(p)) params.delete(key);
         });
     }
 
     parseParam(["q", "quality"]);
     parseParam(["w", "width"]);
+    parseParam(["h", "height"]);
     parseParam(["blur"]);
+    parseParam(["fit"], undefined, true);
 
     return `${
         // 如果 `filanme` 是 URL，或以 `/` 为前缀，不添加前缀

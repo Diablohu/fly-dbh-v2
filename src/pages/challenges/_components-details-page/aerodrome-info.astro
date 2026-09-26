@@ -11,7 +11,9 @@ type Props = {
     runwayPairs: [RunwayType, RunwayType][];
 };
 
+const photoAspectRatio = 3 / 2;
 const baseImageWidth = 225;
+const baseImageHeight = baseImageWidth / photoAspectRatio;
 function generateSrcset(photo: string, width = baseImageWidth) {
     return [1, 1.25, 1.5, 1.75, 2]
         .map(
@@ -19,7 +21,9 @@ function generateSrcset(photo: string, width = baseImageWidth) {
                 `${getSanityImageUrl(photo, {
                     fm: "auto",
                     w: width * scale,
+                    h: (width / photoAspectRatio) * scale,
                     q: 60,
+                    fit: "crop",
                 })}${scale === 1 ? "" : ` ${scale}x`}`,
         )
         .join(", ");
@@ -43,7 +47,9 @@ function generateSrcset(photo: string, width = baseImageWidth) {
                         src: getSanityImageUrl(Astro.props.aerodrome.photo, {
                             fm: "auto",
                             w: baseImageWidth,
+                            h: baseImageHeight,
                             q: 60,
+                            fit: "crop",
                         }),
                         sources: [
                             {
@@ -253,7 +259,12 @@ function generateSrcset(photo: string, width = baseImageWidth) {
     }
 </section>
 
-<style lang="less">
+<style
+    lang="less"
+    define:vars={{
+        "photo-aspect-ratio-padding-value": (1 / photoAspectRatio) * 100 + "%",
+    }}
+>
     @import "../_mixins.less";
 
     .aerodrome-info {
@@ -272,7 +283,7 @@ function generateSrcset(photo: string, width = baseImageWidth) {
             display: block;
             width: 100%;
             position: relative;
-            padding-top: percentage((2/3));
+            padding-top: var(--photo-aspect-ratio-padding-value);
             overflow: hidden;
             & > :global(picture) {
                 &,
