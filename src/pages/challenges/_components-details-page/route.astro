@@ -14,7 +14,7 @@ function parseArrStr(string: string) {
     return string
         .split("/")
         .map((part) => part.trim())
-        .join(" / ");
+        .join("<em class='slash'>/</em>");
 }
 
 function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
@@ -29,7 +29,7 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
     ]
         .filter(Boolean)
         .map((str) => (aerodrome?.is_closed ? `<del>${str}</del>` : str))
-        .join(" / ");
+        .join("<em class='slash'>/</em>");
 }
 ---
 
@@ -55,18 +55,19 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
                         <span>
                             {rwy && (
                                 <>
-                                    <em>{parseArrStr(rwy)}</em>{" "}
-                                    <span class="rwy">跑道</span> ＞
+                                    <strong set:html={parseArrStr(rwy)} />
+                                    <span class="rwy">跑道</span>
+                                    <i class="arrow">＞</i>
                                 </>
                             )}
-                            <em>
+                            <strong>
                                 {sid.split(" ").map((part) => (
                                     <span
                                         class={part === "DCT" ? "dct" : null}
                                         set:text={`${part} `}
                                     />
                                 ))}
-                            </em>
+                            </strong>
                         </span>
                     ))}
                 </dd>
@@ -108,10 +109,11 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
                 <dd class="procedures">
                     {route.star.map(({ rwy, star }) => (
                         <span>
-                            <em>{parseArrStr(star)} </em>
+                            <strong set:html={parseArrStr(star)} />
                             {rwy && (
                                 <>
-                                    ＞ <em>{parseArrStr(rwy)}</em>{" "}
+                                    <i class="arrow">＞</i>
+                                    <strong set:html={parseArrStr(rwy)} />
                                     <span class="rwy">跑道</span>
                                 </>
                             )}
@@ -179,6 +181,37 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
         }
         dd {
             margin: 0;
+            .rwy,
+            .dct,
+            .via {
+                // color: var(--theme-color-invert-p-40);
+                color: var(--text-color-secondary);
+            }
+            &.highlight,
+            .highlight {
+                color: var(--text-color-primary);
+            }
+            strong,
+            .arrow,
+            :global(.slash) {
+                font-style: normal;
+                font-weight: normal;
+            }
+            strong {
+                font-family: var(--font-family-monospace);
+                color: var(--text-color-primary);
+            }
+            .arrow,
+            :global(.slash) {
+                color: var(--text-color-secondary);
+            }
+            .arrow {
+                padding: 0 0.175em;
+            }
+            :global(.slash) {
+                padding: 0 0.3333em;
+            }
+
             &.code {
                 display: block;
                 font-family: var(--font-family-monospace);
@@ -193,30 +226,20 @@ function getAerodromeCodeHtml(aerodrome: typeof route.origin) {
                     font-family: var(--global-font-family);
                     color: var(--text-color-secondary);
                 }
-                :global(.slash) {
-                    color: var(--text-color-secondary);
-                    padding: 0 0.3333em;
-                }
             }
+
             &.procedures {
                 & > span {
                     display: block;
-                    & > em {
-                        font-family: var(--font-family-monospace);
-                        font-style: normal;
-                        color: var(--text-color-primary);
+                    & > strong + .rwy,
+                    & > .rwy + strong {
+                        padding-left: 0.25em;
+                    }
+                    :global(.slash) {
+                        padding-left: 0.25em;
+                        padding-right: 0.25em;
                     }
                 }
-            }
-            .rwy,
-            .dct,
-            .via {
-                // color: var(--theme-color-invert-p-40);
-                color: var(--text-color-secondary);
-            }
-            &.highlight,
-            .highlight {
-                color: var(--text-color-primary);
             }
         }
     }
