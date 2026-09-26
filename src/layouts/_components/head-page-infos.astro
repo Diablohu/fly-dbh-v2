@@ -3,7 +3,6 @@ import { type ValidPageContentType } from "@/types";
 import { title as siteTitle, slogan, urlPrefixSanityImageCdn } from "@/global";
 import getPageTitle from "@/utils/get-page-title";
 import getSanityImageUrl from "@/utils/get-sanity-image-url";
-import { undefined } from "astro:schema";
 
 type Props = {
     title?: string;
@@ -48,7 +47,7 @@ if (Astro.props.image instanceof URL) {
     let isValidUrl = false;
 
     try {
-        const url = new URL(Astro.props.image);
+        new URL(Astro.props.image);
         image = Astro.props.image;
         isValidUrl = true;
     } catch (e) {}
