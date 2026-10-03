@@ -118,7 +118,10 @@ const actions = {
                 query: string;
             }[];
         }>(),
-        handler: async ({ filters, from = 0, length = 20, extra = [] }) => {
+        handler: async (
+            { filters, from = 0, length = 20, extra = [] },
+            context,
+        ) => {
             try {
                 const query = `${getGroqFilterVideo(
                     Array.isArray(filters)
@@ -186,7 +189,7 @@ ${extra.map(({ name, query }) => `'${name}' : ${query},`).join("\n")}
                     },
                 )) as unknown as ResponseDataType;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -398,7 +401,7 @@ ${
         }) as z.ZodType<{
             type?: VideoListPageTypesType | "tagSubCategory";
         }>,
-        handler: async ({ type }) => {
+        handler: async ({ type }, context) => {
             try {
                 const currentType = !type
                     ? "tag"
@@ -521,7 +524,7 @@ ${
                     },
                 );
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

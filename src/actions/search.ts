@@ -207,7 +207,10 @@ const actions = {
             from: z.number().optional(),
             length: z.number().optional(),
         }),
-        handler: async ({ keyword, from = 0, length = defaultLength }) => {
+        handler: async (
+            { keyword, from = 0, length = defaultLength },
+            context,
+        ) => {
             if (!keyword) {
                 const err = new ActionError({
                     message: E50000,
@@ -401,7 +404,7 @@ const actions = {
 
                 return res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

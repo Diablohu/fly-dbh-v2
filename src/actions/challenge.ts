@@ -361,17 +361,20 @@ export const getGroqLatestChallenges = (length = 10) =>
 const actions = {
     fetchList: defineAction({
         input: z.custom<Partial<ChallengeListQueryConditionType>>(),
-        handler: async ({
-            from = 0,
-            length = 20,
-            catalog,
-            // sort,
-            difficulties,
-            // types,
-            hazards,
-            // onlyFullArticle = true,
-            ...params
-        }) => {
+        handler: async (
+            {
+                from = 0,
+                length = 20,
+                catalog,
+                // sort,
+                difficulties,
+                // types,
+                hazards,
+                // onlyFullArticle = true,
+                ...params
+            },
+            context,
+        ) => {
             try {
                 const defaults = {
                     sort: catalog === "latest" ? "latest" : "difficulty",
@@ -446,14 +449,14 @@ const actions = {
                 }
                 return res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
 
     /** 获取所有挑战条目列表 */
     fetchListAll: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 const queryString = `*[${getGroqFilterBase({
                     onlyFullArticle: false,
@@ -489,7 +492,7 @@ const actions = {
                 }
                 return res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -497,7 +500,7 @@ const actions = {
     /** 获取挑战条目详情 */
     fetchItem: defineAction({
         input: z.string(),
-        handler: async (_cmsIdOrSlug) => {
+        handler: async (_cmsIdOrSlug, context) => {
             const cmsIdOrSlug = getCmsIdOrSlug(_cmsIdOrSlug);
             try {
                 const queryString = `*[${getGroqFilterBase({
@@ -559,7 +562,7 @@ const actions = {
                 }
                 return res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -569,12 +572,10 @@ const actions = {
      */
     fetchRandomItem: defineAction({
         input: z.custom<Partial<ChallengeListQueryConditionType>>(),
-        handler: async ({
-            difficulties,
-            types,
-            hazards,
-            onlyFullArticle = false,
-        }) => {
+        handler: async (
+            { difficulties, types, hazards, onlyFullArticle = false },
+            context,
+        ) => {
             try {
                 const total = (await fetch(
                     `count(${getGroqFiltersChallengeList({
@@ -626,14 +627,14 @@ const actions = {
                 }
                 return Array.isArray(res) ? res[0] : res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
 
     /** 获取挑战难点灾害列表 */
     fetchHazards: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 const queryString = `*[_type == "approach_challenge_hazard"] {
   _id,
@@ -655,7 +656,7 @@ const actions = {
                 });
                 return res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

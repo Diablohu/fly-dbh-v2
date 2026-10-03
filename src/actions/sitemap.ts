@@ -15,7 +15,7 @@ const actions = {
      // #region 全列表：视频
      */
     fetchVideos: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 const queryString = `\
 ${getGroqFilterVideo("")} {
@@ -32,7 +32,7 @@ ${getGroqFilterVideo("")} {
                     cache: { key: ["sitemap", "videos"], ...cacheOptions },
                 });
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -41,7 +41,7 @@ ${getGroqFilterVideo("")} {
      // #region TODO: 全列表：视频分类
      */
     fetchVideoCategories: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 const queryString = `\
 *[_type == "tag"] {
@@ -59,7 +59,7 @@ ${getGroqFilterVideo("")} {
                     },
                 });
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -68,7 +68,7 @@ ${getGroqFilterVideo("")} {
      // #region 全列表：挑战（完整文章）
      */
     fetchChallenges: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 const queryString = `\
 *[${getChallengeGroqFilterBase({ onlyFullArticle: true })}] {
@@ -90,7 +90,7 @@ ${getGroqFilterVideo("")} {
                     cache: { key: ["sitemap", "challenges"], ...cacheOptions },
                 });
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

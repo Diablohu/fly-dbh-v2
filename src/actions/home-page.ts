@@ -46,7 +46,7 @@ const getFilterTag = (tagSlug: string, type: FilterType) =>
 
 const actions = {
     fetch: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 return (await fetch(
                     `{
@@ -142,7 +142,7 @@ ${(
                     },
                 )) as unknown as HomeCollectionsType;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

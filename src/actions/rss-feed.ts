@@ -41,7 +41,7 @@ type ReturnVideoItemType = {
 
 const actions = {
     fetch: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             try {
                 // console.log({ query });
                 return await fetch<ReturnVideoItemType>(
@@ -70,7 +70,7 @@ const actions = {
                     },
                 );
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

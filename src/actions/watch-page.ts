@@ -93,7 +93,7 @@ const fetchProjections = `{
 const actions = {
     fetch: defineAction({
         input: z.string(),
-        handler: async (_cmsIdOrSlug /*, context*/) => {
+        handler: async (_cmsIdOrSlug, context) => {
             const cmsIdOrSlug = getCmsIdOrSlug(_cmsIdOrSlug);
             try {
                 const queryString = `${getGroqFilterVideo(
@@ -107,7 +107,10 @@ const actions = {
                                     message: E30000,
                                     code: "NOT_FOUND",
                                 });
-                                err.cause = { GROQ: queryString };
+                                err.cause = {
+                                    cmsIdOrSlug: _cmsIdOrSlug,
+                                    GROQ: queryString,
+                                };
                                 throw err;
                             }
                             res[0].cover = resolveAssetPath(res[0].cover);
@@ -124,12 +127,15 @@ const actions = {
                         message: E30000,
                         code: "NOT_FOUND",
                     });
-                    err.cause = { GROQ: queryString };
+                    err.cause = {
+                        cmsIdOrSlug: _cmsIdOrSlug,
+                        GROQ: queryString,
+                    };
                     throw err;
                 }
                 return res;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),

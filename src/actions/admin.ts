@@ -53,7 +53,7 @@ function handlerWrapper<R>(
             throw new ActionError({ code: "UNAUTHORIZED" });
         return func();
     } catch (err) {
-        actionErrorHandler(err);
+        actionErrorHandler(err, context);
     }
 }
 
@@ -61,7 +61,7 @@ function handlerWrapper<R>(
 
 const actions = {
     reGenenerateTOTPKeyUri: defineAction({
-        handler: async () => {
+        handler: async (_, context) => {
             if (!import.meta.env.DEV)
                 throw new ActionError({ code: "UNAUTHORIZED" });
 
@@ -76,7 +76,7 @@ const actions = {
 
                 return { uri };
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -103,7 +103,7 @@ const actions = {
                     expires: refreshCookie(context),
                 };
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
@@ -119,7 +119,7 @@ const actions = {
                 context.cookies.delete(ADMIN_LAST_LOGIN);
                 return false;
             } catch (err) {
-                actionErrorHandler(err);
+                actionErrorHandler(err, context);
             }
         },
     }),
