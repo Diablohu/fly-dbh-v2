@@ -7,7 +7,9 @@
     --infos-text-color: var(--text-color-secondary);
     --info-overlay-edge: unit((8 / @base-font-size-number), em);
     --links-opacity: 0;
+    --links-opacity-hover: 0;
     --links-translate-x: 100%;
+    --links-translate-x-hover: 100%;
     --menu-handle-size: unit((30 / @base-font-size-number), em);
 
     --img-max-width: none;
@@ -18,6 +20,19 @@
     color: var(--text-color-primary);
     margin: 0;
     overflow: hidden;
+
+    :global(:root.option-video-item-show-platform-links-on-hover) & {
+        --links-opacity-hover: 1;
+        --links-translate-x-hover: 0;
+    }
+
+    .pointer-hover({
+        --infos-text-color: var(--text-color-primary);
+        --cover-scale: 1.05;
+        --links-opacity: var(--links-opacity-hover);
+        --links-translate-x: var(--links-translate-x-hover);
+        // --cover-scale: 0.9;
+    });
 
     .styles-info-overlay() {
         background: var(--dark-theme-color-p-80);
@@ -233,14 +248,4 @@
     //     background: var(--tag-background-color);
     //     border-radius: 10px;
     // }
-
-    .pointer-hover({
-        --infos-text-color: var(--text-color-primary);
-        --cover-scale: 1.05;
-        // --cover-scale: 0.9;
-    });
-    .pointer-hover({
-        --links-opacity: 1;
-        --links-translate-x: 0;
-    }, ".option-video-item-show-platform-links-on-hover");
 }
