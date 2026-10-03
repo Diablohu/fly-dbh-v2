@@ -24,7 +24,7 @@ const logger = winston.createLogger({
         winston.format.prettyPrint(),
     ),
     // format: winston.format.json(),
-    defaultMeta: { service: "fly-dbh-kook-bot" },
+    defaultMeta: { service: "fly-dbh" },
     transports,
 });
 
