@@ -284,7 +284,7 @@ const actions = {
                                     message: E50000,
                                     code: "NOT_FOUND",
                                 });
-                                err.cause = { GROQ: queryString };
+                                err.cause = { keyword, GROQ: queryString };
                                 throw err;
                             }
                             // console.log(queryString)

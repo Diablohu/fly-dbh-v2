@@ -515,7 +515,10 @@ const actions = {
                                 message: E60000,
                                 code: "NOT_FOUND",
                             });
-                            err.cause = { GROQ: queryString };
+                            err.cause = {
+                                cmsIdOrSlug: _cmsIdOrSlug,
+                                GROQ: queryString,
+                            };
                             throw err;
                         }
                         // 处理图片路径
@@ -557,7 +560,10 @@ const actions = {
                         message: E60001,
                         code: "NOT_FOUND",
                     });
-                    err.cause = { GROQ: queryString };
+                    err.cause = {
+                        cmsIdOrSlug: _cmsIdOrSlug,
+                        GROQ: queryString,
+                    };
                     throw err;
                 }
                 return res;
