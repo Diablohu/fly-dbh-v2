@@ -192,32 +192,32 @@
 // ============================================================================
 
 .pointer-hover(@rules, @extraRootSelector: "") {
-    // @media (hover: hover) and (pointer: fine) {
-    //     &:hover {
-    //         @rules();
-    //     }
-    // }
-    @media (hover: hover) {
+    @media (hover: hover) and (pointer: fine) {
         &:hover {
             @rules();
         }
     }
+    // @media (hover: hover) {
+    //     &:hover {
+    //         @rules();
+    //     }
+    // }
     // @selector-root-pointer-hover: ~":root.root-is-pointer-hover@{extraRootSelector}";
     // :global(@{selector-root-pointer-hover}) &:hover {
     //     @rules();
     // }
 }
 .pointer-hover-no-global(@rules, @extraRootSelector: "") {
-    // @media (hover: hover) and (pointer: fine) {
-    //     &:hover {
-    //         @rules();
-    //     }
-    // }
-    @media (hover: hover) {
+    @media (hover: hover) and (pointer: fine) {
         &:hover {
             @rules();
         }
     }
+    // @media (hover: hover) {
+    //     &:hover {
+    //         @rules();
+    //     }
+    // }
     // @selector-root-pointer-hover: ~":root.root-is-pointer-hover@{extraRootSelector}";
     // @{selector-root-pointer-hover} &:hover {
     //     @rules();
@@ -252,7 +252,7 @@
             color, background-color, border-color, border-width, transform,
             opacity;
     }
-    @media (hover: hover) {
+    @media (hover: hover) and (pointer: fine) {
         &:hover {
             background-color: var(--menu-background-color-highlight);
         }
