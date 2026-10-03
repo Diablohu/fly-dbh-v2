@@ -64,6 +64,13 @@ function bodyDelegateClick(evt: MouseEvent) {
         return;
     }
 }
+// function bodyDelegatePointerUp(evt: PointerEvent) {
+//     // 如果为 `touch`，移除对 target 的 focus
+//     if (evt.pointerType === "touch" && evt.target instanceof HTMLElement) {
+//         console.log(evt.target);
+//         // evt.target.blur();
+//     }
+// }
 
 // ============================================================================
 
@@ -122,6 +129,7 @@ const PrepareClient: FC<{
         }
 
         document.body.addEventListener("click", bodyDelegateClick);
+        // document.body.addEventListener("pointerup", bodyDelegatePointerUp);
 
         return () => {
             if (window.PointerEvent) {
@@ -135,6 +143,10 @@ const PrepareClient: FC<{
                 );
             }
             document.body.removeEventListener("click", bodyDelegateClick);
+            // document.body.removeEventListener(
+            //     "pointerup",
+            //     bodyDelegatePointerUp,
+            // );
         };
     }, []);
 

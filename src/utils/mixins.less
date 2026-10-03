@@ -197,10 +197,15 @@
     //         @rules();
     //     }
     // }
-    @selector-root-pointer-hover: ~":root.root-is-pointer-hover@{extraRootSelector}";
-    :global(@{selector-root-pointer-hover}) &:hover {
-        @rules();
+    @media (hover: hover) {
+        &:hover {
+            @rules();
+        }
     }
+    // @selector-root-pointer-hover: ~":root.root-is-pointer-hover@{extraRootSelector}";
+    // :global(@{selector-root-pointer-hover}) &:hover {
+    //     @rules();
+    // }
 }
 .pointer-hover-no-global(@rules, @extraRootSelector: "") {
     // @media (hover: hover) and (pointer: fine) {
@@ -208,10 +213,15 @@
     //         @rules();
     //     }
     // }
-    @selector-root-pointer-hover: ~":root.root-is-pointer-hover@{extraRootSelector}";
-    @{selector-root-pointer-hover} &:hover {
-        @rules();
+    @media (hover: hover) {
+        &:hover {
+            @rules();
+        }
     }
+    // @selector-root-pointer-hover: ~":root.root-is-pointer-hover@{extraRootSelector}";
+    // @{selector-root-pointer-hover} &:hover {
+    //     @rules();
+    // }
 }
 
 // ============================================================================
@@ -242,8 +252,10 @@
             color, background-color, border-color, border-width, transform,
             opacity;
     }
-    &:hover {
-        background-color: var(--menu-background-color-highlight);
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--menu-background-color-highlight);
+        }
     }
     &:disabled,
     &[disabled] {

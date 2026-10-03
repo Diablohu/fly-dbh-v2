@@ -445,10 +445,10 @@
             color: var(--global-header-logo-color);
             transition: opacity var(--base-transition-duration);
             transition-property: color, transform, opacity;
-            &:hover {
+            .pointer-hover({
                 --global-header-logo-shadow: 0 0 10px var(--accent-color-purple);
                 color: var(--global-header-color-primary);
-            }
+            });
         }
         svg {
             display: block;
