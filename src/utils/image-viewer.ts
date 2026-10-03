@@ -74,9 +74,11 @@ export async function openImageViewer(opener: HTMLElement, src: string) {
     opener.classList.remove(classNameLoading);
 
     const viewer = new Viewer(opener, {
+        className: "fly-dbh-image-viewer",
         navbar: false,
         url: () => src,
         toolbar: {
+            position: "bottom",
             zoomIn: 1,
             zoomOut: 1,
             oneToOne: 1,
