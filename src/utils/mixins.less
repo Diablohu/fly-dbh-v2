@@ -252,11 +252,14 @@
             color, background-color, border-color, border-width, transform,
             opacity;
     }
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            background-color: var(--menu-background-color-highlight);
-        }
-    }
+    // @media (hover: hover) and (pointer: fine) {
+    //     &:hover {
+    //         background-color: var(--menu-background-color-highlight);
+    //     }
+    // }
+    .pointer-hover({
+        background-color: var(--menu-background-color-highlight);
+    });
     &:disabled,
     &[disabled] {
         opacity: 0.5;
