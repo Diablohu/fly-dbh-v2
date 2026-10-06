@@ -1,5 +1,9 @@
 ---
 import { type AircraftTypes } from "@/types";
+import { aircraftTypeString } from "@/global";
+
+if (!Astro.params.type || !(Astro.params.type in aircraftTypeString))
+    return Astro.rewrite("/404");
 
 import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
 ---
