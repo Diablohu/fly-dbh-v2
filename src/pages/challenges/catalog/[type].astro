@@ -1,8 +1,8 @@
 ---
 import { type AircraftTypes } from "@/types";
-import { aircraftTypeString } from "@/global";
+import { heroImage } from "@/constants/challenges";
 
-if (!Astro.params.type || !(Astro.params.type in aircraftTypeString))
+if (!Astro.params.type || !(Astro.params.type in heroImage))
     return Astro.rewrite("/404");
 
 import ChallengeListPage from "@/layouts/pages/challenge-list/index.astro";
