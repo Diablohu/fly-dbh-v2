@@ -42,13 +42,13 @@
         "colorthief": "^3.5.0",
         "dayjs": "^1.11.23",
         "debug": "^4.4.3",
-        "dotenv": "^18.0.6",
+        "dotenv": "^18.0.7",
         "fs-extra": "^11.4.1",
         "glob": "^13.0.6",
         "history": "^5.3.0",
         "isomorphic-dompurify": "^4.5.0",
         "less": "^4.9.1",
-        "marked": "^18.1.0",
+        "marked": "^18.1.1",
         "md5": "^2.3.0",
         "nanostores": "^1.5.5",
         "normalize.css": "^8.0.1",
@@ -56,7 +56,7 @@
         "qrcode": "^1.5.4",
         "react": "^19.3.0",
         "react-dom": "^19.3.0",
-        "react-dropzone": "^20.1.2",
+        "react-dropzone": "^20.1.3",
         "react-inlinesvg": "^4.5.0",
         "react-is": "^19.3.0",
         "styled-components": "^6.5.3",
@@ -85,7 +85,7 @@
         "rollup-plugin-visualizer": "^7.1.1",
         "typescript": "^6.0.3",
         "vite-plugin-static-copy": "^4.1.1",
-        "vitest": "^5.0.3"
+        "vitest": "^5.0.4"
     },
     "allowScripts": {
         "sharp@0.34.3": true,
