@@ -27,7 +27,7 @@
         "up": "npm run astro:upgrade && npx --yes npm-check-updates -i --format group"
     },
     "dependencies": {
-        "@astrojs/node": "^11.1.8",
+        "@astrojs/node": "^11.1.9",
         "@astrojs/react": "^7.1.0",
         "@astrojs/rss": "^4.0.19",
         "@astrojs/sitemap": "^3.7.4",
@@ -37,7 +37,7 @@
         "@react-oauth/google": "^0.13.5",
         "@sanity/client": "^8.9.0",
         "@sanity/image-url": "^2.1.1",
-        "astro": "^7.4.0",
+        "astro": "^7.4.1",
         "astro-portabletext": "^1.0.1",
         "axios": "^1.20.0",
         "cache-manager": "^7.2.9",
@@ -69,8 +69,8 @@
         "winston-daily-rotate-file": "^5.0.0"
     },
     "devDependencies": {
-        "@astrojs/check": "^0.9.10",
-        "@inquirer/prompts": "^8.7.3",
+        "@astrojs/check": "^0.9.11",
+        "@inquirer/prompts": "^8.7.4",
         "@types/debug": "^4.1.13",
         "@types/express": "^5.0.6",
         "@types/fs-extra": "^11.0.4",
@@ -82,7 +82,7 @@
         "@types/react": "^19.3.0",
         "@types/react-dom": "^19.3.0",
         "@types/toastify-js": "^1.12.4",
-        "baseline-browser-mapping": "^2.11.29",
+        "baseline-browser-mapping": "^2.11.30",
         "chalk": "^6.0.1",
         "cross-env": "^10.1.0",
         "rollup-plugin-visualizer": "^7.1.1",
