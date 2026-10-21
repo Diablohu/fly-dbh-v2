@@ -10,10 +10,13 @@ import logError from "@/utils/log-error";
 function pageDataErrorHandler(
     error: ActionError | ActionErrorCode,
     context: AstroGlobal | ActionAPIContext,
-): {
-    redirect?: string;
-    rewrite?: string;
-} {
+):
+    | {
+          redirect: string;
+      }
+    | {
+          rewrite: string;
+      } {
     if (typeof error === "string")
         return pageDataErrorHandler(new ActionError({ code: error }), context);
 

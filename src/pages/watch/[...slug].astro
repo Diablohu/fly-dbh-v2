@@ -44,7 +44,7 @@ if (error || !video) {
             }),
         Astro,
     );
-    if (res.redirect) return Astro.redirect(res.redirect);
+    if ("redirect" in res) return Astro.redirect(res.redirect);
     return Astro.rewrite(res.rewrite);
 }
 
