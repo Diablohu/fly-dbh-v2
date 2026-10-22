@@ -35,7 +35,7 @@
         "@nanostores/react": "^2.0.1",
         "@oslojs/otp": "^1.1.0",
         "@react-oauth/google": "^0.13.5",
-        "@sanity/client": "^8.10.0",
+        "@sanity/client": "^8.10.1",
         "@sanity/image-url": "^2.1.1",
         "astro": "^7.4.2",
         "astro-portabletext": "^1.0.1",
