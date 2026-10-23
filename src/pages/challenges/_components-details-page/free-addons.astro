@@ -116,40 +116,49 @@ const aerodromeAddons = generateList(freeAddons);
 const sceneryAddons = generateList(freeSceneryAddons);
 ---
 
-{
-    Array.isArray(aerodromeAddons) && aerodromeAddons.length > 0 && (
-        <InfoBlock {...props} title="本机场的免费景观插件" emoji="🧩">
-            {aerodromeAddons?.map(
+<InfoBlock {...props} title="本机场的免费景观插件" emoji="🧩">
+    {
+        Array.isArray(aerodromeAddons) && aerodromeAddons.length > 0 ? (
+            aerodromeAddons?.map(
                 (item) =>
                     item !== false && (
                         <Markdown
                             src={"#### " + item.title + "\n" + item.markdown}
                         />
                     ),
-            )}
-        </InfoBlock>
-    )
-}
-{
-    Array.isArray(sceneryAddons) && sceneryAddons.length > 0 && (
-        <InfoBlock {...props} title="本机场周边的免费景观插件" emoji="🧩">
-            <p>以下免费插件可以强化机场周边的景观：</p>
-            {sceneryAddons?.map(
-                (item) =>
-                    item !== false && (
-                        <Markdown
-                            src={"#### " + item.title + "\n" + item.markdown}
-                        />
-                    ),
-            )}
-        </InfoBlock>
-    )
-}
+            )
+        ) : (
+            <p class="not-available">暂缺……</p>
+        )
+    }
+</InfoBlock>
+<InfoBlock {...props} title="本机场周边的免费景观插件（非机场自身）" emoji="🧩">
+    {
+        Array.isArray(sceneryAddons) && sceneryAddons.length > 0 ? (
+            <>
+                <p>以下免费插件可以强化机场周边的景观：</p>
+                {sceneryAddons?.map(
+                    (item) =>
+                        item !== false && (
+                            <Markdown
+                                src={
+                                    "#### " + item.title + "\n" + item.markdown
+                                }
+                            />
+                        ),
+                )}
+            </>
+        ) : (
+            <p class="not-available">暂缺……</p>
+        )
+    }
+</InfoBlock>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .free-addons {
-        zoom: 1;
+    .not-available {
+        color: var(--text-color-secondary);
+        font-style: italic;
     }
 </style>
