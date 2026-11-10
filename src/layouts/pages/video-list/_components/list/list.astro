@@ -20,10 +20,7 @@ type FilterType = {
 };
 type Props = FilterType & {
     isIndex: boolean;
-    info: Extract<
-        Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"],
-        { _id: string }
-    >;
+    info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
     extraFilters?: FilterType[];
 };
 const length = 20;

@@ -118,7 +118,7 @@ const title = {
 ---
 
 {
-    (error && error.code === "NOT_FOUND") || !currentCategoryInfo ? (
+    error && error.code === "NOT_FOUND" ? (
         <Page404 />
     ) : (
         <Layout
