@@ -57,8 +57,6 @@ if (
 } | order(release desc)`;
     }
 
-    console.log(Astro.props.info._id);
-
     if (
         Array.isArray(Astro.props.info?.onboard_devices) &&
         Astro.props.info.onboard_devices.length
@@ -68,8 +66,12 @@ if (
                 name: `机载设备 (${maker} ${name}) 教学`,
                 query: getExtraQueryString(
                     `"${_id}"`,
-                    // 如果视频有相关机型的关系，排除包含其他机型的视频条目
-                    `((defined(aircraft_families) && _id in aircraft_families) || !defined(aircraft_families))`,
+                    // 排除含有 `相关机型` 关系的视频
+                    // * 如果包含当前机型，则相关视频条目已经出现在 `教程攻略` 列表中，查询 `机载设备` 结果为重复
+                    // * 如果不包含当前机型，则无意义
+                    `!defined(aircraft_families)`,
+                    // [SCRAPPED] 如果视频有相关机型的关系，必须包含当前机型
+                    // `((defined(aircraft_families) && "${Astro.props.info._id}" in aircraft_families[]._ref) || !defined(aircraft_families))`,
                 ),
             });
         });
