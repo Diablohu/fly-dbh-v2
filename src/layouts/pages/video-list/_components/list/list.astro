@@ -20,7 +20,10 @@ type FilterType = {
 };
 type Props = FilterType & {
     isIndex: boolean;
-    info: Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"];
+    info: Extract<
+        Awaited<ReturnType<typeof actions.videoListPage.fetchInfo>>["data"],
+        { _id: string }
+    >;
     extraFilters?: FilterType[];
 };
 const length = 20;
@@ -35,8 +38,10 @@ if (
      * 追加请求的 GROQ
      *  - 追加到页面初始化请求中，即：不会有额外网络请求
      */
-    function getExtraQueryString(_id: string) {
-        return `*[_type=="video" && "tutorial" in tags[]->slug.current && references(${_id})] {
+    function getExtraQueryString(_id: string, extraFilter?: string) {
+        return `*[_type=="video" && "tutorial" in tags[]->slug.current && references(${_id})${
+            extraFilter ? ` && ${extraFilter}` : ""
+        }] {
     _id,
     'slug': slug.current,
     title,
@@ -52,6 +57,8 @@ if (
 } | order(release desc)`;
     }
 
+    console.log(Astro.props.info._id);
+
     if (
         Array.isArray(Astro.props.info?.onboard_devices) &&
         Astro.props.info.onboard_devices.length
@@ -59,7 +66,11 @@ if (
         Astro.props.info.onboard_devices.forEach(({ _id, maker, name }) => {
             extra.push({
                 name: `机载设备 (${maker} ${name}) 教学`,
-                query: getExtraQueryString(`"${_id}"`),
+                query: getExtraQueryString(
+                    `"${_id}"`,
+                    // 如果视频有相关机型的关系，排除包含其他机型的视频条目
+                    `((defined(aircraft_families) && _id in aircraft_families) || !defined(aircraft_families))`,
+                ),
             });
         });
     }
