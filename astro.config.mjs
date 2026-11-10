@@ -100,7 +100,9 @@ export default defineConfig({
             options: {
                 variants: [
                     {
-                        src: ["./src/assets/fonts/FBW-Display-EIS-A380-SlashedZero.ttf"],
+                        src: [
+                            "./src/assets/fonts/FBW-Display-EIS-A380-SlashedZero.ttf",
+                        ],
                     },
                 ],
             },
