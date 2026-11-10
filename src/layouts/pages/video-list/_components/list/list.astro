@@ -240,23 +240,24 @@ if (error) {
                                 )}
                         </Fragment>
                     ))}
-                {Array.isArray(Astro.props.info?.challenges) && (
-                    <Collection
-                        class="aircraft-family-challenges"
-                        name="latest-challenges"
-                        title="适合挑战"
-                        route={getChallengeCatalogPageLink(
-                            Astro.props.info?.types?.[0],
-                        )}
-                        showMore={`更多 (${Astro.props.info?.challenge_count} 已收录)`}
-                        titleMore
-                    >
-                        <ChallengeListHorizontal
-                            client:idle
-                            challenges={Astro.props.info.challenges}
-                        />
-                    </Collection>
-                )}
+                {Array.isArray(Astro.props.info?.challenges) &&
+                    Astro.props.info.challenges.length > 0 && (
+                        <Collection
+                            class="aircraft-family-challenges"
+                            name="latest-challenges"
+                            title="适合挑战"
+                            route={getChallengeCatalogPageLink(
+                                Astro.props.info?.types?.[0],
+                            )}
+                            showMore={`更多 (${Astro.props.info?.challenge_count} 已收录)`}
+                            titleMore
+                        >
+                            <ChallengeListHorizontal
+                                client:idle
+                                challenges={Astro.props.info.challenges}
+                            />
+                        </Collection>
+                    )}
             </>
         ) : Astro.props.type === "aircraftOnboardDevice" ? (
             Object.entries(
