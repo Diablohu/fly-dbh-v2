@@ -1,3 +1,10 @@
+/*
+TODO: Change Markdown processor
+
+https://docs.astro.build/en/guides/markdown-content/#markdown-processors
+Astro provides two official processors, Sätteri and Unified. You can configure a processor for your entire project or choose a different processor for Markdown and MDX files.
+Since Astro v7, Sätteri is the default Markdown processor. You can use it to render Markdown and MDX files without any installation or configuration according to your project’s needs.
+*/
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
 // import { htmlAttributeImageViewer } from "@/global";
