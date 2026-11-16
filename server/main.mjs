@@ -37,4 +37,13 @@ for (const { key, required } of [
 // ============================================================================
 
 // console.log({ "import.meta.env": import.meta.env, "process.env": process.env });
+
+// log System Info & Node.js Info
+console.log(`\n\nSystem Info`);
+console.log(`・OS: ${process.platform} ${process.arch}`);
+console.log(`・Node.js: ${process.version}`);
+console.log("");
+
+// ============================================================================
+
 await import("../dist/server/entry.mjs");
