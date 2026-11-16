@@ -1,0 +1,170 @@
+---
+import getSanityImageUrl from "@/utils/get-sanity-image-url";
+import Block from "@/components/block.astro";
+
+type Props = {
+    sanityImageFilename: string;
+} & astroHTML.JSX.DefinedIntrinsicElements["section"];
+
+const {
+    class: className,
+    ...props
+} = Astro.props;
+---
+
+<section
+    class:list={["banner", className]}
+    style={{
+        backgroundImage: `url(${getSanityImageUrl(Astro.props.sanityImageFilename, {
+            format: "webp",
+            width: 1280,
+            quality: 50,
+        })})`,
+    }}
+    {...props}
+>
+    <!-- TODO: Banner图改为视频 -->
+    <Block class="content">
+        <section class="title">
+            <h2>
+                <slot />
+            </h2>
+            <h3><slot name="subtitle" /></h3>
+            <p class="slogan"><slot name="slogan" /></p>
+        </section>
+    </Block>
+    <!-- <img
+        class="cover"
+        alt="VHF 123.45 飞行体验馆"
+        src={getSanityImageUrl(Astro.props.sanityImageFilename, {
+            format: "webp",
+            width: 1280,
+            quality: 50,
+        })}
+        fetchpriority="high"
+    /> -->
+    <span class="mask"></span>
+</section>
+
+<style lang="less">
+    @import "@/utils/mixins.less";
+
+    section.banner {
+        position: relative;
+        z-index: -1;
+        background: no-repeat var(--hero-banner-background-position) / cover;
+        height: calc(var(--hero-banner-height) + var(--hero-banner-expanded-height));
+        min-height: var(--hero-banner-min-height);
+        margin-top: calc(var(--global-header-height) * -1);
+        margin-bottom: calc(var(--hero-banner-expanded-height) * -1 + 3em);
+        padding-top: var(--global-header-height);
+
+        .content {
+            position: absolute;
+            z-index: 3;
+            bottom: var(--hero-banner-expanded-height);
+            color: var(--dark-text-color-primary);
+            // font-weight: 900;
+            padding-bottom: 1em;
+            h2 {
+                color: inherit;
+                font-size: var(--hero-banner-font-size);
+                font-family: var(--font-fbw-display-eis-a380-slashed-zero);
+                margin: 0 0 var(--hero-banner-title-gap) 0;
+                text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
+                // font-style: italic;
+            }
+            h3, .slogan {
+                &:empty {
+                    display: none;
+                }
+            }
+            h3 {
+                color: var(--dark-theme-color);
+                background: var(--dark-text-color-primary);
+                font-size: var(--hero-banner-font-size-secondary);
+                margin: 0 0 0.33333em 0;
+                display: inline-block;
+                padding: 0.25em 0.75em;
+                border-radius: 1em;
+                letter-spacing: 0.1em;
+            }
+            h3 + .slogan {
+                margin-top: 0.25em;
+            }
+            .slogan {
+                color: inherit;
+                font-size: calc(var(--hero-banner-font-size-secondary) * 0.9);
+                margin: 0 0 calc(-0.25em - var(--hero-banner-title-gap) / 2) 0;
+                line-height: calc(1.55em + var(--hero-banner-title-gap) * 2);
+                text-shadow: 0 0.05em 0.15em var(--dark-theme-color-p-80);
+            }
+            // &::after {
+            //     position: absolute;
+            //     content: "";
+            //     width: 100%;
+            //     height: 100%;
+            //     bottom: 0;
+            //     left: 0;
+            //     @supports (mask-image: linear-gradient(black, transparent)) {
+            //         z-index: 2;
+            //         mask-image: linear-gradient(
+            //             to right,
+            //             black 0,
+            //             transparent 100%
+            //         );
+            //         backdrop-filter: blur(var(--backdrop-filter-blur-value));
+            //     }
+            // }
+        }
+
+        // img.cover {
+        //     position: absolute;
+        //     z-index: 1;
+        //     display: block;
+        //     width: 100%;
+        //     height: 100%;
+        //     bottom: 0;
+        //     left: 0;
+        //     object-fit: cover;
+        // }
+
+        .mask {
+            &,
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+                left: 0;
+            }
+
+            z-index: 2;
+            height: 100%;
+            display: block;
+            background: linear-gradient(
+                60deg,
+                var(--dark-theme-color-p-30) 33.3333%,
+                var(--dark-theme-color-p-20) 50%,
+                var(--dark-theme-color-p-0) 100%
+            );
+
+            &::before {
+                z-index: 2;
+                height: 100%;
+                .pixel-dots-styles();
+            }
+            &::after {
+                z-index: 3;
+                height: calc(var(--hero-banner-expanded-height) * 2);
+                background: linear-gradient(
+                    to bottom,
+                    var(--theme-color-p-0) 0%,
+                    var(--theme-color-p-80) 60%,
+                    var(--theme-color) 100%
+                );
+            }
+        }
+    }
+</style>

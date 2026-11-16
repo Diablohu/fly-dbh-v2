@@ -1,6 +1,7 @@
 import {
     useState,
     useCallback,
+    useMemo,
     memo,
     type FC,
     type MouseEventHandler,
@@ -8,9 +9,11 @@ import {
 } from "react";
 import classNames from "classnames";
 
-import symbolCogFill from "@/assets/svg-symbols/cog-fill.svg?raw";
-import symbolCogHollow from "@/assets/svg-symbols/cog-hollow.svg?raw";
+import symbolDonateHollow from "@/assets/svg-symbols/header/donate-hollow.svg?raw";
+import symbolDonateFill from "@/assets/svg-symbols/header/donate-fill.svg?raw";
 import symbolSearch from "@/assets/svg-symbols/search-navbar.svg?raw";
+import symbolCogHollow from "@/assets/svg-symbols/cog-hollow.svg?raw";
+import symbolCogFill from "@/assets/svg-symbols/cog-fill.svg?raw";
 
 import Menu, {
     MenuItem,
@@ -38,36 +41,36 @@ const HeaderOptions: FC<Pick<Props, "defaults" | "originPathname">> = ({
 }) => {
     const [showMenu, setShowMenu] = useState(false);
 
+    const isDonateActive = useMemo(() => {
+        return isRouteActive(routeBase.donate, originPathname, [/^\/donate\//]);
+    }, [originPathname]);
+
     const toggleMenu = useCallback(
         (evt: MouseEvent | Parameters<MouseEventHandler<HTMLElement>>[0]) => {
             evt.stopPropagation();
             setShowMenu((prev) => !prev);
         },
-        []
+        [],
     );
 
     return (
         <>
-            {import.meta.env.DEV && (
-                <a
-                    href={routeBase.donate}
-                    className={classNames([
-                        styles["button"],
-                        styles["link"],
-                        {
-                            [styles["is-active"]]: isRouteActive(
-                                routeBase.donate,
-                                originPathname,
-                                [/^\/donate\//]
-                            ),
-                        },
-                    ])}
-                    dangerouslySetInnerHTML={{
-                        __html: "￥",
-                    }}
-                    aria-label="资助"
-                />
-            )}
+            <a
+                href={routeBase.donate}
+                className={classNames([
+                    styles["button"],
+                    styles["link"],
+                    {
+                        [styles["is-active"]]: isDonateActive,
+                    },
+                ])}
+                dangerouslySetInnerHTML={{
+                    __html: isDonateActive
+                        ? symbolDonateFill
+                        : symbolDonateHollow,
+                }}
+                aria-label="打赏"
+            />
             <a
                 href={routeBase.search}
                 className={classNames([
@@ -77,7 +80,7 @@ const HeaderOptions: FC<Pick<Props, "defaults" | "originPathname">> = ({
                         [styles["is-active"]]: isRouteActive(
                             routeBase.search,
                             originPathname,
-                            [new RegExp(`^${routeBase.search}/`)]
+                            [new RegExp(`^${routeBase.search}/`)],
                         ),
                     },
                 ])}
@@ -158,11 +161,11 @@ const OptionColorScheme: FC<{
         (evt) => {
             setForcedColorScheme(
                 evt.currentTarget.getAttribute(
-                    "data-value"
-                ) as typeof defaultValue
+                    "data-value",
+                ) as typeof defaultValue,
             );
         },
-        [setForcedColorScheme]
+        [setForcedColorScheme],
     );
 
     return (
@@ -196,18 +199,18 @@ const OptionVideoSource: FC<{
         (evt) => {
             setVideoSource(
                 evt.currentTarget.getAttribute(
-                    "data-video-platform"
-                ) as typeof defaultValue
+                    "data-video-platform",
+                ) as typeof defaultValue,
             );
         },
-        [setVideoSource]
+        [setVideoSource],
     );
 
     return (
         <MenuItem className={styles["option-switch-container"]}>
             {links
                 .filter(({ name }) =>
-                    ["bilibili", "youtube", "douyin"].includes(name)
+                    ["bilibili", "youtube", "douyin"].includes(name),
                 )
                 .map(({ name, title, iconType, iconHtml }) => (
                     <OptionItem
@@ -247,7 +250,7 @@ const OptionContentListAutoLoadMore: FC<{
         (checked: boolean) => {
             setContentListAutoLoadMore(checked ? "1" : "0");
         },
-        [contentListAutoLoadMore]
+        [contentListAutoLoadMore],
     );
 
     return (
@@ -277,7 +280,7 @@ const OptionVideoItemShowPlatformLinksOnHover: FC<{
         (checked: boolean) => {
             setVideoItemShowPlatformLinksOnHover(checked ? "1" : "0");
         },
-        [videoItemShowPlatformLinksOnHover]
+        [videoItemShowPlatformLinksOnHover],
     );
 
     return (

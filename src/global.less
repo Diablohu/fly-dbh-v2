@@ -75,6 +75,19 @@
     --hero-image-offset-y: 0;
     --hero-image-glossy-opacity: 0;
     --hero-image-stiky-height: var(--global-header-height);
+    --hero-banner-min-height: 300px;
+    --hero-banner-height: 50vh;
+    --hero-banner-expanded-height: 10em;
+    --hero-banner-font-size: unit(
+        (2.5 * @base-font-size-number-h1 / @base-font-size-number),
+        em
+    );
+    --hero-banner-font-size-secondary: unit(
+        (1 * @base-font-size-number-h1 / @base-font-size-number),
+        em
+    );
+    --hero-banner-title-gap: 0px;
+    --hero-banner-background-position: 50% 50%;
 
     --title-letter-spacing: -0.04em;
     --backdrop-filter-blur-value: 20px;
@@ -239,6 +252,19 @@
     });
     .screen-md-below({
         --list-container-grid-item-min-width: 190px;
+    });
+    .screen-sm({
+        --hero-banner-min-height: 250px;
+        --hero-banner-height: 40vh;
+        --hero-banner-font-size: unit(
+            (1.75 * @base-font-size-number-h1 / @base-font-size-number),
+            em
+        );
+        --hero-banner-font-size-secondary: unit(
+            (0.8 * @base-font-size-number-h1 / @base-font-size-number),
+            em
+        );
+        --hero-banner-title-gap: 0.15em;
     });
 
     // ========================================================================

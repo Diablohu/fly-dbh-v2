@@ -5,6 +5,7 @@ import getSanityImageUrl from "@/utils/get-sanity-image-url";
 
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
+import HeroBanner from "@/components/hero-banner.astro";
 // import HeroImage from "@/components/hero-image";
 import CopyButton from "@/components/copy-button";
 import Card from "./_card.astro";
@@ -85,40 +86,19 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         expandedHeight={300}
         imagePositionOffsetY="-15%"
     /> -->
-    <section
-        class="page-variables banner"
-        style={{
-            backgroundImage: `url(${getSanityImageUrl(bannerImageFilename, {
-                format: "webp",
-                width: 1280,
-                quality: 50,
-            })})`,
-        }}
+    <HeroBanner
+        class="banner"
+        sanityImageFilename="def7240d06fe76f40b3df3e572e5e733dd6256b8-2278x1280.jpg"
     >
-        <!-- TODO: Banner图改为视频 -->
-        <Block class="content">
-            <section class="title">
-                <h2>
-                    <span class="vhf">VHF</span>
-                    <span class="numeral">123.45</span>
-                </h2>
-                <h3>维铄飞航空实训基地</h3>
-                <p class="slogan"><strong>Very Happy Flight!</strong></p>
-                <p class="slogan">专业真实模拟体验，普通人也能享受飞行乐趣！</p>
-            </section>
-        </Block>
-        <!-- <img
-            class="cover"
-            alt="VHF 123.45 飞行体验馆"
-            src={getSanityImageUrl(bannerImageFilename, {
-                format: "webp",
-                width: 1280,
-                quality: 50,
-            })}
-            fetchpriority="high"
-        /> -->
-        <span class="mask"></span>
-    </section>
+        <span class="vhf">VHF</span>
+        <span class="numeral">123.45</span>
+        <Fragment slot="subtitle">维铄飞航空实训基地</Fragment>
+        <Fragment slot="slogan">
+            <strong>Very Happy Flight!</strong>
+            <br />
+            专业真实模拟体验，普通人也能享受飞行乐趣！
+        </Fragment>
+    </HeroBanner>
 
     <Block class="page-variables article">
         <section class="cards">
@@ -184,18 +164,6 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
     @import "@/utils/mixins.less";
 
     .page-variables {
-        --banner-min-height: 300px;
-        --banner-height: 50vh;
-        --banner-expanded-height: 10em;
-        --title-font-size: unit(
-            (2.5 * @base-font-size-number-h1 / @base-font-size-number),
-            em
-        );
-        --title-font-size-secondary: unit(
-            (1 * @base-font-size-number-h1 / @base-font-size-number),
-            em
-        );
-        --title-gap: 0;
         --card-grid-item-min-width: 350px;
 
         .screen-xl-above({
@@ -205,138 +173,18 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
         .screen-lg-below({
             --card-grid-item-min-width: 310px;
         });
-
-        .screen-sm({
-            --banner-min-height: 250px;
-            --banner-height: 40vh;
-            --title-font-size: unit(
-                (1.75 * @base-font-size-number-h1 / @base-font-size-number),
-                em
-            );
-            --title-font-size-secondary: unit(
-                (0.8 * @base-font-size-number-h1 / @base-font-size-number),
-                em
-            );
-            --title-gap: 0.15em;
-        });
     }
 
-    section.banner {
-        position: relative;
-        z-index: 1;
-        background: no-repeat 77.5% 30% / cover;
-        height: calc(var(--banner-height) + var(--banner-expanded-height));
-        min-height: var(--banner-min-height);
-        margin-top: calc(var(--global-header-height) * -1);
-        margin-bottom: calc(var(--banner-expanded-height) * -1);
-        padding-top: var(--global-header-height);
-
-        .content {
-            position: absolute;
-            z-index: 3;
-            bottom: var(--banner-expanded-height);
-            color: var(--dark-text-color-primary);
-            // font-weight: 900;
-            padding-bottom: 1em;
-            h2 {
-                color: inherit;
-                font-size: var(--title-font-size);
-                font-family: var(--font-fbw-display-eis-a380-slashed-zero);
-                margin: 0 0 var(--title-gap) 0;
-                text-shadow: 0 0.1em 0.15em var(--dark-theme-color-p-80);
-                // font-style: italic;
-                .vhf {
-                    //     font-family: var(--font-fbw-display-eis-a380-slashed-zero);
-                    letter-spacing: 0.1em;
-                }
-                .numeral {
-                    padding-left: 0.25em;
-                    //     font-family: var(--font-airbus-rtpi);
-                    //     font-size: 1.1em;
-                }
-            }
-            h3 {
-                color: var(--dark-theme-color);
-                background: var(--dark-text-color-primary);
-                font-size: var(--title-font-size-secondary);
-                margin: 0 0 0.33333em 0;
-                display: inline-block;
-                padding: 0.25em 0.75em;
-                border-radius: 1em;
-                letter-spacing: 0.1em;
-            }
-            .slogan {
-                color: inherit;
-                font-size: calc(var(--title-font-size-secondary) * 0.9);
-                margin: 0.5em 0 0 0;
-                text-shadow: 0 0.05em 0.15em var(--dark-theme-color-p-80);
-            }
-            // &::after {
-            //     position: absolute;
-            //     content: "";
-            //     width: 100%;
-            //     height: 100%;
-            //     bottom: 0;
-            //     left: 0;
-            //     @supports (mask-image: linear-gradient(black, transparent)) {
-            //         z-index: 2;
-            //         mask-image: linear-gradient(
-            //             to right,
-            //             black 0,
-            //             transparent 100%
-            //         );
-            //         backdrop-filter: blur(var(--backdrop-filter-blur-value));
-            //     }
-            // }
+    .banner {
+        --hero-banner-background-position: 77.5% 30%;
+        .vhf {
+            //     font-family: var(--font-fbw-display-eis-a380-slashed-zero);
+            letter-spacing: 0.1em;
         }
-
-        // img.cover {
-        //     position: absolute;
-        //     z-index: 1;
-        //     display: block;
-        //     width: 100%;
-        //     height: 100%;
-        //     bottom: 0;
-        //     left: 0;
-        //     object-fit: cover;
-        // }
-
-        .mask {
-            &,
-            &::before,
-            &::after {
-                content: "";
-                position: absolute;
-                width: 100%;
-                bottom: 0;
-                left: 0;
-            }
-
-            z-index: 2;
-            height: 100%;
-            display: block;
-            background: linear-gradient(
-                60deg,
-                var(--dark-theme-color-p-30) 33.3333%,
-                var(--dark-theme-color-p-20) 50%,
-                var(--dark-theme-color-p-0) 100%
-            );
-
-            &::before {
-                z-index: 2;
-                height: 100%;
-                .pixel-dots-styles();
-            }
-            &::after {
-                z-index: 3;
-                height: calc(var(--banner-expanded-height) * 2);
-                background: linear-gradient(
-                    to bottom,
-                    var(--theme-color-p-0) 0%,
-                    var(--theme-color-p-80) 60%,
-                    var(--theme-color) 100%
-                );
-            }
+        .numeral {
+            padding-left: 0.25em;
+            //     font-family: var(--font-airbus-rtpi);
+            //     font-size: 1.1em;
         }
     }
 
@@ -351,7 +199,7 @@ const linkReserve = "https://www.wjx.top/vm/OYpDHv8.aspx";
                 minmax(var(--card-grid-item-min-width), 1fr)
             );
             gap: 2em 1.5em;
-            margin: 3em auto;
+            margin: 0 auto 3em auto;
         }
     }
 
