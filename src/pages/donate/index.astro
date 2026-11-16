@@ -1,8 +1,12 @@
 ---
 import Layout from "@/layouts/layout.astro";
 import Block from "@/components/block.astro";
-import HeroImage from "@/components/hero-image";
 import HeroBanner from "@/components/hero-banner.astro";
+
+import qrAlipay from './_qr/alipay.png';
+import iconAlipay from '@/assets/svg-symbols/brands/alipay.svg';
+import qrWechat from './_qr/wx.png';
+import iconWechat from '@/assets/svg-symbols/brands/wechatpay.svg';
 
 // ============================================================================
 
@@ -29,64 +33,143 @@ import HeroBanner from "@/components/hero-banner.astro";
         </Fragment>
     </HeroBanner>
 
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
-    <Block>Enim in in amet eu eu aliquip non magna quis do officia mollit labore.</Block>
-    <Block>Eiusmod reprehenderit occaecat enim ad fugiat.</Block>
+    <Block class="donate">
+        <section class="methods">
+            {
+                [
+                    {
+                        method: "支付宝",
+                        qr: qrAlipay,
+                        icon: iconAlipay,
+                        theme: "var(--theme-color-alipay)",
+                    },
+                    {
+                        method: "微信支付",
+                        qr: qrWechat,
+                        icon: iconWechat,
+                        theme: "var(--theme-color-wechat)",
+                    },
+                ].map(({ qr, method, icon: Icon, theme }) => (
+                    <section
+                        class="method"
+                        style={`--theme-color: ${theme};`}
+                    >
+                        <h3>
+                            <Icon />
+                            {method}
+                        </h3>
+                        <span class="ratio-box">
+                            <img
+                                alt={`打赏二维码 - ${method}`}
+                                src={qr.src}
+                                width={qr.width}
+                                height={qr.height}
+                            />
+                        </span>
+                    </section>
+                ))
+            }
+        </section>
+    </Block>
 </Layout>
 
 <style lang="less">
     @import "@/utils/mixins.less";
 
-    .player-container {
-        zoom: 1;
+    .donate {
+        --card-grid-item-min-width: 350px;
+        // .screen-xl-above({
+        //     --card-grid-item-min-width: 45%;
+        // });
+        // .screen-lg-below({
+        //     --card-grid-item-min-width: 310px;
+        // });
+
+        .methods {
+            display: flex;
+            // grid-template-columns: repeat(
+            //     auto-fill,
+            //     minmax(var(--card-grid-item-min-width), 1fr)
+            // );
+            flex-flow: row wrap;
+            gap: 6em 1.5em;
+            margin: 0 auto 12em auto;
+            justify-content: space-evenly;
+
+            // &::before, &::after {
+            //     content: "";
+            //     flex: 1;
+            // }
+        }
+
+        .method {
+            position: relative;
+            overflow: hidden;
+            padding: 1.5em 2.5em 0 2.5em;
+            text-align: center;
+            flex: 0 1 30em;
+
+            &::before, &::after{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 10px;
+                pointer-events: none;
+            }
+            &::before {
+                z-index: 2;
+                border: 1px solid var(--theme-color);
+                @supports (mask-image: linear-gradient(black, transparent)) {
+                    mask-image: linear-gradient(
+                        to bottom,
+                        black 50%,
+                        transparent 100%
+                    );
+                }
+            }
+            &::after {
+                z-index: -1;
+                background: linear-gradient(
+                    to bottom,
+                    var(--theme-color) 50%,
+                    transparent 100%
+                );
+                opacity: 0.25;
+            }
+
+            h3, .ratio-box {
+                display: block;
+                margin: 0 auto;
+            }
+
+            h3 {
+                padding: 0.25em 0 0.9em 0;
+                font-size: 2em;
+                svg {
+                    display: inline-block;
+                    width: 1.25em;
+                    height: 1.25em;
+                    margin-right: 0.5em;
+                    vertical-align: text-bottom;
+                    fill: var(--theme-color);
+                }
+            }
+            .ratio-box {
+                position: relative;
+                width: 100%;
+                height: 0;
+                padding-bottom: percentage((1 / 1));
+                img {
+                    display: block;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+        }
     }
 </style>
