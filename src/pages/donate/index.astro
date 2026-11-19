@@ -23,6 +23,7 @@ import iconWechat from '@/assets/svg-symbols/brands/wechatpay.svg';
 
 <Layout title="打赏" header footer>
     <HeroBanner
+        class="banner"
         sanityImageFilename="1a3172dabfa6fb84628aea788bd14a754912683e-2560x1440.jpg"
     >
         赞助打赏
@@ -75,6 +76,10 @@ import iconWechat from '@/assets/svg-symbols/brands/wechatpay.svg';
 
 <style lang="less">
     @import "@/utils/mixins.less";
+
+    .banner {
+        --hero-banner-background-position: 25% 60%;
+    }
 
     .donate {
         --card-grid-item-min-width: 350px;
